@@ -9,7 +9,6 @@ import sqlite3
 from pathlib import Path
 from typing import List, Optional
 
-import pandas as pd
 import typer
 from datasets import Dataset
 from langchain.embeddings import SentenceTransformerEmbeddings
@@ -45,13 +44,22 @@ def once() -> None:
 def chat() -> None:
     """Interactive Q&A."""
 
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        typer.echo(
+            "OPENAI_API_KEY is missing or empty. Please set it before using chat."
+        )
+        raise typer.Exit(code=1)
+
     embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
     path = Path("faiss_index")
     if path.exists():
-        vs = FAISS.load_local(str(path), embeddings, allow_dangerous_deserialization=True)
+        vs = FAISS.load_local(
+            str(path), embeddings, allow_dangerous_deserialization=True
+        )
     else:  # empty store
         vs = FAISS.from_texts([], embeddings)
-    agent = ChatAgent(vs, os.getenv("OPENAI_API_KEY", ""))
+    agent = ChatAgent(vs, api_key)
 
     while True:
         q = typer.prompt("query")
@@ -142,7 +150,9 @@ def web() -> None:
 
         loop = asyncio.get_running_loop()
         await asyncio.gather(
-            updater(), ws_server.serve(lambda: latest), loop.run_in_executor(None, launch_gui)
+            updater(),
+            ws_server.serve(lambda: latest),
+            loop.run_in_executor(None, launch_gui),
         )
 
     asyncio.run(_main())
