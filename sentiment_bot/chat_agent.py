@@ -1,21 +1,27 @@
-"""Interactive chat agent over stored documents."""
+"""Retrieval augmented chat agent."""
 
 from __future__ import annotations
 
+from typing import List, Tuple
 
-def chat_loop() -> None:
-    """Simple REPL that echoes user input.
+from langchain.chains import ConversationalRetrievalChain
+from langchain.chat_models import ChatOpenAI
+from langchain.embeddings import SentenceTransformerEmbeddings  # noqa: F401
+from langchain.vectorstores.faiss import FAISS
 
-    A full implementation would integrate LangChain with the vector store.
-    The minimal version keeps the interface without heavy dependencies.
-    """
 
-    print("Type 'exit' to quit.")
-    while True:
-        try:
-            q = input(">> ")
-        except EOFError:  # pragma: no cover - manual
-            break
-        if q.strip().lower() in {"exit", "quit"}:
-            break
-        print("No documents available.")
+class ChatAgent:
+    """Thin wrapper around a :class:`ConversationalRetrievalChain`."""
+
+    def __init__(self, vs: FAISS, openai_api_key: str) -> None:
+        llm = ChatOpenAI(openai_api_key=openai_api_key, temperature=0)
+        self.chain = ConversationalRetrievalChain.from_llm(llm, vs.as_retriever())
+        self.history: List[Tuple[str, str]] = []
+
+    def ask(self, query: str) -> str:
+        """Ask a question and return the answer."""
+
+        result = self.chain({"question": query, "chat_history": self.history})
+        answer: str = result["answer"]
+        self.history.append((query, answer))
+        return answer

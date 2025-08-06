@@ -1,49 +1,51 @@
-"""Lightweight vector store with JSON persistence."""
+"""FAISS backed vector store."""
 
 from __future__ import annotations
 
-import json
+import gzip
+import pickle
 from pathlib import Path
 from typing import List
 
-from .config import settings
-from .models import Article
+import faiss
+import numpy as np
 
 
-def _load(path: Path) -> list[list[float]]:
-    if not path.exists():
-        return []
-    return json.loads(path.read_text())
+class VectorStore:
+    """Small wrapper around a FAISS index with ID mapping."""
 
+    def __init__(self, dim: int, path: Path) -> None:
+        self.dim = dim
+        self.path = path
+        self.index = faiss.IndexFlatIP(dim)
+        self.id_map: List[int] = []
 
-def _save(path: Path, data: list[list[float]]) -> None:
-    path.write_text(json.dumps(data))
+    def add(self, ids: List[int], vectors: np.ndarray) -> None:
+        vectors = np.asarray(vectors, dtype=np.float32)
+        if vectors.ndim != 2 or vectors.shape[1] != self.dim:
+            raise ValueError("vectors shape mismatch")
+        self.index.add(vectors)
+        self.id_map.extend(ids)
 
+    def query(self, vector: np.ndarray, topk: int = 5) -> List[int]:
+        vec = np.asarray(vector, dtype=np.float32).reshape(1, -1)
+        scores, idxs = self.index.search(vec, topk)
+        return [self.id_map[i] for i in idxs[0] if i < len(self.id_map)]
 
-def build_index(articles: List[Article]):
-    """Build index from ``articles`` and persist it."""
+    def save(self) -> None:
+        data = {
+            "index": faiss.serialize_index(self.index),
+            "id_map": self.id_map,
+            "dim": self.dim,
+        }
+        with gzip.open(self.path, "wb") as f:
+            pickle.dump(data, f)
 
-    vectors = [a.embedding or [] for a in articles]
-    path = Path(settings.VECTOR_INDEX_PATH)
-    _save(path, vectors)
-    return vectors
-
-
-def load_index():
-    """Load index from disk."""
-    return _load(Path(settings.VECTOR_INDEX_PATH))
-
-
-def add_documents(new: List[Article]):
-    """Add documents avoiding exact duplicate vectors."""
-
-    path = Path(settings.VECTOR_INDEX_PATH)
-    index = _load(path)
-    existing = {tuple(v) for v in index}
-    for art in new:
-        vec = art.embedding or []
-        if tuple(vec) not in existing:
-            index.append(vec)
-            existing.add(tuple(vec))
-    _save(path, index)
-    return index
+    @classmethod
+    def load(cls, path: Path) -> "VectorStore":
+        with gzip.open(path, "rb") as f:
+            data = pickle.load(f)
+        vs = cls(data["dim"], path)
+        vs.index = faiss.deserialize_index(data["index"])
+        vs.id_map = list(data["id_map"])
+        return vs

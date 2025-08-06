@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import numpy as np
+
 try:
     from sentence_transformers import SentenceTransformer
 
@@ -12,14 +14,12 @@ except Exception:  # pragma: no cover - optional dependency
     _dim = 384
 
 
-def encode(text: str) -> list[float]:
-    """Return an embedding vector for *text*.
+def encode(texts: list[str]) -> np.ndarray:
+    """Encode ``texts`` into a ``(n, d)`` float32 NumPy array."""
 
-    The fallback implementation returns a list of zeros so tests can run
-    without the transformer model or NumPy installed.
-    """
+    import numpy as np
 
     if _model is None:
-        return [0.0] * _dim
-    vec = _model.encode(text, convert_to_numpy=False)
-    return list(map(float, vec))
+        return np.zeros((len(texts), _dim), dtype=np.float32)
+    vectors = _model.encode(texts, convert_to_numpy=True)
+    return np.asarray(vectors, dtype=np.float32)

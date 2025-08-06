@@ -1,12 +1,14 @@
 import pathlib
 import sys
 
-# Ensure package root on path for direct pytest invocation
+import numpy as np
+
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
-from sentiment_bot import embeddings
+from sentiment_bot.embeddings import encode
 
 
 def test_encode_shape() -> None:
-    vec = embeddings.encode("hello world")
-    assert len(vec) == embeddings._dim
+    arr = encode(["hello", "world"])
+    assert arr.shape == (2, 384)
+    assert arr.dtype == np.float32
