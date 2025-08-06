@@ -30,6 +30,9 @@ numpy = "^1.26.4"
 scipy = "^1.11.4"
 pydantic-settings = "^2.3.1"
 pandas = "^2.0"
+# Added for Bayesian and chat modules
+arviz = "^0.18.0"
+openai = "^1.30.1"
 # Research stack
 pyro-ppl = "^1.9.1"
 pymc = "^5.10.0"

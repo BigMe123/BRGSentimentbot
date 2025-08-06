@@ -4,18 +4,13 @@ from __future__ import annotations
 
 import asyncio
 import json
-from __future__ import annotations
-
-import asyncio
-import json
 from pathlib import Path
 from typing import Optional
 
 import typer
 
-from . import chat_agent, scheduler
+from . import chat_agent
 from .config import settings
-from .rules import load_rules
 from .simulate import monte_carlo, save_csv
 
 app = typer.Typer(help="Async news sentiment and volatility bot")
@@ -27,6 +22,7 @@ def live(interval: Optional[int] = None) -> None:
 
     from . import scheduler
     from .config import settings
+
     asyncio.run(scheduler.run_live(interval or settings.INTERVAL))
 
 
@@ -35,15 +31,38 @@ def once() -> None:
     """Run a single fetch/analyse cycle."""
 
     from . import scheduler
+
     asyncio.run(scheduler.run_once())
 
 
 @app.command()
 def chat() -> None:
-    """Start an interactive chat session."""
+    """Interactive Q&A."""
 
-    from . import chat_agent
-    chat_agent.chat_loop()
+    import os
+    from pathlib import Path
+
+    import typer
+    from langchain.embeddings import SentenceTransformerEmbeddings
+    from langchain.vectorstores import FAISS
+
+    from sentiment_bot.chat_agent import ChatAgent
+
+    embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+    path = Path("faiss_index")
+    if path.exists():
+        vs = FAISS.load_local(
+            str(path), embeddings, allow_dangerous_deserialization=True
+        )
+    else:  # empty store
+        vs = FAISS.from_texts([], embeddings)
+    agent = ChatAgent(vs, os.getenv("OPENAI_API_KEY", ""))
+
+    while True:
+        q = typer.prompt("query")
+        if not q:
+            break
+        typer.echo(agent.ask(q))
 
 
 @app.command()
@@ -51,6 +70,7 @@ def rules() -> None:
     """Print currently configured rules."""
 
     from .rules import load_rules
+
     for rule in load_rules():
         typer.echo(f"when {rule.when} -> {rule.then}")
 
@@ -61,6 +81,7 @@ def simulate(paths: int = 100) -> None:
 
     from .simulate import monte_carlo, save_csv
     from .config import settings
+
     data = [0.1, 0.2, 0.3]
     df = monte_carlo(data, paths)
     save_csv(df)
@@ -80,6 +101,7 @@ def serve() -> None:
             return snapshot
 
         from .ws_server import serve as serve_ws
+
         await serve_ws(_snap)
 
     asyncio.run(_main())
@@ -100,10 +122,12 @@ def web() -> None:
                 return snapshot
 
             from .ws_server import serve as serve_ws
+
             await serve_ws(_snap)
 
         asyncio.create_task(ws_runner())
         from .gui import launch as launch_gui
+
         launch_gui()
 
     asyncio.run(_main())
