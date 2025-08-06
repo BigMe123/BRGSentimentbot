@@ -60,7 +60,9 @@ except Exception:  # pragma: no cover - fallback
         word_re = re.compile(r"\b\w+\b")
 
         def polarity_scores(self, text: str) -> dict[str, float]:
+
             words = self.word_re.findall(text.lower())
+
             score = sum(w in self.POS for w in words) - sum(
                 w in self.NEG for w in words
             )
@@ -125,7 +127,8 @@ def analyze(text: str) -> Analysis:
         )
     if _nli:
         nli_res = _nli(text, candidate_labels=["threat", "safe"])
-        labels = [nli_res.get("labels", [])[0]]
+        cand = nli_res.get("labels", [])
+        labels = cand[:1] if cand else []
     if _summarizer:
         summary = _summarizer(text[:1000])[0]["summary_text"]
     return Analysis(
@@ -143,6 +146,6 @@ def aggregate(results: Iterable[Analysis]) -> Snapshot:
     results = list(results)
     if not results:
         return Snapshot()
-    vol = fmean(abs(r.vader) for r in results)
+    vol = fmean((abs(r.vader) + abs(r.bert)) / 2 for r in results)
     confidence = len(results) / (len(results) + 10)
     return Snapshot(volatility=vol, confidence=confidence, triggers=[])
