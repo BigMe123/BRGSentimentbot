@@ -1,120 +1,86 @@
-"""Asynchronous utilities for fetching news articles."""
-
 from __future__ import annotations
 
+import aiohttp
 import asyncio
 from dataclasses import dataclass
-from typing import Iterable, List
+from typing import List
 
-try:  # pragma: no cover - optional dependency
-    import feedparser
-except Exception:  # pragma: no cover
-    feedparser = None  # type: ignore
+from bs4 import BeautifulSoup
 
-try:  # pragma: no cover - optional dependency
-    from rapidfuzz import fuzz
-except Exception:  # pragma: no cover
-    class fuzz:  # type: ignore
-        @staticmethod
-        def token_set_ratio(a: str, b: str) -> int:
-            return 100 if a == b else 0
-
-from .config import settings
+feedparser = None  # placeholder for tests
 
 
 @dataclass
 class ArticleData:
+    """Simple container for an article's URL and extracted text."""
+
     url: str
     title: str
     text: str
-    published: str | None = None
 
 
-async def fetch_and_parse(url: str) -> ArticleData:
-    """Fetch *url* and extract main text using newspaper3k if available."""
+async def fetch_and_parse(urls: List[str] | str) -> List[ArticleData]:
+    """Fetch URLs and parse article text."""
 
-    try:  # pragma: no cover - optional dependency
-        from newspaper import Article  # type: ignore
-
-        def _parse() -> ArticleData:
-            art = Article(url)
-            art.download()
-            art.parse()
-            return ArticleData(
-                url=url,
-                title=art.title,
-                text=art.text,
-                published=art.publish_date.isoformat() if art.publish_date else None,
-            )
-
-        return await asyncio.to_thread(_parse)
-    except Exception:
-        try:
-            import aiohttp  # type: ignore
-
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, timeout=10) as resp:
-                    text = await resp.text()
-        except Exception:
-            from urllib.request import urlopen
-
-            with urlopen(url) as resp:  # type: ignore
-                text = resp.read().decode()
-        return ArticleData(url=url, title="", text=text, published=None)
-
-
-async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
-    """Gather and deduplicate articles from RSS/Atom feeds."""
-
-    feeds = list(feeds or settings.RSS_FEEDS)
-    entries: list[tuple[str, str, str | None]] = []
-    for feed_url in feeds:
-        parser = getattr(feedparser, "parse", lambda u: type("obj", (), {"entries": []})())
-        parsed = await asyncio.to_thread(parser, feed_url)
-        for e in parsed.entries:
-            url = e.get("link")
-            title = e.get("title", "")
-            published = e.get("published")
-            if url and title:
-                entries.append((url, title, published))
-
-    unique: list[tuple[str, str, str | None]] = []
-    seen_urls: set[str] = set()
-    for url, title, published in entries:
-        if url in seen_urls:
-            continue
-        if any(fuzz.token_set_ratio(title, u[1]) >= 95 for u in unique):
-            continue
-        seen_urls.add(url)
-        unique.append((url, title, published))
-
-    sem = asyncio.Semaphore(10)
-    results: list[ArticleData] = []
-
-    async def _worker(u: str, t: str, p: str | None) -> None:
-        async with sem:
+    if isinstance(urls, str):
+        urls = [urls]
+    articles: List[ArticleData] = []
+    async with aiohttp.ClientSession() as sess:
+        for url in urls:
             try:
-                art = await fetch_and_parse(u)
-                art.title = t or art.title
-                art.published = p
-                results.append(art)
+                async with sess.get(url) as resp:
+                    html = await resp.text()
+                articles.append(ArticleData(url=url, title="", text=parse_article(html)))
             except Exception:
-                pass
-
-    await asyncio.gather(*[_worker(u, t, p) for u, t, p in unique])
-    return results
+                continue
+    return articles
 
 
-async def gather_newsapi() -> List[ArticleData]:  # pragma: no cover - network
-    """Fetch top headlines using :mod:`newsapi` with a simple SQLite TTL cache."""
+def parse_article(html: str) -> str:
+    """Extract main text from HTML."""
 
-    from . import newsapi_client
+    soup = BeautifulSoup(html, "html.parser")
+    paras = soup.find_all("p")
+    return "\n\n".join(p.get_text() for p in paras)
 
-    return await newsapi_client.fetch_top_headlines(settings.TOPICS)
+
+async def gather_rss(urls: List[str]) -> List[ArticleData]:
+    """Fetch RSS feeds concurrently and return parsed articles."""
+
+    if feedparser is not None:
+        entries = []
+        for u in urls:
+            parsed = feedparser.parse(u)
+            entries.extend(parsed.entries)
+        links = []
+        seen = set()
+        for e in entries:
+            link = e.get("link")
+            if link and link not in seen:
+                seen.add(link)
+                links.append(link)
+        articles: List[ArticleData] = []
+        for link in links:
+            res = await fetch_and_parse(link)
+            if isinstance(res, list):
+                articles.extend(res)
+            else:
+                articles.append(res)
+        return articles
+
+    async with aiohttp.ClientSession() as sess:
+        responses = await asyncio.gather(*[sess.get(u) for u in urls])
+        bodies = [await r.text() for r in responses]
+    links: List[str] = []
+    for body in bodies:
+        soup = BeautifulSoup(body, "xml")
+        links.extend([l.text for l in soup.find_all("link")])
+    return await fetch_and_parse(links)
 
 
-async def gather_all_sources() -> List[ArticleData]:
-    """Combine RSS feeds and NewsAPI articles."""
+async def gather_all_sources(urls: List[str] | None = None) -> List[ArticleData]:
+    """Convenience wrapper used by the scheduler."""
+    from .config import settings
 
-    rss, news = await asyncio.gather(gather_rss(), gather_newsapi())
-    return rss + news
+    feeds = urls or settings.RSS_FEEDS
+    return await gather_rss(list(feeds))

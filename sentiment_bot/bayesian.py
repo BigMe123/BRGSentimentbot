@@ -1,12 +1,36 @@
-"""Hierarchical Bayesian volatility model using PyMC."""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List
 
 import numpy as np
 import pandas as pd
+import sqlite3
+
+
+def load_example_data(path: Path | None = None) -> pd.DataFrame:
+    """Load volatility data from SQLite if available, otherwise a toy dataset."""
+
+    db_path = Path(path or "sentiment.db")
+    if db_path.exists():
+        try:
+            con = sqlite3.connect(db_path)
+            df = pd.read_sql_query(
+                "SELECT sector, time, volatility FROM snapshot", con
+            )
+            con.close()
+            if not df.empty:
+                return df
+        except Exception:
+            pass
+    return pd.DataFrame(
+        {
+            "sector": ["tech", "tech", "fin", "fin"],
+            "time": [0, 1, 0, 1],
+            "volatility": [0.1, 0.2, 0.15, 0.25],
+        }
+    )
 
 
 @dataclass
@@ -17,18 +41,8 @@ class InferenceResult:
     ppc: dict
 
 
-def fit_hierarchical(
-    data: pd.DataFrame, draws: int = 500, tune: int = 500
-) -> InferenceResult:
-    """Fit the hierarchical volatility model using PyMC.
-
-    Parameters
-    ----------
-    data:
-        DataFrame containing ``sector``, ``time`` and ``volatility`` columns.
-    draws, tune:
-        Sampling parameters forwarded to :func:`pymc.sample`.
-    """
+def fit_hierarchical(data: pd.DataFrame, draws: int = 500, tune: int = 500) -> InferenceResult:
+    """Fit the hierarchical volatility model using PyMC."""
 
     import pymc as pm
 
@@ -63,10 +77,7 @@ def fit_hierarchical(
 def sample_predictive(
     result: InferenceResult, new_times: np.ndarray, new_sectors: List[str]
 ) -> pd.DataFrame:
-    """Sample posterior predictive for new times and sectors.
-
-    Returns a dataframe with columns ``mean``, ``lower95`` and ``upper95``.
-    """
+    """Sample posterior predictive for new times and sectors."""
 
     posterior = result.trace.posterior
     sectors = list(posterior.coords["sector"].values)

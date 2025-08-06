@@ -4,36 +4,27 @@ import types
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
+import openai
 import sentiment_bot.chat_agent as ca
-from langchain_community.vectorstores import FAISS
-from langchain.embeddings.base import Embeddings
-
-
-class DummyEmbeddings(Embeddings):
-    def embed_documents(self, texts):
-        return [[0.0, 0.0, 0.0] for _ in texts]
-
-    def embed_query(self, text):
-        return [0.0, 0.0, 0.0]
-
-
-class DummyChain:
-    def __call__(self, inputs):
-        return {"answer": "hi"}
+from langchain.embeddings import FakeEmbeddings
+from langchain.vectorstores import FAISS
 
 
 def test_chat_agent(monkeypatch):
-    embeddings = DummyEmbeddings()
-    vs = FAISS.from_texts(["a", "b"], embedding=embeddings)
+    embeddings = FakeEmbeddings(size=3)
+    vs = FAISS.from_texts(["a", "b"], embeddings)
 
-    dummy = DummyChain()
-    monkeypatch.setattr(
-        ca,
-        "ConversationalRetrievalChain",
-        types.SimpleNamespace(from_llm=lambda llm, retriever: dummy),
+    class DummyResp:
+        choices = [types.SimpleNamespace(message=types.SimpleNamespace(content="hi"))]
+        def dict(self):
+            return {"choices": [{"message": {"role": "assistant", "content": "hi"}}]}
+
+    dummy_client = types.SimpleNamespace(
+        chat=types.SimpleNamespace(
+            completions=types.SimpleNamespace(create=lambda **kwargs: DummyResp())
+        )
     )
-    monkeypatch.setattr(ca, "ChatOpenAI", lambda **kwargs: object())
+    monkeypatch.setattr(openai, "OpenAI", lambda **kwargs: dummy_client)
 
     agent = ca.ChatAgent(vs, openai_api_key="key")
-    ans = agent.ask("hello")
-    assert isinstance(ans, str) and len(ans) > 0
+    assert agent.ask("hello") == "hi"
