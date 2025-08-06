@@ -20,8 +20,17 @@ class ChatAgent:
 
     def ask(self, query: str) -> str:
         """Ask a question and return the answer."""
-
+        print(f"[DEBUG] Prompt sent: {query}")
         result = self.chain({"question": query, "chat_history": self.history})
-        answer: str = result["answer"]
-        self.history.append((query, answer))
-        return answer
+        response: str | None = result.get("answer")
+        print(f"[DEBUG] Response: {response}")
+        self.history.append((query, response or ""))
+        if response:
+            return response.strip()
+        else:
+            print(
+                "[ERROR] Model returned None. Possible issue with OpenAI API or input."
+            )
+            return (
+                "[Error] No response received from model. Try again later or check logs."
+            )
