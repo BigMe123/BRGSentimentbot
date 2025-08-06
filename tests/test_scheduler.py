@@ -3,6 +3,8 @@ import asyncio
 
 import pytest
 
+pytest.importorskip("aiohttp")
+
 config = importlib.reload(importlib.import_module("sentiment_bot.config"))
 analyzer = importlib.reload(importlib.import_module("sentiment_bot.analyzer"))
 fetcher = importlib.reload(importlib.import_module("sentiment_bot.fetcher"))

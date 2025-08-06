@@ -3,6 +3,8 @@
 Async sentiment and volatility bot featuring RSS and NewsAPI scraping,
 transformer-based analysis and optional web interfaces.
 
+> **Requires Python 3.11–3.13.**
+
 ## Quickstart
 
 ### Poetry
@@ -16,6 +18,19 @@ poetry run bot once
 ```bash
 docker build -t brg-bot .
 docker run --rm brg-bot
+```
+
+### Simple Python
+
+For a minimal, offline demonstration without installing dependencies:
+
+
+For a minimal, offline demonstration without Poetry or Docker:
+
+```bash
+pip install aiohttp feedparser beautifulsoup4 rich
+
+python run_simple.py
 ```
 
 ### Devcontainer

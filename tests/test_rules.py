@@ -4,7 +4,14 @@ import sys
 # Ensure package root on path for direct pytest invocation
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
-from sentiment_bot import rules, analyzer, config
+import importlib
+import sys
+
+sys.modules.pop("sentiment_bot.config", None)
+from sentiment_bot import rules, analyzer, config as config_module  # noqa: E402
+
+config = importlib.reload(config_module)
+rules.settings = config.settings
 
 
 def test_apply_rules(tmp_path, monkeypatch) -> None:
