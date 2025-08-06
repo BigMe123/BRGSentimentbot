@@ -21,10 +21,15 @@ docker run --rm brg-bot
 ```
 
 ### Simple Python
+
+For a minimal, offline demonstration without installing dependencies:
+
+
 For a minimal, offline demonstration without Poetry or Docker:
 
 ```bash
 pip install aiohttp feedparser beautifulsoup4 rich
+
 python run_simple.py
 ```
 

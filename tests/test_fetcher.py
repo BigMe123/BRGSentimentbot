@@ -5,11 +5,14 @@ import logging
 from dataclasses import dataclass
 from typing import List, Optional, Iterable
 
-import aiohttp
-import feedparser
-from bs4 import BeautifulSoup
+import pytest
 
-from .config import settings
+aiohttp = pytest.importorskip("aiohttp")
+feedparser = pytest.importorskip("feedparser")
+pytest.importorskip("bs4")
+from bs4 import BeautifulSoup  # noqa: E402
+
+from .config import settings  # noqa: E402
 
 
 @dataclass

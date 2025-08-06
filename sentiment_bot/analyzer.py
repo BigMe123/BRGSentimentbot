@@ -15,9 +15,8 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from statistics import fmean, stdev
-from typing import Iterable, List, Dict, Optional, Tuple
+from typing import Iterable, List, Dict
 from collections import Counter
-from math import log
 
 try:  # pragma: no cover - optional dependency
     from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
@@ -326,7 +325,7 @@ def analyze(text: str) -> Analysis:
             bert_score = res.get("score", 0.0) * (
                 1 if res.get("label") == "POSITIVE" else -1
             )
-        except:
+        except Exception:
             pass
     
     # Zero-shot classification
@@ -339,7 +338,7 @@ def analyze(text: str) -> Analysis:
             scores = nli_res.get("scores", [])
             # Get top 2 labels with scores > 0.3
             labels = [cand[i] for i, score in enumerate(scores[:2]) if score > 0.3]
-        except:
+        except Exception:
             pass
     
     # Emotion detection
@@ -349,7 +348,7 @@ def analyze(text: str) -> Analysis:
             emotions = _emotion(text[:512])
             for emotion in emotions:
                 emotion_scores[emotion["label"]] = emotion["score"]
-        except:
+        except Exception:
             pass
     
     # Text summarization
@@ -357,7 +356,7 @@ def analyze(text: str) -> Analysis:
     if _summarizer and len(text) > 300:
         try:
             summary = _summarizer(text[:1000], max_length=150, min_length=50)[0]["summary_text"]
-        except:
+        except Exception:
             pass
     
     # Calculate text metrics
@@ -418,12 +417,11 @@ def aggregate(results: Iterable[Analysis]) -> Snapshot:
     if not results:
         return Snapshot()
     
-    # Calculate volatility with standard deviation
-    sentiment_values = [(r.vader + r.bert) / 2 for r in results if r.bert != 0]
-    if not sentiment_values:
-        sentiment_values = [r.vader for r in results]
-    
-    vol = fmean(abs(v) for v in sentiment_values)
+    # Calculate volatility as average absolute sentiment across analyzers
+    sentiment_values = [
+        (abs(r.vader) + abs(r.bert)) / 2 for r in results
+    ]
+    vol = fmean(sentiment_values)
     
     # Calculate dispersion (standard deviation)
     dispersion = stdev(sentiment_values) if len(sentiment_values) > 1 else 0.0
