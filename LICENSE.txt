@@ -1,6 +1,6 @@
 Proprietary License Agreement  
 Boston Risk Group  
-Marcus Dorazio, Copyright © 2025. All Rights Reserved.
+Marco Dorazio, Copyright © 2025. All Rights Reserved.
 
 This License Agreement (“Agreement”) governs the use of the proprietary software, source code, and related materials (“Software”) made available by Marcus Dorazio and Boston Risk Group (“Licensor”). By accessing, installing, copying, or otherwise using the Software, you (“Licensee”) agree to be bound by the terms and conditions of this Agreement.
 
