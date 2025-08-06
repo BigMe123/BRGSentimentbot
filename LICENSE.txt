@@ -1,0 +1,45 @@
+Proprietary License Agreement  
+Boston Risk Group  
+Marcus Dorazio, Copyright © 2025. All Rights Reserved.
+
+This License Agreement (“Agreement”) governs the use of the proprietary software, source code, and related materials (“Software”) made available by Marcus Dorazio and Boston Risk Group (“Licensor”). By accessing, installing, copying, or otherwise using the Software, you (“Licensee”) agree to be bound by the terms and conditions of this Agreement.
+
+1. GRANT OF LICENSE  
+Licensor grants Licensee a limited, non-exclusive, non-transferable, revocable license to use the Software solely for Licensee’s internal business purposes and only during the period in which Licensee is an active, paying client of Boston Risk Group.  
+No other rights or licenses, express or implied, are granted.
+
+2. RESTRICTIONS  
+Licensee shall not, without the prior written consent of Licensor:  
+(a) Copy, reproduce, modify, or create derivative works of the Software.  
+(b) Distribute, sublicense, rent, lease, sell, transfer, or otherwise make the Software available to any third party.  
+(c) Use the Software for the benefit of any entity other than Licensee.  
+(d) Reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code from the Software, except as expressly permitted by applicable law.
+
+3. OWNERSHIP  
+The Software is and shall remain the sole property of Licensor. All rights, title, and interest, including intellectual property rights, are retained by Licensor.  
+Licensee acquires no ownership or other interest in the Software except the limited right to use it as expressly set forth herein.
+
+4. TERM AND TERMINATION  
+This Agreement shall remain in effect only while Licensee maintains an active, paid service contract with Boston Risk Group.  
+Licensor may terminate this Agreement immediately if Licensee breaches any provision of this Agreement or ceases to be a paying client.  
+Upon termination, Licensee must immediately discontinue use of the Software, delete all copies in their possession, and certify such deletion to Licensor in writing.
+
+5. CONFIDENTIALITY  
+Licensee acknowledges that the Software contains proprietary information, trade secrets, and other confidential materials of Licensor. Licensee agrees to maintain the confidentiality of the Software and to use it solely as permitted under this Agreement.
+
+6. NO WARRANTIES  
+THE SOFTWARE IS PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+
+7. LIMITATION OF LIABILITY  
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, LICENSOR SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS OR REVENUE, ARISING OUT OF OR RELATING TO THIS AGREEMENT OR THE USE OF THE SOFTWARE.
+
+8. GOVERNING LAW  
+This Agreement shall be governed by and construed in accordance with the laws of the State of Massachusetts, without regard to its conflict of law provisions.
+
+9. ENTIRE AGREEMENT  
+This Agreement constitutes the entire agreement between the parties concerning the subject matter hereof and supersedes all prior or contemporaneous oral or written communications, proposals, and representations.
+
+10. CONTACT  
+Questions regarding this Agreement should be directed to:  
+Boston Risk Group  
+bostonriskgroup@gmail.com
