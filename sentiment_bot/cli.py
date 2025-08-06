@@ -11,18 +11,9 @@ from typing import List, Optional
 
 import typer
 
-from datasets import Dataset
-from langchain.embeddings import SentenceTransformerEmbeddings
-from langchain.vectorstores import FAISS
-
-from . import scheduler, ws_server
+from . import scheduler
 from .bayesian import fit_hierarchical, load_example_data
-from .chat_agent import ChatAgent
 from .config import settings
-from .fetcher import gather_rss
-from .gui import launch as launch_gui
-from .meta_learning import MAMLTrainer
-from .simulate import monte_carlo, save_csv
 
 
 app = typer.Typer(help="Async news sentiment and volatility bot")
@@ -31,7 +22,6 @@ app = typer.Typer(help="Async news sentiment and volatility bot")
 @app.command()
 def live(interval: Optional[int] = None) -> None:
     """Continuously run the bot."""
-    from . import scheduler
     from .config import settings
 
     asyncio.run(scheduler.run_live(interval or settings.INTERVAL))
@@ -89,7 +79,7 @@ def rules() -> None:
 @app.command()
 def fetch(urls: List[str] = typer.Option(..., "--urls")) -> None:
     """Fetch RSS feeds and print article snippets."""
-    from .fetcher import fetch_and_parse
+    from .fetcher import fetch_and_parse, gather_rss
 
     async def _main() -> None:
         articles = await gather_rss(urls)
