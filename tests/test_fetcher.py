@@ -12,7 +12,10 @@ feedparser = pytest.importorskip("feedparser")
 pytest.importorskip("bs4")
 from bs4 import BeautifulSoup  # noqa: E402
 
-from .config import settings  # noqa: E402
+# The fetcher module relies on application settings. Previously this test
+# attempted to import a non-existent ``tests.config`` package which caused
+# collection to fail. Import the real settings from the project instead.
+from sentiment_bot.config import settings  # noqa: E402
 
 
 @dataclass
