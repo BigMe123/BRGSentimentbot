@@ -44,7 +44,13 @@ except Exception:  # pragma: no cover - fallback without pydantic
                 "https://www.aljazeera.com/xml/rss/all.xml",
             ]
         )
-        TOPICS: List[str] = field(default_factory=lambda: ["markets"])
+        TOPICS: List[str] = field(
+            default_factory=lambda: [
+                t.strip()
+                for t in os.getenv("TOPICS", "markets").split(",")
+                if t.strip()
+            ]
+        )
         INTERVAL: int = int(os.getenv("INTERVAL", 30))
         DB_PATH: str = os.getenv("DB_PATH", "sentiment.db")
         VECTOR_INDEX_PATH: str = os.getenv("VECTOR_INDEX_PATH", "vector.index")

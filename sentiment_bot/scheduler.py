@@ -15,6 +15,15 @@ console = Console()
 
 async def _cycle() -> analyzer.Snapshot:
     articles = await fetcher.gather_all_sources()
+    topics = [t.lower() for t in settings.TOPICS]
+    if topics:
+        filtered: list[fetcher.ArticleData] = []
+        for art in articles:
+            haystack = f"{art.title} {art.text}".lower()
+            if any(t in haystack for t in topics):
+                filtered.append(art)
+        if filtered:
+            articles = filtered
     analyses = [analyzer.analyze(a.text) for a in articles]
     snapshot = analyzer.aggregate(analyses)
     snapshot.ts = datetime.utcnow().isoformat()
