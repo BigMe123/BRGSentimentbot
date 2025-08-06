@@ -4,6 +4,12 @@ from __future__ import annotations
 
 import asyncio
 import json
+from __future__ import annotations
+
+import asyncio
+import json
+from pathlib import Path
+from typing import Optional
 
 import typer
 
@@ -16,16 +22,19 @@ app = typer.Typer(help="Async news sentiment and volatility bot")
 
 
 @app.command()
-def live(interval: int = settings.INTERVAL) -> None:
+def live(interval: Optional[int] = None) -> None:
     """Continuously run the bot."""
 
-    asyncio.run(scheduler.run_live(interval))
+    from . import scheduler
+    from .config import settings
+    asyncio.run(scheduler.run_live(interval or settings.INTERVAL))
 
 
 @app.command()
 def once() -> None:
     """Run a single fetch/analyse cycle."""
 
+    from . import scheduler
     asyncio.run(scheduler.run_once())
 
 
@@ -33,6 +42,7 @@ def once() -> None:
 def chat() -> None:
     """Start an interactive chat session."""
 
+    from . import chat_agent
     chat_agent.chat_loop()
 
 
@@ -40,6 +50,7 @@ def chat() -> None:
 def rules() -> None:
     """Print currently configured rules."""
 
+    from .rules import load_rules
     for rule in load_rules():
         typer.echo(f"when {rule.when} -> {rule.then}")
 
@@ -48,6 +59,8 @@ def rules() -> None:
 def simulate(paths: int = 100) -> None:
     """Run a Monte Carlo simulation with dummy data."""
 
+    from .simulate import monte_carlo, save_csv
+    from .config import settings
     data = [0.1, 0.2, 0.3]
     df = monte_carlo(data, paths)
     save_csv(df)
@@ -66,6 +79,7 @@ def serve() -> None:
         def _snap() -> dict:
             return snapshot
 
+        from .ws_server import serve as serve_ws
         await serve_ws(_snap)
 
     asyncio.run(_main())
@@ -85,26 +99,41 @@ def web() -> None:
             def _snap() -> dict:
                 return snapshot
 
+            from .ws_server import serve as serve_ws
             await serve_ws(_snap)
 
         asyncio.create_task(ws_runner())
+        from .gui import launch as launch_gui
         launch_gui()
 
     asyncio.run(_main())
 
 
 @app.command()
-def forecast(n_steps: int = 5) -> None:
-    """Run GAN volatility forecast on synthetic data."""
+def forecast(
+    engine: str = typer.Option("vae", help="vae or gan"),
+    steps: int = typer.Option(5, "--steps"),
+    samples: int = typer.Option(50, "--samples"),
+) -> None:
+    """Run forecasting model."""
 
     import pandas as pd
-
-    from .forecast import TimeSeriesGAN
+    from sentiment_bot.forecast import VAEForecast, GANForecast
 
     series = pd.Series([0.1, 0.2, 0.15, 0.18, 0.22, 0.19, 0.21, 0.2, 0.23, 0.25])
-    model = TimeSeriesGAN(seq_len=5).fit(series, epochs=10)
-    result = model.forecast(n_steps)
-    typer.echo(result.forecast.to_string())
+    Model = VAEForecast if engine == "vae" else GANForecast
+    model = Model().fit(series, epochs=20)
+    df = model.forecast(steps, samples)
+
+    from rich.console import Console
+    from rich.table import Table
+
+    table = Table("step", "mean", "lower", "upper")
+    for i, row in df.iterrows():
+        table.add_row(
+            str(i), f"{row['mean']:.3f}", f"{row['lower']:.3f}", f"{row['upper']:.3f}"
+        )
+    Console().print(table)
 
 
 @app.command()
