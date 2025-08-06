@@ -1,40 +1,32 @@
-"""Asynchronous utilities for fetching news articles."""
-
+# sentiment_bot/fetcher.py
 from __future__ import annotations
 
 import asyncio
 import logging
 from dataclasses import dataclass
-from typing import Iterable, List
+from typing import List, Optional, Iterable
 
-try:  # pragma: no cover - optional dependency
-    import feedparser
-except Exception:  # pragma: no cover
-    feedparser = None  # type: ignore
-
-try:  # pragma: no cover - optional dependency
-    from rapidfuzz import fuzz
-except Exception:  # pragma: no cover
-    class fuzz:  # type: ignore
-        @staticmethod
-        def token_set_ratio(a: str, b: str) -> int:
-            return 100 if a == b else 0
+import aiohttp
+import feedparser
+from bs4 import BeautifulSoup
 
 from .config import settings
 
-
 @dataclass
 class ArticleData:
+    """Holds URL, title, text, and optional published timestamp."""
     url: str
     title: str
     text: str
-    published: str | None = None
+    published: Optional[str] = None
 
-
-async def fetch_and_parse(url: str) -> ArticleData:
-    """Fetch *url* and extract main text using newspaper3k if available."""
-
-    try:  # pragma: no cover - optional dependency
+async def _fetch_and_parse_url(url: str) -> ArticleData:
+    """
+    Fetch a single URL and extract its main text.
+    Prefer newspaper3k if available, else simple HTML <p> parse.
+    """
+    # Try newspaper3k
+    try:
         from newspaper import Article  # type: ignore
 
         def _parse() -> ArticleData:
@@ -43,79 +35,70 @@ async def fetch_and_parse(url: str) -> ArticleData:
             art.parse()
             return ArticleData(
                 url=url,
-                title=art.title,
-                text=art.text,
+                title=art.title or "",
+                text=art.text or "",
                 published=art.publish_date.isoformat() if art.publish_date else None,
             )
 
         return await asyncio.to_thread(_parse)
     except Exception:
+        # Fallback to aiohttp + BeautifulSoup
         try:
-            import aiohttp  # type: ignore
-
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, timeout=10) as resp:
-                    text = await resp.text()
-        except Exception:
-            from urllib.request import urlopen
+                    html = await resp.text()
+        except Exception as e:
+            logging.warning("Failed HTTP fetch, falling back to urllib for %s: %s", url, e)
+            from urllib.request import urlopen  # noqa: E402
+            with urlopen(url) as resp:
+                html = resp.read().decode(errors="ignore")
 
-            with urlopen(url) as resp:  # type: ignore
-                text = resp.read().decode()
-        return ArticleData(url=url, title="", text=text, published=None)
-
+        soup = BeautifulSoup(html, "html.parser")
+        paras = soup.find_all("p")
+        text = "\n\n".join(p.get_text() for p in paras)
+        title_tag = soup.find("title")
+        return ArticleData(
+            url=url,
+            title=title_tag.get_text() if title_tag else "",
+            text=text,
+            published=None,
+        )
 
 async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
-    """Gather and deduplicate articles from RSS/Atom feeds."""
-
-    feeds = list(feeds or settings.RSS_FEEDS)
-    entries: list[tuple[str, str, str | None]] = []
-    for feed_url in feeds:
-        parser = getattr(feedparser, "parse", lambda u: type("obj", (), {"entries": []})())
-        parsed = await asyncio.to_thread(parser, feed_url)
+    """
+    Parse each RSS/Atom feed URL in `feeds`, extract all <link> entries,
+    dedupe by URL, then fetch & parse them concurrently.
+    """
+    feed_urls = list(feeds or settings.RSS_FEEDS)
+    entries: List[str] = []
+    for feed_url in feed_urls:
+        parsed = await asyncio.to_thread(feedparser.parse, feed_url)
         for e in parsed.entries:
-            url = e.get("link")
-            title = e.get("title", "")
-            published = e.get("published")
-            if url and title:
-                entries.append((url, title, published))
+            link = e.get("link")
+            if link:
+                entries.append(link)
 
-    unique: list[tuple[str, str, str | None]] = []
-    seen_urls: set[str] = set()
-    for url, title, published in entries:
-        if url in seen_urls:
-            continue
-        if any(fuzz.token_set_ratio(title, u[1]) >= 95 for u in unique):
-            continue
-        seen_urls.add(url)
-        unique.append((url, title, published))
+    # Deduplicate
+    unique_links = list(dict.fromkeys(entries))  # preserve order
 
+    # Concurrently fetch & parse
     sem = asyncio.Semaphore(10)
-    results: list[ArticleData] = []
+    results: List[ArticleData] = []
 
-    async def _worker(u: str, t: str, p: str | None) -> None:
+    async def _worker(link: str):
         async with sem:
             try:
-                art = await fetch_and_parse(u)
-                art.title = t or art.title
-                art.published = p
+                art = await _fetch_and_parse_url(link)
                 results.append(art)
             except Exception:
-                logging.exception("Failed to fetch or parse article: %s", u)
+                logging.exception("Failed to fetch or parse %s", link)
 
-    await asyncio.gather(*[_worker(u, t, p) for u, t, p in unique])
+    await asyncio.gather(*[_worker(link) for link in unique_links])
     return results
 
-
-async def gather_newsapi() -> List[ArticleData]:  # pragma: no cover - network
-    """Fetch top headlines using :mod:`newsapi` with a simple SQLite TTL cache."""
-
-    from . import newsapi_client
-
-    return await newsapi_client.fetch_top_headlines(settings.TOPICS)
-
-
-async def gather_all_sources() -> List[ArticleData]:
-    """Combine RSS feeds and NewsAPI articles."""
-
-    rss, news = await asyncio.gather(gather_rss(), gather_newsapi())
-    return rss + news
+async def gather_all_sources(feeds: Iterable[str] | None = None) -> List[ArticleData]:
+    """
+    Convenience wrapper for scheduler: pulls RSS feeds via `gather_rss()`.
+    Later you can extend this to include NewsAPI or other sources.
+    """
+    return await gather_rss(feeds)

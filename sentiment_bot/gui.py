@@ -1,7 +1,7 @@
-"""Gradio web interface for the bot."""
+# sentiment_bot/gui.py
+"""Gradio web interface for the sentiment bot."""
 
 from __future__ import annotations
-
 import os
 from pathlib import Path
 
@@ -12,21 +12,48 @@ from langchain.vectorstores import FAISS
 from .chat_agent import ChatAgent
 from .config import settings
 
+def launch() -> None:  # pragma: no cover – requires network & UI
+    """
+    Start a Gradio chat UI on settings.GRADIO_PORT.
+    Loads an existing FAISS index from VECTOR_INDEX_PATH or creates an empty one.
+    """
 
-def launch() -> None:  # pragma: no cover - requires network
+    # Prepare embeddings & vector store
     embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-    path = Path("faiss_index")
-    if path.exists():
+    vector_path = Path(os.getenv("VECTOR_INDEX_PATH", settings.VECTOR_INDEX_PATH))
+
+    if vector_path.exists():
         vs = FAISS.load_local(
-            str(path), embeddings, allow_dangerous_deserialization=True
+            str(vector_path),
+            embeddings,
+            allow_dangerous_deserialization=True
         )
-    else:  # empty store
+    else:
         vs = FAISS.from_texts([], embeddings)
-    agent = ChatAgent(vs, os.getenv("OPENAI_API_KEY", "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"))
 
-    def _chat(message, history):
-        answer = agent.ask(message)
-        return answer, history + [(message, answer)]
+    # Instantiate chat agent with your OpenAI API key
+    openai_key = "sk-REPLACE_WITH_YOUR_API_KEY"
+    agent = ChatAgent(vs, openai_key)
 
-    iface = gr.ChatInterface(_chat)
-    iface.launch(server_port=settings.GRADIO_PORT, share=False)
+    # Build Gradio UI
+    with gr.Blocks(title="Sentiment Bot Chat") as demo:
+        chatbot = gr.Chatbot(label="Bot")
+        user_input = gr.Textbox(
+            placeholder="Ask me about recent sentiment trends…",
+            label="Your question",
+        )
+        send_btn = gr.Button("Send")
+
+        def respond(message: str, history: list[tuple[str, str]]):
+            reply = agent.ask(message)
+            history = history + [(message, reply)]
+            return "", history
+
+        send_btn.click(respond, inputs=[user_input, chatbot], outputs=[user_input, chatbot])
+        user_input.submit(respond, inputs=[user_input, chatbot], outputs=[user_input, chatbot])
+
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=settings.GRADIO_PORT,
+        share=False,
+    )

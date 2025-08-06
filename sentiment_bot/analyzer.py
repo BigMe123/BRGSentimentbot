@@ -24,11 +24,21 @@ except Exception:  # pragma: no cover - fallback
 
 try:  # pragma: no cover - optional heavy deps
     from transformers import pipeline
+    try:
+        _bert = pipeline("sentiment-analysis")
+    except Exception:
+        _bert = None
+    try:
+        _nli = pipeline("zero-shot-classification")
+    except Exception:
+        _nli = None
+    try:
+        _summarizer = pipeline("summarization")
+    except Exception:
+        _summarizer = None
 except Exception:  # pragma: no cover - optional dependency
     pipeline = None  # type: ignore
-_bert = pipeline("sentiment-analysis") if pipeline else None
-_nli = pipeline("zero-shot-classification") if pipeline else None
-_summarizer = pipeline("summarization") if pipeline else None
+    _bert = _nli = _summarizer = None
 
 
 @dataclass

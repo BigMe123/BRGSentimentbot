@@ -4,13 +4,24 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
+import sqlite3
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
+import pandas as pd
 import typer
+from datasets import Dataset
+from langchain.embeddings import SentenceTransformerEmbeddings
+from langchain.vectorstores import FAISS
 
-from . import chat_agent
+from . import scheduler, ws_server
+from .bayesian import fit_hierarchical, load_example_data
+from .chat_agent import ChatAgent
 from .config import settings
+from .fetcher import fetch_and_parse
+from .gui import launch as launch_gui
+from .meta_learning import MAMLTrainer
 from .simulate import monte_carlo, save_csv
 
 app = typer.Typer(help="Async news sentiment and volatility bot")
@@ -20,17 +31,12 @@ app = typer.Typer(help="Async news sentiment and volatility bot")
 def live(interval: Optional[int] = None) -> None:
     """Continuously run the bot."""
 
-    from . import scheduler
-    from .config import settings
-
     asyncio.run(scheduler.run_live(interval or settings.INTERVAL))
 
 
 @app.command()
 def once() -> None:
     """Run a single fetch/analyse cycle."""
-
-    from . import scheduler
 
     asyncio.run(scheduler.run_once())
 
@@ -39,21 +45,10 @@ def once() -> None:
 def chat() -> None:
     """Interactive Q&A."""
 
-    import os
-    from pathlib import Path
-
-    import typer
-    from langchain.embeddings import SentenceTransformerEmbeddings
-    from langchain.vectorstores import FAISS
-
-    from sentiment_bot.chat_agent import ChatAgent
-
     embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
     path = Path("faiss_index")
     if path.exists():
-        vs = FAISS.load_local(
-            str(path), embeddings, allow_dangerous_deserialization=True
-        )
+        vs = FAISS.load_local(str(path), embeddings, allow_dangerous_deserialization=True)
     else:  # empty store
         vs = FAISS.from_texts([], embeddings)
     agent = ChatAgent(vs, os.getenv("OPENAI_API_KEY", ""))
@@ -76,33 +71,54 @@ def rules() -> None:
 
 
 @app.command()
+def fetch(urls: List[str] = typer.Option(..., "--urls")) -> None:
+    """Fetch RSS feeds and print article snippets."""
+
+    async def _main() -> None:
+        articles = await fetch_and_parse(urls)
+        for art in articles:
+            snippet = art.text.replace("\n", " ")[:80]
+            typer.echo(f"{art.url} -> {snippet}")
+
+    asyncio.run(_main())
+
+
+@app.command()
 def simulate(paths: int = 100) -> None:
-    """Run a Monte Carlo simulation with dummy data."""
+    """Run a Monte Carlo simulation using stored snapshots."""
 
-    from .simulate import monte_carlo, save_csv
-    from .config import settings
-
-    data = [0.1, 0.2, 0.3]
-    df = monte_carlo(data, paths)
+    try:
+        con = sqlite3.connect(settings.DB_PATH)
+        rows = con.execute(
+            "SELECT volatility FROM snapshot ORDER BY id DESC LIMIT 24"
+        ).fetchall()
+        series = [r[0] for r in rows][::-1]
+        con.close()
+    except Exception:
+        series = [0.0] * 24
+    df = monte_carlo(series, paths)
     save_csv(df)
     typer.echo(f"saved {settings.SIM_PATH}")
 
 
 @app.command()
 def serve() -> None:
-    """Run the WebSocket server."""
+    """Run the WebSocket server with live snapshots."""
 
     async def _main() -> None:
-        from .ws_server import serve as serve_ws
+        latest = {"volatility": 0.0, "confidence": 0.0}
 
-        snapshot = {"volatility": 0.0, "confidence": 0.0}
+        async def updater() -> None:
+            nonlocal latest
+            while True:
+                snap = await scheduler.run_once()
+                latest = {
+                    "volatility": snap.volatility,
+                    "confidence": snap.confidence,
+                }
+                await asyncio.sleep(settings.INTERVAL * 60)
 
-        def _snap() -> dict:
-            return snapshot
-
-        from .ws_server import serve as serve_ws
-
-        await serve_ws(_snap)
+        await asyncio.gather(updater(), ws_server.serve(lambda: latest))
 
     asyncio.run(_main())
 
@@ -112,23 +128,22 @@ def web() -> None:
     """Run WebSocket server and Gradio GUI."""
 
     async def _main() -> None:
-        from .ws_server import serve as serve_ws
-        from .gui import launch as launch_gui
+        latest = {"volatility": 0.0, "confidence": 0.0}
 
-        async def ws_runner() -> None:
-            snapshot = {"volatility": 0.0, "confidence": 0.0}
+        async def updater() -> None:
+            nonlocal latest
+            while True:
+                snap = await scheduler.run_once()
+                latest = {
+                    "volatility": snap.volatility,
+                    "confidence": snap.confidence,
+                }
+                await asyncio.sleep(settings.INTERVAL * 60)
 
-            def _snap() -> dict:
-                return snapshot
-
-            from .ws_server import serve as serve_ws
-
-            await serve_ws(_snap)
-
-        asyncio.create_task(ws_runner())
-        from .gui import launch as launch_gui
-
-        launch_gui()
+        loop = asyncio.get_running_loop()
+        await asyncio.gather(
+            updater(), ws_server.serve(lambda: latest), loop.run_in_executor(None, launch_gui)
+        )
 
     asyncio.run(_main())
 
@@ -142,7 +157,7 @@ def forecast(
     """Run forecasting model."""
 
     import pandas as pd
-    from sentiment_bot.forecast import VAEForecast, GANForecast
+    from sentiment_bot.forecast import GANForecast, VAEForecast
 
     series = pd.Series([0.1, 0.2, 0.15, 0.18, 0.22, 0.19, 0.21, 0.2, 0.23, 0.25])
     Model = VAEForecast if engine == "vae" else GANForecast
@@ -161,22 +176,12 @@ def forecast(
 
 
 @app.command()
-def bayesian() -> None:
-    """Fit a hierarchical Bayesian model on dummy data."""
+def bayesian(path: Optional[Path] = None) -> None:
+    """Fit a hierarchical Bayesian model on data."""
 
-    import pandas as pd
-
-    from .bayesian import fit_hierarchical
-
-    df = pd.DataFrame(
-        {
-            "sector": ["tech", "tech", "fin", "fin"],
-            "time": [0, 1, 0, 1],
-            "volatility": [0.1, 0.2, 0.15, 0.25],
-        }
-    )
+    df = load_example_data(path)
     res = fit_hierarchical(df)
-    typer.echo(f"posterior draws: {len(res.trace.posterior.dims['chain'])}")
+    typer.echo(f"posterior mean volatility: {float(res.ppc['vol'].mean()):.3f}")
 
 
 @app.command()
@@ -204,14 +209,10 @@ def multimodal(image_url: str, video_url: str) -> None:
 
 @app.command()
 def meta() -> None:
-    """Run a dummy meta-learning loop."""
-
-    from datasets import Dataset
-
-    from .meta_learning import MAMLTrainer
+    """Run a minimal meta-learning loop."""
 
     trainer = MAMLTrainer()
-    ds = Dataset.from_dict({"text": ["hello"], "label": [1]})
+    ds = Dataset.from_dict({"text": ["good", "bad"], "label": [1, 0]})
     trainer.meta_train([ds])
     trainer.adapt(ds)
     typer.echo("meta-learning completed")
@@ -258,9 +259,4 @@ def quantum() -> None:
 
     from .quantum_opt import optimize_portfolio
 
-    res = optimize_portfolio([0.1, 0.2])
-    typer.echo(f"optimal weights: {res}")
-
-
-if __name__ == "__main__":  # pragma: no cover - manual
-    app()
+    typer.echo(optimize_portfolio())

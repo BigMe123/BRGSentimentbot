@@ -1,4 +1,3 @@
-# Privacy and Fairness Audit
 
 ## Differential Privacy Settings
 
@@ -47,3 +46,4 @@ Methodology references:
 * AIF360 fairness metrics – <https://aif360.mybluemix.net/>
 
 These steps and references allow the audit to be reproduced and verified.
+
