@@ -5,7 +5,11 @@ import tempfile
 from pathlib import Path
 from typing import Dict
 
+import logging
 import requests
+
+
+logger = logging.getLogger(__name__)
 
 
 def ocr_image_from_url(url: str) -> str:
@@ -51,8 +55,9 @@ def aggregate_article_text(article: Dict[str, str]) -> str:
     if img := article.get("image_url"):
         try:
             parts.append(ocr_image_from_url(img))
-        except Exception:  # pragma: no cover - network/ocr errors
-            pass
+        except Exception as exc:  # pragma: no cover - network/ocr errors
+            logger.exception("Image OCR failed for %s", img)
+            raise exc
     if vid := article.get("video_url"):
         try:
             parts.append(transcribe_video_from_url(vid))
