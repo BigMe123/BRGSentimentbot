@@ -22,7 +22,7 @@ def launch() -> None:  # pragma: no cover - requires network
         )
     else:  # empty store
         vs = FAISS.from_texts([], embeddings)
-    agent = ChatAgent(vs, os.getenv("OPENAI_API_KEY", ""))
+    agent = ChatAgent(vs, os.getenv("OPENAI_API_KEY", "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"))
 
     def _chat(message, history):
         answer = agent.ask(message)
