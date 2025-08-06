@@ -1,6 +1,8 @@
 """Multimodal ingestion utilities."""
+
 from __future__ import annotations
 
+import logging
 import tempfile
 from pathlib import Path
 from typing import Dict
@@ -57,5 +59,5 @@ def aggregate_article_text(article: Dict[str, str]) -> str:
         try:
             parts.append(transcribe_video_from_url(vid))
         except Exception:  # pragma: no cover - network/ffmpeg errors
-            pass
+            logging.exception("Error transcribing video from %s", vid)
     return "\n".join(p for p in parts if p)
