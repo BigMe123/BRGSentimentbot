@@ -3,6 +3,8 @@
 Async sentiment and volatility bot featuring RSS and NewsAPI scraping,
 transformer-based analysis and optional web interfaces.
 
+> **Requires Python 3.11–3.13.**
+
 ## Quickstart
 
 ### Poetry
