@@ -31,8 +31,15 @@ def launch() -> None:  # pragma: no cover – requires network & UI
     else:
         vs = FAISS.from_texts([], embeddings)
 
-    # Instantiate chat agent with your OpenAI API key
-    openai_key = "sk-REPLACE_WITH_YOUR_API_KEY"
+    # Instantiate chat agent with an OpenAI API key from env or settings
+    openai_key = os.getenv("OPENAI_API_KEY") or getattr(
+        settings, "OPENAI_API_KEY", ""
+    )
+    if not openai_key:
+        raise RuntimeError(
+            "OpenAI API key not provided. Set OPENAI_API_KEY in the environment or"
+            " settings"
+        )
     agent = ChatAgent(vs, openai_key)
 
     # Build Gradio UI
