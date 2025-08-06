@@ -46,12 +46,86 @@ def load_rules(path: str | None = None) -> List[Rule]:
 
 
 def _safe_eval(expr: str, snapshot: Snapshot) -> bool:
-    """Evaluate expression against ``snapshot`` in a safe namespace."""
+    """Evaluate ``expr`` against ``snapshot`` using a whitelisted AST."""
 
     tree = ast.parse(expr, mode="eval")
-    allowed = {"snapshot": snapshot}
-    code = compile(tree, "<rules>", "eval")
-    return bool(eval(code, {"__builtins__": {}}, allowed))
+
+    allowed_nodes = (
+        ast.Expression,
+        ast.BoolOp,
+        ast.Compare,
+        ast.Attribute,
+        ast.Name,
+        ast.Load,
+        ast.And,
+        ast.Or,
+        ast.Gt,
+        ast.GtE,
+        ast.Lt,
+        ast.LtE,
+        ast.Eq,
+        ast.NotEq,
+        ast.Constant,
+    )
+
+    class Evaluator(ast.NodeVisitor):
+        def visit(self, node: ast.AST):  # type: ignore[override]
+            if not isinstance(node, allowed_nodes):
+                raise ValueError(f"disallowed node {type(node).__name__}")
+            return super().visit(node)
+
+        def visit_Expression(self, node: ast.Expression):  # pragma: no cover - trivial
+            return self.visit(node.body)
+
+        def visit_Name(self, node: ast.Name):
+            if node.id != "snapshot":
+                raise ValueError("unknown name")
+            return snapshot
+
+        def visit_Attribute(self, node: ast.Attribute):
+            value = self.visit(node.value)
+            if value is not snapshot:
+                raise ValueError("attribute access not allowed")
+            if node.attr.startswith("_"):
+                raise ValueError("private attribute access not allowed")
+            return getattr(value, node.attr)
+
+        def visit_Constant(self, node: ast.Constant):  # pragma: no cover - trivial
+            return node.value
+
+        def visit_BoolOp(self, node: ast.BoolOp):
+            values = [self.visit(v) for v in node.values]
+            if isinstance(node.op, ast.And):
+                return all(values)
+            if isinstance(node.op, ast.Or):
+                return any(values)
+            raise ValueError("unsupported boolean operator")
+
+        def visit_Compare(self, node: ast.Compare):
+            left = self.visit(node.left)
+            for op, comparator in zip(node.ops, node.comparators):
+                right = self.visit(comparator)
+                if isinstance(op, ast.Gt):
+                    result = left > right
+                elif isinstance(op, ast.GtE):
+                    result = left >= right
+                elif isinstance(op, ast.Lt):
+                    result = left < right
+                elif isinstance(op, ast.LtE):
+                    result = left <= right
+                elif isinstance(op, ast.Eq):
+                    result = left == right
+                elif isinstance(op, ast.NotEq):
+                    result = left != right
+                else:  # pragma: no cover - defensive
+                    raise ValueError("unsupported comparison")
+                if not result:
+                    return False
+                left = right
+            return True
+
+    evaluator = Evaluator()
+    return bool(evaluator.visit(tree))
 
 
 def apply_rules(snapshot: Snapshot, rules: List[Rule] | None = None) -> List[str]:
