@@ -82,4 +82,4 @@ posterior predictive distribution and contrasting interventions.
 
 ## License
 
-MIT
+Proprietary License Agreement
