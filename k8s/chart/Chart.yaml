@@ -1,0 +1,4 @@
+apiVersion: v2
+name: sentiment-bot
+version: 0.1.0
+description: Helm chart for sentiment bot microservices
