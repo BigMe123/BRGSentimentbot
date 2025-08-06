@@ -7,7 +7,7 @@ from unittest.mock import patch
 # Ensure package root on path for direct pytest invocation
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
-from sentiment_cli_bot.bot.fetcher import gather_feed_entries
+from sentiment_bot.fetcher import ArticleData, gather_rss
 
 
 def test_gather_feed_entries_dedup() -> None:
@@ -20,6 +20,11 @@ def test_gather_feed_entries_dedup() -> None:
         ]
         return types.SimpleNamespace(entries=entries)
 
-    with patch("feedparser.parse", side_effect=fake_parse):
-        entries = asyncio.run(gather_feed_entries(["http://feed"]))
+    with patch(
+        "sentiment_bot.fetcher.feedparser", types.SimpleNamespace(parse=fake_parse)
+    ), patch(
+        "sentiment_bot.fetcher.fetch_and_parse",
+        side_effect=lambda url: ArticleData(url, "t", "x"),
+    ):
+        entries = asyncio.run(gather_rss(["http://feed"]))
     assert len(entries) == 1

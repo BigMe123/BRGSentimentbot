@@ -1,0 +1,4 @@
+{
+  "image": "python:3.11",
+  "forwardPorts": [8765, 7860]
+}
