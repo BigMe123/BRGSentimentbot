@@ -52,6 +52,13 @@ def chat() -> None:
     from langchain.vectorstores import FAISS
     from .chat_agent import ChatAgent
 
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        typer.echo(
+            "OPENAI_API_KEY is missing or empty. Please set it before using chat."
+        )
+        raise typer.Exit(code=1)
+
     embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
     path = Path("faiss_index")
     if path.exists():
@@ -60,7 +67,7 @@ def chat() -> None:
         )
     else:  # empty store
         vs = FAISS.from_texts([], embeddings)
-    agent = ChatAgent(vs, os.getenv("OPENAI_API_KEY", ""))
+    agent = ChatAgent(vs, api_key)
 
     while True:
         q = typer.prompt("query")
