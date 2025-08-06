@@ -35,7 +35,7 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - fallback without pydantic
 
     @dataclass
-    class Settings:
+    class Settings:  # type: ignore[no-redef]
         NEWSAPI_KEY: str = os.getenv("NEWSAPI_KEY", "027e167533f7488bb9935e9ab1874e72")
         RSS_FEEDS: List[str] = field(
             default_factory=lambda: [
