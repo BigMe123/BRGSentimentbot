@@ -11,6 +11,20 @@ from typing import List, Optional
 
 import typer
 
+from datasets import Dataset
+from langchain.embeddings import SentenceTransformerEmbeddings
+from langchain.vectorstores import FAISS
+
+from . import scheduler, ws_server
+from .bayesian import fit_hierarchical, load_example_data
+from .chat_agent import ChatAgent
+from .config import settings
+from .fetcher import gather_rss
+from .gui import launch as launch_gui
+from .meta_learning import MAMLTrainer
+from .simulate import monte_carlo, save_csv
+
+
 app = typer.Typer(help="Async news sentiment and volatility bot")
 
 
@@ -71,7 +85,7 @@ def fetch(urls: List[str] = typer.Option(..., "--urls")) -> None:
     from .fetcher import fetch_and_parse
 
     async def _main() -> None:
-        articles = await fetch_and_parse(urls)
+        articles = await gather_rss(urls)
         for art in articles:
             snippet = art.text.replace("\n", " ")[:80]
             typer.echo(f"{art.url} -> {snippet}")
