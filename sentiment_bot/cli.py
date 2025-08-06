@@ -9,8 +9,8 @@ import sqlite3
 from pathlib import Path
 from typing import List, Optional
 
-import pandas as pd
 import typer
+
 from datasets import Dataset
 from langchain.embeddings import SentenceTransformerEmbeddings
 from langchain.vectorstores import FAISS
@@ -24,12 +24,15 @@ from .gui import launch as launch_gui
 from .meta_learning import MAMLTrainer
 from .simulate import monte_carlo, save_csv
 
+
 app = typer.Typer(help="Async news sentiment and volatility bot")
 
 
 @app.command()
 def live(interval: Optional[int] = None) -> None:
     """Continuously run the bot."""
+    from . import scheduler
+    from .config import settings
 
     asyncio.run(scheduler.run_live(interval or settings.INTERVAL))
 
@@ -37,6 +40,7 @@ def live(interval: Optional[int] = None) -> None:
 @app.command()
 def once() -> None:
     """Run a single fetch/analyse cycle."""
+    from . import scheduler
 
     asyncio.run(scheduler.run_once())
 
@@ -44,11 +48,16 @@ def once() -> None:
 @app.command()
 def chat() -> None:
     """Interactive Q&A."""
+    from langchain.embeddings import SentenceTransformerEmbeddings
+    from langchain.vectorstores import FAISS
+    from .chat_agent import ChatAgent
 
     embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
     path = Path("faiss_index")
     if path.exists():
-        vs = FAISS.load_local(str(path), embeddings, allow_dangerous_deserialization=True)
+        vs = FAISS.load_local(
+            str(path), embeddings, allow_dangerous_deserialization=True
+        )
     else:  # empty store
         vs = FAISS.from_texts([], embeddings)
     agent = ChatAgent(vs, os.getenv("OPENAI_API_KEY", ""))
@@ -73,6 +82,7 @@ def rules() -> None:
 @app.command()
 def fetch(urls: List[str] = typer.Option(..., "--urls")) -> None:
     """Fetch RSS feeds and print article snippets."""
+    from .fetcher import fetch_and_parse
 
     async def _main() -> None:
         articles = await gather_rss(urls)
@@ -86,6 +96,8 @@ def fetch(urls: List[str] = typer.Option(..., "--urls")) -> None:
 @app.command()
 def simulate(paths: int = 100) -> None:
     """Run a Monte Carlo simulation using stored snapshots."""
+    from .config import settings
+    from .simulate import monte_carlo, save_csv
 
     try:
         con = sqlite3.connect(settings.DB_PATH)
@@ -104,6 +116,8 @@ def simulate(paths: int = 100) -> None:
 @app.command()
 def serve() -> None:
     """Run the WebSocket server with live snapshots."""
+    from . import scheduler, ws_server
+    from .config import settings
 
     async def _main() -> None:
         latest = {"volatility": 0.0, "confidence": 0.0}
@@ -126,6 +140,9 @@ def serve() -> None:
 @app.command()
 def web() -> None:
     """Run WebSocket server and Gradio GUI."""
+    from . import scheduler, ws_server
+    from .config import settings
+    from .gui import launch as launch_gui
 
     async def _main() -> None:
         latest = {"volatility": 0.0, "confidence": 0.0}
@@ -142,7 +159,9 @@ def web() -> None:
 
         loop = asyncio.get_running_loop()
         await asyncio.gather(
-            updater(), ws_server.serve(lambda: latest), loop.run_in_executor(None, launch_gui)
+            updater(),
+            ws_server.serve(lambda: latest),
+            loop.run_in_executor(None, launch_gui),
         )
 
     asyncio.run(_main())
@@ -178,6 +197,7 @@ def forecast(
 @app.command()
 def bayesian(path: Optional[Path] = None) -> None:
     """Fit a hierarchical Bayesian model on data."""
+    from .bayesian import fit_hierarchical, load_example_data
 
     df = load_example_data(path)
     res = fit_hierarchical(df)
@@ -210,6 +230,8 @@ def multimodal(image_url: str, video_url: str) -> None:
 @app.command()
 def meta() -> None:
     """Run a minimal meta-learning loop."""
+    from datasets import Dataset
+    from .meta_learning import MAMLTrainer
 
     trainer = MAMLTrainer()
     ds = Dataset.from_dict({"text": ["good", "bad"], "label": [1, 0]})
