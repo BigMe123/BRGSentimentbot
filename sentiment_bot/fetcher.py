@@ -50,8 +50,12 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
         except Exception as e:
             logging.warning("Failed HTTP fetch, falling back to urllib for %s: %s", url, e)
             from urllib.request import urlopen  # noqa: E402
-            with urlopen(url) as resp:
-                html = resp.read().decode(errors="ignore")
+
+            def _urlopen_read() -> str:
+                with urlopen(url) as resp:
+                    return resp.read().decode(errors="ignore")
+
+            html = await asyncio.to_thread(_urlopen_read)
 
         soup = BeautifulSoup(html, "html.parser")
         paras = soup.find_all("p")
