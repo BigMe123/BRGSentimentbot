@@ -10,6 +10,7 @@ transformer-based analysis and optional web interfaces.
 ### Poetry
 ```bash
 pip install -U poetry
+poetry lock   # regenerate lockfile after dependency change
 poetry install --no-root
 poetry run bot once
 ```
