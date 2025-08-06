@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streaming
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streaming
+  template:
+    metadata:
+      labels:
+        app: streaming
+    spec:
+      containers:
+        - name: streaming
+          image: streaming:latest
+          command: ["bot", "stream"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: streaming
+spec:
+  selector:
+    app: streaming
+  ports:
+    - port: 80
+      targetPort: 80

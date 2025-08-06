@@ -44,6 +44,42 @@ graph TD
     C --> H[Gradio GUI]
 ```
 
+## Research Methodology
+
+### Forecasting Architecture
+```mermaid
+graph LR
+    V[Volatility Series] -->|GAN| G[Generator]
+    V --> D[Discriminator]
+    G --> F[Forecast]
+```
+
+### Streaming Topology
+```mermaid
+graph TD
+    K[Kafka] --> S[Spark Streaming]
+    S --> M[Model]
+    M --> K2[Kafka Out]
+```
+
+### Quantum Optimiser
+```plantuml
+@startuml
+participant "QAOA" as Q
+participant "Optimizer" as O
+Q -> O: evaluate(cost)
+O -> Q: new parameters
+@enduml
+```
+
+### Causal Inference
+The Bayesian module supports counterfactual queries by sampling from the
+posterior predictive distribution and contrasting interventions.
+
+### Privacy & Fairness
+- Differential privacy decorator `dp_mechanism`
+- Bias reports can be generated with templates in `docs/privacy_template.md`
+
 ## License
 
 MIT
