@@ -12,6 +12,7 @@ from sentiment_bot import analyzer
 def test_analyze_vader_positive() -> None:
     res = analyzer.analyze("This is an amazing and wonderful day!")
     assert res.vader > 0
+    assert isinstance(res.low_quality, bool)
 
 
 def test_aggregate_basic() -> None:
