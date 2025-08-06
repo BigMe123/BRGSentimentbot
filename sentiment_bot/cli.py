@@ -4,10 +4,19 @@ from __future__ import annotations
 
 import asyncio
 import json
+from __future__ import annotations
+
+import asyncio
+import json
 from pathlib import Path
 from typing import Optional
 
 import typer
+
+from . import chat_agent, scheduler
+from .config import settings
+from .rules import load_rules
+from .simulate import monte_carlo, save_csv
 
 app = typer.Typer(help="Async news sentiment and volatility bot")
 
@@ -63,6 +72,8 @@ def serve() -> None:
     """Run the WebSocket server."""
 
     async def _main() -> None:
+        from .ws_server import serve as serve_ws
+
         snapshot = {"volatility": 0.0, "confidence": 0.0}
 
         def _snap() -> dict:
@@ -79,6 +90,9 @@ def web() -> None:
     """Run WebSocket server and Gradio GUI."""
 
     async def _main() -> None:
+        from .ws_server import serve as serve_ws
+        from .gui import launch as launch_gui
+
         async def ws_runner() -> None:
             snapshot = {"volatility": 0.0, "confidence": 0.0}
 
@@ -204,7 +218,9 @@ def explain(text: str = "A sample article") -> None:
 
 
 @app.command()
-def stream(kafka_bootstrap: str, topic: str) -> None:  # pragma: no cover - requires infra
+def stream(
+    kafka_bootstrap: str, topic: str
+) -> None:  # pragma: no cover - requires infra
     """Run the streaming job."""
 
     from .streaming import start_stream

@@ -25,16 +25,24 @@ async def _fetch_remote(topic: str) -> List[ArticleData]:  # pragma: no cover - 
     data = await loop.run_in_executor(None, client.get_top_headlines, None, "en", topic)
     articles = []
     for a in data.get("articles", []):
-        articles.append(ArticleData(url=a.get("url", ""), title=a.get("title", ""), text=a.get("description", "")))
+        articles.append(
+            ArticleData(
+                url=a.get("url", ""),
+                title=a.get("title", ""),
+                text=a.get("description", ""),
+            )
+        )
     return articles
 
 
 async def fetch_top_headlines(topics: List[str]) -> List[ArticleData]:
     """Fetch headlines for ``topics`` using a TTL cache."""
 
-    await CACHE_PATH.touch(exist_ok=True)
+    CACHE_PATH.touch(exist_ok=True)
     async with aiosqlite.connect(CACHE_PATH) as db:
-        await db.execute("CREATE TABLE IF NOT EXISTS cache (topic TEXT PRIMARY KEY, ts REAL, data TEXT)")
+        await db.execute(
+            "CREATE TABLE IF NOT EXISTS cache (topic TEXT PRIMARY KEY, ts REAL, data TEXT)"
+        )
         await db.commit()
         results: list[ArticleData] = []
         for topic in topics:
