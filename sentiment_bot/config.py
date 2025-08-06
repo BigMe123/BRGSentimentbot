@@ -27,7 +27,7 @@ try:  # pragma: no cover - optional dependency
         SIM_PATH: str = "simulations.csv"
         WEBSOCKET_PORT: int = 8765
         GRADIO_PORT: int = 7860
-        OPENAI_API_KEY: str = ""
+        OPENAI_API_KEY: str = "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"
 
         class Config:
             env_file = ".env"
