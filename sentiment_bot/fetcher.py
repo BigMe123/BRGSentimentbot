@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from dataclasses import dataclass
 from typing import Iterable, List
 
@@ -99,7 +100,7 @@ async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
                 art.published = p
                 results.append(art)
             except Exception:
-                pass
+                logging.exception("Failed to fetch or parse article: %s", u)
 
     await asyncio.gather(*[_worker(u, t, p) for u, t, p in unique])
     return results
