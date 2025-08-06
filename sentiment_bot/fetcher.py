@@ -1,4 +1,3 @@
-# sentiment_bot/fetcher.py
 from __future__ import annotations
 
 import asyncio
@@ -45,7 +44,7 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
 
         return await asyncio.to_thread(_parse)
     except Exception:
-        # Fallback to aiohttp + BeautifulSoup
+        # Fallback to aiohttp + BeautifulSoup or urllib in thread
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, timeout=10) as resp:
@@ -58,12 +57,15 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
             from urllib.request import urlopen  # noqa: E402
             import socket  # noqa: E402
 
-            try:
-                with urlopen(url, timeout=10) as resp:
-                    html = resp.read().decode(errors="ignore")
-            except (URLError, socket.timeout) as e_url:
-                logging.warning("Failed urllib fetch for %s: %s", url, e_url)
-                raise
+            def _urlopen_read() -> str:
+                try:
+                    with urlopen(url, timeout=10) as resp:
+                        return resp.read().decode(errors="ignore")
+                except (URLError, socket.timeout) as err:
+                    logging.warning("Failed urllib fetch for %s: %s", url, err)
+                    raise
+
+            html = await asyncio.to_thread(_urlopen_read)
 
         soup = BeautifulSoup(html, "html.parser")
         paras = soup.find_all("p")
@@ -80,6 +82,7 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
 async def fetch_and_parse(url: str) -> ArticleData:
     """Public wrapper around :func:`_fetch_and_parse_url` for easier patching."""
     return await _fetch_and_parse_url(url)
+
 
 async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
     """
