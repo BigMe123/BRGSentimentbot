@@ -77,6 +77,10 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
         )
 
 
+async def fetch_and_parse(url: str) -> ArticleData:
+    """Public wrapper around :func:`_fetch_and_parse_url` for easier patching."""
+    return await _fetch_and_parse_url(url)
+
 async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
     """
     Parse each RSS/Atom feed URL in `feeds`, extract all <link> entries,
@@ -101,7 +105,7 @@ async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
     async def _worker(link: str):
         async with sem:
             try:
-                art = await _fetch_and_parse_url(link)
+                art = await fetch_and_parse(link)
                 results.append(art)
             except Exception:
                 logging.exception("Failed to fetch or parse %s", link)
