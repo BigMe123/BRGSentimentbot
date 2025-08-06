@@ -81,6 +81,6 @@ def aggregate(results: Iterable[Analysis]) -> Snapshot:
     results = list(results)
     if not results:
         return Snapshot()
-    vol = fmean(abs(r.vader) for r in results)
+    vol = fmean((abs(r.vader) + abs(r.bert)) / 2 for r in results)
     confidence = len(results) / (len(results) + 10)
     return Snapshot(volatility=vol, confidence=confidence, triggers=[])
