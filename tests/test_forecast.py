@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
+pytest.importorskip("torch")
+
 from sentiment_bot.forecast import GANForecast, VAEForecast
 
 

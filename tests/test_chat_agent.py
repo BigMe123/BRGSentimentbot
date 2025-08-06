@@ -4,10 +4,15 @@ import types
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
-import openai
-import sentiment_bot.chat_agent as ca
-from langchain.embeddings import FakeEmbeddings
-from langchain.vectorstores import FAISS
+import pytest
+
+openai = pytest.importorskip("openai")
+emb_mod = pytest.importorskip("langchain.embeddings")
+vec_mod = pytest.importorskip("langchain.vectorstores")
+import sentiment_bot.chat_agent as ca  # noqa: E402
+
+FakeEmbeddings = emb_mod.FakeEmbeddings
+FAISS = vec_mod.FAISS
 
 
 def test_chat_agent(monkeypatch):

@@ -18,6 +18,13 @@ docker build -t brg-bot .
 docker run --rm brg-bot
 ```
 
+### Simple Python
+For a minimal, offline demonstration without installing dependencies:
+
+```bash
+python run_simple.py
+```
+
 ### Devcontainer
 A simple `devcontainer.json` is provided for VS Code Remote Containers.
 
