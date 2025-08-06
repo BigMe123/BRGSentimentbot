@@ -24,6 +24,11 @@ async def _cycle() -> analyzer.Snapshot:
                 filtered.append(art)
         if filtered:
             articles = filtered
+
+    console.print("Fetched Articles:")
+    for art in articles:
+        console.print(f" - {art.title}")
+    console.print()
     analyses = [analyzer.analyze(a.text) for a in articles]
     snapshot = analyzer.aggregate(analyses)
     snapshot.ts = datetime.utcnow().isoformat()
