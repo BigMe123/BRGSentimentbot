@@ -14,7 +14,7 @@ newspaper3k = "^0.2.8"
 rapidfuzz = "^3.6.1"
 spacy = ">=3.7,<3.8"
 transformers = "^4.41.2"
-torch = "^2.2.2"
+torch = "2.2.2"
 vaderSentiment = "^3.3.2"
 typer = {extras = ["all"], version = "^0.12.3"}
 rich = "^13.0"
