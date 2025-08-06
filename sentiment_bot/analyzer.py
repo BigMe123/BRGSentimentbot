@@ -11,19 +11,23 @@ try:  # pragma: no cover - optional dependency
 
     _vader = SentimentIntensityAnalyzer()
 except Exception:  # pragma: no cover - fallback
+
     class SentimentIntensityAnalyzer:  # type: ignore
         POS = {"good", "great", "excellent", "amazing", "wonderful"}
         NEG = {"bad", "terrible", "awful"}
 
         def polarity_scores(self, text: str) -> dict[str, float]:
             words = text.lower().split()
-            score = sum(w in self.POS for w in words) - sum(w in self.NEG for w in words)
+            score = sum(w in self.POS for w in words) - sum(
+                w in self.NEG for w in words
+            )
             return {"compound": float(score)}
 
     _vader = SentimentIntensityAnalyzer()
 
 try:  # pragma: no cover - optional heavy deps
     from transformers import pipeline
+
     try:
         _bert = pipeline("sentiment-analysis")
     except Exception:
@@ -66,10 +70,13 @@ def analyze(text: str) -> Analysis:
     summary = text[:200]
     if _bert:
         res = _bert(text)[0]
-        bert_score = res.get("score", 0.0) * (1 if res.get("label") == "POSITIVE" else -1)
+        bert_score = res.get("score", 0.0) * (
+            1 if res.get("label") == "POSITIVE" else -1
+        )
     if _nli:
         nli_res = _nli(text, candidate_labels=["threat", "safe"])
-        labels = [nli_res.get("labels", [])[0]]
+        cand = nli_res.get("labels", [])
+        labels = cand[:1] if cand else []
     if _summarizer:
         summary = _summarizer(text[:1000])[0]["summary_text"]
     return Analysis(vader=vader_score, bert=bert_score, labels=labels, summary=summary)
