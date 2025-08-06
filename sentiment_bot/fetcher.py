@@ -1,86 +1,104 @@
+# sentiment_bot/fetcher.py
 from __future__ import annotations
 
-import aiohttp
 import asyncio
+import logging
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional, Iterable
 
+import aiohttp
+import feedparser
 from bs4 import BeautifulSoup
 
-feedparser = None  # placeholder for tests
-
+from .config import settings
 
 @dataclass
 class ArticleData:
-    """Simple container for an article's URL and extracted text."""
-
+    """Holds URL, title, text, and optional published timestamp."""
     url: str
     title: str
     text: str
+    published: Optional[str] = None
 
+async def _fetch_and_parse_url(url: str) -> ArticleData:
+    """
+    Fetch a single URL and extract its main text.
+    Prefer newspaper3k if available, else simple HTML <p> parse.
+    """
+    # Try newspaper3k
+    try:
+        from newspaper import Article  # type: ignore
 
-async def fetch_and_parse(urls: List[str] | str) -> List[ArticleData]:
-    """Fetch URLs and parse article text."""
+        def _parse() -> ArticleData:
+            art = Article(url)
+            art.download()
+            art.parse()
+            return ArticleData(
+                url=url,
+                title=art.title or "",
+                text=art.text or "",
+                published=art.publish_date.isoformat() if art.publish_date else None,
+            )
 
-    if isinstance(urls, str):
-        urls = [urls]
-    articles: List[ArticleData] = []
-    async with aiohttp.ClientSession() as sess:
-        for url in urls:
-            try:
-                async with sess.get(url) as resp:
+        return await asyncio.to_thread(_parse)
+    except Exception:
+        # Fallback to aiohttp + BeautifulSoup
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, timeout=10) as resp:
                     html = await resp.text()
-                articles.append(ArticleData(url=url, title="", text=parse_article(html)))
-            except Exception:
-                continue
-    return articles
+        except Exception as e:
+            logging.warning("Failed HTTP fetch, falling back to urllib for %s: %s", url, e)
+            from urllib.request import urlopen  # noqa: E402
+            with urlopen(url) as resp:
+                html = resp.read().decode(errors="ignore")
 
+        soup = BeautifulSoup(html, "html.parser")
+        paras = soup.find_all("p")
+        text = "\n\n".join(p.get_text() for p in paras)
+        title_tag = soup.find("title")
+        return ArticleData(
+            url=url,
+            title=title_tag.get_text() if title_tag else "",
+            text=text,
+            published=None,
+        )
 
-def parse_article(html: str) -> str:
-    """Extract main text from HTML."""
-
-    soup = BeautifulSoup(html, "html.parser")
-    paras = soup.find_all("p")
-    return "\n\n".join(p.get_text() for p in paras)
-
-
-async def gather_rss(urls: List[str]) -> List[ArticleData]:
-    """Fetch RSS feeds concurrently and return parsed articles."""
-
-    if feedparser is not None:
-        entries = []
-        for u in urls:
-            parsed = feedparser.parse(u)
-            entries.extend(parsed.entries)
-        links = []
-        seen = set()
-        for e in entries:
+async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
+    """
+    Parse each RSS/Atom feed URL in `feeds`, extract all <link> entries,
+    dedupe by URL, then fetch & parse them concurrently.
+    """
+    feed_urls = list(feeds or settings.RSS_FEEDS)
+    entries: List[str] = []
+    for feed_url in feed_urls:
+        parsed = await asyncio.to_thread(feedparser.parse, feed_url)
+        for e in parsed.entries:
             link = e.get("link")
-            if link and link not in seen:
-                seen.add(link)
-                links.append(link)
-        articles: List[ArticleData] = []
-        for link in links:
-            res = await fetch_and_parse(link)
-            if isinstance(res, list):
-                articles.extend(res)
-            else:
-                articles.append(res)
-        return articles
+            if link:
+                entries.append(link)
 
-    async with aiohttp.ClientSession() as sess:
-        responses = await asyncio.gather(*[sess.get(u) for u in urls])
-        bodies = [await r.text() for r in responses]
-    links: List[str] = []
-    for body in bodies:
-        soup = BeautifulSoup(body, "xml")
-        links.extend([l.text for l in soup.find_all("link")])
-    return await fetch_and_parse(links)
+    # Deduplicate
+    unique_links = list(dict.fromkeys(entries))  # preserve order
 
+    # Concurrently fetch & parse
+    sem = asyncio.Semaphore(10)
+    results: List[ArticleData] = []
 
-async def gather_all_sources(urls: List[str] | None = None) -> List[ArticleData]:
-    """Convenience wrapper used by the scheduler."""
-    from .config import settings
+    async def _worker(link: str):
+        async with sem:
+            try:
+                art = await _fetch_and_parse_url(link)
+                results.append(art)
+            except Exception:
+                logging.exception("Failed to fetch or parse %s", link)
 
-    feeds = urls or settings.RSS_FEEDS
-    return await gather_rss(list(feeds))
+    await asyncio.gather(*[_worker(link) for link in unique_links])
+    return results
+
+async def gather_all_sources(feeds: Iterable[str] | None = None) -> List[ArticleData]:
+    """
+    Convenience wrapper for scheduler: pulls RSS feeds via `gather_rss()`.
+    Later you can extend this to include NewsAPI or other sources.
+    """
+    return await gather_rss(feeds)
