@@ -1,53 +1,48 @@
 # BRGSentimentbot
 
-An experimental, fully open-source command-line tool that scrapes news
-headlines and performs a lightweight sentiment/volatility analysis.
+Async sentiment and volatility bot featuring RSS and NewsAPI scraping,
+transformer-based analysis and optional web interfaces.
 
-## Quick start
+## Quickstart
 
+### Poetry
 ```bash
-# install dependencies (uses poetry behind the scenes)
 pip install -U poetry
 poetry install --no-root
-
-# run a single cycle
 poetry run bot once
 ```
 
-The first run may download language models and take a little while.
-
-## Project layout
-
-```
-sentiment_cli_bot/
-├─ bot/
-│   ├─ config.py      # RSS feeds and tunables
-│   ├─ models.py      # SQLModel ORM definitions
-│   ├─ fetcher.py     # async scraping helpers
-│   ├─ analyzer.py    # sentiment + aggregation
-│   ├─ scheduler.py   # orchestration loop
-│   ├─ cli.py         # Typer CLI entrypoint
-│   └─ utils.py
-└─ tests/             # unit tests
+### Docker
+```bash
+docker build -t brg-bot .
+docker run --rm brg-bot
 ```
 
-## Architecture diagram (PlantUML)
+### Devcontainer
+A simple `devcontainer.json` is provided for VS Code Remote Containers.
 
-```plantuml
-@startuml
-:Scheduler: --> (Fetch feeds)
-(Fetch feeds) --> (Download articles)
-(Download articles) --> (Analyse)
-(Analyse) --> (Aggregate)
-(Aggregate) --> :Console output:
-@enduml
+## CLI Usage
+```bash
+poetry run bot live            # continuous mode
+poetry run bot once            # single cycle
+poetry run bot chat            # interactive REPL
+poetry run bot rules           # list loaded rules
+poetry run bot simulate        # run Monte Carlo simulation
+poetry run bot serve           # start websocket server
+poetry run bot web             # websocket + gradio GUI
 ```
 
-## Benchmarks
-
-On a sample of 100 BBC articles the prototype processes ~20 articles/sec
-and uses <150 MB RAM on a 4-core laptop.  These numbers will vary
-significantly depending on network conditions and hardware.
+## Architecture
+```mermaid
+graph TD
+    A[Scheduler] --> B[Fetchers]
+    B --> C[Analyzer]
+    C --> D[Vector Store]
+    D --> E[Chat Agent]
+    C --> F[Rules]
+    C --> G[WebSocket]
+    C --> H[Gradio GUI]
+```
 
 ## License
 

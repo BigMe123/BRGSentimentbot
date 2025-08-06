@@ -1,15 +1,14 @@
 [tool.poetry]
 name = "brgsentimentbot"
-version = "0.1.0"
+version = "0.2.0"
 description = "Async news sentiment/volatility CLI bot"
 authors = ["BRG <dev@example.com>"]
-packages = [{ include = "sentiment_cli_bot" }]
+packages = [{ include = "sentiment_bot" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 feedparser = "^6.0.11"
 aiohttp = "^3.9.5"
-beautifulsoup4 = "^4.12"
 newspaper3k = "^0.2.8"
 rapidfuzz = "^3.6.1"
 spacy = "^3.8.0"
@@ -20,6 +19,17 @@ typer = {extras = ["all"], version = "^0.12.3"}
 rich = "^13.7.1"
 sqlmodel = "^0.0.16"
 aiosqlite = "^0.19.0"
+newsapi-python = "^0.2.7"
+langchain = "^0.2.1"
+sentence-transformers = "^3.0.1"
+faiss-cpu = "^1.8.0"
+pyyaml = "^6.0.1"
+websockets = "^12.0"
+gradio = "^4.37.1"
+numpy = "^1.26.4"
+scipy = "^1.11.4"
+pydantic-settings = "^2.3.1"
+pandas = "^2.2.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.2.0"
@@ -30,7 +40,7 @@ coverage = "^7.5"
 respx = "^0.20.2"
 
 [tool.poetry.scripts]
-bot = "sentiment_cli_bot.bot.cli:app"
+bot = "sentiment_bot.cli:app"
 
 [build-system]
 requires = ["poetry-core"]
