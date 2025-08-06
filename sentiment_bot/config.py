@@ -27,6 +27,7 @@ try:  # pragma: no cover - optional dependency
         SIM_PATH: str = "simulations.csv"
         WEBSOCKET_PORT: int = 8765
         GRADIO_PORT: int = 7860
+        OPENAI_API_KEY: str = ""
 
         class Config:
             env_file = ".env"
@@ -51,5 +52,6 @@ except Exception:  # pragma: no cover - fallback without pydantic
         SIM_PATH: str = os.getenv("SIM_PATH", "simulations.csv")
         WEBSOCKET_PORT: int = int(os.getenv("WEBSOCKET_PORT", 8765))
         GRADIO_PORT: int = int(os.getenv("GRADIO_PORT", 7860))
+        OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
 
     settings = Settings()

@@ -1,4 +1,3 @@
-# sentiment_bot/fetcher.py
 from __future__ import annotations
 
 import asyncio
@@ -12,13 +11,16 @@ from bs4 import BeautifulSoup
 
 from .config import settings
 
+
 @dataclass
 class ArticleData:
     """Holds URL, title, text, and optional published timestamp."""
+
     url: str
     title: str
     text: str
     published: Optional[str] = None
+
 
 async def _fetch_and_parse_url(url: str) -> ArticleData:
     """
@@ -42,18 +44,26 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
 
         return await asyncio.to_thread(_parse)
     except Exception:
-        # Fallback to aiohttp + BeautifulSoup
+        # Fallback to aiohttp + BeautifulSoup or urllib in thread
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url, timeout=10) as resp:
                     html = await resp.text()
         except Exception as e:
-            logging.warning("Failed HTTP fetch, falling back to urllib for %s: %s", url, e)
+            logging.warning(
+                "Failed HTTP fetch, falling back to urllib for %s: %s", url, e
+            )
+            from urllib.error import URLError  # noqa: E402
             from urllib.request import urlopen  # noqa: E402
+            import socket  # noqa: E402
 
             def _urlopen_read() -> str:
-                with urlopen(url) as resp:
-                    return resp.read().decode(errors="ignore")
+                try:
+                    with urlopen(url, timeout=10) as resp:
+                        return resp.read().decode(errors="ignore")
+                except (URLError, socket.timeout) as err:
+                    logging.warning("Failed urllib fetch for %s: %s", url, err)
+                    raise
 
             html = await asyncio.to_thread(_urlopen_read)
 
@@ -67,6 +77,12 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
             text=text,
             published=None,
         )
+
+
+async def fetch_and_parse(url: str) -> ArticleData:
+    """Public wrapper around :func:`_fetch_and_parse_url` for easier patching."""
+    return await _fetch_and_parse_url(url)
+
 
 async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
     """
@@ -92,13 +108,14 @@ async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
     async def _worker(link: str):
         async with sem:
             try:
-                art = await _fetch_and_parse_url(link)
+                art = await fetch_and_parse(link)
                 results.append(art)
             except Exception:
                 logging.exception("Failed to fetch or parse %s", link)
 
     await asyncio.gather(*[_worker(link) for link in unique_links])
     return results
+
 
 async def gather_all_sources(feeds: Iterable[str] | None = None) -> List[ArticleData]:
     """
