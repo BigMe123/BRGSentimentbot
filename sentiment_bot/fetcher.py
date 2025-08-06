@@ -12,13 +12,16 @@ from bs4 import BeautifulSoup
 
 from .config import settings
 
+
 @dataclass
 class ArticleData:
     """Holds URL, title, text, and optional published timestamp."""
+
     url: str
     title: str
     text: str
     published: Optional[str] = None
+
 
 async def _fetch_and_parse_url(url: str) -> ArticleData:
     """
@@ -48,10 +51,19 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
                 async with session.get(url, timeout=10) as resp:
                     html = await resp.text()
         except Exception as e:
-            logging.warning("Failed HTTP fetch, falling back to urllib for %s: %s", url, e)
+            logging.warning(
+                "Failed HTTP fetch, falling back to urllib for %s: %s", url, e
+            )
+            from urllib.error import URLError  # noqa: E402
             from urllib.request import urlopen  # noqa: E402
-            with urlopen(url) as resp:
-                html = resp.read().decode(errors="ignore")
+            import socket  # noqa: E402
+
+            try:
+                with urlopen(url, timeout=10) as resp:
+                    html = resp.read().decode(errors="ignore")
+            except (URLError, socket.timeout) as e_url:
+                logging.warning("Failed urllib fetch for %s: %s", url, e_url)
+                raise
 
         soup = BeautifulSoup(html, "html.parser")
         paras = soup.find_all("p")
@@ -100,6 +112,7 @@ async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
 
     await asyncio.gather(*[_worker(link) for link in unique_links])
     return results
+
 
 async def gather_all_sources(feeds: Iterable[str] | None = None) -> List[ArticleData]:
     """
