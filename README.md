@@ -18,6 +18,14 @@ docker build -t brg-bot .
 docker run --rm brg-bot
 ```
 
+### Simple Python
+For a minimal, offline demonstration without Poetry or Docker:
+
+```bash
+pip install aiohttp feedparser beautifulsoup4 rich
+python run_simple.py
+```
+
 ### Devcontainer
 A simple `devcontainer.json` is provided for VS Code Remote Containers.
 
