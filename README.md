@@ -59,6 +59,15 @@ graph TD
     C --> H[Gradio GUI]
 ```
 
+### Components
+- **scheduler.py** – orchestrates periodic jobs and triggers fetchers.
+- **fetcher.py** and **newsapi_client.py** – retrieve articles from RSS feeds and the NewsAPI.
+- **analyzer.py** – runs sentiment and volatility analysis using embeddings, forecasting, and Bayesian modules.
+- **vector_store.py** – stores embeddings and supports similarity search with FAISS.
+- **chat_agent.py** – chat interface over the stored knowledge.
+- **rules.py** – defines alerting rules to drive automation.
+- **ws_server.py** and **gui.py** – optional WebSocket and Gradio interfaces for real-time interaction.
+
 ## Research Methodology
 
 ### Forecasting Architecture
