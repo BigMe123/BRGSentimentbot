@@ -390,6 +390,7 @@ async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
     failed_count = 0
     
     async def _worker(link: str):
+        nonlocal failed_count
         async with sem:
             try:
                 art = await fetch_and_parse(link)
@@ -397,10 +398,8 @@ async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
                     results.append(art)
                     logger.debug(f"Successfully extracted: {link} ({len(art.text)} chars)")
                 else:
-                    nonlocal failed_count
                     failed_count += 1
             except Exception:
-                nonlocal failed_count
                 failed_count += 1
                 logger.exception(f"Failed to fetch or parse {link}")
     
