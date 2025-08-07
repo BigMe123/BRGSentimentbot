@@ -15,8 +15,12 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from statistics import fmean, stdev
-from typing import Iterable, List, Dict
+from typing import Iterable, List, Dict, Any
 from collections import Counter
+from rich.console import Console
+from rich.markdown import Markdown
+from rich.panel import Panel
+from rich.table import Table
 
 try:  # pragma: no cover - optional dependency
     from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
@@ -498,3 +502,32 @@ def aggregate(results: Iterable[Analysis]) -> Snapshot:
         dominant_emotion=dominant_emotion,
         alert_level=alert_level
     )
+
+
+def display_ingestion_summary(stats: Dict[str, Any]) -> None:
+    """Render ingestion statistics using Rich."""
+    console = Console()
+    table = Table("Metric", "Value")
+    table.add_row("Total Articles", f"{stats['total']}/{stats['attempted']}")
+    table.add_row("Success Rate", f"{stats['success_rate']:.1f}%")
+    table.add_row("Words Collected", f"{stats['words_collected']:,}")
+    table.add_row("Unique Domains", str(stats['unique_domains']))
+    table.add_row("Cache Hits", str(stats['cache_hits']))
+    table.add_row("Circuit Breakers", str(stats['circuit_breakers']))
+    table.add_row("Data Quality", f"{stats['data_quality']:.1f}%")
+    console.print(Panel(table, title="Ingestion Summary"))
+
+
+def display_analysis_results(results: Dict[str, Any]) -> None:
+    """Render analysis results using Rich."""
+    console = Console()
+    table = Table("Metric", "Value")
+    table.add_row("Volatility Score", f"{results['volatility']:.3f}")
+    table.add_row("Model Confidence", f"{results['model_confidence']:.2f}")
+    console.print(Panel(table, title="Analysis Results"))
+    articles = results.get("articles", [])
+    if articles:
+        markdown = "Fetched Articles:\n" + "\n".join(
+            f"- {a.title}" for a in articles
+        )
+        console.print(Markdown(markdown))

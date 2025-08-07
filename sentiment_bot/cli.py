@@ -10,10 +10,16 @@ from pathlib import Path
 from typing import List, Optional
 
 import typer
+from rich.console import Console
+from rich.prompt import Prompt
 
 from . import scheduler
 from .bayesian import fit_hierarchical, load_example_data
 from .config import settings
+from .analyzer import (
+    display_analysis_results,
+    display_ingestion_summary,
+)
 
 
 app = typer.Typer(help="Async news sentiment and volatility bot")
@@ -27,12 +33,52 @@ def live(interval: Optional[int] = None) -> None:
     asyncio.run(scheduler.run_live(interval or settings.INTERVAL))
 
 
+def menu_after_run(stats: dict, results: dict, articles) -> None:
+    console = Console()
+    choices = ["Summary", "Articles", "Analysis", "Exit"]
+    while True:
+        choice = Prompt.ask(
+            "What would you like to view?", choices=choices, default="Summary"
+        )
+        if choice == "Summary":
+            display_ingestion_summary(stats)
+        elif choice == "Articles":
+            console.rule("Fetched Articles")
+            for art in articles:
+                console.print(f"- {art.title}")
+        elif choice == "Analysis":
+            display_analysis_results(results)
+        else:
+            break
+
+
 @app.command()
 def once() -> None:
-    """Run a single fetch/analyse cycle."""
-    from . import scheduler
+    """Run a single fetch/analyse cycle with interactive output."""
+    from . import analyzer, fetcher
 
-    asyncio.run(scheduler.run_once())
+    async def _main() -> None:
+        articles, stats = await fetcher.gather_rss()
+        topics = [t.lower() for t in settings.TOPICS]
+        if topics:
+            filtered = []
+            for art in articles:
+                haystack = f"{art.title} {art.text}".lower()
+                if any(t in haystack for t in topics):
+                    filtered.append(art)
+            if filtered:
+                articles = filtered
+
+        analyses = [analyzer.analyze(a.text) for a in articles]
+        snapshot = analyzer.aggregate(analyses)
+        results = {
+            "volatility": snapshot.volatility,
+            "model_confidence": snapshot.confidence,
+            "articles": articles,
+        }
+        menu_after_run(stats, results, articles)
+
+    asyncio.run(_main())
 
 
 @app.command()
@@ -79,10 +125,10 @@ def rules() -> None:
 @app.command()
 def fetch(urls: List[str] = typer.Option(..., "--urls")) -> None:
     """Fetch RSS feeds and print article snippets."""
-    from .fetcher import fetch_and_parse, gather_rss
+    from .fetcher import gather_rss
 
     async def _main() -> None:
-        articles = await gather_rss(urls)
+        articles, _ = await gather_rss(urls)
         for art in articles:
             snippet = art.text.replace("\n", " ")[:80]
             typer.echo(f"{art.url} -> {snippet}")

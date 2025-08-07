@@ -13,6 +13,8 @@ from bs4 import BeautifulSoup, Comment
 
 import aiohttp
 import feedparser
+from rich.console import Console
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 
 from .config import settings
 
@@ -375,73 +377,77 @@ async def fetch_and_parse(url: str) -> ArticleData:
     return await _fetch_and_parse_url(url)
 
 
-async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
-    """
-    Parse RSS feeds with maximum parallelization and smart features.
-    """
+async def gather_rss(
+    feeds: Iterable[str] | None = None,
+) -> tuple[List[ArticleData], Dict[str, Any]]:
+    """Parse RSS feeds and return articles with collection stats."""
+    console = Console()
     feed_urls = list(feeds or settings.RSS_FEEDS)
-    all_article_urls = []
+    all_article_urls: List[str] = []
 
-    # Parse all feeds in parallel
     async def parse_feed(feed_url: str) -> List[str]:
         try:
             parsed = await asyncio.to_thread(feedparser.parse, feed_url)
-            urls = []
-            for entry in parsed.entries:
-                if link := entry.get("link"):
-                    urls.append(link)
-            logger.info(f"Found {len(urls)} articles in feed: {feed_url}")
+            urls = [entry.get("link") for entry in parsed.entries if entry.get("link")]
             return urls
         except Exception as e:
             logger.warning(f"Failed to parse feed {feed_url}: {e}")
             return []
 
-    # Gather all URLs from all feeds concurrently
-    feed_tasks = [parse_feed(feed_url) for feed_url in feed_urls]
-    feed_results = await asyncio.gather(*feed_tasks)
+    with Progress(
+        SpinnerColumn(),
+        "[progress.description]{task.description}",
+        BarColumn(),
+        TextColumn("{task.completed}/{task.total}"),
+        console=console,
+    ) as progress:
+        feed_task = progress.add_task("Fetching feeds", total=len(feed_urls))
+        feed_tasks = [parse_feed(url) for url in feed_urls]
+        for coro in asyncio.as_completed(feed_tasks):
+            urls = await coro
+            all_article_urls.extend(urls)
+            progress.advance(feed_task)
 
-    for urls in feed_results:
-        all_article_urls.extend(urls)
-
-    # Deduplicate URLs while preserving order
     unique_links = list(dict.fromkeys(all_article_urls))
+    console.print(f"Total unique articles to fetch: {len(unique_links)}")
 
-    logger.info(f"Total unique articles to fetch: {len(unique_links)}")
-
-    # Aggressive concurrent fetching with high semaphore limit
     sem = asyncio.Semaphore(50)
     results: List[ArticleData] = []
     failed_count = 0
 
-    async def _worker(link: str):
+    async def _worker(link: str) -> None:
         nonlocal failed_count
         async with sem:
             try:
                 art = await fetch_and_parse(link)
                 if art.text:
                     results.append(art)
-                    logger.debug(
-                        f"Successfully extracted: {link} ({len(art.text)} chars)"
-                    )
                 else:
                     failed_count += 1
             except Exception:
                 failed_count += 1
                 logger.exception(f"Failed to fetch or parse {link}")
 
-    # Execute all fetches concurrently
-    await asyncio.gather(*[_worker(link) for link in unique_links])
+    with Progress(
+        SpinnerColumn(),
+        "[progress.description]{task.description}",
+        BarColumn(),
+        TextColumn("{task.completed}/{task.total}"),
+        console=console,
+    ) as progress:
+        task = progress.add_task("Downloading articles", total=len(unique_links))
+        workers = [_worker(link) for link in unique_links]
+        for coro in asyncio.as_completed(workers):
+            await coro
+            progress.advance(task)
 
-    # Log collection statistics
     total_words = sum(len(art.text.split()) for art in results)
     unique_domains = len(set(urlparse(art.url).netloc for art in results))
-
-    # Calculate confidence score based on volume and diversity
-    volume_score = min(len(results) / 100, 1.0)  # Max at 100 articles
-    diversity_score = min(unique_domains / 20, 1.0)  # Max at 20 domains
     success_rate = len(results) / len(unique_links) if unique_links else 0
-    word_volume_score = min(total_words / 100000, 1.0)  # Max at 100k words
 
+    volume_score = min(len(results) / 100, 1.0)
+    diversity_score = min(unique_domains / 20, 1.0)
+    word_volume_score = min(total_words / 100000, 1.0)
     confidence = (
         volume_score * 0.3
         + diversity_score * 0.2
@@ -449,26 +455,23 @@ async def gather_rss(feeds: Iterable[str] | None = None) -> List[ArticleData]:
         + word_volume_score * 0.3
     )
 
-    logger.info(
-        f"""
-    ========== SENTIMENT DATA COLLECTION SUMMARY ==========
-    Total articles collected: {len(results)}/{len(unique_links)}
-    Success rate: {success_rate*100:.1f}%
-    Total words collected: {total_words:,}
-    Unique domains: {unique_domains}
-    Cache hits: {sum(1 for _ in content_cache.cache)}
-    Circuit breakers active: {sum(1 for url in circuit_breaker.failures if circuit_breaker.is_open(url))}
-    CONFIDENCE SCORE: {confidence*100:.1f}%
-    ========================================================
-    """
-    )
+    stats = {
+        "total": len(results),
+        "attempted": len(unique_links),
+        "success_rate": success_rate * 100,
+        "words_collected": total_words,
+        "unique_domains": unique_domains,
+        "cache_hits": sum(1 for _ in content_cache.cache),
+        "circuit_breakers": sum(
+            1 for url in circuit_breaker.failures if circuit_breaker.is_open(url)
+        ),
+        "data_quality": confidence * 100,
+    }
 
-    return results
+    return results, stats
 
 
 async def gather_all_sources(feeds: Iterable[str] | None = None) -> List[ArticleData]:
-    """
-    Main entry point for risk sentiment data collection.
-    Maximizes article volume with smart features for high-confidence analysis.
-    """
-    return await gather_rss(feeds)
+    """Compatibility wrapper returning only articles."""
+    articles, _ = await gather_rss(feeds)
+    return articles
