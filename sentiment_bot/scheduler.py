@@ -41,7 +41,7 @@ async def _cycle() -> analyzer.Snapshot:
 async def run_once() -> analyzer.Snapshot:
     snap = await _cycle()
     console.print(
-        f"Volatility {snap.volatility:.3f} (confidence {snap.confidence:.2f})"
+        f"Volatility {snap.volatility:.3f} (model confidence {snap.confidence:.2f})"
     )
     return snap
 
