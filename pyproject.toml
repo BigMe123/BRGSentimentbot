@@ -1,71 +1,20 @@
 [tool.poetry]
 name = "brgsentimentbot"
-version = "0.2.0"
-description = "Async news sentiment/volatility CLI bot"
-authors = ["BRG <dev@example.com>"]
+version = "0.3.0"
+description = "Simplified news sentiment CLI"
 packages = [{ include = "sentiment_bot" }]
 
 [tool.poetry.dependencies]
-
 python = ">=3.11,<3.13"
-feedparser = "^6.0.11"
 aiohttp = "^3.9.5"
-newspaper3k = "^0.2.8"
-rapidfuzz = "^3.6.1"
-spacy = ">=3.7,<3.8"
-transformers = "^4.41.2"
-torch = "2.2.2"
+feedparser = "^6.0.11"
 vaderSentiment = "^3.3.2"
-typer = {extras = ["all"], version = "^0.12.3"}
 rich = "^13.0"
-sqlmodel = "^0.0.16"
-aiosqlite = "^0.19.0"
-newsapi-python = "^0.2.7"
-langchain = "^0.2.1"
-langchain-community = "^0.2.7"
-sentence-transformers = "^3.0.1"
-faiss-cpu = "^1.8.0"
-pyyaml = "^6.0.1"
-websockets = "^12.0"
-gradio = "^4.37.1"
-numpy = ">=1.23.0,<2.0"
-scipy = "^1.13.0"
-pydantic-settings = "^2.3.1"
-pandas = "^2.2.0"
-# Added for Bayesian and chat modules
-arviz = "^0.18.0"
-openai = "^1.30.1"
-# Research stack
-pyro-ppl = "^1.9.1"
-pymc = "^5.10.0"
-torch-geometric = "^2.5.3"
-networkx = "^3.2.1"
-opencv-python = "^4.9.0.80"
-pytesseract = "^0.3.10"
-ffmpeg-python = "^0.2.0"
-diffprivlib = "^0.6.5"
-pgmpy = "^0.1.24"
-mlflow = "^2.13.0"
-dvc = "^3.50.2"
-pyspark = "^3.5.1"
-apache-flink = "^2.1.0"
-qiskit-aer = "^0.13.3"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.4.1"
-numpy = "^1.26.4"
-typer = "^0.12.3"
-pytest-mock = "^3.12.0"
-respx = "^0.20.2"
-httpx = "^0.27.0"
-ruff = "^0.4.8"
-black = "^24.4.2"
-mypy = "^1.8"
-coverage = "^7.5"
-
-[tool.poetry.scripts]
-bot = "sentiment_bot.cli:app"
+pytest = "^8.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+

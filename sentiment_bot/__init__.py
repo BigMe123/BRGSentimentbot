@@ -1,6 +1,4 @@
-"""Core package for the sentiment bot project."""
+"""Simplified sentiment bot package."""
 
-# Re-export settings for convenience
-from .config import settings
+__all__ = []
 
-__all__ = ["settings"]

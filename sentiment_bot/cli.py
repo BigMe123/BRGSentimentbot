@@ -1,327 +1,141 @@
-"""Command line interface using :mod:`typer`."""
+"""Command line interface for the simplified sentiment bot."""
 
 from __future__ import annotations
 
+import argparse
 import asyncio
 import json
-import os
-import sqlite3
-from pathlib import Path
-from typing import List, Optional
+import sys
+from datetime import datetime, timezone
+from typing import List
 
-import typer
 from rich.console import Console
-from rich.prompt import Prompt
+from rich.table import Table
 
-from . import scheduler
-from .bayesian import fit_hierarchical, load_example_data
-from .config import settings
-from .analyzer import (
-    display_analysis_results,
-    display_ingestion_summary,
-)
+from . import aggregate, fetcher
+from .analyzer import Analyzer
+from .config import WINDOWS
 
 
-app = typer.Typer(help="Async news sentiment and volatility bot")
+def _parse_iso(ts: str) -> datetime:
+    return datetime.fromisoformat(ts.replace("Z", "+00:00")).astimezone(timezone.utc)
 
 
-@app.command()
-def live(interval: Optional[int] = None) -> None:
-    """Continuously run the bot."""
-    from .config import settings
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="News sentiment and volatility bot")
+    parser.add_argument("--window", choices=WINDOWS.keys(), default="day")
+    parser.add_argument("--since")
+    parser.add_argument("--until")
+    parser.add_argument("--keywords", type=str, default="")
+    parser.add_argument("--topic", action="append", default=[])
+    parser.add_argument("--region", action="append", default=[])
+    parser.add_argument("--conflict", action="store_true")
+    parser.add_argument("--limit", type=int, default=1000)
+    parser.add_argument("--newsapi-query")
+    parser.add_argument("--output", choices=["json", "table"], default="table")
+    parser.add_argument("--match", choices=["any", "all"], default="any")
+    return parser
 
-    asyncio.run(scheduler.run_live(interval or settings.INTERVAL))
 
+def filter_articles(articles: List[fetcher.Article], args) -> List[fetcher.Article]:
+    """Filter articles by keywords/topics/region/conflict settings."""
 
-def menu_after_run(stats: dict, results: dict, articles) -> None:
-    console = Console()
-    choices = ["Summary", "Articles", "Analysis", "Exit"]
-    while True:
-        choice = Prompt.ask(
-            "What would you like to view?", choices=choices, default="Summary"
-        )
-        if choice == "Summary":
-            display_ingestion_summary(stats)
-        elif choice == "Articles":
-            console.rule("Fetched Articles")
-            for art in articles:
-                console.print(f"- {art.title}")
-        elif choice == "Analysis":
-            display_analysis_results(results)
+    kws = [k.strip().lower() for k in args.keywords.replace(",", " ").split() if k.strip()]
+    expanded_topics = [t.lower() for t in args.topic]
+
+    filtered = []
+    for art in articles:
+        text = f"{art.title} {art.text}".lower()
+        conds = []
+        if kws:
+            conds.append(any(k in text for k in kws))
+        if expanded_topics:
+            from .config import TOPIC_MAP
+
+            topic_words = []
+            for t in expanded_topics:
+                topic_words.extend(TOPIC_MAP.get(t, []))
+            conds.append(any(w in text for w in topic_words))
+        if args.conflict:
+            from .config import CONFLICT_KEYWORDS
+
+            conds.append(any(w in text for w in CONFLICT_KEYWORDS))
+        if args.region:
+            regions = aggregate.assign_regions(text)
+            conds.append(any(r.lower() in [x.lower() for x in args.region] for r in regions))
+
+        if not conds:
+            filtered.append(art)
         else:
-            break
+            if args.match == "any" and any(conds):
+                filtered.append(art)
+            elif args.match == "all" and all(conds):
+                filtered.append(art)
+    return filtered
+
+
+async def run(args) -> dict:
+    until = _parse_iso(args.until) if args.until else datetime.now(timezone.utc)
+    since = _parse_iso(args.since) if args.since else until - WINDOWS[args.window]
+
+    if args.limit <= 0:
+        articles: List[fetcher.Article] = []
+    else:
+        articles = await fetcher.fetch_all(since, until, args.limit, args.newsapi_query)
+    articles = filter_articles(articles, args)
+
+    analyzer = Analyzer()
+    for art in articles:
+        result = analyzer.analyze(f"{art.title} {art.text}")
+        art.volatility = result.volatility
+
+    keywords = [k.strip() for k in args.keywords.replace(",", " ").split() if k.strip()]
+    summary = aggregate.aggregate(articles, keywords, args.topic, args.conflict)
+    meta = {
+        "analyzed": len(articles),
+        "low_quality": analyzer.low_quality,
+    }
+    return {"meta": meta, **summary}
+
+
+def output_table(result: dict) -> None:
+    console = Console()
+    meta = result.get("meta", {})
+    console.print(
+        f"Analyzed: {meta.get('analyzed', 0)} articles | low_quality={meta.get('low_quality')}"
+    )
+
+    table = Table("Region", "Articles", "Volatility")
+    for region, stats in result["regions"].items():
+        table.add_row(region, str(stats["count"]), f"{stats['volatility']:.3f}")
+    console.print(table)
+
+    for region, stats in result["regions"].items():
+        if stats["keywords"]:
+            console.print(f"Top keywords/topics for {region}")
+            t = Table("Name", "Count", "Volatility")
+            for kw in stats["keywords"]:
+                t.add_row(kw["name"], str(kw["count"]), f"{kw['volatility']:.3f}")
+            console.print(t)
+
+    if result["articles"]:
+        console.print("Top contributing articles")
+        t = Table("Volatility", "Source", "Title")
+        for art in result["articles"]:
+            t.add_row(f"{art['volatility']:.3f}", art["source"], art["title"])
+        console.print(t)
+
+
+def main(argv: list[str] | None = None) -> None:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    result = asyncio.run(run(args))
+    if args.output == "json":
+        json.dump(result, sys.stdout)
+    else:
+        output_table(result)
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main()
 
-
-@app.command()
-def once() -> None:
-    """Run a single fetch/analyse cycle with interactive output."""
-    from . import analyzer, fetcher
-
-    async def _main() -> None:
-        articles, stats = await fetcher.gather_rss()
-        topics = [t.lower() for t in settings.TOPICS]
-        if topics:
-            filtered = []
-            for art in articles:
-                haystack = f"{art.title} {art.text}".lower()
-                if any(t in haystack for t in topics):
-                    filtered.append(art)
-            if filtered:
-                articles = filtered
-
-        analyses = [analyzer.analyze(a.text) for a in articles]
-        snapshot = analyzer.aggregate(analyses)
-        results = {
-            "volatility": snapshot.volatility,
-            "model_confidence": snapshot.confidence,
-            "articles": articles,
-        }
-        menu_after_run(stats, results, articles)
-
-    asyncio.run(_main())
-
-
-@app.command()
-def chat() -> None:
-    """Interactive Q&A."""
-    from langchain.embeddings import SentenceTransformerEmbeddings
-    from langchain.vectorstores import FAISS
-    from .chat_agent import ChatAgent
-
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        typer.echo(
-            "OPENAI_API_KEY is missing or empty. Please set it before using chat."
-        )
-        raise typer.Exit(code=1)
-
-    embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-    path = Path("faiss_index")
-    if path.exists():
-        vs = FAISS.load_local(
-            str(path), embeddings, allow_dangerous_deserialization=True
-        )
-    else:  # empty store
-        vs = FAISS.from_texts([], embeddings)
-    agent = ChatAgent(vs, api_key)
-
-    while True:
-        q = typer.prompt("query")
-        if not q:
-            break
-        typer.echo(agent.ask(q))
-
-
-@app.command()
-def rules() -> None:
-    """Print currently configured rules."""
-
-    from .rules import load_rules
-
-    for rule in load_rules():
-        typer.echo(f"when {rule.when} -> {rule.then}")
-
-
-@app.command()
-def fetch(urls: List[str] = typer.Option(..., "--urls")) -> None:
-    """Fetch RSS feeds and print article snippets."""
-    from .fetcher import gather_rss
-
-    async def _main() -> None:
-        articles, _ = await gather_rss(urls)
-        for art in articles:
-            snippet = art.text.replace("\n", " ")[:80]
-            typer.echo(f"{art.url} -> {snippet}")
-
-    asyncio.run(_main())
-
-
-@app.command()
-def simulate(paths: int = 100) -> None:
-    """Run a Monte Carlo simulation using stored snapshots."""
-    from .config import settings
-    from .simulate import monte_carlo, save_csv
-
-    try:
-        con = sqlite3.connect(settings.DB_PATH)
-        rows = con.execute(
-            "SELECT volatility FROM snapshot ORDER BY id DESC LIMIT 24"
-        ).fetchall()
-        series = [r[0] for r in rows][::-1]
-        con.close()
-    except Exception:
-        series = [0.0] * 24
-    df = monte_carlo(series, paths)
-    save_csv(df)
-    typer.echo(f"saved {settings.SIM_PATH}")
-
-
-@app.command()
-def serve() -> None:
-    """Run the WebSocket server with live snapshots."""
-    from . import scheduler, ws_server
-    from .config import settings
-
-    async def _main() -> None:
-        latest = {"volatility": 0.0, "confidence": 0.0}
-
-        async def updater() -> None:
-            nonlocal latest
-            while True:
-                snap = await scheduler.run_once()
-                latest = {
-                    "volatility": snap.volatility,
-                    "confidence": snap.confidence,
-                }
-                await asyncio.sleep(settings.INTERVAL * 60)
-
-        await asyncio.gather(updater(), ws_server.serve(lambda: latest))
-
-    asyncio.run(_main())
-
-
-@app.command()
-def web() -> None:
-    """Run WebSocket server and Gradio GUI."""
-    from . import scheduler, ws_server
-    from .config import settings
-    from .gui import launch as launch_gui
-
-    async def _main() -> None:
-        latest = {"volatility": 0.0, "confidence": 0.0}
-
-        async def updater() -> None:
-            nonlocal latest
-            while True:
-                snap = await scheduler.run_once()
-                latest = {
-                    "volatility": snap.volatility,
-                    "confidence": snap.confidence,
-                }
-                await asyncio.sleep(settings.INTERVAL * 60)
-
-        loop = asyncio.get_running_loop()
-        await asyncio.gather(
-            updater(),
-            ws_server.serve(lambda: latest),
-            loop.run_in_executor(None, launch_gui),
-        )
-
-    asyncio.run(_main())
-
-
-@app.command()
-def forecast(
-    engine: str = typer.Option("vae", help="vae or gan"),
-    steps: int = typer.Option(5, "--steps"),
-    samples: int = typer.Option(50, "--samples"),
-) -> None:
-    """Run forecasting model."""
-
-    import pandas as pd
-    from sentiment_bot.forecast import GANForecast, VAEForecast
-
-    series = pd.Series([0.1, 0.2, 0.15, 0.18, 0.22, 0.19, 0.21, 0.2, 0.23, 0.25])
-    Model = VAEForecast if engine == "vae" else GANForecast
-    model = Model().fit(series, epochs=20)
-    df = model.forecast(steps, samples)
-
-    from rich.console import Console
-    from rich.table import Table
-
-    table = Table("step", "mean", "lower", "upper")
-    for i, row in df.iterrows():
-        table.add_row(
-            str(i), f"{row['mean']:.3f}", f"{row['lower']:.3f}", f"{row['upper']:.3f}"
-        )
-    Console().print(table)
-
-
-@app.command()
-def bayesian(path: Optional[Path] = None) -> None:
-    """Fit a hierarchical Bayesian model on data."""
-    from .bayesian import fit_hierarchical, load_example_data
-
-    df = load_example_data(path)
-    res = fit_hierarchical(df)
-    typer.echo(f"posterior mean volatility: {float(res.ppc['vol'].mean()):.3f}")
-
-
-@app.command()
-def graph(question: str = "What about Apple?") -> None:
-    """Query a tiny knowledge graph."""
-
-    triples = [("Apple", "competes", "Google"), ("Google", "acquires", "YouTube")]
-    from .knowledge_graph import GraphEmbedder, ingest_triples
-
-    kg = ingest_triples(triples)
-    emb = GraphEmbedder()
-    emb.fit(kg)
-    typer.echo(emb.query_graph(question))
-
-
-@app.command()
-def multimodal(image_url: str, video_url: str) -> None:
-    """Extract text from image and video."""
-
-    from .multimodal import aggregate_article_text
-
-    article = {"text": "", "image_url": image_url, "video_url": video_url}
-    typer.echo(aggregate_article_text(article))
-
-
-@app.command()
-def meta() -> None:
-    """Run a minimal meta-learning loop."""
-    from datasets import Dataset
-    from .meta_learning import MAMLTrainer
-
-    trainer = MAMLTrainer()
-    ds = Dataset.from_dict({"text": ["good", "bad"], "label": [1, 0]})
-    trainer.meta_train([ds])
-    trainer.adapt(ds)
-    typer.echo("meta-learning completed")
-
-
-@app.command()
-def privacy_demo() -> None:
-    """Demonstrate differential privacy decorator."""
-
-    from .privacy import dp_mechanism
-
-    @dp_mechanism(epsilon=5.0, delta=1e-5)
-    def compute(x: int) -> int:
-        return x * 2
-
-    compute(2)
-    typer.echo(f"eps={compute.epsilon:.2f}, delta={compute.delta:.1e}")
-
-
-@app.command()
-def explain(text: str = "A sample article") -> None:
-    """Explain model prediction for given text."""
-
-    from .explain import explain_article
-
-    attributions = explain_article(text)
-    typer.echo(json.dumps(attributions, indent=2))
-
-
-@app.command()
-def stream(
-    kafka_bootstrap: str, topic: str
-) -> None:  # pragma: no cover - requires infra
-    """Run the streaming job."""
-
-    from .streaming import start_stream
-
-    start_stream(kafka_bootstrap, topic)
-
-
-@app.command()
-def quantum() -> None:
-    """Optimise a tiny sentiment portfolio."""
-
-    from .quantum_opt import optimize_portfolio
-
-    typer.echo(optimize_portfolio())

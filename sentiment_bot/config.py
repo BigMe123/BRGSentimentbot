@@ -1,217 +1,121 @@
-"""Configuration via environment variables using :mod:`pydantic-settings`."""
+"""Configuration helpers for the simplified sentiment bot.
+
+This module exposes a small collection of constants and helpers used by the
+CLI.  The goal is to keep configuration light weight and environment driven.
+"""
+
 from __future__ import annotations
-from typing import List
+
+from dataclasses import dataclass
+from datetime import timedelta
+from pathlib import Path
 import os
-from dataclasses import dataclass, field
 
-try:  # pragma: no cover - optional dependency
-    from pydantic_settings import BaseSettings  # type: ignore
+# ---------------------------------------------------------------------------
+# RSS sources
 
-    class Settings(BaseSettings):
-        """Application settings loaded from environment variables."""
+ROOT = Path(__file__).resolve().parent.parent
 
-        NEWSAPI_KEY: str = "027e167533f7488bb9935e9ab1874e72"
-        RSS_FEEDS: List[str] = [
-            # Major International News
-            "https://feeds.bbci.co.uk/news/world/rss.xml",
-            "https://feeds.bbci.co.uk/news/rss.xml",
-            "https://www.aljazeera.com/xml/rss/all.xml",
-            "http://rss.cnn.com/rss/cnn_topstories.rss",
-            "http://rss.cnn.com/rss/cnn_world.rss",
-            "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
-            "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
-            "https://feeds.washingtonpost.com/rss/world",
-            "https://feeds.washingtonpost.com/rss/national",
-            "https://www.theguardian.com/world/rss",
-            "https://www.theguardian.com/uk/rss",
-            "https://feeds.reuters.com/reuters/topNews",
-            "https://feeds.reuters.com/reuters/worldNews",
-            
-            # Business & Finance
-            "https://feeds.bloomberg.com/markets/news.rss",
-            "https://feeds.ft.com/rss/home",
-            "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml",
-            "https://feeds.washingtonpost.com/rss/business",
-            "http://rss.cnn.com/rss/money_latest.rss",
-            "https://www.wsj.com/xml/rss/3_7085.xml",
-            "https://www.cnbc.com/id/100003114/device/rss/rss.html",
-            "https://www.cnbc.com/id/100727362/device/rss/rss.html",
-            "https://feeds.marketwatch.com/marketwatch/topstories/",
-            "https://www.economist.com/feeds/print-sections/79/finance-and-economics.xml",
-            
-            # Technology
-            "https://feeds.arstechnica.com/arstechnica/index",
-            "https://www.wired.com/feed/rss",
-            "https://techcrunch.com/feed/",
-            "https://www.theverge.com/rss/index.xml",
-            "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",
-            "https://feeds.washingtonpost.com/rss/business/technology",
-            "http://feeds.feedburner.com/TechCrunch/",
-            "https://www.zdnet.com/news/rss.xml",
-            "https://www.cnet.com/rss/news/",
-            "https://feeds.feedburner.com/venturebeat/SZYF",
-            
-            # Science
-            "https://www.nature.com/nature.rss",
-            "https://www.sciencedaily.com/rss/all.xml",
-            "https://rss.nytimes.com/services/xml/rss/nyt/Science.xml",
-            "https://www.newscientist.com/feed/home",
-            "https://feeds.washingtonpost.com/rss/rss_speaking-of-science",
-            "https://www.scientificamerican.com/feed/basic/",
-            
-            # Politics
-            "https://rss.politico.com/politics-news.xml",
-            "https://thehill.com/feed/",
-            "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml",
-            "https://feeds.washingtonpost.com/rss/politics",
-            "https://feeds.npr.org/1014/rss.xml",
-            
-            # Defense & Military
-            "https://www.defensenews.com/arc/outboundfeeds/rss/category/news/?outputType=xml",
-            "https://www.janes.com/feeds/news",
-            "https://www.military.com/rss-feeds/content?category=news&tags=headlines",
-            "https://www.defenseone.com/rss.xml",
-            "https://www.airforcetimes.com/arc/outboundfeeds/rss/?outputType=xml",
-            "https://www.navytimes.com/arc/outboundfeeds/rss/?outputType=xml",
-            "https://www.armytimes.com/arc/outboundfeeds/rss/?outputType=xml",
-            "https://breakingdefense.com/feed/",
-            "https://www.thedrive.com/the-war-zone/rss",
-            "https://www.c4isrnet.com/arc/outboundfeeds/rss/?outputType=xml",
-            
-            # Geopolitics & International Relations
-            "https://www.foreignaffairs.com/rss.xml",
-            "https://www.cfr.org/rss.xml",
-            "https://feeds.feedburner.com/stratfor/geopolitical-diary",
-            "https://warontherocks.com/feed/",
-            "https://www.csis.org/analysis/feed",
-            "https://www.brookings.edu/feed/",
-            "https://carnegieendowment.org/feed",
-            "https://www.rand.org/blog.xml",
-            "https://www.atlanticcouncil.org/feed/",
-            "https://thediplomat.com/feed/",
-            "https://www.lawfareblog.com/rss.xml",
-            "https://www.realcleardefense.com/index.xml",
-            "https://www.iiss.org/en/feed/",
-            "https://rusi.org/rss.xml",
-            
-            # Intelligence & Security
-            "https://theintercept.com/feed/?lang=en",
-            "https://www.bellingcat.com/feed/",
-            "https://intelnews.org/feed/",
-            "https://www.janes.com/feeds/news/security",
-            "https://www.hstoday.us/feed/",
-            "https://www.cyberscoop.com/feed/",
-            
-            # Regional Security Focus
-            "https://amwaj.media/rss",  # Middle East
-            "https://www.mei.edu/rss.xml",  # Middle East Institute
-            "https://besacenter.org/feed/",  # Begin-Sadat Center
-            "https://www.scmp.com/rss/91/feed",  # South China Morning Post - China
-            "https://www.38north.org/feed/",  # North Korea analysis
-            "https://jamestown.org/feed/",  # Eurasia focus
-            "https://www.fpri.org/feed/",  # Foreign Policy Research Institute
-            
-            # NATO & European Security
-            "https://www.nato.int/cps/en/natohq/rss.xml",
-            "https://www.euractiv.com/sections/defence-and-security/feed/",
-            "https://www.europeanleadershipnetwork.org/feed/",
-            
-            # Think Tanks & Analysis
-            "https://www.hudson.org/rss.xml",
-            "https://www.aei.org/feed/",
-            "https://www.heritage.org/rss.xml",
-            "https://www.newamerica.org/rss/",
-            "https://www.stimson.org/feed/",
-            "https://www.usip.org/rss.xml",
-            
-            # European News
-            "https://www.france24.com/en/rss",
-            "https://www.dw.com/rss/en/news/rss.xml",
-            "https://www.euronews.com/rss",
-            "https://www.spiegel.de/international/index.rss",
-            "https://www.lemonde.fr/en/rss/une.xml",
-            
-            # Asian News
-            "https://asia.nikkei.com/rss/feed/nar",
-            "https://www.japantimes.co.jp/feed/",
-            "https://www.koreatimes.co.kr/www/rss/rss.xml",
-            "https://www.taipeitimes.com/xml/rss/feat.rss",
-            "https://www.straitstimes.com/news/world/rss.xml",
-            "https://www.bangkokpost.com/rss/data/news.xml",
-            
-            # Latin American News
-            "https://riotimesonline.com/feed/",
-            "https://mexiconewsdaily.com/feed/",
-            "https://www.batimes.com.ar/feed",
-            
-            # African News
-            "https://africanews.com/rss/news",
-            "https://www.dailymaverick.co.za/rss/",
-            "https://allafrica.com/tools/headlines/rdf/latest/headlines.rdf",
-            
-            # Oceania News
-            "https://www.abc.net.au/news/feed/1948/rss.xml",
-            "https://www.nzherald.co.nz/arc/outboundfeeds/rss/curated/78/?outputType=xml&_ga=2.172515608.1955944642.1609809093-1604323447.1609809093",
-            
-            # Energy & Climate
-            "https://www.eenews.net/api/feeds/rss/eedaily/",
-            "https://www.climatechangenews.com/feed/",
-            "https://insideclimatenews.org/feed/",
-            
-            # Health & Medicine
-            "https://rss.nytimes.com/services/xml/rss/nyt/Health.xml",
-            "https://www.statnews.com/feed/",
-            "https://www.medscape.com/cx/rssfeeds/2700.xml",
-            
-            # Space & Aviation
-            "https://spacenews.com/feed/",
-            "https://www.space.com/feeds/all",
-            "https://www.nasa.gov/rss/dyn/breaking_news.rss",
-            "https://www.flightglobal.com/feed",
-            "https://www.airspacemag.com/rss/latest-stories/",  # Air & Space Magazine
-        ]
-        
-        TOPICS: List[str] = ["markets"]
-        INTERVAL: int = 30
-        DB_PATH: str = "sentiment.db"
-        VECTOR_INDEX_PATH: str = "vector.index"
-        RULES_PATH: str = "rules.yml"
-        SIM_PATH: str = "simulations.csv"
-        WEBSOCKET_PORT: int = 8765
-        GRADIO_PORT: int = 7860
-        OPENAI_API_KEY: str = "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"
 
-        class Config:
-            env_file = ".env"
+def load_rss_sources() -> list[str]:
+    """Return the list of RSS feed URLs.
 
-    settings = Settings()
+    The file ``rss_sources.txt`` lives in the project root by default.  A
+    different location can be provided via the ``RSS_SOURCES_FILE``
+    environment variable.  Lines starting with ``#`` are ignored.
+    """
 
-except ImportError:  # pragma: no cover - fallback without pydantic
-    @dataclass
-    class Settings:  # type: ignore[no-redef]
-        """Fallback settings when pydantic-settings is not available."""
-        
-        NEWSAPI_KEY: str = os.getenv("NEWSAPI_KEY", "027e167533f7488bb9935e9ab1874e72")
-        RSS_FEEDS: List[str] = field(
-            default_factory=lambda: [
-                "https://feeds.bbci.co.uk/news/world/rss.xml",
-                "https://www.aljazeera.com/xml/rss/all.xml",
-            ]
-        )
-        TOPICS: List[str] = field(
-            default_factory=lambda: [
-                t.strip()
-                for t in os.getenv("TOPICS", "markets").split(",")
-                if t.strip()
-            ]
-        )
-        INTERVAL: int = int(os.getenv("INTERVAL", "30"))
-        DB_PATH: str = os.getenv("DB_PATH", "sentiment.db")
-        VECTOR_INDEX_PATH: str = os.getenv("VECTOR_INDEX_PATH", "vector.index")
-        RULES_PATH: str = os.getenv("RULES_PATH", "rules.yml")
-        SIM_PATH: str = os.getenv("SIM_PATH", "simulations.csv")
-        WEBSOCKET_PORT: int = int(os.getenv("WEBSOCKET_PORT", "8765"))
-        GRADIO_PORT: int = int(os.getenv("GRADIO_PORT", "7860"))
-        OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+    default_file = ROOT / "rss_sources.txt"
+    path = Path(os.getenv("RSS_SOURCES_FILE", default_file))
+    sources: list[str] = []
+    if path.exists():
+        for line in path.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#"):
+                sources.append(line)
+    return sources
 
-    settings = Settings()
+
+# ---------------------------------------------------------------------------
+# Time windows
+
+WINDOWS = {
+    "minute": timedelta(minutes=1),
+    "half_hour": timedelta(minutes=30),
+    "hour": timedelta(hours=1),
+    "day": timedelta(days=1),
+    "week": timedelta(weeks=1),
+    "month": timedelta(days=30),
+    "year": timedelta(days=365),
+}
+
+
+# ---------------------------------------------------------------------------
+# Keyword maps
+
+REGION_MAP = {
+    "Europe": [
+        "europe",
+        "france",
+        "germany",
+        "italy",
+        "spain",
+        "uk",
+        "britain",
+        "london",
+        "paris",
+    ],
+    "Asia": [
+        "asia",
+        "china",
+        "beijing",
+        "japan",
+        "tokyo",
+        "korea",
+        "india",
+    ],
+    "Middle East": ["middle east", "iran", "iraq", "israel", "syria", "palestine"],
+    "Africa": ["africa", "nigeria", "south africa", "kenya", "ethiopia"],
+    "Americas": ["united states", "usa", "america", "canada", "brazil", "mexico"],
+}
+
+TOPIC_MAP = {
+    "energy": ["energy", "oil", "gas", "electricity", "power"],
+    "sanctions": ["sanction", "embargo"],
+    "border": ["border", "boundary"],
+    "elections": ["election", "vote"],
+    "trade": ["trade", "tariff"],
+    "cyber": ["cyber", "hacker", "ransomware"],
+    "terrorism": ["terrorism", "terrorist", "bomb"],
+    "protests": ["protest", "demonstration"],
+}
+
+CONFLICT_KEYWORDS = [
+    "airstrike",
+    "mobilization",
+    "missile",
+    "drone",
+    "clashes",
+    "shelling",
+    "coup",
+    "riot",
+    "blockade",
+    "offensive",
+    "ceasefire",
+]
+
+
+# Optional NewsAPI configuration
+NEWSAPI_KEY = os.getenv("NEWSAPI_KEY")
+NEWSAPI_DOMAINS = os.getenv("NEWSAPI_DOMAINS")
+
+
+@dataclass
+class Meta:
+    """Runtime metadata returned with results."""
+
+    feeds_attempted: int = 0
+    feeds_succeeded: int = 0
+    articles_fetched: int = 0
+    articles_analyzed: int = 0
+
