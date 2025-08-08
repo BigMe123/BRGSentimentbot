@@ -110,3 +110,29 @@ def test_interactive_cli_all(monkeypatch):
     result = runner.invoke(app, ["interactive"])
     assert result.exit_code == 0
     assert "All" in result.output
+
+
+def test_run_interactive_mode_reprompt(monkeypatch, capsys):
+    answers = iter(["99", "2", "99", "2", "99", "1", "Articles", "Exit"])
+    monkeypatch.setattr(
+        "sentiment_bot.interactive.Prompt.ask", lambda *a, **k: next(answers)
+    )
+    interactive.run_interactive_mode()
+    out = capsys.readouterr().out
+    assert "Invalid selection" in out
+    assert "Africa oil" in out
+
+
+def test_run_interactive_mode_no_articles(monkeypatch, capsys):
+    async def empty_gather():
+        return [], {"total": 0}
+
+    module = sys.modules["sentiment_bot.fetcher"]
+    monkeypatch.setattr(module, "gather_rss", empty_gather)
+    answers = iter(["1", "1", "1"])
+    monkeypatch.setattr(
+        "sentiment_bot.interactive.Prompt.ask", lambda *a, **k: next(answers)
+    )
+    interactive.run_interactive_mode()
+    out = capsys.readouterr().out
+    assert "No articles found" in out

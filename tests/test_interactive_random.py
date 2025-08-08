@@ -3,6 +3,7 @@ import sys
 import types
 import random
 from datetime import datetime, timedelta
+import pytest  # needed for the monkeypatch fixture
 
 # ensure package root on path
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
@@ -24,6 +25,7 @@ for mod_name in [
     module = types.ModuleType(full_name)
     sys.modules.setdefault(full_name, module)
 
+# Minimal config surface the code expects
 sys.modules["sentiment_bot.config"].settings = types.SimpleNamespace(TOPICS=[])
 sys.modules["sentiment_bot.config"].REGION_MAP = {
     "africa": ["africa"],
@@ -38,17 +40,18 @@ sys.modules["sentiment_bot.config"].WINDOWS = {
     "day": timedelta(days=1),
 }
 
+# Lightweight analyzer stub
 analyzer_stub = types.ModuleType("sentiment_bot.analyzer")
 sys.modules["sentiment_bot.analyzer"] = analyzer_stub
 analyzer_stub.display_analysis_results = lambda *a, **k: None
 analyzer_stub.display_ingestion_summary = lambda *a, **k: None
 
 import sentiment_bot.interactive as interactive  # noqa: E402
-from sentiment_bot.interactive import (
+from sentiment_bot.interactive import (  # noqa: E402
     REGION_CHOICES,
     TOPIC_CHOICES,
     WINDOW_CHOICES,
-)  # noqa: E402
+)
 from sentiment_bot.cli import interactive as cli_interactive  # noqa: E402
 
 
@@ -91,11 +94,12 @@ def fake_aggregate(results):
     return Snap()
 
 
+# Wire stubs
 sys.modules["sentiment_bot.fetcher"].gather_rss = fake_gather_rss
 analyzer_stub.analyze = fake_analyze
 analyzer_stub.aggregate = fake_aggregate
 
-# Expose the CLI helper for tests
+# Expose the CLI helper to match expected test entry point
 interactive.run_interactive_mode = cli_interactive
 
 
@@ -105,5 +109,9 @@ def test_run_interactive_mode_random(monkeypatch):
     topic_idx = random.randint(1, len(TOPIC_CHOICES) - 1)
     window_idx = random.randint(1, len(WINDOW_CHOICES))
     answers = iter([str(region_idx), str(topic_idx), str(window_idx)])
+
+    # The CLI uses Rich's Prompt.ask; patch that so we can feed answers
     monkeypatch.setattr("sentiment_bot.cli.Prompt.ask", lambda *a, **k: next(answers))
+
+    # Should complete a single interactive cycle without throwing
     interactive.run_interactive_mode()
