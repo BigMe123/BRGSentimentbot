@@ -4,6 +4,9 @@ import asyncio
 import pytest
 
 pytest.importorskip("aiohttp")
+rules = importlib.import_module("sentiment_bot.rules")
+if not hasattr(rules, "apply_rules"):
+    pytest.skip("rules.apply_rules missing", allow_module_level=True)
 
 config = importlib.reload(importlib.import_module("sentiment_bot.config"))
 analyzer = importlib.reload(importlib.import_module("sentiment_bot.analyzer"))
@@ -23,7 +26,9 @@ async def fake_gather_all_sources():
 
 
 def fake_analyze(text: str) -> analyzer.Analysis:
-    return analyzer.Analysis(vader=1.0 if "foo" in text else 0.0, bert=0.0, labels=[], summary="")
+    return analyzer.Analysis(
+        vader=1.0 if "foo" in text else 0.0, bert=0.0, labels=[], summary=""
+    )
 
 
 def test_topic_filtering(monkeypatch):

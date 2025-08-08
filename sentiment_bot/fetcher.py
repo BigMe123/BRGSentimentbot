@@ -5,6 +5,7 @@ import logging
 import json
 import re
 import time
+from contextlib import suppress
 from collections import defaultdict, deque
 from dataclasses import dataclass
 from typing import Any, Deque, Dict, Iterable, List, Optional, Tuple
@@ -386,13 +387,16 @@ async def gather_rss(
     all_article_urls: List[str] = []
 
     async def parse_feed(feed_url: str) -> List[str]:
-        try:
-            parsed = await asyncio.to_thread(feedparser.parse, feed_url)
-            urls = [entry.get("link") for entry in parsed.entries if entry.get("link")]
-            return urls
-        except Exception as e:
-            logger.warning(f"Failed to parse feed {feed_url}: {e}")
-            return []
+        for attempt in range(1, (getattr(settings, "REQUEST_RETRIES", 2) + 1)):
+            try:
+                parsed = await asyncio.wait_for(
+                    asyncio.to_thread(feedparser.parse, feed_url),
+                    timeout=getattr(settings, "REQUEST_TIMEOUT_SECONDS", 10),
+                )
+                return [e.get("link") for e in parsed.entries if e.get("link")]
+            except Exception as e:
+                logger.warning(f"[feed attempt {attempt}] Failed {feed_url}: {e}")
+        return []
 
     with Progress(
         SpinnerColumn(),
@@ -409,24 +413,33 @@ async def gather_rss(
             progress.advance(feed_task)
 
     unique_links = list(dict.fromkeys(all_article_urls))
+    if hasattr(settings, "MAX_ARTICLES"):
+        unique_links = unique_links[: settings.MAX_ARTICLES]
     console.print(f"Total unique articles to fetch: {len(unique_links)}")
 
-    sem = asyncio.Semaphore(50)
+    sem = asyncio.Semaphore(
+        settings.MAX_CONCURRENT_REQUESTS
+        if hasattr(settings, "MAX_CONCURRENT_REQUESTS")
+        else 30
+    )
     results: List[ArticleData] = []
     failed_count = 0
 
     async def _worker(link: str) -> None:
         nonlocal failed_count
         async with sem:
-            try:
-                art = await fetch_and_parse(link)
-                if art.text:
-                    results.append(art)
-                else:
-                    failed_count += 1
-            except Exception:
-                failed_count += 1
-                logger.exception(f"Failed to fetch or parse {link}")
+            for attempt in range(1, (getattr(settings, "REQUEST_RETRIES", 2) + 1)):
+                try:
+                    art = await asyncio.wait_for(
+                        fetch_and_parse(link),
+                        timeout=getattr(settings, "REQUEST_TIMEOUT_SECONDS", 10),
+                    )
+                    if art and art.text:
+                        results.append(art)
+                        return
+                except Exception:
+                    logger.exception(f"[article attempt {attempt}] {link}")
+            failed_count += 1
 
     with Progress(
         SpinnerColumn(),
@@ -467,6 +480,11 @@ async def gather_rss(
         ),
         "data_quality": confidence * 100,
     }
+
+    if not feed_urls or not results:
+        console.print(
+            "No articles found. Provide RSS URLs in rss_sources.txt or set RSS_SOURCES_FILE."
+        )
 
     return results, stats
 
