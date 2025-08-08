@@ -17,7 +17,7 @@ import feedparser
 from rich.console import Console
 from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 
-from .config import settings
+from .config import NEWS_OFFLINE, settings
 
 # Configure logging for risk sentiment analysis
 logging.basicConfig(
@@ -312,28 +312,19 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
             timeout = aiohttp.ClientTimeout(total=20)
             async with aiohttp.ClientSession(timeout=timeout) as session:
                 async with session.get(url, ssl=False) as resp:
-                    if resp.status == 200:
-                        html = await resp.text()
-                        break
-        except Exception:
+                    resp.raise_for_status()
+                    html = await resp.text()
+                    break
+        except (aiohttp.ClientError, asyncio.TimeoutError, OSError) as e:
+            logger.error(
+                "Fetch failed %s: %s. If in CI, set NEWS_OFFLINE=1.", url, e
+            )
             if attempt < max_retries - 1:
                 await asyncio.sleep(retry_delay * (attempt + 1))
                 continue
-            else:
-                # Final fallback to urllib
-                try:
-                    from urllib.request import urlopen
-
-                    def _urlopen_read() -> str:
-                        with urlopen(url, timeout=20) as resp:
-                            return resp.read().decode(errors="ignore")
-
-                    html = await asyncio.to_thread(_urlopen_read)
-                except Exception:
-                    circuit_breaker.record_failure(url)
-                    logger.debug(f"All fetch attempts failed for {url}")
-                    return ArticleData(url=url, title="", text="", published=None)
-
+            circuit_breaker.record_failure(url)
+            return ArticleData(url=url, title="", text="", published=None)
+    
     # Parse HTML with smart extraction
     soup = BeautifulSoup(html, "html.parser")
 
@@ -383,6 +374,15 @@ async def gather_rss(
 ) -> tuple[List[ArticleData], Dict[str, Any]]:
     """Parse RSS feeds and return articles with collection stats."""
     console = Console()
+    if NEWS_OFFLINE:
+        return [
+            ArticleData(
+                url="http://stub/a", title="Asia trade", text="trade asia"
+            ),
+            ArticleData(
+                url="http://stub/b", title="Africa oil", text="energy africa"
+            ),
+        ], {"total": 2}
     feed_urls = list(feeds or settings.RSS_FEEDS)
     all_article_urls: List[str] = []
 
