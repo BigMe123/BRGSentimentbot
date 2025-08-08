@@ -15,6 +15,9 @@ MAX_CONCURRENT_REQUESTS = 30  # Reduce blast radius
 MAX_ARTICLES = 500  # Safety cap so we don't blow RAM
 SAFE_MODE = True  # Keep heavy/optional features off by default in CLI
 
+# Allow running without network access
+NEWS_OFFLINE = os.getenv("NEWS_OFFLINE", "0").lower() in ("1", "true", "yes")
+
 
 def load_rss_sources(path: str | Path | None = None) -> List[str]:
     """Load RSS source URLs from a text file.
