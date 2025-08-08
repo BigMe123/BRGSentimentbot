@@ -15,6 +15,15 @@ poetry install --no-root
 poetry run bot once
 ```
 
+### Troubleshooting
+- **No articles fetched?** Create `rss_sources.txt` in the repo root with one RSS URL per line, or set `RSS_SOURCES_FILE=/path/to/feeds.txt`.
+- **Interactive mode?** `poetry run bot interactive` lets you choose regions, topics, and time frames; supports `all` or comma-separated numbers.
+- **Optional deps missing?** Features like chat/FAISS/LangChain are optional; the core CLI works without them.
+
+### Config
+- `RSS_SOURCES_FILE` (optional): path to a text file with RSS URLs.
+- Default feeds: BBC World, Reuters World (baked-in fallback).
+
 ### Docker
 ```bash
 docker build -t brg-bot .
@@ -42,6 +51,7 @@ A simple `devcontainer.json` is provided for VS Code Remote Containers.
 poetry run bot live            # continuous mode
 poetry run bot once            # single cycle
 poetry run bot chat            # interactive REPL
+poetry run bot interactive     # select regions/topics/time
 poetry run bot rules           # list loaded rules
 poetry run bot simulate        # run Monte Carlo simulation
 poetry run bot serve           # start websocket server

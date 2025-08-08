@@ -8,6 +8,14 @@ from dataclasses import dataclass, field
 from datetime import timedelta
 
 
+# Hardening defaults (no new deps)
+REQUEST_TIMEOUT_SECONDS = 10
+REQUEST_RETRIES = 2
+MAX_CONCURRENT_REQUESTS = 30  # Reduce blast radius
+MAX_ARTICLES = 500  # Safety cap so we don't blow RAM
+SAFE_MODE = True  # Keep heavy/optional features off by default in CLI
+
+
 def load_rss_sources(path: str | Path | None = None) -> List[str]:
     """Load RSS source URLs from a text file.
 

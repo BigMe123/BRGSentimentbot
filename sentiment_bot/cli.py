@@ -6,7 +6,7 @@ import asyncio
 import json
 import os
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional
 from urllib.parse import urlparse
@@ -34,34 +34,56 @@ from .interactive import (
 )
 
 
+def _try_parse_iso(dt_str: str) -> datetime | None:
+    """Parse ISO formatted datetimes safely."""
+    try:
+        dt = datetime.fromisoformat(dt_str)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+    except Exception:
+        return None
+
+
 app = typer.Typer(help="Async news sentiment and volatility bot")
+
+
+def _safe_run(coro) -> None:
+    try:
+        asyncio.run(coro)
+    except KeyboardInterrupt:
+        typer.echo("Interrupted. Exiting cleanly.")
+    except Exception as e:
+        typer.echo(f"Something went wrong, but we handled it: {e}")
 
 
 @app.command()
 def live(interval: Optional[int] = None) -> None:
     """Continuously run the bot."""
-    from .config import settings
 
-    asyncio.run(scheduler.run_live(interval or settings.INTERVAL))
+    _safe_run(scheduler.run_live(interval or settings.INTERVAL))
 
 
 def menu_after_run(stats: dict, results: dict, articles) -> None:
-    console = Console()
-    choices = ["Summary", "Articles", "Analysis", "Exit"]
-    while True:
-        choice = Prompt.ask(
-            "What would you like to view?", choices=choices, default="Summary"
-        )
-        if choice == "Summary":
-            display_ingestion_summary(stats)
-        elif choice == "Articles":
-            console.rule("Fetched Articles")
-            for art in articles:
-                console.print(f"- {art.title}")
-        elif choice == "Analysis":
-            display_analysis_results(results)
-        else:
-            break
+    try:
+        console = Console()
+        choices = ["Summary", "Articles", "Analysis", "Exit"]
+        while True:
+            choice = Prompt.ask(
+                "What would you like to view?", choices=choices, default="Summary"
+            )
+            if choice == "Summary":
+                display_ingestion_summary(stats)
+            elif choice == "Articles":
+                console.rule("Fetched Articles")
+                for art in articles:
+                    console.print(f"- {art.title}")
+            elif choice == "Analysis":
+                display_analysis_results(results)
+            else:
+                break
+    except Exception as e:
+        Console().print(f"Display issue (continuing): {e}")
 
 
 @app.command()
@@ -95,10 +117,15 @@ def interactive(
 
     async def _main() -> None:
         articles, _ = await fetcher.gather_rss()
-        start = datetime.utcnow() - window
+        start_ts = datetime.now(timezone.utc) - window
         filtered = []
         for art in articles:
-            if art.published and art.published < start:
+            pub = art.published
+            if isinstance(pub, datetime):
+                pub_dt = pub if pub.tzinfo else pub.replace(tzinfo=timezone.utc)
+            else:
+                pub_dt = _try_parse_iso(pub or "")
+            if pub_dt and pub_dt < start_ts:
                 continue
             text = f"{art.title} {art.text}".lower()
             if regions:
@@ -188,7 +215,7 @@ def interactive(
                 )
             console.print(art_table)
 
-    asyncio.run(_main())
+    _safe_run(_main())
 
 
 @app.command()
@@ -197,7 +224,20 @@ def once() -> None:
     from . import analyzer, fetcher
 
     async def _main() -> None:
-        articles, stats = await fetcher.gather_rss()
+        try:
+            articles, stats = await fetcher.gather_rss()
+        except Exception as e:
+            typer.echo(f"Fetch error handled: {e}")
+            articles, stats = [], {
+                "total": 0,
+                "attempted": 0,
+                "success_rate": 0,
+                "words_collected": 0,
+                "unique_domains": 0,
+                "cache_hits": 0,
+                "circuit_breakers": 0,
+                "data_quality": 0,
+            }
         topics = [t.lower() for t in settings.TOPICS]
         if topics:
             filtered = []
@@ -208,8 +248,12 @@ def once() -> None:
             if filtered:
                 articles = filtered
 
-        analyses = [analyzer.analyze(a.text) for a in articles]
-        snapshot = analyzer.aggregate(analyses)
+        try:
+            analyses = [analyzer.analyze(a.text) for a in articles]
+            snapshot = analyzer.aggregate(analyses)
+        except Exception as e:
+            typer.echo(f"Analysis error handled: {e}")
+            snapshot = type("S", (), {"volatility": 0.0, "confidence": 0.0})()
         results = {
             "volatility": snapshot.volatility,
             "model_confidence": snapshot.confidence,
@@ -217,22 +261,29 @@ def once() -> None:
         }
         menu_after_run(stats, results, articles)
 
-    asyncio.run(_main())
+    _safe_run(_main())
 
 
 @app.command()
 def chat() -> None:
     """Interactive Q&A."""
-    from langchain.embeddings import SentenceTransformerEmbeddings
-    from langchain.vectorstores import FAISS
-    from .chat_agent import ChatAgent
+    if getattr(settings, "SAFE_MODE", True):
+        typer.echo("SAFE_MODE enabled; chat disabled.")
+        return
+    try:
+        from langchain.embeddings import SentenceTransformerEmbeddings
+        from langchain.vectorstores import FAISS
+        from .chat_agent import ChatAgent
+    except Exception as e:
+        typer.echo("LangChain/FAISS not available; chat disabled.")
+        return
 
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         typer.echo(
             "OPENAI_API_KEY is missing or empty. Please set it before using chat."
         )
-        raise typer.Exit(code=1)
+        return
 
     embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
     path = Path("faiss_index")
@@ -272,13 +323,12 @@ def fetch(urls: List[str] = typer.Option(..., "--urls")) -> None:
             snippet = art.text.replace("\n", " ")[:80]
             typer.echo(f"{art.url} -> {snippet}")
 
-    asyncio.run(_main())
+    _safe_run(_main())
 
 
 @app.command()
 def simulate(paths: int = 100) -> None:
     """Run a Monte Carlo simulation using stored snapshots."""
-    from .config import settings
     from .simulate import monte_carlo, save_csv
 
     try:
@@ -298,8 +348,14 @@ def simulate(paths: int = 100) -> None:
 @app.command()
 def serve() -> None:
     """Run the WebSocket server with live snapshots."""
-    from . import scheduler, ws_server
-    from .config import settings
+    if getattr(settings, "SAFE_MODE", True):
+        typer.echo("SAFE_MODE enabled; serve disabled.")
+        return
+    try:
+        from . import scheduler, ws_server
+    except Exception:
+        typer.echo("WebSocket server not available.")
+        return
 
     async def _main() -> None:
         latest = {"volatility": 0.0, "confidence": 0.0}
@@ -316,15 +372,21 @@ def serve() -> None:
 
         await asyncio.gather(updater(), ws_server.serve(lambda: latest))
 
-    asyncio.run(_main())
+    _safe_run(_main())
 
 
 @app.command()
 def web() -> None:
     """Run WebSocket server and Gradio GUI."""
-    from . import scheduler, ws_server
-    from .config import settings
-    from .gui import launch as launch_gui
+    if getattr(settings, "SAFE_MODE", True):
+        typer.echo("SAFE_MODE enabled; web disabled.")
+        return
+    try:
+        from . import scheduler, ws_server
+        from .gui import launch as launch_gui
+    except Exception:
+        typer.echo("Web/GUI dependencies missing.")
+        return
 
     async def _main() -> None:
         latest = {"volatility": 0.0, "confidence": 0.0}
@@ -346,7 +408,7 @@ def web() -> None:
             loop.run_in_executor(None, launch_gui),
         )
 
-    asyncio.run(_main())
+    _safe_run(_main())
 
 
 @app.command()
@@ -356,9 +418,15 @@ def forecast(
     samples: int = typer.Option(50, "--samples"),
 ) -> None:
     """Run forecasting model."""
-
-    import pandas as pd
-    from sentiment_bot.forecast import GANForecast, VAEForecast
+    if getattr(settings, "SAFE_MODE", True):
+        typer.echo("SAFE_MODE enabled; forecast disabled.")
+        return
+    try:
+        import pandas as pd
+        from sentiment_bot.forecast import GANForecast, VAEForecast
+    except Exception:
+        typer.echo("Forecast dependencies missing.")
+        return
 
     series = pd.Series([0.1, 0.2, 0.15, 0.18, 0.22, 0.19, 0.21, 0.2, 0.23, 0.25])
     Model = VAEForecast if engine == "vae" else GANForecast

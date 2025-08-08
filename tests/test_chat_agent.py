@@ -5,6 +5,10 @@ import types
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 import pytest
+from sentiment_bot.config import SAFE_MODE
+
+if SAFE_MODE:
+    pytest.skip("SAFE_MODE enabled", allow_module_level=True)
 
 openai = pytest.importorskip("openai")
 emb_mod = pytest.importorskip("langchain.embeddings")

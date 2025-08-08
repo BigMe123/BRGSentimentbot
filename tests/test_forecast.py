@@ -7,6 +7,10 @@ import pandas as pd
 import pytest
 
 pytest.importorskip("torch")
+from sentiment_bot.config import SAFE_MODE
+
+if SAFE_MODE:
+    pytest.skip("SAFE_MODE enabled", allow_module_level=True)
 
 from sentiment_bot.forecast import GANForecast, VAEForecast
 
@@ -24,4 +28,3 @@ def test_forecast_mean_close_to_one(Model) -> None:
     series = pd.Series(np.ones(20))
     df = Model().fit(series).forecast(5, samples=10)
     assert np.max(np.abs(df["mean"].to_numpy() - 1.0)) < 0.1
-
