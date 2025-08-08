@@ -171,7 +171,8 @@ def interactive(
             for art, res in zip(filtered, analyses):
                 vol = (abs(res.vader) + abs(res.bert)) / 2
                 per_art.append((vol, art))
-            for vol, art in sorted(per_art, reverse=True)[:5]:
+            # sort by volatility only, avoid comparing ArticleData objects
+            for vol, art in sorted(per_art, key=lambda x: x[0], reverse=True)[:5]:
                 writer.writerow(
                     [art.title, urlparse(art.url).netloc, f"{vol:.3f}", art.url]
                 )
@@ -209,7 +210,8 @@ def interactive(
             per_art.append((vol, art))
         if per_art:
             art_table = Table("Title", "Source", "Volatility", "URL")
-            for vol, art in sorted(per_art, reverse=True)[:5]:
+            # sort by volatility only, avoid comparing ArticleData objects
+            for vol, art in sorted(per_art, key=lambda x: x[0], reverse=True)[:5]:
                 art_table.add_row(
                     art.title, urlparse(art.url).netloc, f"{vol:.3f}", art.url
                 )
