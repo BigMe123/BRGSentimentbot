@@ -6,19 +6,31 @@ import asyncio
 import json
 import os
 import sqlite3
+from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
+from urllib.parse import urlparse
 
 import typer
 from rich.console import Console
 from rich.prompt import Prompt
+from rich.table import Table
 
 from . import scheduler
-from .bayesian import fit_hierarchical, load_example_data
-from .config import settings
+from .config import settings, REGION_MAP, TOPIC_MAP, WINDOWS
 from .analyzer import (
     display_analysis_results,
     display_ingestion_summary,
+)
+from .interactive import (
+    REGION_CHOICES,
+    TOPIC_CHOICES,
+    WINDOW_CHOICES,
+    REGION_KEYS,
+    TOPIC_KEYS,
+    WINDOW_KEYS,
+    parse_multi_selection,
+    parse_single_selection,
 )
 
 
@@ -50,6 +62,133 @@ def menu_after_run(stats: dict, results: dict, articles) -> None:
             display_analysis_results(results)
         else:
             break
+
+
+@app.command()
+def interactive(
+    format: str = typer.Option(
+        "table", "--format", help="Output format: table/json/csv"
+    )
+) -> None:
+    """Prompt for region, topic and time window before analysing."""
+
+    from . import analyzer, fetcher
+
+    console = Console()
+
+    def _prompt(message: str, choices, keys, multi: bool):
+        while True:
+            for idx, (label, _) in enumerate(choices, start=1):
+                console.print(f"{idx}. {label}")
+            answer = Prompt.ask(message)
+            try:
+                if multi:
+                    return parse_multi_selection(answer, keys)
+                return parse_single_selection(answer, keys)
+            except ValueError:
+                console.print("Invalid selection, please try again.")
+
+    regions = _prompt("Select region(s)", REGION_CHOICES, REGION_KEYS, True)
+    topics = _prompt("Select topic(s)", TOPIC_CHOICES, TOPIC_KEYS, True)
+    window_key = _prompt("Select time frame", WINDOW_CHOICES, WINDOW_KEYS, False)
+    window = WINDOWS[window_key]
+
+    async def _main() -> None:
+        articles, _ = await fetcher.gather_rss()
+        start = datetime.utcnow() - window
+        filtered = []
+        for art in articles:
+            if art.published and art.published < start:
+                continue
+            text = f"{art.title} {art.text}".lower()
+            if regions:
+                region_words = [
+                    w.lower() for r in regions for w in REGION_MAP.get(r, [])
+                ]
+                if not any(w in text for w in region_words):
+                    continue
+            if topics:
+                topic_words = [w.lower() for t in topics for w in TOPIC_MAP.get(t, [])]
+                if not any(w in text for w in topic_words):
+                    continue
+            filtered.append(art)
+
+        analyses = [analyzer.analyze(a.text) for a in filtered]
+        snapshot = analyzer.aggregate(analyses)
+
+        if format == "json":
+            console.print(
+                json.dumps(
+                    {
+                        "regions": regions or ["all"],
+                        "topics": topics or ["all"],
+                        "time_frame": window_key,
+                        "total_articles": len(filtered),
+                        "confidence": snapshot.confidence,
+                        "volatility": snapshot.volatility,
+                        "top_keywords": snapshot.triggers or [],
+                    },
+                    indent=2,
+                )
+            )
+            return
+
+        if format == "csv":
+            import csv
+            from io import StringIO
+
+            out = StringIO()
+            writer = csv.writer(out)
+            writer.writerow(["title", "source", "volatility", "url"])
+            per_art = []
+            for art, res in zip(filtered, analyses):
+                vol = (abs(res.vader) + abs(res.bert)) / 2
+                per_art.append((vol, art))
+            for vol, art in sorted(per_art, reverse=True)[:5]:
+                writer.writerow(
+                    [art.title, urlparse(art.url).netloc, f"{vol:.3f}", art.url]
+                )
+            console.print(out.getvalue())
+            return
+
+        header = Table(
+            "Selected Regions",
+            "Selected Topics",
+            "Time Frame",
+            "Total Articles",
+            "Confidence",
+            "Analyzer Mode",
+        )
+        header.add_row(
+            ", ".join(regions) or "All",
+            ", ".join(topics) or "All",
+            window_key.replace("_", " "),
+            str(len(filtered)),
+            f"{snapshot.confidence:.2f}",
+            "standard",
+        )
+        console.print(header)
+
+        vol_table = Table("Metric", "Value")
+        vol_table.add_row("Volatility", f"{snapshot.volatility:.3f}")
+        console.print(vol_table)
+
+        if snapshot.triggers:
+            console.print(f"Top volatile keywords: {', '.join(snapshot.triggers[:5])}")
+
+        per_art = []
+        for art, res in zip(filtered, analyses):
+            vol = (abs(res.vader) + abs(res.bert)) / 2
+            per_art.append((vol, art))
+        if per_art:
+            art_table = Table("Title", "Source", "Volatility", "URL")
+            for vol, art in sorted(per_art, reverse=True)[:5]:
+                art_table.add_row(
+                    art.title, urlparse(art.url).netloc, f"{vol:.3f}", art.url
+                )
+            console.print(art_table)
+
+    asyncio.run(_main())
 
 
 @app.command()

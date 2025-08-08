@@ -5,6 +5,7 @@ from typing import List
 import os
 from pathlib import Path
 from dataclasses import dataclass, field
+from datetime import timedelta
 
 
 def load_rss_sources(path: str | Path | None = None) -> List[str]:
@@ -33,6 +34,49 @@ def load_rss_sources(path: str | Path | None = None) -> List[str]:
 
 
 DEFAULT_RSS_SOURCES = load_rss_sources()
+
+# Region, topic and time window mappings used by the interactive CLI
+REGION_MAP = {
+    "africa": ["africa"],
+    "asia": ["asia"],
+    "europe": ["europe"],
+    "latin_america": ["latin america", "south america"],
+    "middle_east": ["middle east"],
+    "north_america": ["north america"],
+    "oceania": ["oceania"],
+}
+
+TOPIC_MAP = {
+    "energy": ["energy", "oil", "gas"],
+    "elections": ["election", "vote"],
+    "sanctions": ["sanction"],
+    "cybersecurity": ["cyber", "hacker"],
+    "protests": ["protest", "demonstration"],
+    "trade": ["trade", "tariff"],
+    "banking": ["bank", "finance"],
+    "sovereign_risk": ["sovereign", "default", "debt"],
+    "supply_chain": ["supply chain", "logistics"],
+    "climate": ["climate", "emission"],
+    "migration": ["migration", "immigrant"],
+    "health": ["health", "disease", "pandemic"],
+    "conflict": ["conflict", "war"],
+    "technology": ["technology", "tech"],
+    "defense": ["defense", "military"],
+    "natural_disasters": ["earthquake", "flood", "hurricane"],
+    "terrorism": ["terrorism", "attack"],
+    "infrastructure": ["infrastructure", "bridge", "road"],
+    "diplomacy": ["diplomacy", "talks"],
+}
+
+WINDOWS = {
+    "minute": timedelta(seconds=60),
+    "half_hour": timedelta(minutes=30),
+    "hour": timedelta(hours=1),
+    "day": timedelta(days=1),
+    "week": timedelta(weeks=1),
+    "month": timedelta(days=30),
+    "year": timedelta(days=365),
+}
 
 try:  # pragma: no cover - optional dependency
     from pydantic_settings import BaseSettings  # type: ignore
