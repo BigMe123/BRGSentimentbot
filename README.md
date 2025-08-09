@@ -1,4 +1,4 @@
-# BRGSentimentbot
+# Boston Risk Group Sentiment Analyzer
 
 Async sentiment and volatility bot featuring RSS and NewsAPI scraping,
 transformer-based analysis and optional web interfaces.
@@ -117,4 +117,4 @@ posterior predictive distribution and contrasting interventions.
 
 ## License
 
-Proprietary License Agreement
+Proprietary License Agreement, reach out to Marco Dorazio for more questions @ +1 646-877-2527, or at bostonriskgroup@gmail.com
