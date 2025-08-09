@@ -5,6 +5,7 @@ import logging
 import json
 import re
 import time
+import random
 from contextlib import suppress
 from collections import defaultdict, deque
 from dataclasses import dataclass
@@ -265,6 +266,31 @@ circuit_breaker = CircuitBreaker()
 content_cache = ContentCache()
 content_extractor = ContentExtractor()
 
+# Per-host concurrency controls and headers
+USER_AGENTS = [
+    # Chrome
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+    # Firefox
+    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/117.0",
+    # Safari
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
+]
+
+DEFAULT_HEADERS = {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://www.google.com/",
+}
+
+_domain_semaphores: Dict[str, asyncio.Semaphore] = {}
+_offline_domains: set[str] = set()
+
+
+def _get_domain_semaphore(domain: str) -> asyncio.Semaphore:
+    if domain not in _domain_semaphores:
+        _domain_semaphores[domain] = asyncio.Semaphore(3)
+    return _domain_semaphores[domain]
+
 
 async def _fetch_and_parse_url(url: str) -> ArticleData:
     """
@@ -303,30 +329,67 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
     except Exception:
         pass
 
-    # Fallback to aiohttp + BeautifulSoup with retry
+    # Skip domains previously marked offline
+    domain = urlparse(url).netloc
+    if domain in _offline_domains:
+        return ArticleData(url=url, title="", text="", published=None)
+
     max_retries = 3
-    retry_delay = 1
+    backoff = 1
+    html = ""
 
     for attempt in range(max_retries):
+        headers = {**DEFAULT_HEADERS, "User-Agent": random.choice(USER_AGENTS)}
+        sem = _get_domain_semaphore(domain)
         try:
-            timeout = aiohttp.ClientTimeout(total=20)
-            async with aiohttp.ClientSession(timeout=timeout) as session:
-                async with session.get(url, ssl=False) as resp:
-                    resp.raise_for_status()
-                    html = await resp.text()
-                    break
+            async with sem:
+                await asyncio.sleep(random.uniform(0.5, 2.0))
+                timeout = aiohttp.ClientTimeout(total=30)
+                async with aiohttp.ClientSession(headers=headers, timeout=timeout) as session:
+                    try:
+                        async with session.get(url, ssl=False) as resp:
+                            if resp.status == 403:
+                                if attempt < max_retries - 1 and not NEWS_OFFLINE:
+                                    logger.warning(f"403 for {url}, retrying")
+                                    await asyncio.sleep(random.uniform(2, 5))
+                                    continue
+                                circuit_breaker.record_failure(url)
+                                return ArticleData(url=url, title="", text="", published=None)
+                            resp.raise_for_status()
+                            try:
+                                html = await resp.text()
+                            except asyncio.TimeoutError:
+                                logger.warning(f"Timeout reading {url}")
+                                raise
+                    except asyncio.TimeoutError:
+                        logger.warning(f"Timeout connecting {url}")
+                        raise
+            break
         except (aiohttp.ClientError, asyncio.TimeoutError, OSError) as e:
-            logger.error(
-                "Fetch failed %s: %s. If in CI, set NEWS_OFFLINE=1.", url, e
-            )
-            if attempt < max_retries - 1:
-                await asyncio.sleep(retry_delay * (attempt + 1))
+            if "Network is unreachable" in str(e) and attempt < max_retries - 1 and not NEWS_OFFLINE:
+                await asyncio.sleep(backoff)
+                backoff *= 2
                 continue
+            logger.error("Fetch failed %s: %s", url, e)
+            if attempt < max_retries - 1 and not NEWS_OFFLINE:
+                await asyncio.sleep(backoff)
+                backoff *= 2
+                continue
+            _offline_domains.add(domain)
             circuit_breaker.record_failure(url)
             return ArticleData(url=url, title="", text="", published=None)
     
     # Parse HTML with smart extraction
-    soup = BeautifulSoup(html, "html.parser")
+    try:
+        soup = await asyncio.wait_for(
+            asyncio.to_thread(BeautifulSoup, html, "html.parser"),
+            timeout=30,
+        )
+    except asyncio.TimeoutError:
+        logger.warning(f"Timeout parsing {url}")
+        _offline_domains.add(domain)
+        circuit_breaker.record_failure(url)
+        return ArticleData(url=url, title="", text="", published=None)
 
     # Extract metadata
     metadata = content_extractor.extract_metadata(soup)
@@ -387,15 +450,49 @@ async def gather_rss(
     all_article_urls: List[str] = []
 
     async def parse_feed(feed_url: str) -> List[str]:
-        for attempt in range(1, (getattr(settings, "REQUEST_RETRIES", 2) + 1)):
+        domain = urlparse(feed_url).netloc
+        if domain in _offline_domains:
+            return []
+        max_retries = 3
+        backoff = 1
+        last_error = ""
+        for attempt in range(1, max_retries + 1):
+            headers = {**DEFAULT_HEADERS, "User-Agent": random.choice(USER_AGENTS)}
+            sem = _get_domain_semaphore(domain)
             try:
-                parsed = await asyncio.wait_for(
-                    asyncio.to_thread(feedparser.parse, feed_url),
-                    timeout=getattr(settings, "REQUEST_TIMEOUT_SECONDS", 10),
-                )
+                async with sem:
+                    await asyncio.sleep(random.uniform(0.5, 2.0))
+                    parsed = await asyncio.wait_for(
+                        asyncio.to_thread(
+                            feedparser.parse, feed_url, request_headers=headers
+                        ),
+                        timeout=30,
+                    )
+                if getattr(parsed, "status", 200) == 403:
+                    if attempt < max_retries and not NEWS_OFFLINE:
+                        logger.warning(f"403 for feed {feed_url}, retrying")
+                        await asyncio.sleep(random.uniform(2, 5))
+                        continue
+                    _offline_domains.add(domain)
+                    return []
                 return [e.get("link") for e in parsed.entries if e.get("link")]
+            except asyncio.TimeoutError:
+                last_error = "timeout"
+                logger.warning(f"[feed timeout attempt {attempt}] {feed_url}")
             except Exception as e:
+                last_error = str(e)
+                if "Network is unreachable" in last_error and attempt < max_retries and not NEWS_OFFLINE:
+                    await asyncio.sleep(backoff)
+                    backoff *= 2
+                    continue
                 logger.warning(f"[feed attempt {attempt}] Failed {feed_url}: {e}")
+            if attempt < max_retries and not NEWS_OFFLINE:
+                await asyncio.sleep(backoff)
+                backoff *= 2
+                continue
+            break
+        if "Network is unreachable" in last_error:
+            _offline_domains.add(domain)
         return []
 
     with Progress(
@@ -432,11 +529,13 @@ async def gather_rss(
                 try:
                     art = await asyncio.wait_for(
                         fetch_and_parse(link),
-                        timeout=getattr(settings, "REQUEST_TIMEOUT_SECONDS", 10),
+                        timeout=30,
                     )
                     if art and art.text:
                         results.append(art)
                         return
+                except asyncio.TimeoutError:
+                    logger.warning(f"[article timeout attempt {attempt}] {link}")
                 except Exception:
                     logger.exception(f"[article attempt {attempt}] {link}")
             failed_count += 1
