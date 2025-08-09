@@ -116,7 +116,11 @@ def interactive(
     window = WINDOWS[window_key]
 
     async def _main() -> None:
-        articles, _ = await fetcher.gather_rss()
+        articles, stats = await fetcher.gather_rss()
+        if not articles or stats.get("total", 0) == 0:
+            console.print("No articles found")
+            return
+
         start_ts = datetime.now(timezone.utc) - window
         filtered = []
         for art in articles:
@@ -139,6 +143,10 @@ def interactive(
                 if not any(w in text for w in topic_words):
                     continue
             filtered.append(art)
+
+        if not filtered:
+            console.print("No articles found")
+            return
 
         analyses = [analyzer.analyze(a.text) for a in filtered]
         snapshot = analyzer.aggregate(analyses)
