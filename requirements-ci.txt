@@ -1,0 +1,6 @@
+-r requirements.txt
+# Exclude truly heavy deps by overriding them to no-ops in CI
+# (pip ignores unknown packages if they're commented out or absent)
+# Remove these next lines in local dev if you need full pipelines.
+# pyspark==3.5.1
+# apache-flink==2.1.0
