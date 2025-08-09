@@ -136,6 +136,10 @@ def run_interactive_mode() -> None:
 
     async def _main() -> None:
         articles, stats = await fetcher.gather_rss()
+        if not articles or stats.get("total", 0) == 0:
+            console.print("No articles found")
+            return
+
         start_ts = datetime.now(timezone.utc) - window
         filtered = []
         for art in articles:
