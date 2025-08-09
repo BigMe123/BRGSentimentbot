@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import importlib
 from datetime import datetime, timezone
 from typing import List, Tuple
 
@@ -104,8 +105,6 @@ def parse_single_selection(selection: str, options: List[str]) -> str:
 def run_interactive_mode() -> None:
     """Run an interactive prompt for region/topic/time selection and analysis."""
 
-    from . import analyzer, fetcher
-
     console = Console()
 
     def _prompt(message: str, choices, keys, multi: bool):
@@ -135,6 +134,8 @@ def run_interactive_mode() -> None:
             return None
 
     async def _main() -> None:
+        fetcher = importlib.import_module("sentiment_bot.fetcher")
+        analyzer = importlib.import_module("sentiment_bot.analyzer")
         articles, stats = await fetcher.gather_rss()
         if not articles or stats.get("total", 0) == 0:
             console.print("No articles found")
