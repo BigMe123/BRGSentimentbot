@@ -1,0 +1,29 @@
+[
+  {
+    "timestamp": 1754772625.708328,
+    "severity": "error",
+    "metric": "fetch_success_rate",
+    "condition": "< 0.7",
+    "value": 0.6144200626959248,
+    "threshold": 0.7,
+    "message": "Fetch success rate critically low: fetch_success_rate=0.614"
+  },
+  {
+    "timestamp": 1754772625.708349,
+    "severity": "warning",
+    "metric": "fetch_success_rate",
+    "condition": "< 0.8",
+    "value": 0.6144200626959248,
+    "threshold": 0.8,
+    "message": "Fetch success rate below 80% target: fetch_success_rate=0.614"
+  },
+  {
+    "timestamp": 1754772625.7083578,
+    "severity": "warning",
+    "metric": "p95_fetch_latency_ms",
+    "condition": "> 6000",
+    "value": 6153,
+    "threshold": 6000,
+    "message": "P95 fetch latency approaching SLO (>6s): p95_fetch_latency_ms=6153.000"
+  }
+]

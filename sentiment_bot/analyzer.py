@@ -531,3 +531,84 @@ def display_analysis_results(results: Dict[str, Any]) -> None:
             f"- {a.title}" for a in articles
         )
         console.print(Markdown(markdown))
+
+
+async def parse_and_score(html: str, url: str) -> Any:
+    """
+    Async wrapper for parsing HTML and scoring sentiment.
+    Used by the fast pipeline for concurrent NLP processing.
+    
+    Args:
+        html: HTML content to parse
+        url: URL of the article (for metadata)
+    
+    Returns:
+        ArticleResult with parsed content and sentiment scores
+    """
+    import asyncio
+    from newspaper import Article
+    from urllib.parse import urlparse
+    
+    # Import ArticleResult locally to avoid circular imports
+    from .pipeline import ArticleResult
+    
+    try:
+        # Parse HTML with newspaper3k
+        article = Article(url)
+        article.set_html(html)
+        article.parse()
+        
+        # Extract text content
+        text = article.text
+        title = article.title or ""
+        published = str(article.publish_date) if article.publish_date else None
+        
+        if not text or len(text) < 50:
+            # Try fallback extraction
+            import re
+            # Remove scripts and styles
+            html_clean = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL)
+            html_clean = re.sub(r'<style[^>]*>.*?</style>', '', html_clean, flags=re.DOTALL)
+            # Extract text
+            text = re.sub(r'<[^>]+>', ' ', html_clean)
+            text = re.sub(r'\s+', ' ', text).strip()
+            
+            # Try to find title
+            title_match = re.search(r'<title[^>]*>(.*?)</title>', html, re.IGNORECASE)
+            if title_match and not title:
+                title = title_match.group(1)
+        
+        # Run sentiment analysis (this is CPU-bound, but fast)
+        # We run it in executor to not block the event loop
+        loop = asyncio.get_event_loop()
+        analysis = await loop.run_in_executor(None, analyze, text)
+        
+        # Create result
+        result = ArticleResult(
+            url=url,
+            title=title or "Untitled",
+            text=text,
+            published=published,
+            domain=urlparse(url).netloc,
+            word_count=len(text.split()) if text else 0,
+            sentiment_scores={
+                'vader': analysis.vader,
+                'bert': analysis.bert,
+                'confidence': analysis.confidence_level,
+                'subjectivity': analysis.subjectivity,
+                'complexity': analysis.complexity_score,
+                'pos_neg_ratio': analysis.pos_neg_ratio
+            }
+        )
+        
+        return result
+        
+    except Exception as e:
+        # Return minimal result on error
+        return ArticleResult(
+            url=url,
+            title="Parse Error",
+            text="",
+            domain=urlparse(url).netloc,
+            warnings=[f"Parse error: {str(e)}"]
+        )

@@ -1,0 +1,23 @@
+{
+  "unique_domains": 17,
+  "articles_ingested": 73,
+  "words_ingested": 11349,
+  "fetch_success_rate": 0.6144200626959248,
+  "timeout_rate": 0.018808777429467086,
+  "headless_usage_rate": 0.0,
+  "p50_fetch_latency_ms": 366,
+  "p95_fetch_latency_ms": 6153,
+  "p99_fetch_latency_ms": 6942,
+  "avg_fetch_latency_ms": 887.1122448979592,
+  "avg_doc_length": 155.46575342465752,
+  "p95_doc_length": 317,
+  "top1_source_share": 0.22495374041765795,
+  "top3_source_share": 0.5624284077892325,
+  "top1_source_domain": "bbc.com",
+  "fraction_published_24h": 1.0,
+  "median_article_age_hours": 9.559363285,
+  "dedup_drop_rate": 0.0,
+  "robots_denied_count": 0,
+  "circuit_opened_count": 0,
+  "runtime_seconds": 33.59273099899292
+}

@@ -1,0 +1,23 @@
+{
+  "unique_domains": 11,
+  "articles_ingested": 20,
+  "words_ingested": 562,
+  "fetch_success_rate": 0.025477707006369428,
+  "timeout_rate": 0.0,
+  "headless_usage_rate": 0.0,
+  "p50_fetch_latency_ms": 637,
+  "p95_fetch_latency_ms": 704,
+  "p99_fetch_latency_ms": 704,
+  "avg_fetch_latency_ms": 485.25,
+  "avg_doc_length": 28.1,
+  "p95_doc_length": 40,
+  "top1_source_share": 0.5498220640569395,
+  "top3_source_share": 1.0,
+  "top1_source_domain": "bloomberg.com",
+  "fraction_published_24h": 1.0,
+  "median_article_age_hours": 5.960230547638888,
+  "dedup_drop_rate": 0.0,
+  "robots_denied_count": 0,
+  "circuit_opened_count": 0,
+  "runtime_seconds": 30.537232875823975
+}

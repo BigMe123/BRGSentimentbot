@@ -229,13 +229,26 @@ def interactive(
 
 
 @app.command()
-def once() -> None:
+def once(
+    feeds: Optional[str] = typer.Option(None, "--feeds", help="Custom RSS feeds file path"),
+    log_level: str = typer.Option("INFO", "--log-level", help="Logging level: DEBUG, INFO, WARNING, ERROR")
+) -> None:
     """Run a single fetch/analyse cycle with interactive output."""
     from . import analyzer, fetcher
+    import logging
+    
+    # Set logging level
+    logging.getLogger('sentiment_bot.fetcher').setLevel(getattr(logging, log_level.upper()))
 
     async def _main() -> None:
         try:
-            articles, stats = await fetcher.gather_rss()
+            if feeds:
+                # Load custom feeds from file
+                with open(feeds, 'r') as f:
+                    feed_urls = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+                articles, stats = await fetcher.gather_rss(feed_urls)
+            else:
+                articles, stats = await fetcher.gather_rss()
         except Exception as e:
             typer.echo(f"Fetch error handled: {e}")
             articles, stats = [], {
@@ -270,6 +283,84 @@ def once() -> None:
             "articles": articles,
         }
         menu_after_run(stats, results, articles)
+
+    _safe_run(_main())
+
+
+@app.command()
+def once_filtered(
+    region: str = typer.Option(..., "--region", help="Region filter (asia, europe, middle_east, africa, americas, oceania)"),
+    topic: str = typer.Option(..., "--topic", help="Topic filter (elections, defense, economy, technology, climate, health)"),
+    feeds: Optional[str] = typer.Option(None, "--feeds", help="Custom RSS feeds file path"),
+    log_level: str = typer.Option("INFO", "--log-level", help="Logging level: DEBUG, INFO, WARNING, ERROR"),
+    max_concurrency: int = typer.Option(200, "--max-concurrency", help="Maximum concurrent requests"),
+    per_domain: int = typer.Option(3, "--per-domain", help="Maximum requests per domain")
+) -> None:
+    """Run single cycle with region and topic filtering."""
+    from . import analyzer, fetcher
+    from .filter import get_supported_regions, get_supported_topics
+    import logging
+    
+    # Set logging level
+    logging.getLogger('sentiment_bot.fetcher').setLevel(getattr(logging, log_level.upper()))
+    logging.getLogger('sentiment_bot.filter').setLevel(getattr(logging, log_level.upper()))
+    
+    # Validate region and topic
+    supported_regions = get_supported_regions()
+    supported_topics = get_supported_topics()
+    
+    if region.lower() not in supported_regions:
+        typer.echo(f"Error: Region '{region}' not supported.")
+        typer.echo(f"Supported regions: {', '.join(supported_regions)}")
+        return
+    
+    if topic.lower() not in supported_topics:
+        typer.echo(f"Error: Topic '{topic}' not supported.")
+        typer.echo(f"Supported topics: {', '.join(supported_topics)}")
+        return
+    
+    async def _main() -> None:
+        console = Console()
+        console.print(f"[bold]Fetching articles for Region: {region}, Topic: {topic}[/bold]")
+        
+        try:
+            if feeds:
+                # Load custom feeds from file
+                with open(feeds, 'r') as f:
+                    feed_urls = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+                articles, stats = await fetcher.gather_rss(feed_urls, region=region, topic=topic)
+            else:
+                articles, stats = await fetcher.gather_rss(region=region, topic=topic)
+            
+            # Display collection stats
+            display_ingestion_summary(stats)
+            
+            if stats.get("filtered", 0) > 0:
+                console.print(f"\n[yellow]Filtered out {stats['filtered']} irrelevant articles[/yellow]")
+            
+            if articles:
+                # Analyze sentiment
+                results = await analyzer.run_analysis(articles)
+                display_analysis_results(results)
+                
+                # Show top relevant articles
+                console.rule("Top Relevant Articles")
+                for i, art in enumerate(articles[:5], 1):
+                    console.print(f"{i}. [bold]{art.title}[/bold]")
+                    console.print(f"   URL: {art.url}")
+                    console.print(f"   Preview: {art.text[:200]}...")
+                    console.print()
+                
+                # Interactive menu
+                menu_after_run(stats, results, articles)
+            else:
+                console.print("[red]No articles matched the specified region and topic filters.[/red]")
+                
+        except Exception as e:
+            console.print(f"[red]Error: {e}[/red]")
+            import traceback
+            if log_level.upper() == "DEBUG":
+                traceback.print_exc()
 
     _safe_run(_main())
 
@@ -542,3 +633,198 @@ def quantum() -> None:
     from .quantum_opt import optimize_portfolio
 
     typer.echo(optimize_portfolio())
+
+
+@app.command()
+def once_fast(
+    feeds: Optional[str] = typer.Option(None, "--feeds", help="Path to feeds file"),
+    max_concurrency: int = typer.Option(200, "--max-concurrency", help="Max concurrent operations"),
+    per_domain: int = typer.Option(3, "--per-domain", help="Max concurrent requests per domain"),
+    browser_pool_size: int = typer.Option(5, "--browser-pool", help="Number of browser pages in pool"),
+    debug: bool = typer.Option(False, "--debug", help="Enable debug logging"),
+    topic: Optional[str] = typer.Option(None, "--topic", help="Filter by topic"),
+    region: Optional[str] = typer.Option(None, "--region", help="Filter by region"),
+) -> None:
+    """
+    Run the FAST pipeline once with high-throughput 3-stage processing.
+    
+    Features:
+    - Concurrent fetch with curl_cffi → aiohttp fallback
+    - Smart JS detection and Playwright pooling
+    - Streaming NLP with async parse_and_score
+    - Real-time results as they complete
+    """
+    from .pipeline import run_pipeline
+    from .browser_pool import PlaywrightPool
+    from .logging import setup_logging
+    from .analyzer import aggregate
+    from rich.console import Console
+    from rich.live import Live
+    from rich.table import Table
+    from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
+    import time
+    
+    console = Console()
+    
+    # Setup logging
+    setup_logging(level="DEBUG" if debug else "INFO")
+    
+    async def _run_fast():
+        console.print("[bold cyan]🚀 Starting FAST Pipeline[/bold cyan]")
+        console.print(f"Concurrency: {max_concurrency} | Per-domain: {per_domain} | Browser pool: {browser_pool_size}")
+        
+        # Load feeds
+        if feeds and Path(feeds).exists():
+            with open(feeds, 'r') as f:
+                lines = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+                # Parse mixed sources (RSS|url or HTML|url)
+                urls = []
+                for line in lines:
+                    if '|' in line:
+                        _, url = line.split('|', 1)
+                        urls.append(url.strip())
+                    else:
+                        urls.append(line)
+        else:
+            # Default feeds
+            urls = [
+                "https://feeds.bbci.co.uk/news/world/rss.xml",
+                "https://feeds.reuters.com/reuters/worldNews",
+                "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+            ]
+            console.print(f"[yellow]Using default feeds (use --feeds to specify custom)[/yellow]")
+        
+        console.print(f"Processing {len(urls)} sources...")
+        
+        # Initialize browser pool
+        playwright_pool = None
+        if browser_pool_size > 0:
+            try:
+                from .browser_pool import PlaywrightPool
+                playwright_pool = PlaywrightPool(pages=browser_pool_size)
+                await playwright_pool.start()
+                console.print(f"[green]✓ Browser pool started with {browser_pool_size} pages[/green]")
+            except Exception as e:
+                console.print(f"[yellow]Browser pool failed to start: {e}[/yellow]")
+                console.print("[yellow]Continuing without JS rendering[/yellow]")
+        
+        # Process through pipeline
+        results = []
+        analyses = []
+        start_time = time.time()
+        
+        # Progress tracking
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TextColumn("{task.completed}/{task.total}"),
+            console=console,
+        ) as progress:
+            task = progress.add_task("Processing articles", total=len(urls))
+            
+            async for article in run_pipeline(
+                urls,
+                max_concurrency=max_concurrency,
+                per_domain=per_domain,
+                playwright_pool=playwright_pool
+            ):
+                results.append(article)
+                progress.update(task, advance=1)
+                
+                # Apply filters if specified
+                if topic or region:
+                    text_to_check = f"{article.title} {article.text}".lower()
+                    if topic and topic.lower() not in text_to_check:
+                        continue
+                    if region and region.lower() not in text_to_check:
+                        continue
+                
+                # Analyze sentiment if we have text
+                if article.text and len(article.text) > 50:
+                    from .analyzer import analyze
+                    analysis = analyze(article.text)
+                    analyses.append(analysis)
+                
+                # Show result
+                transport_icon = {
+                    'curl_cffi': '🔥',
+                    'aiohttp': '🌐',
+                    'playwright': '🎭',
+                }.get(article.transport, '❓')
+                
+                timing = article.timing_ms.get('total_ms', 0)
+                timing_color = 'green' if timing < 500 else 'yellow' if timing < 1000 else 'red'
+                
+                console.print(
+                    f"{transport_icon} [{timing_color}]{timing}ms[/{timing_color}] "
+                    f"{article.domain}: {article.title[:60]}... ({article.word_count} words)"
+                )
+        
+        # Close browser pool
+        if playwright_pool:
+            await playwright_pool.close()
+        
+        # Calculate aggregate metrics
+        elapsed = time.time() - start_time
+        
+        console.print("\n[bold green]═══ PIPELINE COMPLETE ═══[/bold green]")
+        
+        # Stats table
+        stats_table = Table(title="Pipeline Statistics", show_header=True)
+        stats_table.add_column("Metric", style="cyan")
+        stats_table.add_column("Value", style="yellow")
+        
+        stats_table.add_row("Total URLs", str(len(urls)))
+        stats_table.add_row("Successful", str(len([r for r in results if r.text])))
+        stats_table.add_row("Failed", str(len([r for r in results if not r.text])))
+        stats_table.add_row("Total Time", f"{elapsed:.2f}s")
+        stats_table.add_row("Avg Time/URL", f"{(elapsed/len(urls)*1000):.0f}ms")
+        
+        # Transport breakdown
+        transports = {}
+        for r in results:
+            transports[r.transport] = transports.get(r.transport, 0) + 1
+        stats_table.add_row("Transports", str(transports))
+        
+        console.print(stats_table)
+        
+        # Sentiment analysis if we have results
+        if analyses:
+            snapshot = aggregate(analyses)
+            
+            console.print("\n[bold cyan]═══ SENTIMENT ANALYSIS ═══[/bold cyan]")
+            sentiment_table = Table(show_header=True)
+            sentiment_table.add_column("Metric", style="cyan")
+            sentiment_table.add_column("Value", style="yellow")
+            sentiment_table.add_column("Status", style="green")
+            
+            sentiment_table.add_row(
+                "Volatility",
+                f"{snapshot.volatility:.4f}",
+                "🔴 HIGH" if snapshot.volatility > 0.5 else "🟡 MODERATE" if snapshot.volatility > 0.3 else "🟢 LOW"
+            )
+            sentiment_table.add_row(
+                "Certainty",
+                f"{snapshot.confidence:.4f}",
+                "✅ HIGH" if snapshot.confidence > 0.5 else "⚠️ MODERATE" if snapshot.confidence > 0.3 else "❌ LOW"
+            )
+            sentiment_table.add_row("Articles Analyzed", str(len(analyses)), "")
+            
+            console.print(sentiment_table)
+            
+            if snapshot.triggers:
+                console.print(f"\n[bold]Trigger Words:[/bold] {', '.join(snapshot.triggers[:10])}")
+        
+        # Show warnings if any
+        all_warnings = []
+        for r in results:
+            all_warnings.extend(r.warnings)
+        
+        if all_warnings:
+            unique_warnings = list(set(all_warnings))
+            console.print(f"\n[yellow]Warnings ({len(unique_warnings)} unique):[/yellow]")
+            for w in unique_warnings[:5]:
+                console.print(f"  - {w}")
+    
+    _safe_run(_run_fast())
