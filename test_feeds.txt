@@ -1,4 +1,0 @@
-# Test feeds - just a few for quick testing
-https://feeds.bbci.co.uk/news/world/rss.xml
-https://feeds.reuters.com/reuters/worldNews
-EOF < /dev/null

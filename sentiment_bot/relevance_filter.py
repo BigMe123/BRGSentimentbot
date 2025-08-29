@@ -230,17 +230,19 @@ class RelevanceFilter:
         self,
         article: Dict[str, Any],
         target_region: Optional[str] = None,
-        target_topic: Optional[str] = None,
-        strict: bool = False
+        target_topics: Optional[List[str]] = None,
+        strict: bool = False,
+        threshold: float = 0.5
     ) -> RelevanceScore:
         """
-        Verify article relevance for region and topic.
+        Verify article relevance for region and topic with enhanced scoring.
         
         Args:
             article: Article data with 'text', 'title', 'url' fields
             target_region: Target region to match
-            target_topic: Target topic to match
+            target_topics: Target topics to match (can be multiple)
             strict: Strict matching (must match both if specified)
+            threshold: Minimum score threshold for keeping article
             
         Returns:
             RelevanceScore with signals and decision
@@ -252,6 +254,10 @@ class RelevanceFilter:
         title = article.get('title', '')
         url = article.get('url', '')
         combined_text = f"{title} {text[:1000]}".lower()  # Focus on title and lead
+        
+        # Handle single topic or list
+        if target_topics and isinstance(target_topics, str):
+            target_topics = [target_topics]
         
         # Region verification
         if target_region:
@@ -271,14 +277,21 @@ class RelevanceFilter:
                 if self._dateline_matches_region(dateline, target_region):
                     score.region_score = min(1.0, score.region_score + 0.3)
         
-        # Topic verification  
-        if target_topic:
-            score.topic_score, score.topic_signals = self._score_topic(
-                combined_text, url, target_topic
-            )
+        # Topic verification (handle multiple topics)
+        if target_topics:
+            topic_scores = []
+            all_signals = []
+            for topic in target_topics:
+                t_score, t_signals = self._score_topic(combined_text, url, topic)
+                topic_scores.append(t_score)
+                all_signals.extend(t_signals)
+            
+            # Take best topic score
+            score.topic_score = max(topic_scores) if topic_scores else 0.0
+            score.topic_signals = list(set(all_signals))  # Deduplicate signals
         
         # NER enhancement (if available)
-        if nlp and (target_region or target_topic):
+        if nlp and (target_region or target_topics):
             entities = self._extract_entities(combined_text[:500])  # Limit for speed
             
             if target_region:
@@ -288,7 +301,7 @@ class RelevanceFilter:
                         score.region_signals.append(f"ner:{ent}")
                         score.region_score = min(1.0, score.region_score + 0.1)
             
-            if target_topic == 'elections' and 'PERSON' in entities:
+            if target_topics and 'elections' in target_topics and 'PERSON' in entities:
                 # Political figures often mentioned in election coverage
                 score.topic_signals.append(f"people:{len(entities['PERSON'])}")
                 score.topic_score = min(1.0, score.topic_score + 0.1)
@@ -309,13 +322,13 @@ class RelevanceFilter:
         else:
             # Lenient mode: Allow articles from region-specific sources even with lower scores
             # If we selected a source for this region, trust it more
-            if target_region and target_topic:
+            if target_region and target_topics:
                 # Both specified: need at least one moderate match
                 if score.region_score < 0.1 and score.topic_score < 0.1:
                     score.drop_reason = 'both_scores_too_low'
             elif target_region and score.region_score < 0.1:
                 score.drop_reason = 'region_mismatch'
-            elif target_topic and score.topic_score < 0.1:
+            elif target_topics and score.topic_score < 0.1:
                 score.drop_reason = 'topic_mismatch'
         
         return score

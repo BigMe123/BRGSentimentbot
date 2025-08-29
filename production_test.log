@@ -445,3 +445,196 @@ ModuleNotFoundError: No module named 'mmh3'
 2025-08-09 20:57:11 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 8 failures
 2025-08-09 20:58:32 UTC [ERROR] asyncio: Unclosed client session
 client_session: <aiohttp.client.ClientSession object at 0x121695df0>
+2025-08-09 21:56:54 UTC [INFO] production_readiness_suite: 📚 Built corpus with 300 feeds
+2025-08-09 21:56:54 UTC [INFO] production_readiness_suite:    Fixtures: 10 duplicates, 20 stale, 20 cached
+2025-08-09 21:57:08 UTC [INFO] production_readiness_suite: 📚 Built corpus with 300 feeds
+2025-08-09 21:57:08 UTC [INFO] production_readiness_suite:    Fixtures: 10 duplicates, 20 stale, 20 cached
+2025-08-09 21:57:08 UTC [INFO] production_readiness_suite: 
+================================================================================
+2025-08-09 21:57:08 UTC [INFO] production_readiness_suite: 📍 PHASE 1: CANARY TEST
+2025-08-09 21:57:08 UTC [INFO] production_readiness_suite: ================================================================================
+2025-08-09 21:57:08 UTC [INFO] production_readiness_suite: Testing 15 high-value feeds with 60min budget
+2025-08-09 21:57:09 UTC [INFO] sentiment_bot.fetcher_optimized: Started 30 workers for 15 feeds
+2025-08-09 21:57:09 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 45 articles from https://www.theguardian.com/world/rss
+2025-08-09 21:57:10 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 20 articles from https://techcrunch.com/feed/
+2025-08-09 21:57:10 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 30 articles from https://www.bloomberg.com/feeds/markets/news.rss
+2025-08-09 21:57:10 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 25 articles from https://www.aljazeera.com/xml/rss/all.xml
+2025-08-09 21:57:10 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 50 articles from https://rss.nytimes.com/services/xml/rss/nyt/World.xml
+2025-08-09 21:57:10 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 50 articles from https://www.wired.com/feed/rss
+2025-08-09 21:57:10 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 50 articles from https://asia.nikkei.com/rss/feed/nar
+2025-08-09 21:57:11 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 25 articles from https://www.defensenews.com/arc/outboundfeeds/rss/
+2025-08-09 21:57:11 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 28 articles from https://feeds.bbci.co.uk/news/world/rss.xml
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 3 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 4 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 5 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 6 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 7 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 3 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 4 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 5 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 6 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 7 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 8 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 9 failures
+2025-08-09 21:57:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 10 failures
+2025-08-09 21:57:18 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 25 articles from https://www.iswresearch.org/feeds/posts/default
+2025-08-09 21:57:18 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.aljazeera.com after 3 failures
+2025-08-09 21:57:18 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 20 articles from https://feeds.washingtonpost.com/rss/world
+2025-08-09 21:57:37 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 3 failures
+2025-08-09 21:57:37 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 4 failures
+2025-08-09 21:57:37 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 5 failures
+2025-08-09 21:57:37 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 6 failures
+2025-08-09 21:57:39 UTC [WARNING] sentiment_bot.fetcher_optimized: Budget expired, stopping workers
+2025-08-09 21:57:47 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 7 failures
+2025-08-09 21:57:47 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 8 failures
+2025-08-09 21:57:47 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 9 failures
+2025-08-09 21:57:47 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 10 failures
+2025-08-09 21:57:47 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 11 failures
+2025-08-09 21:57:47 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 12 failures
+2025-08-09 21:57:57 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 13 failures
+2025-08-09 21:57:57 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 14 failures
+2025-08-09 21:57:57 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 15 failures
+2025-08-09 21:57:57 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 16 failures
+2025-08-09 21:57:57 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 17 failures
+2025-08-09 21:57:57 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 18 failures
+2025-08-09 21:58:07 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 19 failures
+2025-08-09 21:58:07 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.washingtonpost.com after 20 failures
+2025-08-09 21:58:07 UTC [INFO] sentiment_bot.fetcher_optimized: Collected 368 articles before filtering
+2025-08-09 21:58:11 UTC [INFO] sentiment_bot.content_filter: Content filter: 80/368 passed (fresh=192, dup_url=0, dup_content=0, near_dup=0, domain_cap=112)
+2025-08-09 21:58:11 UTC [INFO] sentiment_bot.fetcher_optimized: Pipeline complete: 80 articles after filtering
+2025-08-09 21:58:11 UTC [INFO] sentiment_bot.fetcher_optimized: Metrics: {'unique_domains': 18, 'articles_ingested': 80, 'words_ingested': 11010, 'fetch_success_rate': 0.6764705882352942, 'timeout_rate': 0.07647058823529412, 'headless_usage_rate': 0.0, 'p50_fetch_latency_ms': 745, 'p95_fetch_latency_ms': 5882, 'p99_fetch_latency_ms': 8597, 'avg_fetch_latency_ms': 1432.3347826086956, 'avg_doc_length': 137.625, 'p95_doc_length': 263, 'top1_source_share': 0.23115349682107175, 'top3_source_share': 0.5746594005449591, 'top1_source_domain': 'bbc.com', 'fraction_published_24h': 1.0, 'median_article_age_hours': 9.96526120125, 'dedup_drop_rate': 0.0, 'robots_denied_count': 0, 'circuit_opened_count': 0, 'runtime_seconds': 61.91368913650513}
+2025-08-09 21:58:11 UTC [WARNING] sentiment_bot.fetcher_optimized: ALERT [error]: Fetch success rate critically low: fetch_success_rate=0.676
+2025-08-09 21:58:11 UTC [WARNING] sentiment_bot.fetcher_optimized: ALERT [warning]: Fetch success rate below 80% target: fetch_success_rate=0.676
+2025-08-09 21:58:11 UTC [INFO] sentiment_bot.http_client: HTTP client closed. Stats: {'requests': 277, 'successes': 230, 'timeouts': 26, 'errors': 2, 'bytes_downloaded': 114548953, 'cache_hits': 0, 'circuit_opens': 32, 'success_rate': 0.8303249097472925, 'timeout_rate': 0.09386281588447654, 'error_rate': 0.007220216606498195, 'cache_hit_rate': 0.0, 'open_circuits': 4}
+2025-08-09 21:58:11 UTC [INFO] production_readiness_suite: 
+================================================================================
+2025-08-09 21:58:11 UTC [INFO] production_readiness_suite: 📍 PHASE 2: FUNCTIONAL TEST
+2025-08-09 21:58:11 UTC [INFO] production_readiness_suite: ================================================================================
+2025-08-09 21:58:11 UTC [INFO] production_readiness_suite: Testing 17 feeds with 5min budget
+2025-08-09 21:58:11 UTC [INFO] production_readiness_suite: Includes: 3 duplicates, 1 long report, 10 stale items
+2025-08-09 21:58:11 UTC [INFO] sentiment_bot.fetcher_optimized: Started 30 workers for 17 feeds
+2025-08-09 21:58:11 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for feeds.reuters.com after 3 failures
+2025-08-09 21:58:11 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for feeds.reuters.com after 4 failures
+2025-08-09 21:58:11 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for feeds.reuters.com after 5 failures
+2025-08-09 21:58:11 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 50 articles from https://rss.nytimes.com/services/xml/rss/nyt/World.xml
+2025-08-09 21:58:11 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for feeds.reuters.com after 6 failures
+2025-08-09 21:58:12 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 30 articles from https://feeds.bloomberg.com/politics/news.rss
+2025-08-09 21:58:12 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 30 articles from https://feeds.bloomberg.com/technology/news.rss
+2025-08-09 21:58:12 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 30 articles from https://feeds.bloomberg.com/markets/news.rss
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for oldnews.com after 3 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 3 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 4 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 5 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 6 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 7 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 8 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 9 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 10 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 11 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 12 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 13 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 14 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 15 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 16 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 17 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 18 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 19 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 20 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 21 failures
+2025-08-09 21:58:12 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 22 failures
+2025-08-09 21:58:41 UTC [WARNING] sentiment_bot.fetcher_optimized: Budget expired, stopping workers
+2025-08-09 21:58:41 UTC [INFO] sentiment_bot.fetcher_optimized: Collected 140 articles before filtering
+2025-08-09 21:58:42 UTC [INFO] sentiment_bot.content_filter: Content filter: 20/140 passed (fresh=75, dup_url=2, dup_content=0, near_dup=0, domain_cap=53)
+2025-08-09 21:58:42 UTC [INFO] sentiment_bot.fetcher_optimized: Pipeline complete: 20 articles after filtering
+2025-08-09 21:58:42 UTC [INFO] sentiment_bot.fetcher_optimized: Metrics: {'unique_domains': 11, 'articles_ingested': 20, 'words_ingested': 566, 'fetch_success_rate': 0.025477707006369428, 'timeout_rate': 0.006369426751592357, 'headless_usage_rate': 0.0, 'p50_fetch_latency_ms': 725, 'p95_fetch_latency_ms': 796, 'p99_fetch_latency_ms': 796, 'avg_fetch_latency_ms': 555, 'avg_doc_length': 28.3, 'p95_doc_length': 36, 'top1_source_share': 0.5530035335689046, 'top3_source_share': 1.0, 'top1_source_domain': 'bloomberg.com', 'fraction_published_24h': 1.0, 'median_article_age_hours': 10.327517787222222, 'dedup_drop_rate': 0.0, 'robots_denied_count': 0, 'circuit_opened_count': 0, 'runtime_seconds': 30.535079956054688}
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.fetcher_optimized: ALERT [error]: Fetch success rate critically low: fetch_success_rate=0.025
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.fetcher_optimized: ALERT [error]: Single source dominates >30% of content: top1_source_share=0.553
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.fetcher_optimized: ALERT [error]: Top 3 sources dominate >60% of content: top3_source_share=1.000
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.fetcher_optimized: ALERT [warning]: Fetch success rate below 80% target: fetch_success_rate=0.025
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.fetcher_optimized: ALERT [warning]: Single source approaching dominance threshold: top1_source_share=0.553
+2025-08-09 21:58:42 UTC [INFO] sentiment_bot.http_client: HTTP client closed. Stats: {'requests': 316, 'successes': 234, 'timeouts': 27, 'errors': 9, 'bytes_downloaded': 114785187, 'cache_hits': 0, 'circuit_opens': 57, 'success_rate': 0.740506329113924, 'timeout_rate': 0.08544303797468354, 'error_rate': 0.028481012658227847, 'cache_hit_rate': 0.0, 'open_circuits': 6}
+2025-08-09 21:58:42 UTC [INFO] production_readiness_suite: 
+================================================================================
+2025-08-09 21:58:42 UTC [INFO] production_readiness_suite: 📍 PHASE 3: INCREMENTALITY TEST
+2025-08-09 21:58:42 UTC [INFO] production_readiness_suite: ================================================================================
+2025-08-09 21:58:42 UTC [INFO] production_readiness_suite: Run 1: Populating cache...
+2025-08-09 21:58:42 UTC [INFO] sentiment_bot.fetcher_optimized: Started 30 workers for 10 feeds
+2025-08-09 21:58:42 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 50 articles from https://rss.nytimes.com/services/xml/rss/nyt/World.xml
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 3 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 4 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 5 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 6 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 7 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 8 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 9 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 10 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 11 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 12 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 13 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 14 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 15 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 16 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 17 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 18 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 19 failures
+2025-08-09 21:58:42 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 20 failures
+2025-08-09 21:58:42 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 30 articles from https://feeds.bloomberg.com/markets/news.rss
+2025-08-09 21:59:24 UTC [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1211180e0>
+2025-08-09 22:01:39 UTC [INFO] __main__: 📚 Built corpus with 300 feeds
+2025-08-09 22:01:39 UTC [INFO] __main__:    Fixtures: 10 duplicates, 20 stale, 20 cached
+2025-08-09 22:01:39 UTC [INFO] __main__: ================================================================================
+2025-08-09 22:01:39 UTC [INFO] __main__: 🚀 PRODUCTION READINESS TEST SUITE
+2025-08-09 22:01:39 UTC [INFO] __main__:    Started: 2025-08-09T22:01:39.700242+00:00
+2025-08-09 22:01:39 UTC [INFO] __main__: ================================================================================
+2025-08-09 22:01:39 UTC [INFO] __main__: 
+================================================================================
+2025-08-09 22:01:39 UTC [INFO] __main__: 📍 PHASE 1: CANARY TEST
+2025-08-09 22:01:39 UTC [INFO] __main__: ================================================================================
+2025-08-09 22:01:39 UTC [INFO] __main__: Testing 15 high-value feeds with 60min budget
+2025-08-09 22:01:41 UTC [INFO] sentiment_bot.fetcher_optimized: Started 30 workers for 15 feeds
+2025-08-09 22:01:41 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 50 articles from https://asia.nikkei.com/rss/feed/nar
+2025-08-09 22:01:41 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 20 articles from https://techcrunch.com/feed/
+2025-08-09 22:01:41 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 50 articles from https://www.wired.com/feed/rss
+2025-08-09 22:01:41 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 50 articles from https://rss.nytimes.com/services/xml/rss/nyt/World.xml
+2025-08-09 22:01:42 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 45 articles from https://www.theguardian.com/world/rss
+2025-08-09 22:01:42 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 30 articles from https://www.bloomberg.com/feeds/markets/news.rss
+2025-08-09 22:01:42 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 25 articles from https://www.aljazeera.com/xml/rss/all.xml
+2025-08-09 22:01:47 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 25 articles from https://www.iswresearch.org/feeds/posts/default
+2025-08-09 22:01:48 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 25 articles from https://www.defensenews.com/arc/outboundfeeds/rss/
+2025-08-09 22:01:48 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 28 articles from https://feeds.bbci.co.uk/news/world/rss.xml
+2025-08-09 22:01:50 UTC [INFO] sentiment_bot.fetcher_optimized: Parsed 20 articles from https://feeds.washingtonpost.com/rss/world
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 3 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 4 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 5 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 6 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 7 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 8 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 9 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 10 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 11 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 12 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 13 failures
+2025-08-09 22:01:50 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 14 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 3 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 4 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 5 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 6 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 7 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 3 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 8 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 9 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 10 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 11 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 12 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 13 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 14 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 15 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 16 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.bloomberg.com after 17 failures
+2025-08-09 22:01:51 UTC [WARNING] sentiment_bot.http_client: Circuit breaker opened for www.nytimes.com after 4 failures
+2025-08-09 22:01:53 UTC [ERROR] asyncio: Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x15a58d490>
+2025-08-09 22:01:53 UTC [ERROR] asyncio: Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x15a629070>, 1249768.634926416)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15a629430>, 1249769.224973708)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15e83dc10>, 1249769.351728291)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15e8b8a70>, 1249775.391055333)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15e83d850>, 1249775.600131708), (<aiohttp.client_proto.ResponseHandler object at 0x15a629490>, 1249775.600263375), (<aiohttp.client_proto.ResponseHandler object at 0x15e83d550>, 1249775.619053166), (<aiohttp.client_proto.ResponseHandler object at 0x15e83d670>, 1249775.636636125), (<aiohttp.client_proto.ResponseHandler object at 0x15a62b5f0>, 1249775.680001458), (<aiohttp.client_proto.ResponseHandler object at 0x15e83da30>, 1249775.686451416)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15e8baa50>, 1249775.726209541), (<aiohttp.client_proto.ResponseHandler object at 0x15e8d2930>, 1249775.726501375), (<aiohttp.client_proto.ResponseHandler object at 0x15e8d0590>, 1249775.735977791), (<aiohttp.client_proto.ResponseHandler object at 0x15e8bbe90>, 1249775.7394035), (<aiohttp.client_proto.ResponseHandler object at 0x15e8d2bd0>, 1249775.742876916), (<aiohttp.client_proto.ResponseHandler object at 0x15a628b90>, 1249775.745770833)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15e8baff0>, 1249777.379327458), (<aiohttp.client_proto.ResponseHandler object at 0x15e8d0a70>, 1249777.457938458), (<aiohttp.client_proto.ResponseHandler object at 0x15e8d2c90>, 1249777.491110791), (<aiohttp.client_proto.ResponseHandler object at 0x15e8baed0>, 1249777.831560541), (<aiohttp.client_proto.ResponseHandler object at 0x15a629190>, 1249778.039736666), (<aiohttp.client_proto.ResponseHandler object at 0x15e8d17f0>, 1249778.080606916)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15e881550>, 1249777.418084375)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15e8ba030>, 1249777.917793916), (<aiohttp.client_proto.ResponseHandler object at 0x15e83e330>, 1249777.926529125), (<aiohttp.client_proto.ResponseHandler object at 0x15e83c770>, 1249777.927053166), (<aiohttp.client_proto.ResponseHandler object at 0x15e83c290>, 1249777.939281791), (<aiohttp.client_proto.ResponseHandler object at 0x15e8d39b0>, 1249777.945565958), (<aiohttp.client_proto.ResponseHandler object at 0x15e8bacf0>, 1249777.982842833)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15e8824b0>, 1249778.277087833), (<aiohttp.client_proto.ResponseHandler object at 0x15a62b7d0>, 1249778.280229916), (<aiohttp.client_proto.ResponseHandler object at 0x15eb945f0>, 1249778.280310916), (<aiohttp.client_proto.ResponseHandler object at 0x15a62bef0>, 1249778.286059375), (<aiohttp.client_proto.ResponseHandler object at 0x15e83e930>, 1249778.292756708), (<aiohttp.client_proto.ResponseHandler object at 0x15eb94410>, 1249778.326099208)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15a5a7950>, 1249778.700183583), (<aiohttp.client_proto.ResponseHandler object at 0x15eb941d0>, 1249778.717900083), (<aiohttp.client_proto.ResponseHandler object at 0x15a5a7cb0>, 1249778.77244375), (<aiohttp.client_proto.ResponseHandler object at 0x15e8bbcb0>, 1249778.85149125), (<aiohttp.client_proto.ResponseHandler object at 0x15e8d2990>, 1249778.922218625), (<aiohttp.client_proto.ResponseHandler object at 0x15e8d3ef0>, 1249778.928255125)])', 'deque([(<aiohttp.client_proto.ResponseHandler object at 0x15e8830b0>, 1249778.70783075), (<aiohttp.client_proto.ResponseHandler object at 0x15e8836b0>, 1249778.730885833), (<aiohttp.client_proto.ResponseHandler object at 0x15e8b98b0>, 1249778.7358035), (<aiohttp.client_proto.ResponseHandler object at 0x15e8b9af0>, 1249778.740349333), (<aiohttp.client_proto.ResponseHandler object at 0x15e8ba570>, 1249778.767308)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1376af920>

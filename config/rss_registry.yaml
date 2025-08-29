@@ -1,0 +1,409 @@
+# RSS Feed Registry - Curated feeds with confirmed working endpoints
+# Format: domain -> region -> topics -> rss_endpoints
+
+europe:
+  # UK Sources
+  bbc.com:
+    editorial_family: public_broadcaster
+    languages: [en]
+    topics: [politics, economy, general, world]
+    rss_endpoints:
+      - http://feeds.bbci.co.uk/news/rss.xml
+      - http://feeds.bbci.co.uk/news/world/rss.xml
+      - http://feeds.bbci.co.uk/news/uk/rss.xml
+      - http://feeds.bbci.co.uk/news/politics/rss.xml
+      - http://feeds.bbci.co.uk/news/business/rss.xml
+  
+  theguardian.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, climate, tech]
+    rss_endpoints:
+      - https://www.theguardian.com/world/rss
+      - https://www.theguardian.com/uk/rss
+      - https://www.theguardian.com/politics/rss
+      - https://www.theguardian.com/business/rss
+      - https://www.theguardian.com/environment/climate-crisis/rss
+  
+  telegraph.co.uk:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.telegraph.co.uk/rss.xml
+      - https://www.telegraph.co.uk/politics/rss.xml
+      - https://www.telegraph.co.uk/business/rss.xml
+  
+  ft.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [economy, business, politics]
+    rss_endpoints:
+      - https://www.ft.com/?format=rss
+      - https://www.ft.com/world?format=rss
+      - https://www.ft.com/companies?format=rss
+  
+  dailymail.co.uk:
+    editorial_family: tabloid
+    languages: [en]
+    topics: [general, politics]
+    rss_endpoints:
+      - https://www.dailymail.co.uk/articles.rss
+      - https://www.dailymail.co.uk/news/index.rss
+  
+  # France
+  lemonde.fr:
+    editorial_family: broadsheet
+    languages: [fr]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.lemonde.fr/rss/une.xml
+      - https://www.lemonde.fr/international/rss_full.xml
+      - https://www.lemonde.fr/politique/rss_full.xml
+      - https://www.lemonde.fr/economie/rss_full.xml
+  
+  lefigaro.fr:
+    editorial_family: broadsheet
+    languages: [fr]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.lefigaro.fr/rss/figaro_actualites.xml
+      - https://www.lefigaro.fr/rss/figaro_politique.xml
+      - https://www.lefigaro.fr/rss/figaro_economie.xml
+  
+  france24.com:
+    editorial_family: public_broadcaster
+    languages: [en, fr]
+    topics: [general, politics, economy]
+    rss_endpoints:
+      - https://www.france24.com/en/rss
+      - https://www.france24.com/en/europe/rss
+      - https://www.france24.com/fr/rss
+  
+  # Germany
+  spiegel.de:
+    editorial_family: broadsheet
+    languages: [de]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.spiegel.de/schlagzeilen/index.rss
+      - https://www.spiegel.de/politik/index.rss
+      - https://www.spiegel.de/wirtschaft/index.rss
+  
+  dw.com:
+    editorial_family: public_broadcaster
+    languages: [en, de]
+    topics: [general, politics, economy]
+    rss_endpoints:
+      - https://rss.dw.com/rdf/rss-en-all
+      - https://rss.dw.com/rdf/rss-en-eu
+      - https://rss.dw.com/rdf/rss-de-all
+  
+  bild.de:
+    editorial_family: tabloid
+    languages: [de]
+    topics: [general, politics]
+    rss_endpoints:
+      - https://www.bild.de/rss-feeds/rss-16725492,feed=home.bild.html
+      - https://www.bild.de/rss-feeds/rss-16725492,feed=politik.bild.html
+  
+  # Italy
+  corriere.it:
+    editorial_family: broadsheet
+    languages: [it]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://xml2.corriereobjects.it/rss/homepage.xml
+      - https://xml2.corriereobjects.it/rss/politica.xml
+      - https://xml2.corriereobjects.it/rss/economia.xml
+  
+  repubblica.it:
+    editorial_family: broadsheet
+    languages: [it]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.repubblica.it/rss/homepage/rss2.0.xml
+      - https://www.repubblica.it/rss/politica/rss2.0.xml
+      - https://www.repubblica.it/rss/economia/rss2.0.xml
+  
+  # Spain
+  elpais.com:
+    editorial_family: broadsheet
+    languages: [es, en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada
+      - https://feeds.elpais.com/mrss-s/pages/ep/site/english.elpais.com/portada
+  
+  elmundo.es:
+    editorial_family: broadsheet
+    languages: [es]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml
+      - https://e00-elmundo.uecdn.es/elmundo/rss/espana.xml
+      - https://e00-elmundo.uecdn.es/elmundo/rss/economia.xml
+  
+  # Netherlands
+  nrc.nl:
+    editorial_family: broadsheet
+    languages: [nl]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.nrc.nl/rss/
+      - https://www.nrc.nl/rss/categorie/nieuws/politiek/
+      - https://www.nrc.nl/rss/categorie/nieuws/economie/
+  
+  # Wire Services
+  reuters.com:
+    editorial_family: wire
+    languages: [en]
+    topics: [general, politics, economy, business]
+    rss_endpoints:
+      - https://www.reuters.com/rssFeed/worldNews
+      - https://www.reuters.com/rssFeed/businessNews
+      - https://www.reuters.com/rssFeed/topNews
+  
+  apnews.com:
+    editorial_family: wire
+    languages: [en]
+    topics: [general, politics, economy]
+    rss_endpoints:
+      - https://feeds.apnews.com/rss/apf-topnews
+      - https://feeds.apnews.com/rss/apf-intlnews
+      - https://feeds.apnews.com/rss/apf-business
+
+asia:
+  # India
+  thehindu.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, elections, general]
+    rss_endpoints:
+      - https://www.thehindu.com/news/feeder/default.rss
+      - https://www.thehindu.com/news/national/feeder/default.rss
+      - https://www.thehindu.com/news/international/feeder/default.rss
+      - https://www.thehindu.com/business/feeder/default.rss
+  
+  timesofindia.indiatimes.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, elections, general]
+    rss_endpoints:
+      - https://timesofindia.indiatimes.com/rssfeedstopstories.cms
+      - https://timesofindia.indiatimes.com/rssfeeds/1221656.cms  # Politics
+      - https://timesofindia.indiatimes.com/rssfeeds/1898055.cms  # Business
+  
+  indianexpress.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, elections]
+    rss_endpoints:
+      - https://indianexpress.com/feed/
+      - https://indianexpress.com/section/india/feed/
+      - https://indianexpress.com/section/india/politics/feed/
+  
+  ndtv.com:
+    editorial_family: broadcaster
+    languages: [en]
+    topics: [general, politics, economy]
+    rss_endpoints:
+      - https://feeds.feedburner.com/ndtvnews-top-stories
+      - https://feeds.feedburner.com/ndtvnews-india-news
+      - https://feeds.feedburner.com/ndtvprofit-latest
+  
+  # Pakistan
+  dawn.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, elections, security]
+    rss_endpoints:
+      - https://www.dawn.com/feeds/home
+      - https://www.dawn.com/feeds/pakistan
+      - https://www.dawn.com/feeds/business
+  
+  thenews.com.pk:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, elections]
+    rss_endpoints:
+      - https://www.thenews.com.pk/rss/1/1  # Latest news
+      - https://www.thenews.com.pk/rss/1/2  # Pakistan
+      - https://www.thenews.com.pk/rss/1/3  # Business
+  
+  tribune.com.pk:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://tribune.com.pk/feed/home
+      - https://tribune.com.pk/feed/pakistan
+      - https://tribune.com.pk/feed/business
+  
+  # Bangladesh
+  thedailystar.net:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.thedailystar.net/rss.xml
+      - https://www.thedailystar.net/politics/rss.xml
+      - https://www.thedailystar.net/business/rss.xml
+  
+  # China
+  scmp.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, tech, general]
+    rss_endpoints:
+      - https://www.scmp.com/rss/2/feed
+      - https://www.scmp.com/rss/3/feed
+      - https://www.scmp.com/rss/5/feed
+  
+  chinadaily.com.cn:
+    editorial_family: state_media
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - http://www.chinadaily.com.cn/rss/world_rss.xml
+      - http://www.chinadaily.com.cn/rss/china_rss.xml
+      - http://www.chinadaily.com.cn/rss/business_rss.xml
+  
+  # Japan
+  japantimes.co.jp:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, tech]
+    rss_endpoints:
+      - https://www.japantimes.co.jp/feed
+      - https://www.japantimes.co.jp/news/feed
+      - https://www.japantimes.co.jp/business/feed
+  
+  asahi.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.asahi.com/ajw/asahi_news_rss.xml
+  
+  # South Korea
+  koreaherald.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, tech]
+    rss_endpoints:
+      - http://www.koreaherald.com/common/rss_xml.php
+  
+  koreatimes.co.kr:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.koreatimes.co.kr/www/rss/rss.xml
+      - https://www.koreatimes.co.kr/www/rss/nation.xml
+      - https://www.koreatimes.co.kr/www/rss/biz.xml
+  
+  # Singapore
+  straitstimes.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.straitstimes.com/news/singapore/rss.xml
+      - https://www.straitstimes.com/news/asia/rss.xml
+      - https://www.straitstimes.com/business/rss.xml
+  
+  channelnewsasia.com:
+    editorial_family: broadcaster
+    languages: [en]
+    topics: [general, politics, economy]
+    rss_endpoints:
+      - https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml
+      - https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&category=6311
+      - https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&category=6511
+  
+  # Thailand
+  bangkokpost.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.bangkokpost.com/rss/data/topstories.xml
+      - https://www.bangkokpost.com/rss/data/business.xml
+  
+  # Indonesia
+  thejakartapost.com:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.thejakartapost.com/feed
+  
+  # Malaysia
+  thestar.com.my:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://www.thestar.com.my/rss/News/Nation
+      - https://www.thestar.com.my/rss/Business/Business-News
+  
+  # Philippines
+  inquirer.net:
+    editorial_family: broadsheet
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://newsinfo.inquirer.net/feed
+      - https://business.inquirer.net/feed
+  
+  # Vietnam
+  vietnamnews.vn:
+    editorial_family: state_media
+    languages: [en]
+    topics: [politics, economy, general]
+    rss_endpoints:
+      - https://vietnamnews.vn/rss/most-read.rss
+      - https://vietnamnews.vn/rss/politics-laws.rss
+      - https://vietnamnews.vn/rss/economy.rss
+
+# Global/Wire services available for backfill
+global:
+  reuters.com:
+    editorial_family: wire
+    languages: [en]
+    topics: [general, politics, economy, business]
+    rss_endpoints:
+      - https://www.reuters.com/rssFeed/worldNews
+      - https://www.reuters.com/rssFeed/businessNews
+  
+  apnews.com:
+    editorial_family: wire
+    languages: [en]
+    topics: [general, politics, economy]
+    rss_endpoints:
+      - https://feeds.apnews.com/rss/apf-topnews
+      - https://feeds.apnews.com/rss/apf-intlnews
+  
+  bloomberg.com:
+    editorial_family: wire
+    languages: [en]
+    topics: [economy, business, politics]
+    rss_endpoints:
+      - https://feeds.bloomberg.com/markets/news.rss
+      - https://feeds.bloomberg.com/politics/news.rss
+  
+  aljazeera.com:
+    editorial_family: broadcaster
+    languages: [en]
+    topics: [general, politics, economy]
+    rss_endpoints:
+      - https://www.aljazeera.com/xml/rss/all.xml
+  
+  cnn.com:
+    editorial_family: broadcaster
+    languages: [en]
+    topics: [general, politics, economy]
+    rss_endpoints:
+      - http://rss.cnn.com/rss/cnn_topstories.rss
+      - http://rss.cnn.com/rss/cnn_world.rss

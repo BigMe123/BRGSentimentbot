@@ -32,6 +32,14 @@ BSGBOT is a cutting-edge, async-first sentiment analysis and risk assessment pla
 
 ## ✨ Features
 
+### 🆕 Massive Non-Throttling SKB System
+- **Scalable to 10,000+ Sources**: SQLite-based catalog with precomputed indexes
+- **250+ Curated Sources**: High-quality feeds across all regions and topics
+- **Intelligent Selection**: <300ms selection from any size catalog
+- **Auto-Discovery**: Dynamically finds and adds sources for obscure topics
+- **Health Monitoring**: Auto-promotes/demotes sources based on performance
+- **Unified Interface**: Single `bsgbot` command replaces all old CLIs
+
 ### Core Intelligence Engine
 - **Multi-Source Aggregation**: RSS, NewsAPI, direct HTML scraping
 - **Advanced Content Extraction**: Smart parsing with fallback strategies
@@ -117,53 +125,87 @@ poetry run mypy sentiment_bot
 
 ## 🎮 Quick Start
 
-### Basic Commands
+### 🆕 Unified Command System (NEW!)
+
+The system now uses **ONE unified command** for everything:
 
 ```bash
-# Run once with default feeds
-poetry run bot once
+# Initialize the database (one-time setup)
+python initialize_skb.py
 
-# Run with region/topic filtering
-poetry run bot once-filtered --region asia --topic defense
+# Run analysis with the unified command
+poetry run bsgbot run [OPTIONS]
+```
 
-# High-performance pipeline (200+ articles/sec)
-poetry run bot once-fast --max-concurrency 500 --browser-pool 10
+### Basic Usage Examples
 
-# Interactive mode with menu
-poetry run bot interactive
+```bash
+# Standard region/topic analysis
+poetry run bsgbot run --region asia --topic elections
 
-# Continuous monitoring
-poetry run bot live --interval 5
+# Obscure topics with discovery
+poetry run bsgbot run --other "semiconductors in Maghreb" --discover
+
+# Quick 1-minute scan
+poetry run bsgbot run --topic climate --budget 60 --min-sources 10
+
+# Large comprehensive run
+poetry run bsgbot run --region americas --budget 600 --min-sources 100
+```
+
+### Key Options
+
+| Option | Short | Description | Example |
+|--------|-------|-------------|---------|
+| `--region` | `-r` | Target region | `--region asia` |
+| `--topic` | `-t` | Standard topic | `--topic elections` |
+| `--other` | `-o` | Free-text/obscure topic | `--other "AI governance"` |
+| `--strict` | `-s` | Exact matches only | `--strict` |
+| `--expand` | `-e` | Include global sources | `--expand` |
+| `--discover` | `-d` | Find new sources | `--discover` |
+| `--budget` | `-b` | Time limit (seconds) | `--budget 300` |
+| `--min-sources` | | Minimum sources | `--min-sources 50` |
+
+### System Commands
+
+```bash
+# View statistics
+poetry run bsgbot stats
+
+# Check health metrics
+poetry run bsgbot health
+
+# Import/update SKB
+poetry run bsgbot import-skb config/sources/skb_v1.yaml
 ```
 
 ### ⏱️ Production Run Times
 
 #### **Standard Production Run** (5 minutes)
 ```bash
-poetry run bot once
+poetry run bsgbot run --budget 300
 ```
-- **117 RSS feeds** from configured sources
+- **250+ curated sources** with intelligent selection
 - **5-minute hard budget** (enforced timeout)
 - Typically collects **500-1500 articles**
 - Analyzes **50,000-150,000 words**
+- Auto-discovery expands source pool dynamically
 
-#### **Enhanced with HTML Crawling** (5-10 minutes)
+#### **Quick Scan** (1 minute)
 ```bash
-poetry run bot-enhanced enhanced --topic "all" --region "all"
+poetry run bsgbot run --topic energy --budget 60 --min-sources 10
 ```
-- RSS feeds + HTML page crawling
-- JavaScript rendering for paywalled sites
-- 5-minute budget + processing overhead
-- More comprehensive but slower
+- Fast targeted analysis
+- 10-30 high-priority sources
+- Ideal for quick market checks
 
-#### **Optimized with SLO Monitoring** (5 minutes strict)
+#### **Comprehensive Analysis** (10 minutes)
 ```bash
-poetry run python -m sentiment_bot.cli_optimized once --budget 300
+poetry run bsgbot run --region europe --expand --budget 600 --min-sources 100
 ```
-- **Enforced 5-minute budget** (kills workers at timeout)
-- Connection pooling and circuit breakers
-- Parallel processing with 100+ workers
-- Real-time SLO monitoring
+- Extended coverage with global sources
+- 100+ sources with diversity quotas
+- Deep analysis with discovery
 
 ### 📊 What Happens in 5 Minutes
 
@@ -186,16 +228,16 @@ From production runs, a typical 5-minute execution:
 - **Circuit breakers**: Open after 3 failures
 - **Deduplication**: Removes ~15-20% redundant content
 
-### 🕐 Longer Run Options
+### 🕐 Extended Run Options
 
 ```bash
 # 15-Minute Deep Scan
-poetry run python -m sentiment_bot.cli_optimized once --budget 900
+poetry run bsgbot run --budget 900 --min-sources 150
 # → Covers ~500+ feeds, 2000-4000 articles
 
-# 60-Minute Complete Scan
-poetry run python -m sentiment_bot.cli_optimized once --budget 3600
-# → Full corpus coverage, all sources attempted
+# 60-Minute Complete Scan  
+poetry run bsgbot run --budget 3600 --min-sources 500 --discover
+# → Full corpus coverage with discovery
 ```
 
 **💡 Recommendation**: The 5-minute run is optimal for regular use:
@@ -415,15 +457,10 @@ is_relevant, reason, scores = filter.is_relevant(
 
 | Command | Description | Key Options |
 |---------|-------------|-------------|
-| `once` | Single analysis cycle | `--feeds`, `--log-level` |
-| `once-filtered` | Filtered analysis | `--region`, `--topic` |
-| `once-fast` | High-performance mode | `--max-concurrency`, `--browser-pool` |
-| `live` | Continuous monitoring | `--interval` |
-| `interactive` | Menu-driven interface | `--format` |
-| `serve` | WebSocket server | - |
-| `web` | GUI + WebSocket | - |
-| `forecast` | Volatility prediction | `--engine`, `--steps` |
-| `quantum` | Portfolio optimization | - |
+| `bsgbot run` | Main analysis command | `--region`, `--topic`, `--other`, `--budget` |
+| `bsgbot stats` | View SKB statistics | - |
+| `bsgbot health` | Check source health | `--domain`, `--export` |
+| `bsgbot import-skb` | Import/update SKB | `yaml_path` |
 
 ## 🔬 Production Readiness Testing
 

@@ -1,0 +1,72 @@
+models:
+  sentiment:
+    id: distilbert/distilbert-base-uncased-finetuned-sst-2-english
+    revision: 714eb0f
+  nli:
+    id: facebook/bart-large-mnli
+    revision: d7645e1
+  summarizer:
+    id: sshleifer/distilbart-cnn-12-6
+    revision: a4f8f3e
+  emotion:
+    id: j-hartmann/emotion-english-distilroberta-base
+    revision: main
+
+runtime:
+  device_preference: ["cuda:0", "mps:0", "cpu"]
+  batch_size: 16
+  cache_dir: ".cache/"
+  enable_quantization: false
+
+freshness:
+  max_age_hours: 24          # default freshness cutoff (24h for news)
+  target_min_fresh_ratio: 0.7  # aim for 70% fresh content
+  strict_mode: true            # reject stale articles by default
+
+selection:
+  min_sources: 30
+  max_sources: 80
+  require_editorial_families: 4
+  max_domain_percentage: 0.2  # Max 20% from single domain
+  articles_per_source: 25      # Increased from 10
+  max_total_articles: 500      # Process up to 500 articles
+  relevance_threshold: 0.6     # Min relevance score to keep
+
+discovery:
+  enabled: true
+  smart_selection: true        # Use AI-powered source ranking
+  max_concurrent: 5
+  timeout: 10
+  common_paths:
+    - "/rss"
+    - "/feed"
+    - "/feeds"
+    - "/rss.xml"
+    - "/feed.xml"
+    - "/atom.xml"
+    - "/index.rss"
+    - "/index.xml"
+    - "/news/rss"
+    - "/en/rss"
+    - "/api/rss"
+
+ensemble:
+  weights:
+    sst2: 0.45
+    emotion: 0.25
+    nli: 0.30
+  abstain:
+    max_prob_thresh: 0.65
+    disagreement_thresh: 0.35
+
+clustering:
+  model: "sentence-transformers/all-MiniLM-L6-v2"
+  cosine_threshold: 0.78
+  min_cluster_size: 2
+
+analysis:
+  aspects:
+    max_aspects_per_doc: 8
+  topic:
+    relevance_threshold: 0.7
+    stance_threshold: 0.6

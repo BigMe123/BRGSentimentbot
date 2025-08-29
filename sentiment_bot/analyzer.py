@@ -163,22 +163,27 @@ except Exception:  # pragma: no cover - fallback
     VADER_AVAILABLE = False
 
 try:  # pragma: no cover - optional heavy deps
-    from transformers import pipeline
+    from .models import (
+        get_sentiment_pipeline, 
+        get_nli_pipeline,
+        get_summarizer_pipeline,
+        get_emotion_pipeline
+    )
 
     try:
-        _bert = pipeline("sentiment-analysis")
+        _bert = get_sentiment_pipeline()
     except Exception:
         _bert = None
     try:
-        _nli = pipeline("zero-shot-classification")
+        _nli = get_nli_pipeline()
     except Exception:
         _nli = None
     try:
-        _summarizer = pipeline("summarization")
+        _summarizer = get_summarizer_pipeline()
     except Exception:
         _summarizer = None
     try:
-        _emotion = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base")
+        _emotion = get_emotion_pipeline()
     except Exception:
         _emotion = None
 except Exception:  # pragma: no cover - optional dependency
