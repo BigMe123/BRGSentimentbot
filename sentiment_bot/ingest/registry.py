@@ -42,7 +42,7 @@ CONNECTORS: Dict[str, Type[Connector]] = {
 class ConnectorRegistry:
     """Manage and instantiate connectors from configuration."""
 
-    def __init__(self, config_path: str = "config/sources.yaml"):
+    def __init__(self, config_path: str = "config/master_config.yaml"):
         """
         Initialize the registry.
 
@@ -51,6 +51,7 @@ class ConnectorRegistry:
         """
         self.config_path = Path(config_path)
         self.connectors: List[Connector] = []
+        logger.info(f"Initializing ConnectorRegistry with config: {self.config_path}")
         self._load_config()
 
     def _load_config(self):
@@ -63,6 +64,11 @@ class ConnectorRegistry:
         try:
             with open(self.config_path, "r") as f:
                 config = yaml.safe_load(f)
+
+            # Debug: Check what was loaded
+            if not isinstance(config, dict):
+                logger.error(f"Config is not a dictionary, got: {type(config)}")
+                return
 
             sources = config.get("sources", [])
 
@@ -91,7 +97,10 @@ class ConnectorRegistry:
                     logger.error(f"Failed to initialize {connector_type}: {e}")
 
         except Exception as e:
-            logger.error(f"Failed to load configuration: {e}")
+            import traceback
+
+            logger.error(f"Failed to load configuration from {self.config_path}: {e}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
 
     def get_connectors(self) -> List[Connector]:
         """Get all loaded connectors."""

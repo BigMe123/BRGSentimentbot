@@ -1,0 +1,6 @@
+# Test challenging European sources
+- politico.eu
+- euractiv.com
+- economist.com
+- telegraph.co.uk
+- france24.com

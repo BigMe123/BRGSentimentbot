@@ -43,34 +43,245 @@ class EntityExtractor:
         "Vanguard",
     }
 
-    # Countries and regions
-    KNOWN_GPES = {
-        "United States",
-        "USA",
-        "US",
-        "America",
-        "China",
-        "Japan",
-        "Germany",
-        "UK",
-        "United Kingdom",
-        "Britain",
-        "France",
-        "Italy",
-        "Spain",
-        "India",
-        "Brazil",
-        "Russia",
-        "Canada",
-        "Australia",
-        "South Korea",
-        "Mexico",
-        "Indonesia",
-        "Europe",
-        "Asia",
-        "Africa",
-        "Middle East",
-        "Latin America",
+    # Comprehensive countries and regions by continent
+    COUNTRIES_BY_REGION = {
+        "Europe": {
+            # Western Europe
+            "Germany",
+            "France",
+            "Italy",
+            "Spain",
+            "Netherlands",
+            "Belgium",
+            "Austria",
+            "Switzerland",
+            "Luxembourg",
+            "Portugal",
+            "Ireland",
+            "UK",
+            "United Kingdom",
+            "Britain",
+            # Northern Europe
+            "Sweden",
+            "Norway",
+            "Denmark",
+            "Finland",
+            "Iceland",
+            # Eastern Europe
+            "Russia",
+            "Poland",
+            "Czech Republic",
+            "Hungary",
+            "Slovakia",
+            "Romania",
+            "Bulgaria",
+            "Ukraine",
+            "Belarus",
+            "Lithuania",
+            "Latvia",
+            "Estonia",
+            "Slovenia",
+            "Croatia",
+            "Serbia",
+            "Bosnia",
+            "Montenegro",
+            "North Macedonia",
+            "Albania",
+            "Moldova",
+            # Southern Europe
+            "Greece",
+            "Cyprus",
+            "Malta",
+            "Turkey",
+        },
+        "Americas": {
+            # North America
+            "United States",
+            "USA",
+            "US",
+            "America",
+            "Canada",
+            "Mexico",
+            # Central America
+            "Guatemala",
+            "Belize",
+            "El Salvador",
+            "Honduras",
+            "Nicaragua",
+            "Costa Rica",
+            "Panama",
+            # Caribbean
+            "Cuba",
+            "Jamaica",
+            "Haiti",
+            "Dominican Republic",
+            "Puerto Rico",
+            "Trinidad",
+            "Barbados",
+            # South America
+            "Brazil",
+            "Argentina",
+            "Chile",
+            "Peru",
+            "Colombia",
+            "Venezuela",
+            "Ecuador",
+            "Bolivia",
+            "Paraguay",
+            "Uruguay",
+            "Guyana",
+            "Suriname",
+        },
+        "Asia": {
+            # East Asia
+            "China",
+            "Japan",
+            "South Korea",
+            "North Korea",
+            "Mongolia",
+            "Taiwan",
+            # Southeast Asia
+            "Indonesia",
+            "Philippines",
+            "Thailand",
+            "Vietnam",
+            "Malaysia",
+            "Singapore",
+            "Myanmar",
+            "Cambodia",
+            "Laos",
+            "Brunei",
+            "East Timor",
+            # South Asia
+            "India",
+            "Pakistan",
+            "Bangladesh",
+            "Sri Lanka",
+            "Nepal",
+            "Bhutan",
+            "Maldives",
+            "Afghanistan",
+            # Central Asia
+            "Kazakhstan",
+            "Uzbekistan",
+            "Turkmenistan",
+            "Kyrgyzstan",
+            "Tajikistan",
+            # Western Asia / Middle East
+            "Saudi Arabia",
+            "Iran",
+            "Iraq",
+            "Israel",
+            "Jordan",
+            "Lebanon",
+            "Syria",
+            "Yemen",
+            "Oman",
+            "UAE",
+            "Qatar",
+            "Kuwait",
+            "Bahrain",
+            "Georgia",
+            "Armenia",
+            "Azerbaijan",
+        },
+        "Africa": {
+            # North Africa
+            "Egypt",
+            "Libya",
+            "Tunisia",
+            "Algeria",
+            "Morocco",
+            "Sudan",
+            "South Sudan",
+            # West Africa
+            "Nigeria",
+            "Ghana",
+            "Senegal",
+            "Mali",
+            "Burkina Faso",
+            "Niger",
+            "Guinea",
+            "Sierra Leone",
+            "Liberia",
+            "Ivory Coast",
+            "Togo",
+            "Benin",
+            "Mauritania",
+            "Gambia",
+            "Guinea-Bissau",
+            "Cape Verde",
+            # East Africa
+            "Ethiopia",
+            "Kenya",
+            "Tanzania",
+            "Uganda",
+            "Rwanda",
+            "Burundi",
+            "Somalia",
+            "Eritrea",
+            "Djibouti",
+            "Comoros",
+            "Seychelles",
+            "Mauritius",
+            "Madagascar",
+            # Central Africa
+            "Democratic Republic of Congo",
+            "Central African Republic",
+            "Chad",
+            "Cameroon",
+            "Equatorial Guinea",
+            "Gabon",
+            "Republic of Congo",
+            "Sao Tome and Principe",
+            # Southern Africa
+            "South Africa",
+            "Zimbabwe",
+            "Zambia",
+            "Botswana",
+            "Namibia",
+            "Lesotho",
+            "Swaziland",
+            "Malawi",
+            "Mozambique",
+            "Angola",
+        },
+        "Oceania": {
+            "Australia",
+            "New Zealand",
+            "Papua New Guinea",
+            "Fiji",
+            "Solomon Islands",
+            "Vanuatu",
+            "Samoa",
+            "Tonga",
+            "Kiribati",
+            "Palau",
+            "Marshall Islands",
+            "Micronesia",
+            "Nauru",
+            "Tuvalu",
+        },
+    }
+
+    # Flatten for easy lookup
+    KNOWN_GPES = set()
+    COUNTRY_TO_REGION = {}
+    for region, countries in COUNTRIES_BY_REGION.items():
+        for country in countries:
+            KNOWN_GPES.add(country)
+            COUNTRY_TO_REGION[country] = region
+
+    # Add common alternative names
+    COUNTRY_ALIASES = {
+        "US": "United States",
+        "USA": "United States",
+        "America": "United States",
+        "UK": "United Kingdom",
+        "Britain": "United Kingdom",
+        "DRC": "Democratic Republic of Congo",
+        "Congo": "Democratic Republic of Congo",
+        "UAE": "United Arab Emirates",
     }
 
     # Market tickers patterns
@@ -348,6 +559,310 @@ class EntityExtractor:
             themes.append("crypto_markets")
 
         return themes[:5]  # Return top 5 themes
+
+    def extract_country_mentions(self, text: str) -> List[Dict[str, str]]:
+        """
+        Extract country mentions from text with context.
+
+        Args:
+            text: Input text
+
+        Returns:
+            List of country mention dictionaries with country, region, and context
+        """
+        mentions = []
+        text_lower = text.lower()
+
+        # Look for country mentions
+        for country in self.KNOWN_GPES:
+            # Use word boundaries to avoid partial matches
+            pattern = r"\b" + re.escape(country.lower()) + r"\b"
+            matches = list(re.finditer(pattern, text_lower))
+
+            if matches:
+                # Get surrounding context for each match
+                for match in matches:
+                    start = max(0, match.start() - 50)
+                    end = min(len(text), match.end() + 50)
+                    context = text[start:end].strip()
+
+                    # Normalize country name using aliases
+                    normalized_country = self.COUNTRY_ALIASES.get(country, country)
+                    region = self.COUNTRY_TO_REGION.get(normalized_country, "Unknown")
+
+                    mentions.append(
+                        {
+                            "country": normalized_country,
+                            "region": region,
+                            "context": context,
+                            "position": match.start(),
+                        }
+                    )
+
+        return mentions
+
+    def analyze_country_sentiment(
+        self, country_mentions: List[Dict], sentiment_score: float, text: str
+    ) -> List[Dict]:
+        """
+        Analyze sentiment for mentioned countries.
+
+        Args:
+            country_mentions: List of country mention dictionaries
+            sentiment_score: Overall article sentiment score
+            text: Full article text
+
+        Returns:
+            List of country sentiment dictionaries
+        """
+        country_sentiments = []
+        text_lower = text.lower()
+
+        # Define positive and negative context keywords
+        positive_keywords = {
+            "growth",
+            "success",
+            "prosperity",
+            "stable",
+            "strong",
+            "positive",
+            "improvement",
+            "progress",
+            "development",
+            "opportunity",
+            "investment",
+            "boom",
+            "recovery",
+            "breakthrough",
+            "achievement",
+            "victory",
+            "alliance",
+            "cooperation",
+            "peace",
+        }
+
+        negative_keywords = {
+            "crisis",
+            "conflict",
+            "war",
+            "instability",
+            "corruption",
+            "recession",
+            "decline",
+            "collapse",
+            "threat",
+            "sanctions",
+            "violence",
+            "protests",
+            "unrest",
+            "chaos",
+            "failure",
+            "scandal",
+            "attack",
+            "terrorism",
+            "poverty",
+            "unemployment",
+            "inflation",
+        }
+
+        risk_keywords = {
+            "high_risk": [
+                "war",
+                "terrorism",
+                "collapse",
+                "crisis",
+                "sanctions",
+                "conflict",
+            ],
+            "medium_risk": [
+                "protests",
+                "instability",
+                "corruption",
+                "recession",
+                "unrest",
+            ],
+            "low_risk": [
+                "stable",
+                "growth",
+                "investment",
+                "development",
+                "cooperation",
+            ],
+        }
+
+        for mention in country_mentions:
+            context = mention["context"].lower()
+            country = mention["country"]
+
+            # Analyze context sentiment
+            positive_score = sum(1 for word in positive_keywords if word in context)
+            negative_score = sum(1 for word in negative_keywords if word in context)
+
+            # Calculate country-specific sentiment
+            if positive_score > negative_score:
+                country_sentiment = "positive"
+                sentiment_strength = min(1.0, positive_score / 3)
+            elif negative_score > positive_score:
+                country_sentiment = "negative"
+                sentiment_strength = min(1.0, negative_score / 3)
+            else:
+                country_sentiment = "neutral"
+                sentiment_strength = 0.5
+
+            # Analyze risk level
+            risk_level = "low"
+            for level, keywords in risk_keywords.items():
+                if any(word in context for word in keywords):
+                    if level == "high_risk":
+                        risk_level = "high"
+                        break
+                    elif level == "medium_risk":
+                        risk_level = "medium"
+
+            country_sentiments.append(
+                {
+                    "country": country,
+                    "region": mention["region"],
+                    "sentiment": country_sentiment,
+                    "sentiment_strength": sentiment_strength,
+                    "risk_level": risk_level,
+                    "context": (
+                        mention["context"][:100] + "..."
+                        if len(mention["context"]) > 100
+                        else mention["context"]
+                    ),
+                    "positive_signals": positive_score,
+                    "negative_signals": negative_score,
+                }
+            )
+
+        return country_sentiments
+
+    def generate_country_insights(
+        self, country_sentiments_list: List[List[Dict]]
+    ) -> Dict:
+        """
+        Generate insights about countries mentioned across all articles.
+
+        Args:
+            country_sentiments_list: List of country sentiment lists from all articles
+
+        Returns:
+            Dictionary with country insights
+        """
+        from collections import Counter, defaultdict
+
+        # Aggregate data across all articles
+        country_mentions = Counter()
+        country_sentiment_scores = defaultdict(list)
+        country_risk_levels = defaultdict(list)
+        country_regions = {}
+        country_contexts = defaultdict(list)
+
+        for sentiments in country_sentiments_list:
+            for sentiment in sentiments:
+                country = sentiment["country"]
+                country_mentions[country] += 1
+                country_sentiment_scores[country].append(
+                    {
+                        "sentiment": sentiment["sentiment"],
+                        "strength": sentiment["sentiment_strength"],
+                        "positive_signals": sentiment["positive_signals"],
+                        "negative_signals": sentiment["negative_signals"],
+                    }
+                )
+                country_risk_levels[country].append(sentiment["risk_level"])
+                country_regions[country] = sentiment["region"]
+                country_contexts[country].append(sentiment["context"])
+
+        # Calculate aggregate scores
+        insights = {
+            "most_mentioned": [],
+            "highest_risk": [],
+            "most_positive": [],
+            "most_negative": [],
+            "regional_summary": defaultdict(
+                lambda: {"positive": 0, "negative": 0, "neutral": 0, "high_risk": 0}
+            ),
+        }
+
+        for country, count in country_mentions.items():
+            if count < 2:  # Skip countries mentioned only once
+                continue
+
+            sentiments = country_sentiment_scores[country]
+            risks = country_risk_levels[country]
+            region = country_regions[country]
+
+            # Calculate average sentiment
+            positive_count = sum(1 for s in sentiments if s["sentiment"] == "positive")
+            negative_count = sum(1 for s in sentiments if s["sentiment"] == "negative")
+            neutral_count = len(sentiments) - positive_count - negative_count
+
+            avg_positive_signals = sum(s["positive_signals"] for s in sentiments) / len(
+                sentiments
+            )
+            avg_negative_signals = sum(s["negative_signals"] for s in sentiments) / len(
+                sentiments
+            )
+
+            # Risk analysis
+            high_risk_count = sum(1 for r in risks if r == "high")
+            risk_ratio = high_risk_count / len(risks) if risks else 0
+
+            country_data = {
+                "country": country,
+                "region": region,
+                "mentions": count,
+                "positive_mentions": positive_count,
+                "negative_mentions": negative_count,
+                "neutral_mentions": neutral_count,
+                "avg_positive_signals": avg_positive_signals,
+                "avg_negative_signals": avg_negative_signals,
+                "risk_ratio": risk_ratio,
+                "sample_context": (
+                    country_contexts[country][0] if country_contexts[country] else ""
+                ),
+            }
+
+            # Add to appropriate categories
+            insights["most_mentioned"].append(country_data)
+
+            if risk_ratio > 0.3:  # High risk threshold
+                insights["highest_risk"].append(country_data)
+
+            if positive_count > negative_count and avg_positive_signals > 1:
+                insights["most_positive"].append(country_data)
+
+            if negative_count > positive_count and avg_negative_signals > 1:
+                insights["most_negative"].append(country_data)
+
+            # Update regional summary
+            insights["regional_summary"][region]["positive"] += positive_count
+            insights["regional_summary"][region]["negative"] += negative_count
+            insights["regional_summary"][region]["neutral"] += neutral_count
+            if risk_ratio > 0.5:
+                insights["regional_summary"][region]["high_risk"] += 1
+
+        # Sort categories
+        insights["most_mentioned"] = sorted(
+            insights["most_mentioned"], key=lambda x: x["mentions"], reverse=True
+        )[:10]
+        insights["highest_risk"] = sorted(
+            insights["highest_risk"], key=lambda x: x["risk_ratio"], reverse=True
+        )[:5]
+        insights["most_positive"] = sorted(
+            insights["most_positive"],
+            key=lambda x: x["avg_positive_signals"],
+            reverse=True,
+        )[:5]
+        insights["most_negative"] = sorted(
+            insights["most_negative"],
+            key=lambda x: x["avg_negative_signals"],
+            reverse=True,
+        )[:5]
+
+        return insights
 
     def generate_article_id(self, source: str, title: str, published_at: str) -> str:
         """Generate unique article ID."""

@@ -59,6 +59,8 @@ mmh3 = "^5.2.0"
 datasketch = "^1.6.5"
 beautifulsoup4 = "^4.12.0"
 scikit-learn = "^1.7.1"
+2captcha-python = "^1.2.8"
+playwright-stealth = "^1.0.6"
 
 [tool.poetry.group.heavy]
 optional = true
@@ -89,6 +91,8 @@ types-networkx = "^3.5.0.20250830"
 bsgbot = "sentiment_bot.cli_unified:app"
 # Enhanced v2 with all fixes
 bsgbot-v2 = "sentiment_bot.cli_enhanced_v2:app"
+# 🛡️ Military-grade stealth harvester for expanding SKB
+skb-harvest = "sentiment_bot.stealth_harvester:main"
 
 [tool.mypy]
 python_version = "3.12"

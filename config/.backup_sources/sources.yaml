@@ -58,8 +58,8 @@ sources:
     
   # Bluesky - Requires account (free signup)
   - type: bluesky
-    handle: "your.handle"
-    password: "your_password"  # Or use environment variable
+    handle: "webscraper101"
+    password: "tanki123"  # Or use environment variable
     queries:
       - "tech news"
       - "ai"

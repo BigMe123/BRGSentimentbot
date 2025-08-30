@@ -1,0 +1,12 @@
+RUN 3d07a209 | americas · General | 21 relevant | Sentiment -19 (avg -0.19) | Volatility 0.08
+Signals: ai_disruption · monetary_policy · geopolitical_risk · equity_markets · energy_prices
+Entities: America(6), US(4), UN(3), TO(2), CLICK(2)
+Skews: Pos: 0%, Neg: 0%, Neu: 0%
+Notables:
+ - 🟢 RFK Jr.’s full-fat crusade
+ - 🔴 FBI: Making America Great Means Lowering The Bar For New Hires
+ - 🔴 'The Brady Bunch' star Susan Olsen admits she disliked her 'stupid' Cindy Brady 
+ - 🔴 Philadelphia schools partner with Muslim advocacy group for guides on 'American 
+ - 🟢 Settlement Signed in Texas v. New Mexico Rio Grande Case
+Actions:
+ - Continue standard monitoring

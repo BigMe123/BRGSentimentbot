@@ -1,0 +1,13 @@
+RUN c2e8bbca | middle_east · General | 15 relevant | Sentiment -39 (avg -0.40) | Volatility 0.00
+Signals: ai_disruption · geopolitical_risk · monetary_policy · energy_prices · green_transition
+Entities: Italy(2), EU(1), EU(1), UN(1), Britain(1)
+Skews: Pos: 0%, Neg: 0%, Neu: 0%
+Notables:
+ - 🔴 Iran says eight arrested for suspected links to Israel's Mossad spy agency
+ - 🟢 Thousands protest Israeli siege of Gaza near Venice Film Festival
+ - 🔴 Red Cross warns against evacuation of Gaza City as Israel tightens siege
+ - 🔴 Yemen’s Houthis confirm Israeli strike killed group’s prime minister
+ - 🔴 Iran's Pezeshkian says Iran does not seek war, but Israel, US seek to 'divide, d
+Actions:
+ - Review negative sentiment drivers in sector
+ - Expand source coverage for middle_east

@@ -1,0 +1,42 @@
+{
+  "run_id": "8d45ad60",
+  "started_at": "2025-08-30T15:11:19.313952",
+  "finished_at": "2025-08-30T15:11:19.341929",
+  "config": {
+    "region": "americas",
+    "budget_sec": 300,
+    "min_sources": 30,
+    "discover": false,
+    "max_age_hours": 24
+  },
+  "collection": {
+    "attempted_feeds": 120,
+    "articles_raw": 0,
+    "unique_after_dedupe": 0,
+    "fresh_window_h": 24,
+    "fresh_count": 0,
+    "relevant_count": 0
+  },
+  "analysis": {
+    "sentiment_total": 0,
+    "breakdown": {
+      "positive": 0,
+      "negative": 0,
+      "neutral": 0
+    },
+    "avg_sentiment": 0.0,
+    "top_triggers": [],
+    "top_entities": [],
+    "volatility_index": 0.0
+  },
+  "sources": [],
+  "diversity": {
+    "sources": 0,
+    "languages": 1,
+    "regions": 1,
+    "editorial_families": 1,
+    "score": 0.78
+  },
+  "errors": [],
+  "schema_version": "1.0.0"
+}

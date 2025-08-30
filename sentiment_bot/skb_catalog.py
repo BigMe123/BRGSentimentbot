@@ -1,6 +1,6 @@
 """
 Unified Source Knowledge Base (SKB) Catalog with SQLite storage and precomputed indexes.
-This is the SINGLE SOURCE OF TRUTH for all source management.
+This module now integrates with the Master Source Manager for unified source access.
 """
 
 import sqlite3
@@ -9,6 +9,7 @@ import yaml
 import hashlib
 import mmap
 import time
+import os
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Set, Tuple
 from dataclasses import dataclass, field, asdict, fields
@@ -17,6 +18,15 @@ import logging
 from datetime import datetime, timedelta
 import re
 from difflib import get_close_matches
+
+# Import the master source manager
+try:
+    from .master_sources import get_master_sources, MasterSourceManager
+
+    USE_MASTER_SOURCES = True
+except ImportError:
+    USE_MASTER_SOURCES = False
+    logger.warning("Master sources module not available, using legacy mode")
 
 logger = logging.getLogger(__name__)
 
@@ -78,6 +88,7 @@ class SKBCatalog:
         self._cache = {}
         self._cache_timestamps = {}
         self._init_db()
+        self._load_harvested_sources()
 
     def _init_db(self):
         """Initialize SQLite database with schema."""
@@ -158,6 +169,191 @@ class SKBCatalog:
         )
 
         self.conn.commit()
+
+    def _load_harvested_sources(self):
+        """Load sources from the master source system."""
+        # Use master sources if available
+        if USE_MASTER_SOURCES:
+            try:
+                from .master_sources import get_master_sources
+
+                manager = get_master_sources()
+                all_sources = manager.get_all_sources()
+                logger.info(
+                    f"Loading {len(all_sources)} sources from master source system"
+                )
+
+                # Convert NewsSource objects to SourceRecord format
+                for source in all_sources:
+                    # Check if source exists in DB to preserve existing metadata
+                    existing = self.conn.execute(
+                        "SELECT data FROM sources WHERE domain = ?", (source.domain,)
+                    ).fetchone()
+
+                    if existing and existing["data"]:
+                        # Source exists - preserve existing metadata but update from master
+                        try:
+                            existing_data = json.loads(existing["data"])
+                            # Preserve notes, RSS feeds, and editorial family if they exist
+                            notes = existing_data.get("notes", "")
+                            rss_feeds = existing_data.get(
+                                "rss_endpoints",
+                                source.rss_feeds if source.rss_feeds else [],
+                            )
+                            editorial_family = existing_data.get("editorial_family", "")
+                        except:
+                            notes = ""
+                            rss_feeds = source.rss_feeds if source.rss_feeds else []
+                            editorial_family = ""
+                    else:
+                        # New source - use defaults
+                        notes = ""
+                        rss_feeds = source.rss_feeds if source.rss_feeds else []
+                        editorial_family = ""
+
+                    # Create SourceRecord from master source with preserved metadata
+                    source_record = SourceRecord(
+                        domain=source.domain,
+                        name=source.name,
+                        region=source.region,
+                        country=source.country,
+                        languages=[source.language],
+                        topics=source.topics,
+                        primary_sections=[],
+                        rss_endpoints=rss_feeds,
+                        sitemap_endpoints=[],
+                        priority=source.priority,
+                        policy=source.policy,
+                        rate_limit_ms=300,
+                        max_docs_per_run=30,
+                        notes=notes,
+                    )
+
+                    # Build data dict with editorial family preserved
+                    data_dict = source_record.to_dict()
+                    if editorial_family:
+                        data_dict["editorial_family"] = editorial_family
+
+                    # Insert or update in database
+                    self.conn.execute(
+                        """
+                        INSERT OR REPLACE INTO sources (
+                            domain, name, region, country, data, priority, 
+                            policy, historical_yield, freshness_score, 
+                            reliability_score, validation_status
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                        (
+                            source_record.domain,
+                            source_record.name,
+                            source_record.region,
+                            source_record.country,
+                            json.dumps(data_dict),
+                            source_record.priority,
+                            source_record.policy,
+                            0.0,  # historical_yield
+                            source.freshness_score,
+                            source.reliability_score,
+                            source.validation_status,
+                        ),
+                    )
+
+                    # Update topic index
+                    for topic in source_record.topics:
+                        self.conn.execute(
+                            "INSERT OR IGNORE INTO topic_index (topic, domain) VALUES (?, ?)",
+                            (topic.lower(), source_record.domain),
+                        )
+
+                    # Update language index
+                    for language in source_record.languages:
+                        self.conn.execute(
+                            "INSERT OR IGNORE INTO language_index (language, domain) VALUES (?, ?)",
+                            (language.lower(), source_record.domain),
+                        )
+
+                # Clear old indexes first
+                self.conn.execute("DELETE FROM topic_index")
+                self.conn.execute("DELETE FROM language_index")
+
+                # Rebuild indexes for all sources
+                for source in all_sources:
+                    for topic in source.topics:
+                        self.conn.execute(
+                            "INSERT OR IGNORE INTO topic_index (topic, domain) VALUES (?, ?)",
+                            (topic.lower(), source.domain),
+                        )
+                    self.conn.execute(
+                        "INSERT OR IGNORE INTO language_index (language, domain) VALUES (?, ?)",
+                        (source.language.lower(), source.domain),
+                    )
+
+                self.conn.commit()
+                return
+            except Exception as e:
+                logger.warning(f"Could not load from master sources: {e}")
+
+        # Fallback to legacy loading
+        from .skb_loader import load_harvested_yaml
+
+        harvested_path = os.environ.get(
+            "SKB_SOURCES_PATH", "config/master_sources.yaml"
+        )
+        if not os.path.exists(harvested_path):
+            return
+
+        try:
+            harvested_sources = load_harvested_yaml(harvested_path)
+            logger.info(
+                f"Loading {len(harvested_sources)} harvested sources from {harvested_path}"
+            )
+
+            for source in harvested_sources:
+                # Insert or update harvested source
+                self.conn.execute(
+                    """
+                    INSERT OR REPLACE INTO sources (
+                        domain, name, region, country, data, priority, 
+                        policy, historical_yield, freshness_score, 
+                        reliability_score, validation_status
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                    (
+                        source.domain,
+                        source.name,
+                        source.region,
+                        source.country,
+                        json.dumps(source.to_dict()),
+                        source.priority,
+                        source.policy,
+                        source.historical_yield,
+                        source.freshness_score,
+                        source.reliability_score,
+                        source.validation_status,
+                    ),
+                )
+
+                # Update topic index
+                for topic in source.topics:
+                    self.conn.execute(
+                        "INSERT OR IGNORE INTO topic_index (topic, domain) VALUES (?, ?)",
+                        (topic.lower(), source.domain),
+                    )
+
+                # Update language index
+                for language in source.languages:
+                    self.conn.execute(
+                        "INSERT OR IGNORE INTO language_index (language, domain) VALUES (?, ?)",
+                        (language.lower(), source.domain),
+                    )
+
+            self.conn.commit()
+            logger.info(
+                f"Successfully loaded {len(harvested_sources)} harvested sources"
+            )
+
+        except Exception as e:
+            logger.error(f"Error loading harvested sources: {e}")
 
     def import_from_yaml(self, yaml_path: str):
         """Import sources from YAML SKB file."""
@@ -269,9 +465,15 @@ class SKBCatalog:
             query += f" LIMIT {limit}"
 
         cursor = self.conn.execute(query, (region,))
-        sources = [
-            SourceRecord.from_dict(json.loads(row["data"])) for row in cursor.fetchall()
-        ]
+        sources = []
+        for row in cursor.fetchall():
+            try:
+                data = json.loads(row["data"])
+                if data:  # Only create SourceRecord if data exists
+                    sources.append(SourceRecord.from_dict(data))
+            except (json.JSONDecodeError, TypeError) as e:
+                logger.warning(f"Skipping invalid source data: {e}")
+                continue
 
         self._update_cache(cache_key, sources)
         return sources
@@ -298,12 +500,17 @@ class SKBCatalog:
         cursor = self.conn.execute(query, (topic.lower(),))
         sources = []
         for row in cursor.fetchall():
-            data = json.loads(row["data"]) if row["data"] else {}
-            # Add required fields from columns
-            data["domain"] = row["domain"]
-            data["name"] = row["name"]
-            data["region"] = row["region"]
-            sources.append(SourceRecord.from_dict(data))
+            try:
+                data = json.loads(row["data"]) if row["data"] else {}
+                # Add required fields from columns
+                data["domain"] = row["domain"]
+                data["name"] = row["name"]
+                data["region"] = row["region"]
+                if data.get("domain") and data.get("name") and data.get("region"):
+                    sources.append(SourceRecord.from_dict(data))
+            except (json.JSONDecodeError, TypeError, KeyError) as e:
+                logger.warning(f"Skipping invalid source data: {e}")
+                continue
 
         self._update_cache(cache_key, sources)
         return sources
@@ -383,12 +590,17 @@ class SKBCatalog:
         cursor = self.conn.execute(query, params)
         sources = []
         for row in cursor.fetchall():
-            data = json.loads(row["data"]) if row["data"] else {}
-            # Add required fields from columns
-            data["domain"] = row["domain"]
-            data["name"] = row["name"]
-            data["region"] = row["region"]
-            sources.append(SourceRecord.from_dict(data))
+            try:
+                data = json.loads(row["data"]) if row["data"] else {}
+                # Add required fields from columns
+                data["domain"] = row["domain"]
+                data["name"] = row["name"]
+                data["region"] = row["region"]
+                if data.get("domain") and data.get("name") and data.get("region"):
+                    sources.append(SourceRecord.from_dict(data))
+            except (json.JSONDecodeError, TypeError, KeyError) as e:
+                logger.warning(f"Skipping invalid source data: {e}")
+                continue
 
         return sources
 

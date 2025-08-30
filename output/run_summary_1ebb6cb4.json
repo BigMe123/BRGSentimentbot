@@ -1,0 +1,204 @@
+{
+  "run_id": "1ebb6cb4",
+  "started_at": "2025-08-30T18:57:47.505412",
+  "finished_at": "2025-08-30T19:00:19.753631",
+  "config": {
+    "region": "americas",
+    "budget_sec": 15,
+    "min_sources": 2,
+    "discover": false,
+    "max_age_hours": 24
+  },
+  "collection": {
+    "attempted_feeds": 120,
+    "articles_raw": 759,
+    "unique_after_dedupe": 755,
+    "fresh_window_h": 24,
+    "fresh_count": 333,
+    "relevant_count": 110
+  },
+  "analysis": {
+    "sentiment_total": 2,
+    "breakdown": {
+      "positive": 11,
+      "negative": 34,
+      "neutral": 65
+    },
+    "avg_sentiment": 0.02818818181818182,
+    "top_triggers": [
+      "ai_disruption",
+      "monetary_policy",
+      "geopolitical_risk",
+      "equity_markets",
+      "crypto_markets"
+    ],
+    "top_entities": [
+      {
+        "text": "US",
+        "type": "GPE",
+        "count": 16
+      },
+      {
+        "text": "America",
+        "type": "GPE",
+        "count": 10
+      },
+      {
+        "text": "AI",
+        "type": "TICKER",
+        "count": 8
+      },
+      {
+        "text": "TO",
+        "type": "TICKER",
+        "count": 8
+      },
+      {
+        "text": "US",
+        "type": "TICKER",
+        "count": 7
+      },
+      {
+        "text": "CLICK",
+        "type": "TICKER",
+        "count": 7
+      },
+      {
+        "text": "HERE",
+        "type": "TICKER",
+        "count": 7
+      },
+      {
+        "text": "Russia",
+        "type": "GPE",
+        "count": 5
+      },
+      {
+        "text": "Apple",
+        "type": "ORG",
+        "count": 5
+      },
+      {
+        "text": "MORE",
+        "type": "TICKER",
+        "count": 5
+      }
+    ],
+    "volatility_index": 0.0341716932949396
+  },
+  "sources": [
+    {
+      "domain": "Bloomberg Politics",
+      "articles": 13
+    },
+    {
+      "domain": "Latest & Breaking News on Fox News",
+      "articles": 10
+    },
+    {
+      "domain": "NYT > Top Stories",
+      "articles": 9
+    },
+    {
+      "domain": "Cointelegraph.com News",
+      "articles": 8
+    },
+    {
+      "domain": "Home - CBSNews.com",
+      "articles": 8
+    },
+    {
+      "domain": "NBC News Top Stories",
+      "articles": 7
+    },
+    {
+      "domain": "Gizmodo",
+      "articles": 5
+    },
+    {
+      "domain": "Hacker News",
+      "articles": 5
+    },
+    {
+      "domain": "World",
+      "articles": 5
+    },
+    {
+      "domain": "Inside Climate News",
+      "articles": 4
+    },
+    {
+      "domain": "WIRED",
+      "articles": 4
+    },
+    {
+      "domain": "CryptoSlate",
+      "articles": 4
+    },
+    {
+      "domain": "9to5Mac",
+      "articles": 3
+    },
+    {
+      "domain": "Techdirt",
+      "articles": 3
+    },
+    {
+      "domain": "Latest from Live Science",
+      "articles": 3
+    },
+    {
+      "domain": "Latest from Android Central",
+      "articles": 3
+    },
+    {
+      "domain": "Latest from Space.com",
+      "articles": 3
+    },
+    {
+      "domain": "TechCrunch",
+      "articles": 2
+    },
+    {
+      "domain": "Decrypt",
+      "articles": 2
+    },
+    {
+      "domain": "",
+      "articles": 2
+    },
+    {
+      "domain": "STAT",
+      "articles": 2
+    },
+    {
+      "domain": "NPR Topics: News",
+      "articles": 1
+    },
+    {
+      "domain": "Grist",
+      "articles": 1
+    },
+    {
+      "domain": "Ars Technica - All content",
+      "articles": 1
+    },
+    {
+      "domain": "American Enterprise Institute – AEI",
+      "articles": 1
+    },
+    {
+      "domain": "PCWorld",
+      "articles": 1
+    }
+  ],
+  "diversity": {
+    "sources": 26,
+    "languages": 1,
+    "regions": 1,
+    "editorial_families": 3,
+    "score": 1.0
+  },
+  "errors": [],
+  "schema_version": "1.0.0"
+}

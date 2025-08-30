@@ -1,0 +1,7751 @@
+version: '2.0'
+description: Master source list for BSG Sentiment Bot
+total_sources: 768
+sources:
+- domain: asia.nikkei.com
+  name: Nikkei Asia
+  topics:
+  - economy
+  - politics
+  - tech
+  - security
+  priority: 0.9
+  policy: allow
+  region: asia
+  country: JP
+  language: en
+  rss_endpoints: null
+- domain: www.aljazeera.com
+  name: Al Jazeera
+  topics:
+  - politics
+  - conflict
+  - economy
+  - elections
+  priority: 0.9
+  policy: js_allowed
+  region: middle_east
+  country: QA
+  language: en
+  rss_endpoints: null
+- domain: ft.com
+  name: Ft
+  topics:
+  - economy
+  priority: 0.9
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: reuters.com
+  name: Reuters
+  topics:
+  - economy
+  priority: 0.9
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: economist.com
+  name: Economist
+  topics:
+  - economy
+  priority: 0.9
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: politico.eu
+  name: POLITICO Europe
+  topics:
+  - politics
+  - economy
+  - elections
+  priority: 0.9
+  policy: allow
+  region: europe
+  country: BE
+  language: en
+  rss_endpoints: null
+- domain: wsj.com
+  name: Wsj
+  topics:
+  - economy
+  priority: 0.9
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: bloomberg.com
+  name: Bloomberg
+  topics:
+  - economy
+  priority: 0.9
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nature.com
+  name: Nature
+  topics:
+  - technology
+  - science
+  priority: 0.9
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: sciencemag.org
+  name: Sciencemag
+  topics:
+  - technology
+  - science
+  priority: 0.9
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: www.scmp.com
+  name: South China Morning Post
+  topics:
+  - politics
+  - economy
+  - security
+  - tech
+  priority: 0.85
+  policy: allow
+  region: asia
+  country: HK
+  language: en
+  rss_endpoints: null
+- domain: www.thehindu.com
+  name: The Hindu
+  topics:
+  - politics
+  - economy
+  - society
+  - elections
+  priority: 0.85
+  policy: allow
+  region: asia
+  country: IN
+  language: en
+  rss_endpoints: null
+- domain: www.al-monitor.com
+  name: Al-Monitor
+  topics:
+  - politics
+  - security
+  - economy
+  - elections
+  priority: 0.85
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: www.france24.com
+  name: France 24
+  topics:
+  - politics
+  - economy
+  - elections
+  - society
+  priority: 0.85
+  policy: js_allowed
+  region: europe
+  country: FR
+  language: en
+  rss_endpoints: null
+- domain: www.dw.com
+  name: Deutsche Welle
+  topics:
+  - politics
+  - economy
+  - elections
+  - climate
+  priority: 0.85
+  policy: allow
+  region: europe
+  country: DE
+  language: en
+  rss_endpoints: null
+- domain: euronews.com
+  name: Euronews
+  topics:
+  - politics
+  - economy
+  - general
+  priority: 0.85
+  policy: allow
+  region: europe
+  country: FR
+  language: en
+  rss_endpoints: null
+- domain: dw.com
+  name: Deutsche Welle
+  topics:
+  - politics
+  - economy
+  - general
+  priority: 0.85
+  policy: allow
+  region: europe
+  country: DE
+  language: en
+  rss_endpoints: null
+- domain: www.japantimes.co.jp
+  name: Japan Times
+  topics:
+  - politics
+  - economy
+  - society
+  priority: 0.8
+  policy: allow
+  region: asia
+  country: JP
+  language: en
+  rss_endpoints: null
+- domain: www.straitstimes.com
+  name: Straits Times
+  topics:
+  - politics
+  - economy
+  - tech
+  priority: 0.8
+  policy: js_allowed
+  region: asia
+  country: SG
+  language: en
+  rss_endpoints: null
+- domain: ec.europa.eu
+  name: European Commission
+  topics:
+  - politics
+  priority: 0.8
+  policy: allow
+  region: europe
+  country: Regional
+  language: en
+  rss_endpoints: null
+- domain: theguardian.com
+  name: Theguardian
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: news.sky.com
+  name: Sky News
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: europe
+  country: GB
+  language: en
+  rss_endpoints: null
+- domain: apnews.com
+  name: Apnews
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: africanews.com
+  name: Africa News
+  topics:
+  - politics
+  - economy
+  - elections
+  - society
+  priority: 0.8
+  policy: allow
+  region: africa
+  country: CG
+  language: en
+  rss_endpoints: null
+- domain: bbc.com
+  name: Bbc
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: guardian.ng
+  name: Guardian Ng
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: middle_east
+  country: Nigeria
+  language: en
+  rss_endpoints: null
+- domain: euractiv.com
+  name: EurActiv
+  topics:
+  - politics
+  - economy
+  - tech
+  priority: 0.8
+  policy: allow
+  region: europe
+  country: EU
+  language: en
+  rss_endpoints: null
+- domain: nytimes.com
+  name: Nytimes
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: washingtonpost.com
+  name: Washingtonpost
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: pbs.org
+  name: Pbs
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: npr.org
+  name: Npr
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: bbc.co.uk
+  name: Bbc
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: eleconomista.com.mx
+  name: Eleconomista Mx
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: latam
+  country: Mexico
+  language: es
+  rss_endpoints: null
+- domain: who.int
+  name: Who Int
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: un.org
+  name: Un
+  topics:
+  - general
+  priority: 0.8
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cnbc.com
+  name: Cnbc
+  topics:
+  - economy
+  priority: 0.8
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: www.koreatimes.co.kr
+  name: Korea Times
+  topics:
+  - politics
+  - economy
+  - security
+  - tech
+  priority: 0.75
+  policy: allow
+  region: asia
+  country: KR
+  language: en
+  rss_endpoints: null
+- domain: www.dawn.com
+  name: Dawn
+  topics:
+  - politics
+  - economy
+  - security
+  - elections
+  priority: 0.75
+  policy: allow
+  region: asia
+  country: PK
+  language: en
+  rss_endpoints: null
+- domain: europapress.es
+  name: Europa Press
+  topics:
+  - politics
+  - general
+  priority: 0.75
+  policy: allow
+  region: europe
+  country: ES
+  language: en
+  rss_endpoints: null
+- domain: brusselstimes.com
+  name: The Brussels Times
+  topics:
+  - politics
+  - economy
+  priority: 0.75
+  policy: allow
+  region: europe
+  country: EU
+  language: en
+  rss_endpoints: null
+- domain: euractiv.de
+  name: EurActiv Deutschland
+  topics:
+  - politics
+  - economy
+  priority: 0.75
+  policy: allow
+  region: europe
+  country: DE
+  language: en
+  rss_endpoints: null
+- domain: www.bangkokpost.com
+  name: Bangkok Post
+  topics:
+  - politics
+  - economy
+  - security
+  priority: 0.7
+  policy: allow
+  region: asia
+  country: TH
+  language: en
+  rss_endpoints: null
+- domain: www.thenews.com.pk
+  name: The News International
+  topics:
+  - politics
+  - economy
+  - elections
+  priority: 0.7
+  policy: allow
+  region: asia
+  country: PK
+  language: en
+  rss_endpoints: null
+- domain: euobserver.com
+  name: EU Observer
+  topics:
+  - politics
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: Regional
+  language: en
+  rss_endpoints: null
+- domain: themoscowtimes.com
+  name: The Moscow Times
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: RU
+  language: en
+  rss_endpoints: null
+- domain: rferl.org
+  name: Radio Free Europe
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: Regional
+  language: en
+  rss_endpoints: null
+- domain: iht.com
+  name: International Herald Tribune
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: FR
+  language: en
+  rss_endpoints: null
+- domain: sabc.co.za
+  name: Sabcza
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: middle_east
+  country: South Africa
+  language: en
+  rss_endpoints: null
+- domain: thelocal.de
+  name: The Local Germany
+  topics:
+  - politics
+  - society
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: DE
+  language: en
+  rss_endpoints: null
+- domain: thelocal.fr
+  name: The Local France
+  topics:
+  - politics
+  - society
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: FR
+  language: en
+  rss_endpoints: null
+- domain: thelocal.it
+  name: The Local Italy
+  topics:
+  - politics
+  - society
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: IT
+  language: en
+  rss_endpoints: null
+- domain: thelocal.es
+  name: The Local Spain
+  topics:
+  - politics
+  - society
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: ES
+  language: en
+  rss_endpoints: null
+- domain: thejournal.ie
+  name: TheJournal.ie
+  topics:
+  - politics
+  - general
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: EU
+  language: en
+  rss_endpoints: null
+- domain: neweurope.eu
+  name: New Europe
+  topics:
+  - politics
+  - economy
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: EU
+  language: en
+  rss_endpoints: null
+- domain: eubusiness.com
+  name: EUbusiness
+  topics:
+  - economy
+  - politics
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: EU
+  language: en
+  rss_endpoints: null
+- domain: cnn.com
+  name: Cnn
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: foxnews.com
+  name: Foxnews
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: msnbc.com
+  name: Msnbc
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: abcnews.go.com
+  name: Abcnews Go
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nbcnews.com
+  name: Nbcnews
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cbsnews.com
+  name: Cbsnews
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: foxbusiness.com
+  name: Foxbusiness
+  topics:
+  - economy
+  priority: 0.7
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: abc.es
+  name: Abc Es
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: europe
+  country: Spain
+  language: es
+  rss_endpoints: null
+- domain: abc.net.au
+  name: Abc Au
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: abc.com.py
+  name: Abc Py
+  topics:
+  - general
+  priority: 0.7
+  policy: allow
+  region: latam
+  country: Paraguay
+  language: en
+  rss_endpoints: null
+- domain: cbssports.com
+  name: Cbssports
+  topics:
+  - crypto
+  priority: 0.7
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nbcsports.com
+  name: Nbcsports
+  topics:
+  - crypto
+  priority: 0.7
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: foxsports.com
+  name: Foxsports
+  topics:
+  - crypto
+  priority: 0.7
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: www.eastasiaforum.org
+  name: East Asia Forum
+  topics:
+  - politics
+  - economy
+  - security
+  - elections
+  priority: 0.65
+  policy: allow
+  region: asia
+  country: AU
+  language: en
+  rss_endpoints: null
+- domain: europeanfiles.eu
+  name: The European Files
+  topics:
+  - politics
+  - economy
+  priority: 0.65
+  policy: allow
+  region: europe
+  country: EU
+  language: en
+  rss_endpoints: null
+- domain: tol.org
+  name: Transitions Online
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: europe
+  country: Regional
+  language: en
+  rss_endpoints: null
+- domain: wienerzeitung.at
+  name: Wiener Zeitung
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: europe
+  country: AT
+  language: en
+  rss_endpoints: null
+- domain: hina.hr
+  name: Croatian News Agency
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: europe
+  country: HR
+  language: en
+  rss_endpoints: null
+- domain: jutarnji.hr
+  name: Jutarnji list
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: europe
+  country: HR
+  language: en
+  rss_endpoints: null
+- domain: kathimerini.gr
+  name: Kathimerini
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: europe
+  country: GR
+  language: en
+  rss_endpoints: null
+- domain: irishexaminer.com
+  name: Irish Examiner
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: europe
+  country: IE
+  language: en
+  rss_endpoints: null
+- domain: rp.pl
+  name: Rzeczpospolita
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: europe
+  country: PL
+  language: en
+  rss_endpoints: null
+- domain: b92.net
+  name: B92
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: europe
+  country: RS
+  language: en
+  rss_endpoints: null
+- domain: zaman.com.tr
+  name: Zaman Daily Newspaper
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: europe
+  country: TR
+  language: en
+  rss_endpoints: null
+- domain: irinnews.org
+  name: IRIN
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: africa
+  country: Regional
+  language: en
+  rss_endpoints: null
+- domain: mapnews.ma
+  name: Maghreb Arabe Presse
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: africa
+  country: MA
+  language: en
+  rss_endpoints: null
+- domain: ait.live
+  name: African International Television
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: africa
+  country: NG
+  language: en
+  rss_endpoints: null
+- domain: arise.tv
+  name: AriseTV
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: africa
+  country: NG
+  language: en
+  rss_endpoints: null
+- domain: channelstv.com
+  name: ChannelsTV
+  topics:
+  - general
+  priority: 0.6
+  policy: allow
+  region: africa
+  country: NG
+  language: en
+  rss_endpoints: null
+- domain: cyprus-mail.com
+  name: Cyprus Mail
+  topics:
+  - politics
+  - general
+  priority: 0.6
+  policy: allow
+  region: europe
+  country: EU
+  language: en
+  rss_endpoints: null
+- domain: marketwatch.com
+  name: Marketwatch
+  topics:
+  - economy
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: barrons.com
+  name: Barrons
+  topics:
+  - economy
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: techcrunch.com
+  name: Techcrunch
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: theverge.com
+  name: Theverge
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: arstechnica.com
+  name: Arstechnica
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: wired.com
+  name: Wired
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: gizmodo.com
+  name: Gizmodo
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: engadget.com
+  name: Engadget
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: mashable.com
+  name: Mashable
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: venturebeat.com
+  name: Venturebeat
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: recode.net
+  name: Recode
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: techdirt.com
+  name: Techdirt
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: Russia
+  language: en
+  rss_endpoints: null
+- domain: slashdot.org
+  name: Slashdot
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: hackernews.com
+  name: Hackernews
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thenextweb.com
+  name: Thenextweb
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: readwrite.com
+  name: Readwrite
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: gigaom.com
+  name: Gigaom
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: techrepublic.com
+  name: Techrepublic
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: zdnet.com
+  name: Zdnet
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cnet.com
+  name: Cnet
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: pcworld.com
+  name: Pcworld
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: macworld.com
+  name: Macworld
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: 9to5mac.com
+  name: 9To5Mac
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: macrumors.com
+  name: Macrumors
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: appleinsider.com
+  name: Appleinsider
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: androidcentral.com
+  name: Androidcentral
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: androidpolice.com
+  name: Androidpolice
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: xda-developers.com
+  name: Xda-Developers
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: finance.yahoo.com
+  name: Finance Yahoo
+  topics:
+  - economy
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: investing.com
+  name: Investing
+  topics:
+  - economy
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: benzinga.com
+  name: Benzinga
+  topics:
+  - economy
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thestreet.com
+  name: Thestreet
+  topics:
+  - economy
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: morningstar.com
+  name: Morningstar
+  topics:
+  - economy
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: kiplinger.com
+  name: Kiplinger
+  topics:
+  - economy
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nasdaq.com
+  name: Nasdaq
+  topics:
+  - economy
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: newscientist.com
+  name: Newscientist
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: scientificamerican.com
+  name: Scientificamerican
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: sciencedaily.com
+  name: Sciencedaily
+  topics:
+  - technology
+  - science
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: phys.org
+  name: Phys
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: eurekalert.org
+  name: Eurekalert
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: livescience.com
+  name: Livescience
+  topics:
+  - technology
+  - science
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: space.com
+  name: Space
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nasa.gov
+  name: Nasa Gov
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: esa.int
+  name: Esa Int
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ieee.org
+  name: Ieee
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: acm.org
+  name: Acm
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: mittechnologyreview.com
+  name: Mittechnologyreview
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: insideclimatenews.org
+  name: Insideclimatenews
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: climatehome.news
+  name: Climatehome News
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: desmog.com
+  name: Desmog
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cleantechnica.com
+  name: Cleantechnica
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: carbonbrief.org
+  name: Carbonbrief
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: mongabay.com
+  name: Mongabay
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: treehugger.com
+  name: Treehugger
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: grist.org
+  name: Grist
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ecowatch.com
+  name: Ecowatch
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: earthjustice.org
+  name: Earthjustice
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: statnews.com
+  name: Statnews
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: medscape.com
+  name: Medscape
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: webmd.com
+  name: Webmd
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: healthline.com
+  name: Healthline
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: medicalnewstoday.com
+  name: Medicalnewstoday
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nih.gov
+  name: Nih Gov
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cdc.gov
+  name: Cdc Gov
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nejm.org
+  name: Nejm
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thelancet.com
+  name: Thelancet
+  topics:
+  - technology
+  priority: 0.6
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: timesofindia.indiatimes.com
+  name: Timesofindia Indiatimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: asbarez.com
+  name: Asbarez
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: AM
+  language: en
+  rss_endpoints: null
+- domain: armenianow.com
+  name: ArmeniaNow
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: AM
+  language: en
+  rss_endpoints: null
+- domain: today.az
+  name: Today.Az
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: AZ
+  language: en
+  rss_endpoints: null
+- domain: azertag.az
+  name: Azerbaijan Press Agency
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: AZ
+  language: en
+  rss_endpoints: null
+- domain: trend.az
+  name: Trend
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: AZ
+  language: en
+  rss_endpoints: null
+- domain: anspress.com
+  name: ANS Press
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: AZ
+  language: en
+  rss_endpoints: null
+- domain: sofiaecho.com
+  name: Sofia Echo
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: BG
+  language: en
+  rss_endpoints: null
+- domain: novinite.com
+  name: Sofia News Agency
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: BG
+  language: en
+  rss_endpoints: null
+- domain: cphpost.dk
+  name: The Copenhagen Post
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: DK
+  language: en
+  rss_endpoints: null
+- domain: baltictimes.com
+  name: The Baltic Times
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: EE
+  language: en
+  rss_endpoints: null
+- domain: hs.fi
+  name: Hs Fi
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Finland
+  language: en
+  rss_endpoints: null
+- domain: spiegel.de
+  name: Spiegel De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: athensnews.gr
+  name: Athens News
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: GR
+  language: en
+  rss_endpoints: null
+- domain: bbj.hu
+  name: Budapest Business Journal
+  topics:
+  - economy
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: HU
+  language: en
+  rss_endpoints: null
+- domain: icelandreview.com
+  name: Iceland Review
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: IS
+  language: en
+  rss_endpoints: null
+- domain: irishtimes.com
+  name: Irishtimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ansa.it
+  name: Ansa It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: repubblica.it
+  name: Repubblica It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: corriere.it
+  name: Corriere It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: aftenposten.no
+  name: Aftenposten No
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Norway
+  language: en
+  rss_endpoints: null
+- domain: warsawvoice.pl
+  name: The Warsaw Voice
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: PL
+  language: en
+  rss_endpoints: null
+- domain: pravda.ru
+  name: Pravda
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: RU
+  language: en
+  rss_endpoints: null
+- domain: interfax.ru
+  name: Interfax Ru
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: ru
+  rss_endpoints: null
+- domain: sptimes.ru
+  name: The St. Petersburg Times
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: RU
+  language: en
+  rss_endpoints: null
+- domain: thelocal.se
+  name: The Local
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: SE
+  language: en
+  rss_endpoints: null
+- domain: nzz.ch
+  name: Nzz Ch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Switzerland
+  language: en
+  rss_endpoints: null
+- domain: turkishdailynews.com
+  name: Turkish Daily News
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: TR
+  language: en
+  rss_endpoints: null
+- domain: independent.co.uk
+  name: Independent
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: telegraph.co.uk
+  name: Telegraph
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: allafrica.com
+  name: Allafrica
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: rfi.fr
+  name: Rfi Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: pambazuka.org
+  name: Pambazuka News
+  topics:
+  - politics
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: Regional
+  language: en
+  rss_endpoints: null
+- domain: elkhabar.com
+  name: El Khabar
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: DZ
+  language: en
+  rss_endpoints: null
+- domain: north-africa.com
+  name: The North Africa Journal
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: DZ
+  language: en
+  rss_endpoints: null
+- domain: angop.ao
+  name: Angola Press
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: AO
+  language: en
+  rss_endpoints: null
+- domain: angola24horas.com
+  name: Angola24Horas
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: AO
+  language: en
+  rss_endpoints: null
+- domain: mmegi.bw
+  name: Mmegi
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: BW
+  language: en
+  rss_endpoints: null
+- domain: ahram.org.eg
+  name: Ahram Eg
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: Egypt
+  language: en
+  rss_endpoints: null
+- domain: cairolive.com
+  name: Cairolive
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: EG
+  language: en
+  rss_endpoints: null
+- domain: cairotimes.com
+  name: Cairo Times
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: EG
+  language: en
+  rss_endpoints: null
+- domain: egypttoday.com
+  name: Egypttoday
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: dehai.org
+  name: Dehai
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ER
+  language: en
+  rss_endpoints: null
+- domain: addistribune.com
+  name: Addis Tribune
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ET
+  language: en
+  rss_endpoints: null
+- domain: ena.et
+  name: Ethiopia News Agency
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ET
+  language: en
+  rss_endpoints: null
+- domain: ethiopianreview.com
+  name: Ethiopian Review
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ET
+  language: en
+  rss_endpoints: null
+- domain: waltainfo.com
+  name: Walta Information Centre
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ET
+  language: en
+  rss_endpoints: null
+- domain: gambia.net
+  name: Gambia Net
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: GM
+  language: en
+  rss_endpoints: null
+- domain: ghanareview.com
+  name: Ghana Review
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: GH
+  language: en
+  rss_endpoints: null
+- domain: ghanaian-chronicle.com
+  name: Ghanaian Chronicle
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: GH
+  language: en
+  rss_endpoints: null
+- domain: theonlineindependent.com
+  name: The Online Independent
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: GH
+  language: en
+  rss_endpoints: null
+- domain: liberianconnection.com
+  name: The Liberian Connection
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: LR
+  language: en
+  rss_endpoints: null
+- domain: theperspective.org
+  name: The Perspective
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: LR
+  language: en
+  rss_endpoints: null
+- domain: watanona.com
+  name: Libya Watanona
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: LY
+  language: en
+  rss_endpoints: null
+- domain: dailytimes.bppmw.com
+  name: The Daily Times
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: MW
+  language: en
+  rss_endpoints: null
+- domain: mana.gov.mw
+  name: Malawi News Agency
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: MW
+  language: en
+  rss_endpoints: null
+- domain: mwnation.com
+  name: The Malawi Nation
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: MW
+  language: en
+  rss_endpoints: null
+- domain: mbc.mu
+  name: Mauritius Broadcasting Corporation
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: MU
+  language: en
+  rss_endpoints: null
+- domain: mauritiusnews.co.uk
+  name: Mauritius News
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: MU
+  language: en
+  rss_endpoints: null
+- domain: aljarida.ma
+  name: Al Jarida Al Maghriba
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: MA
+  language: en
+  rss_endpoints: null
+- domain: macauhub.com.mo
+  name: AIM
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: MZ
+  language: en
+  rss_endpoints: null
+- domain: economist.com.na
+  name: Namibia Economist
+  topics:
+  - economy
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: NA
+  language: en
+  rss_endpoints: null
+- domain: namibian.com.na
+  name: The Namibian
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: NA
+  language: en
+  rss_endpoints: null
+- domain: newswatchngr.com
+  name: Newswatch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: NG
+  language: en
+  rss_endpoints: null
+- domain: silverbird.tv
+  name: Silverbird Group
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: NG
+  language: en
+  rss_endpoints: null
+- domain: vanguardngr.com
+  name: Vanguardngr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: banadir.com
+  name: Banadir
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: SO
+  language: en
+  rss_endpoints: null
+- domain: businesslive.co.za
+  name: Businessliveza
+  topics:
+  - economy
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: South Africa
+  language: en
+  rss_endpoints: null
+- domain: iafrica.com
+  name: iAfrica
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ZA
+  language: en
+  rss_endpoints: null
+- domain: iol.co.za
+  name: Iolza
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: South Africa
+  language: en
+  rss_endpoints: null
+- domain: news24.com
+  name: News24
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: timeslive.co.za
+  name: Timesliveza
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: South Africa
+  language: en
+  rss_endpoints: null
+- domain: sudan.net
+  name: Sudan Net
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: SD
+  language: en
+  rss_endpoints: null
+- domain: times.co.sz
+  name: Times of Swaziland
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: SZ
+  language: en
+  rss_endpoints: null
+- domain: theexpressnews.co.tz
+  name: The Express Online
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: TZ
+  language: en
+  rss_endpoints: null
+- domain: ippmedia.com
+  name: IPP Media
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: TZ
+  language: en
+  rss_endpoints: null
+- domain: tunisiaonlinenews.com
+  name: Tunisia Online News
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: TN
+  language: en
+  rss_endpoints: null
+- domain: monitor.co.ug
+  name: Monitorug
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: newvision.co.ug
+  name: The New Vision
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: UG
+  language: en
+  rss_endpoints: null
+- domain: wsahara.net
+  name: Western Sahara Online
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: EH
+  language: en
+  rss_endpoints: null
+- domain: wsaupdate.org
+  name: Western Sahara Update
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: EH
+  language: en
+  rss_endpoints: null
+- domain: daily-mail.co.zm
+  name: Zambia Daily Mail
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ZM
+  language: en
+  rss_endpoints: null
+- domain: times.co.zm
+  name: Times of Zambia
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ZM
+  language: en
+  rss_endpoints: null
+- domain: herald.co.zw
+  name: The Herald
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ZW
+  language: en
+  rss_endpoints: null
+- domain: fingaz.co.zw
+  name: The Financial Gazette
+  topics:
+  - economy
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ZW
+  language: en
+  rss_endpoints: null
+- domain: theindependent.co.zw
+  name: The Independent
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ZW
+  language: en
+  rss_endpoints: null
+- domain: zbc.co.zw
+  name: Zimbabwe Broadcasting Corporation
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ZW
+  language: en
+  rss_endpoints: null
+- domain: zimbabwenews.co.zw
+  name: Zimbabwe News
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: africa
+  country: ZW
+  language: en
+  rss_endpoints: null
+- domain: france24.com
+  name: France24
+  topics:
+  - general
+  priority: 0.5
+  policy: js_allowed
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: swissinfo.ch
+  name: Swissinfo Ch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Switzerland
+  language: en
+  rss_endpoints: null
+- domain: yle.fi
+  name: Yle Fi
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Finland
+  language: en
+  rss_endpoints: null
+- domain: rte.ie
+  name: Rte Ie
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: usatoday.com
+  name: Usatoday
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: latimes.com
+  name: Latimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: chicagotribune.com
+  name: Chicagotribune
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: bostonglobe.com
+  name: Bostonglobe
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nypost.com
+  name: Nypost
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: denverpost.com
+  name: Denverpost
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: seattletimes.com
+  name: Seattletimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: miamiherald.com
+  name: Miamiherald
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: dallasnews.com
+  name: Dallasnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: startribune.com
+  name: Startribune
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: oregonlive.com
+  name: Oregonlive
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: sfchronicle.com
+  name: Sfchronicle
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: mercurynews.com
+  name: Mercurynews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: azcentral.com
+  name: Azcentral
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: tampabay.com
+  name: Tampabay
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cleveland.com
+  name: Cleveland
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: philly.com
+  name: Philly
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: detroitnews.com
+  name: Detroitnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ajc.com
+  name: Ajc
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: baltimoresun.com
+  name: Baltimoresun
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: sandiegouniontribune.com
+  name: Sandiegouniontribune
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: sacbee.com
+  name: Sacbee
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: kansascity.com
+  name: Kansascity
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: charlotteobserver.com
+  name: Charlotteobserver
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: orlandosentinel.com
+  name: Orlandosentinel
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cspan.org
+  name: Cspan
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: time.com
+  name: Time
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: newsweek.com
+  name: Newsweek
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: usnews.com
+  name: Usnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: theatlantic.com
+  name: Theatlantic
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: newyorker.com
+  name: Newyorker
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: harpers.org
+  name: Harpers
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: slate.com
+  name: Slate
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: salon.com
+  name: Salon
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: vox.com
+  name: Vox
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: axios.com
+  name: Axios
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: politico.com
+  name: Politico
+  topics:
+  - politics
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thehill.com
+  name: Thehill
+  topics:
+  - politics
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: rollcall.com
+  name: Rollcall
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nationalreview.com
+  name: Nationalreview
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: reason.com
+  name: Reason
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: motherjones.com
+  name: Motherjones
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thenation.com
+  name: Thenation
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: prospect.org
+  name: Prospect
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: jacobin.com
+  name: Jacobin
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: theintercept.com
+  name: Theintercept
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: propublica.org
+  name: Propublica
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: revealnews.org
+  name: Revealnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thedailybeast.com
+  name: Thedailybeast
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: buzzfeednews.com
+  name: Buzzfeednews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: vice.com
+  name: Vice
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: huffpost.com
+  name: Huffpost
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: businessinsider.com
+  name: Businessinsider
+  topics:
+  - economy
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: forbes.com
+  name: Forbes
+  topics:
+  - economy
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: fortune.com
+  name: Fortune
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: investors.com
+  name: Investors
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: fool.com
+  name: Fool
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: seekingalpha.com
+  name: Seekingalpha
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: zerohedge.com
+  name: Zerohedge
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: dailymail.co.uk
+  name: Dailymail
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: mirror.co.uk
+  name: Mirror
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: thesun.co.uk
+  name: Thesun
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: express.co.uk
+  name: Express
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: thetimes.co.uk
+  name: Thetimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: spectator.co.uk
+  name: Spectator
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: newstatesman.com
+  name: Newstatesman
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: dailyrecord.co.uk
+  name: Dailyrecord
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: scotsman.com
+  name: Scotsman
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: heraldscotland.com
+  name: Heraldscotland
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: walesonline.co.uk
+  name: Walesonline
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: belfasttelegraph.co.uk
+  name: Belfasttelegraph
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: UK
+  language: en
+  rss_endpoints: null
+- domain: irishnews.com
+  name: Irishnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: breakingnews.ie
+  name: Breakingnews Ie
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: zeit.de
+  name: Zeit De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: sueddeutsche.de
+  name: Sueddeutsche De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: faz.net
+  name: Faz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: welt.de
+  name: Welt De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: bild.de
+  name: Bild De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: tagesschau.de
+  name: Tagesschau De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: n-tv.de
+  name: N-Tv De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: focus.de
+  name: Focus De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: handelsblatt.com
+  name: Handelsblatt
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: wiwo.de
+  name: Wiwo De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: taz.de
+  name: Taz De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: berliner-zeitung.de
+  name: Berliner-Zeitung De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: tagesspiegel.de
+  name: Tagesspiegel De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: morgenpost.de
+  name: Morgenpost De
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Germany
+  language: de
+  rss_endpoints: null
+- domain: lemonde.fr
+  name: Lemonde Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: lefigaro.fr
+  name: Lefigaro Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: liberation.fr
+  name: Liberation Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: lexpress.fr
+  name: Lexpress Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: lepoint.fr
+  name: Lepoint Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: nouvelobs.com
+  name: Nouvelobs
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: francetvinfo.fr
+  name: Francetvinfo Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: mediapart.fr
+  name: Mediapart Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: leparisien.fr
+  name: Leparisien Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: ouest-france.fr
+  name: Ouest-France Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: 20minutes.fr
+  name: 20Minutes Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: bfmtv.com
+  name: Bfmtv
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: lci.fr
+  name: Lci Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: europe1.fr
+  name: Europe1 Fr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: France
+  language: fr
+  rss_endpoints: null
+- domain: lastampa.it
+  name: Lastampa It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: ilsole24ore.com
+  name: Ilsole24Ore
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ilmessaggero.it
+  name: Ilmessaggero It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: ilgiornale.it
+  name: Ilgiornale It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: rainews.it
+  name: Rainews It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: ilfattoquotidiano.it
+  name: Ilfattoquotidiano It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: avvenire.it
+  name: Avvenire It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: ilsecoloxix.it
+  name: Ilsecoloxix It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: ilrestodelcarlino.it
+  name: Ilrestodelcarlino It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: lanazione.it
+  name: Lanazione It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: ilgiorno.it
+  name: Ilgiorno It
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Italy
+  language: it
+  rss_endpoints: null
+- domain: elpais.com
+  name: Elpais
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: elmundo.es
+  name: Elmundo Es
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Spain
+  language: es
+  rss_endpoints: null
+- domain: lavanguardia.com
+  name: Lavanguardia
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: 20minutos.es
+  name: 20Minutos Es
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Spain
+  language: es
+  rss_endpoints: null
+- domain: elconfidencial.com
+  name: Elconfidencial
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: eldiario.es
+  name: Eldiario Es
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Spain
+  language: es
+  rss_endpoints: null
+- domain: publico.es
+  name: Publico Es
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Spain
+  language: es
+  rss_endpoints: null
+- domain: larazon.es
+  name: Larazon Es
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Spain
+  language: es
+  rss_endpoints: null
+- domain: elespanol.com
+  name: Elespanol
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: rtve.es
+  name: Rtve Es
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Spain
+  language: es
+  rss_endpoints: null
+- domain: antena3.com
+  name: Antena3
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: lasexta.com
+  name: Lasexta
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: telecinco.es
+  name: Telecinco Es
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Spain
+  language: es
+  rss_endpoints: null
+- domain: nos.nl
+  name: Nos Nl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Netherlands
+  language: nl
+  rss_endpoints: null
+- domain: nu.nl
+  name: Nu Nl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Netherlands
+  language: nl
+  rss_endpoints: null
+- domain: telegraaf.nl
+  name: Telegraaf Nl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Netherlands
+  language: nl
+  rss_endpoints: null
+- domain: volkskrant.nl
+  name: Volkskrant Nl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Netherlands
+  language: nl
+  rss_endpoints: null
+- domain: nrc.nl
+  name: Nrc Nl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Netherlands
+  language: nl
+  rss_endpoints: null
+- domain: ad.nl
+  name: Ad Nl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Netherlands
+  language: nl
+  rss_endpoints: null
+- domain: trouw.nl
+  name: Trouw Nl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Netherlands
+  language: nl
+  rss_endpoints: null
+- domain: parool.nl
+  name: Parool Nl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Netherlands
+  language: nl
+  rss_endpoints: null
+- domain: rtlnieuws.nl
+  name: Rtlnieuws Nl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Netherlands
+  language: nl
+  rss_endpoints: null
+- domain: bnr.nl
+  name: Bnr Nl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Netherlands
+  language: nl
+  rss_endpoints: null
+- domain: standaard.be
+  name: Standaard Be
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Belgium
+  language: en
+  rss_endpoints: null
+- domain: nieuwsblad.be
+  name: Nieuwsblad Be
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Belgium
+  language: en
+  rss_endpoints: null
+- domain: hln.be
+  name: Hln Be
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Belgium
+  language: en
+  rss_endpoints: null
+- domain: demorgen.be
+  name: Demorgen Be
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Belgium
+  language: en
+  rss_endpoints: null
+- domain: tijd.be
+  name: Tijd Be
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Belgium
+  language: en
+  rss_endpoints: null
+- domain: lesoir.be
+  name: Lesoir Be
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Belgium
+  language: en
+  rss_endpoints: null
+- domain: lalibre.be
+  name: Lalibre Be
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Belgium
+  language: en
+  rss_endpoints: null
+- domain: rtbf.be
+  name: Rtbf Be
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Belgium
+  language: en
+  rss_endpoints: null
+- domain: vrt.be
+  name: Vrt Be
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Belgium
+  language: en
+  rss_endpoints: null
+- domain: levif.be
+  name: Levif Be
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Belgium
+  language: en
+  rss_endpoints: null
+- domain: tagesanzeiger.ch
+  name: Tagesanzeiger Ch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Switzerland
+  language: en
+  rss_endpoints: null
+- domain: 20min.ch
+  name: 20Min Ch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Switzerland
+  language: en
+  rss_endpoints: null
+- domain: blick.ch
+  name: Blick Ch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Switzerland
+  language: en
+  rss_endpoints: null
+- domain: srf.ch
+  name: Srf Ch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Switzerland
+  language: en
+  rss_endpoints: null
+- domain: rts.ch
+  name: Rts Ch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Switzerland
+  language: en
+  rss_endpoints: null
+- domain: watson.ch
+  name: Watson Ch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Switzerland
+  language: en
+  rss_endpoints: null
+- domain: bazonline.ch
+  name: Bazonline Ch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Switzerland
+  language: en
+  rss_endpoints: null
+- domain: orf.at
+  name: Orf At
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Austria
+  language: en
+  rss_endpoints: null
+- domain: derstandard.at
+  name: Derstandard At
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Austria
+  language: en
+  rss_endpoints: null
+- domain: diepresse.com
+  name: Diepresse
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: krone.at
+  name: Krone At
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Austria
+  language: en
+  rss_endpoints: null
+- domain: kurier.at
+  name: Kurier At
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Austria
+  language: en
+  rss_endpoints: null
+- domain: heute.at
+  name: Heute At
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Austria
+  language: en
+  rss_endpoints: null
+- domain: oe24.at
+  name: Oe24 At
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Austria
+  language: en
+  rss_endpoints: null
+- domain: salzburg.com
+  name: Salzburg
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: kleinezeitung.at
+  name: Kleinezeitung At
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Austria
+  language: en
+  rss_endpoints: null
+- domain: dn.se
+  name: Dn Se
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Sweden
+  language: en
+  rss_endpoints: null
+- domain: svd.se
+  name: Svd Se
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Sweden
+  language: en
+  rss_endpoints: null
+- domain: aftonbladet.se
+  name: Aftonbladet Se
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Sweden
+  language: en
+  rss_endpoints: null
+- domain: expressen.se
+  name: Expressen Se
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Sweden
+  language: en
+  rss_endpoints: null
+- domain: svt.se
+  name: Svt Se
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Sweden
+  language: en
+  rss_endpoints: null
+- domain: iltalehti.fi
+  name: Iltalehti Fi
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Finland
+  language: en
+  rss_endpoints: null
+- domain: dr.dk
+  name: Dr Dk
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Denmark
+  language: en
+  rss_endpoints: null
+- domain: politiken.dk
+  name: Politiken Dk
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Denmark
+  language: en
+  rss_endpoints: null
+- domain: berlingske.dk
+  name: Berlingske Dk
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Denmark
+  language: en
+  rss_endpoints: null
+- domain: jyllands-posten.dk
+  name: Jyllands-Posten Dk
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Denmark
+  language: en
+  rss_endpoints: null
+- domain: nrk.no
+  name: Nrk No
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Norway
+  language: en
+  rss_endpoints: null
+- domain: vg.no
+  name: Vg No
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Norway
+  language: en
+  rss_endpoints: null
+- domain: dagbladet.no
+  name: Dagbladet No
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Norway
+  language: en
+  rss_endpoints: null
+- domain: onet.pl
+  name: Onet Pl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Poland
+  language: en
+  rss_endpoints: null
+- domain: wp.pl
+  name: Wp Pl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Poland
+  language: en
+  rss_endpoints: null
+- domain: gazeta.pl
+  name: Gazeta Pl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Poland
+  language: en
+  rss_endpoints: null
+- domain: tvn24.pl
+  name: Tvn24 Pl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Poland
+  language: en
+  rss_endpoints: null
+- domain: polskieradio.pl
+  name: Polskieradio Pl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Poland
+  language: en
+  rss_endpoints: null
+- domain: idnes.cz
+  name: Idnes Cz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Czech Republic
+  language: en
+  rss_endpoints: null
+- domain: novinky.cz
+  name: Novinky Cz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Czech Republic
+  language: en
+  rss_endpoints: null
+- domain: aktualne.cz
+  name: Aktualne Cz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Czech Republic
+  language: en
+  rss_endpoints: null
+- domain: lidovky.cz
+  name: Lidovky Cz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Czech Republic
+  language: en
+  rss_endpoints: null
+- domain: blesk.cz
+  name: Blesk Cz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Czech Republic
+  language: en
+  rss_endpoints: null
+- domain: index.hu
+  name: Index Hu
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Hungary
+  language: en
+  rss_endpoints: null
+- domain: origo.hu
+  name: Origo Hu
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Hungary
+  language: en
+  rss_endpoints: null
+- domain: 24.hu
+  name: 24 Hu
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Hungary
+  language: en
+  rss_endpoints: null
+- domain: hvg.hu
+  name: Hvg Hu
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Hungary
+  language: en
+  rss_endpoints: null
+- domain: nepszava.hu
+  name: Nepszava Hu
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Hungary
+  language: en
+  rss_endpoints: null
+- domain: rt.com
+  name: Rt
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: en
+  rss_endpoints: null
+- domain: tass.com
+  name: Tass
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: en
+  rss_endpoints: null
+- domain: ria.ru
+  name: Ria Ru
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: ru
+  rss_endpoints: null
+- domain: kommersant.ru
+  name: Kommersant Ru
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: ru
+  rss_endpoints: null
+- domain: rbc.ru
+  name: Rbc Ru
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: ru
+  rss_endpoints: null
+- domain: vedomosti.ru
+  name: Vedomosti Ru
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: ru
+  rss_endpoints: null
+- domain: izvestia.ru
+  name: Izvestia Ru
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: ru
+  rss_endpoints: null
+- domain: mk.ru
+  name: Mk Ru
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: ru
+  rss_endpoints: null
+- domain: kp.ru
+  name: Kp Ru
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: ru
+  rss_endpoints: null
+- domain: novayagazeta.ru
+  name: Novayagazeta Ru
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: Russia
+  language: ru
+  rss_endpoints: null
+- domain: meduza.io
+  name: Meduza Io
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ukrainianjournal.com
+  name: Ukrainianjournal
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: kyivpost.com
+  name: Kyivpost
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: unian.info
+  name: Unian Info
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: pravda.com.ua
+  name: Pravda Ua
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: liga.net
+  name: Liga
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: gordonua.com
+  name: Gordonua
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: europe
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: chinadaily.com.cn
+  name: Chinadaily Cn
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: China
+  language: zh
+  rss_endpoints: null
+- domain: xinhuanet.com
+  name: Xinhuanet
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: China
+  language: en
+  rss_endpoints: null
+- domain: globaltimes.cn
+  name: Globaltimes Cn
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: China
+  language: zh
+  rss_endpoints: null
+- domain: china.org.cn
+  name: China Cn
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: China
+  language: zh
+  rss_endpoints: null
+- domain: people.com.cn
+  name: People Cn
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: China
+  language: zh
+  rss_endpoints: null
+- domain: cgtn.com
+  name: Cgtn
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: China
+  language: en
+  rss_endpoints: null
+- domain: scmp.com
+  name: Scmp
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: shanghaidaily.com
+  name: Shanghaidaily
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: caixinglobal.com
+  name: Caixinglobal
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: sixthtone.com
+  name: Sixthtone
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thepaper.cn
+  name: Thepaper Cn
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: China
+  language: zh
+  rss_endpoints: null
+- domain: yicai.com
+  name: Yicai
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: japantimes.co.jp
+  name: Japantimesjp
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Japan
+  language: ja
+  rss_endpoints: null
+- domain: mainichi.jp
+  name: Mainichi Jp
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Japan
+  language: ja
+  rss_endpoints: null
+- domain: asahi.com
+  name: Asahi
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: yomiuri.co.jp
+  name: Yomiurijp
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Japan
+  language: ja
+  rss_endpoints: null
+- domain: nikkei.com
+  name: Nikkei
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: kyodonews.net
+  name: Kyodonews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nhk.or.jp
+  name: Nhk Or Jp
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Japan
+  language: ja
+  rss_endpoints: null
+- domain: japantoday.com
+  name: Japantoday
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: jiji.com
+  name: Jiji
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: sankei.com
+  name: Sankei
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thehindu.com
+  name: Thehindu
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: indianexpress.com
+  name: Indianexpress
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: hindustantimes.com
+  name: Hindustantimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ndtv.com
+  name: Ndtv
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: news18.com
+  name: News18
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: indiatoday.in
+  name: Indiatoday In
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: India
+  language: hi
+  rss_endpoints: null
+- domain: firstpost.com
+  name: Firstpost
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: theprint.in
+  name: Theprint In
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: India
+  language: hi
+  rss_endpoints: null
+- domain: scroll.in
+  name: Scroll In
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: India
+  language: hi
+  rss_endpoints: null
+- domain: thewire.in
+  name: Thewire In
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: India
+  language: hi
+  rss_endpoints: null
+- domain: livemint.com
+  name: Livemint
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: economictimes.indiatimes.com
+  name: Economictimes Indiatimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: business-standard.com
+  name: Business-Standard
+  topics:
+  - economy
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: financialexpress.com
+  name: Financialexpress
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: moneycontrol.com
+  name: Moneycontrol
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: deccanherald.com
+  name: Deccanherald
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: telegraphindia.com
+  name: Telegraphindia
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: tribuneindia.com
+  name: Tribuneindia
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: mid-day.com
+  name: Mid-Day
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: koreaherald.com
+  name: Koreaherald
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: koreatimes.co.kr
+  name: Koreatimeskr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: South Korea
+  language: ko
+  rss_endpoints: null
+- domain: yna.co.kr
+  name: Ynakr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: South Korea
+  language: ko
+  rss_endpoints: null
+- domain: hankyoreh.com
+  name: Hankyoreh
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: donga.com
+  name: Donga
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: chosun.com
+  name: Chosun
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: joins.com
+  name: Joins
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: mk.co.kr
+  name: Mkkr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: South Korea
+  language: ko
+  rss_endpoints: null
+- domain: arirang.com
+  name: Arirang
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: kbs.co.kr
+  name: Kbskr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: South Korea
+  language: ko
+  rss_endpoints: null
+- domain: straitstimes.com
+  name: Straitstimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: channelnewsasia.com
+  name: Channelnewsasia
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: todayonline.com
+  name: Todayonline
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: businesstimes.com.sg
+  name: Businesstimes Sg
+  topics:
+  - economy
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Singapore
+  language: en
+  rss_endpoints: null
+- domain: bangkokpost.com
+  name: Bangkokpost
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nationthailand.com
+  name: Nationthailand
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thejakartapost.com
+  name: Thejakartapost
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: tempo.co
+  name: Tempo Co
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Colombia
+  language: en
+  rss_endpoints: null
+- domain: kompas.com
+  name: Kompas
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: detik.com
+  name: Detik
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: philstar.com
+  name: Philstar
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: inquirer.net
+  name: Inquirer
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: rappler.com
+  name: Rappler
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: manilatimes.net
+  name: Manilatimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: gmanetwork.com
+  name: Gmanetwork
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: abs-cbn.com
+  name: Abs-Cbn
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thestar.com.my
+  name: Thestar My
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Malaysia
+  language: en
+  rss_endpoints: null
+- domain: nst.com.my
+  name: Nst My
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Malaysia
+  language: en
+  rss_endpoints: null
+- domain: malaymail.com
+  name: Malaymail
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: freemalaysiatoday.com
+  name: Freemalaysiatoday
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: vietnamnews.vn
+  name: Vietnamnews Vn
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Vietnam
+  language: en
+  rss_endpoints: null
+- domain: tuoitrenews.vn
+  name: Tuoitrenews Vn
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Vietnam
+  language: en
+  rss_endpoints: null
+- domain: vnexpress.net
+  name: Vnexpress
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: vietreader.com
+  name: Vietreader
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: taipeitimes.com
+  name: Taipeitimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: focustaiwan.tw
+  name: Focustaiwan Tw
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Taiwan
+  language: en
+  rss_endpoints: null
+- domain: taiwannews.com.tw
+  name: Taiwannews Tw
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Taiwan
+  language: en
+  rss_endpoints: null
+- domain: chinapost.com.tw
+  name: Chinapost Tw
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Taiwan
+  language: en
+  rss_endpoints: null
+- domain: rthk.hk
+  name: Rthk Hk
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Hong Kong
+  language: en
+  rss_endpoints: null
+- domain: hongkongfp.com
+  name: Hongkongfp
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thestandard.com.hk
+  name: Thestandard Hk
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Hong Kong
+  language: en
+  rss_endpoints: null
+- domain: dimsum.com.hk
+  name: Dimsum Hk
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: asia
+  country: Hong Kong
+  language: en
+  rss_endpoints: null
+- domain: aljazeera.com
+  name: Aljazeera
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: Qatar
+  language: en
+  rss_endpoints: null
+- domain: alarabiya.net
+  name: Alarabiya
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: middleeasteye.net
+  name: Middleeasteye
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: timesofisrael.com
+  name: Timesofisrael
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: haaretz.com
+  name: Haaretz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ynetnews.com
+  name: Ynetnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: jpost.com
+  name: Jpost
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: i24news.tv
+  name: I24News Tv
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: dailystar.com.lb
+  name: Dailystar Lb
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: lorientlejour.com
+  name: Lorientlejour
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: jordantimes.com
+  name: Jordantimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: dailysabah.com
+  name: Dailysabah
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: hurriyetdailynews.com
+  name: Hurriyetdailynews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: trtworld.com
+  name: Trtworld
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: egyptindependent.com
+  name: Egyptindependent
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: arabnews.com
+  name: Arabnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: gulf-times.com
+  name: Gulf-Times
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thenationalnews.com
+  name: Thenationalnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: gulfnews.com
+  name: Gulfnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: khaleejtimes.com
+  name: Khaleejtimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: tehrantimes.com
+  name: Tehrantimes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: presstv.ir
+  name: Presstv Ir
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: tasnimnews.com
+  name: Tasnimnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: mg.co.za
+  name: Mgza
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: South Africa
+  language: en
+  rss_endpoints: null
+- domain: dailymaverick.co.za
+  name: Dailymaverickza
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: South Africa
+  language: en
+  rss_endpoints: null
+- domain: ewn.co.za
+  name: Ewnza
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: South Africa
+  language: en
+  rss_endpoints: null
+- domain: citizen.co.za
+  name: Citizenza
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: South Africa
+  language: en
+  rss_endpoints: null
+- domain: thenairobistar.co.ke
+  name: Thenairobistarke
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: Kenya
+  language: en
+  rss_endpoints: null
+- domain: nation.co.ke
+  name: Nationke
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: Kenya
+  language: en
+  rss_endpoints: null
+- domain: standardmedia.co.ke
+  name: Standardmediake
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: Kenya
+  language: en
+  rss_endpoints: null
+- domain: theeastafrican.co.ke
+  name: Theeastafricanke
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: Kenya
+  language: en
+  rss_endpoints: null
+- domain: newtimes.co.rw
+  name: Newtimesrw
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ethiopianreporter.com
+  name: Ethiopianreporter
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: egyptianstreets.com
+  name: Egyptianstreets
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: moroccoworldnews.com
+  name: Moroccoworldnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: dailynews.co.tz
+  name: Dailynewstz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: premiumtimesng.com
+  name: Premiumtimesng
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: punchng.com
+  name: Punchng
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thecable.ng
+  name: Thecable Ng
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: Nigeria
+  language: en
+  rss_endpoints: null
+- domain: ghanaweb.com
+  name: Ghanaweb
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: myjoyonline.com
+  name: Myjoyonline
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: citinewsroom.com
+  name: Citinewsroom
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: middle_east
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: news.com.au
+  name: News Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: smh.com.au
+  name: Smh Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: theage.com.au
+  name: Theage Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: theaustralian.com.au
+  name: Theaustralian Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: afr.com
+  name: Afr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: dailytelegraph.com.au
+  name: Dailytelegraph Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: heraldsun.com.au
+  name: Heraldsun Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: couriermail.com.au
+  name: Couriermail Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: adelaidenow.com.au
+  name: Adelaidenow Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: perthnow.com.au
+  name: Perthnow Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: brisbanetimes.com.au
+  name: Brisbanetimes Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: canberratimes.com.au
+  name: Canberratimes Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: sbs.com.au
+  name: Sbs Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: crikey.com.au
+  name: Crikey Au
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: Australia
+  language: en
+  rss_endpoints: null
+- domain: theconversation.com
+  name: Theconversation
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nzherald.co.nz
+  name: Nzheraldnz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: New Zealand
+  language: en
+  rss_endpoints: null
+- domain: stuff.co.nz
+  name: Stuffnz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: New Zealand
+  language: en
+  rss_endpoints: null
+- domain: newshub.co.nz
+  name: Newshubnz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: New Zealand
+  language: en
+  rss_endpoints: null
+- domain: rnz.co.nz
+  name: Rnznz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: New Zealand
+  language: en
+  rss_endpoints: null
+- domain: odt.co.nz
+  name: Odtnz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: New Zealand
+  language: en
+  rss_endpoints: null
+- domain: newsroom.co.nz
+  name: Newsroomnz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: New Zealand
+  language: en
+  rss_endpoints: null
+- domain: scoop.co.nz
+  name: Scoopnz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: New Zealand
+  language: en
+  rss_endpoints: null
+- domain: tvnz.co.nz
+  name: Tvnznz
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: oceania
+  country: New Zealand
+  language: en
+  rss_endpoints: null
+- domain: reforma.com
+  name: Reforma
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: eluniversal.com.mx
+  name: Eluniversal Mx
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Mexico
+  language: es
+  rss_endpoints: null
+- domain: excelsior.com.mx
+  name: Excelsior Mx
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Mexico
+  language: es
+  rss_endpoints: null
+- domain: milenio.com
+  name: Milenio
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: jornada.com.mx
+  name: Jornada Mx
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Mexico
+  language: es
+  rss_endpoints: null
+- domain: elfinanciero.com.mx
+  name: Elfinanciero Mx
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Mexico
+  language: es
+  rss_endpoints: null
+- domain: proceso.com.mx
+  name: Proceso Mx
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Mexico
+  language: es
+  rss_endpoints: null
+- domain: sinembargo.mx
+  name: Sinembargo Mx
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Mexico
+  language: es
+  rss_endpoints: null
+- domain: aristeguinoticias.com
+  name: Aristeguinoticias
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: folha.uol.com.br
+  name: Folha Uol Br
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Brazil
+  language: pt
+  rss_endpoints: null
+- domain: oglobo.globo.com
+  name: Oglobo Globo
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: estadao.com.br
+  name: Estadao Br
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Brazil
+  language: pt
+  rss_endpoints: null
+- domain: uol.com.br
+  name: Uol Br
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Brazil
+  language: pt
+  rss_endpoints: null
+- domain: g1.globo.com
+  name: G1 Globo
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: r7.com
+  name: R7
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: terra.com.br
+  name: Terra Br
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Brazil
+  language: pt
+  rss_endpoints: null
+- domain: cartacapital.com.br
+  name: Cartacapital Br
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Brazil
+  language: pt
+  rss_endpoints: null
+- domain: valor.com.br
+  name: Valor Br
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Brazil
+  language: pt
+  rss_endpoints: null
+- domain: exame.com
+  name: Exame
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: clarin.com
+  name: Clarin
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: lanacion.com.ar
+  name: Lanacion Ar
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Argentina
+  language: es
+  rss_endpoints: null
+- domain: pagina12.com.ar
+  name: Pagina12 Ar
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Argentina
+  language: es
+  rss_endpoints: null
+- domain: infobae.com
+  name: Infobae
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: perfil.com
+  name: Perfil
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ambito.com
+  name: Ambito
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cronista.com
+  name: Cronista
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: telam.com.ar
+  name: Telam Ar
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Argentina
+  language: es
+  rss_endpoints: null
+- domain: tn.com.ar
+  name: Tn Ar
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Argentina
+  language: es
+  rss_endpoints: null
+- domain: c5n.com
+  name: C5N
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: eltiempo.com
+  name: Eltiempo
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: elespectador.com
+  name: Elespectador
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: semana.com
+  name: Semana
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: portafolio.co
+  name: Portafolio Co
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Colombia
+  language: en
+  rss_endpoints: null
+- domain: elcomercio.pe
+  name: Elcomercio Pe
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Peru
+  language: en
+  rss_endpoints: null
+- domain: rpp.pe
+  name: Rpp Pe
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Peru
+  language: en
+  rss_endpoints: null
+- domain: gestion.pe
+  name: Gestion Pe
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Peru
+  language: en
+  rss_endpoints: null
+- domain: larepublica.pe
+  name: Larepublica Pe
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Peru
+  language: en
+  rss_endpoints: null
+- domain: latercera.com
+  name: Latercera
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: emol.com
+  name: Emol
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: biobiochile.cl
+  name: Biobiochile Cl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Chile
+  language: en
+  rss_endpoints: null
+- domain: cooperativa.cl
+  name: Cooperativa Cl
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Chile
+  language: en
+  rss_endpoints: null
+- domain: elmercurio.com
+  name: Elmercurio
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: eluniverso.com
+  name: Eluniverso
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: elcomercio.com
+  name: Elcomercio
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: eltelegrafo.com.ec
+  name: Eltelegrafo Ec
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Ecuador
+  language: en
+  rss_endpoints: null
+- domain: elpais.com.uy
+  name: Elpais Uy
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Uruguay
+  language: en
+  rss_endpoints: null
+- domain: elobservador.com.uy
+  name: Elobservador Uy
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Uruguay
+  language: en
+  rss_endpoints: null
+- domain: montevideo.com.uy
+  name: Montevideo Uy
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Uruguay
+  language: en
+  rss_endpoints: null
+- domain: ultimahora.com.py
+  name: Ultimahora Py
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Paraguay
+  language: en
+  rss_endpoints: null
+- domain: lanacion.com.py
+  name: Lanacion Py
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: Paraguay
+  language: en
+  rss_endpoints: null
+- domain: el-nacional.com
+  name: El-Nacional
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: eluniversal.com
+  name: Eluniversal
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: talcualdigital.com
+  name: Talcualdigital
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: latam
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cbc.ca
+  name: Cbc Ca
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: Canada
+  language: en
+  rss_endpoints: null
+- domain: ctvnews.ca
+  name: Ctvnews Ca
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: Canada
+  language: en
+  rss_endpoints: null
+- domain: globalnews.ca
+  name: Globalnews Ca
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: Canada
+  language: en
+  rss_endpoints: null
+- domain: theglobeandmail.com
+  name: Theglobeandmail
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nationalpost.com
+  name: Nationalpost
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thestar.com
+  name: Thestar
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: montrealgazette.com
+  name: Montrealgazette
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: vancouversun.com
+  name: Vancouversun
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ottawacitizen.com
+  name: Ottawacitizen
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: calgaryherald.com
+  name: Calgaryherald
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: edmontonjournal.com
+  name: Edmontonjournal
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: winnipegfreepress.com
+  name: Winnipegfreepress
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thechronicleherald.ca
+  name: Thechronicleherald Ca
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: Canada
+  language: en
+  rss_endpoints: null
+- domain: macleans.ca
+  name: Macleans Ca
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: Canada
+  language: en
+  rss_endpoints: null
+- domain: canadianbusiness.com
+  name: Canadianbusiness
+  topics:
+  - economy
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: lapresse.ca
+  name: Lapresse Ca
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: Canada
+  language: en
+  rss_endpoints: null
+- domain: ledevoir.com
+  name: Ledevoir
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: journaldemontreal.com
+  name: Journaldemontreal
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: radio-canada.ca
+  name: Radio-Canada Ca
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: Canada
+  language: en
+  rss_endpoints: null
+- domain: defensenews.com
+  name: Defensenews
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: janes.com
+  name: Janes
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: militarytimes.com
+  name: Militarytimes
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: stripes.com
+  name: Stripes
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: thedefensepost.com
+  name: Thedefensepost
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: breakingdefense.com
+  name: Breakingdefense
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: defenseone.com
+  name: Defenseone
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: armytimes.com
+  name: Armytimes
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: navytimes.com
+  name: Navytimes
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: airforcetimes.com
+  name: Airforcetimes
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: oilprice.com
+  name: Oilprice
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: naturalgasintel.com
+  name: Naturalgasintel
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: worldoil.com
+  name: Worldoil
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: rigzone.com
+  name: Rigzone
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: energyvoice.com
+  name: Energyvoice
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: rechargenews.com
+  name: Rechargenews
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: windpowermonthly.com
+  name: Windpowermonthly
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: solarpowerworldonline.com
+  name: Solarpowerworldonline
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: utilitydive.com
+  name: Utilitydive
+  topics:
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: greentechmedia.com
+  name: Greentechmedia
+  topics:
+  - technology
+  - security
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: coindesk.com
+  name: Coindesk
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cointelegraph.com
+  name: Cointelegraph
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: decrypt.co
+  name: Decrypt Co
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: Colombia
+  language: en
+  rss_endpoints: null
+- domain: theblock.co
+  name: Theblock Co
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: Colombia
+  language: en
+  rss_endpoints: null
+- domain: bitcoinmagazine.com
+  name: Bitcoinmagazine
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cryptonews.com
+  name: Cryptonews
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: newsbtc.com
+  name: Newsbtc
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cryptoslate.com
+  name: Cryptoslate
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cryptobriefing.com
+  name: Cryptobriefing
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: ambcrypto.com
+  name: Ambcrypto
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: espn.com
+  name: Espn
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: si.com
+  name: Si
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: theathletic.com
+  name: Theathletic
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: bleacherreport.com
+  name: Bleacherreport
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: Russia
+  language: en
+  rss_endpoints: null
+- domain: skysports.com
+  name: Skysports
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: goal.com
+  name: Goal
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: marca.com
+  name: Marca
+  topics:
+  - crypto
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: democracynow.org
+  name: Democracynow
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: truthout.org
+  name: Truthout
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: commondreams.org
+  name: Commondreams
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: alternet.org
+  name: Alternet
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: rawstory.com
+  name: Rawstory
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: truthdig.com
+  name: Truthdig
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: counterpunch.org
+  name: Counterpunch
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: consortiumnews.com
+  name: Consortiumnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: antiwar.com
+  name: Antiwar
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: mondoweiss.net
+  name: Mondoweiss
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: electronicintifada.net
+  name: Electronicintifada
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: therealnews.com
+  name: Therealnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: greyzone.com
+  name: Greyzone
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: mintpressnews.com
+  name: Mintpressnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: shadowproof.com
+  name: Shadowproof
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: fair.org
+  name: Fair
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: accuracy.org
+  name: Accuracy
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: projectcensored.org
+  name: Projectcensored
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: factcheck.org
+  name: Factcheck
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: politifact.com
+  name: Politifact
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: snopes.com
+  name: Snopes
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: fullfact.org
+  name: Fullfact
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: africacheck.org
+  name: Africacheck
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: chequeado.com
+  name: Chequeado
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: poynter.org
+  name: Poynter
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: hoax-slayer.com
+  name: Hoax-Slayer
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: worldbank.org
+  name: Worldbank
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: imf.org
+  name: Imf
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: wto.org
+  name: Wto
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: unesco.org
+  name: Unesco
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: unicef.org
+  name: Unicef
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: unhcr.org
+  name: Unhcr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: nato.int
+  name: Nato Int
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: europa.eu
+  name: Europa Eu
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: asean.org
+  name: Asean
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: au.int
+  name: Au Int
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: oas.org
+  name: Oas
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: brookings.edu
+  name: Brookings Edu
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cfr.org
+  name: Cfr
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: csis.org
+  name: Csis
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: carnegieendowment.org
+  name: Carnegieendowment
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: heritage.org
+  name: Heritage
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: aei.org
+  name: Aei
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: cato.org
+  name: Cato
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: hoover.org
+  name: Hoover
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: urban.org
+  name: Urban
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: rand.org
+  name: Rand
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: wilsoncenter.org
+  name: Wilsoncenter
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: chathamhouse.org
+  name: Chathamhouse
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: iiss.org
+  name: Iiss
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: rusi.org
+  name: Rusi
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: sipri.org
+  name: Sipri
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: news.google.com
+  name: News Google
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: news.yahoo.com
+  name: News Yahoo
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: msn.com
+  name: Msn
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: feedly.com
+  name: Feedly
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: flipboard.com
+  name: Flipboard
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: smartnews.com
+  name: Smartnews
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: newsbreak.com
+  name: Newsbreak
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: reddit.com
+  name: Reddit
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: digg.com
+  name: Digg
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null
+- domain: fark.com
+  name: Fark
+  topics:
+  - general
+  priority: 0.5
+  policy: allow
+  region: americas
+  country: US
+  language: en
+  rss_endpoints: null

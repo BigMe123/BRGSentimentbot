@@ -1,0 +1,6 @@
+# Additional requirements for LLM-based sentiment analysis
+aiohttp>=3.8.0
+python-dotenv>=1.0.0
+
+# Optional: For Anthropic support
+# anthropic>=0.25.0

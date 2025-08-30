@@ -1,0 +1,1738 @@
+{
+  "run_timestamp": "2025-08-30T15:34:52.129238",
+  "config": {
+    "keywords": [
+      "test"
+    ],
+    "since": "7d",
+    "limit": 5,
+    "analyze": false,
+    "connector_type": null
+  },
+  "metrics": {
+    "total_time_sec": 35.64227294921875,
+    "connectors_used": 12,
+    "total_fetched": 1038,
+    "after_keywords": 920,
+    "after_since": 21,
+    "final_saved": 21,
+    "errors": 0,
+    "connector_stats": {
+      "reddit": {
+        "fetched": 8,
+        "after_keywords": 8,
+        "after_since": 5,
+        "saved": 5,
+        "time_ms": 622,
+        "errors": 0
+      },
+      "google_news": {
+        "fetched": 5,
+        "after_keywords": 5,
+        "after_since": 5,
+        "saved": 5,
+        "time_ms": 755,
+        "errors": 0
+      },
+      "hackernews": {
+        "fetched": 100,
+        "after_keywords": 3,
+        "after_since": 3,
+        "saved": 3,
+        "time_ms": 15896,
+        "errors": 0
+      },
+      "hackernews_search": {
+        "fetched": 300,
+        "after_keywords": 300,
+        "after_since": 2,
+        "saved": 2,
+        "time_ms": 1471,
+        "errors": 0
+      },
+      "stackexchange": {
+        "fetched": 600,
+        "after_keywords": 598,
+        "after_since": 0,
+        "saved": 0,
+        "time_ms": 6804,
+        "errors": 0
+      },
+      "mastodon": {
+        "fetched": 5,
+        "after_keywords": 5,
+        "after_since": 5,
+        "saved": 5,
+        "time_ms": 664,
+        "errors": 0
+      },
+      "bluesky": {
+        "fetched": 0,
+        "after_keywords": 0,
+        "after_since": 0,
+        "saved": 0,
+        "time_ms": 1094,
+        "errors": 0
+      },
+      "youtube": {
+        "fetched": 0,
+        "after_keywords": 0,
+        "after_since": 0,
+        "saved": 0,
+        "time_ms": 501,
+        "errors": 0
+      },
+      "wikipedia": {
+        "fetched": 0,
+        "after_keywords": 0,
+        "after_since": 0,
+        "saved": 0,
+        "time_ms": 551,
+        "errors": 0
+      },
+      "gdelt": {
+        "fetched": 0,
+        "after_keywords": 0,
+        "after_since": 0,
+        "saved": 0,
+        "time_ms": 702,
+        "errors": 0
+      },
+      "generic_web": {
+        "fetched": 20,
+        "after_keywords": 1,
+        "after_since": 1,
+        "saved": 1,
+        "time_ms": 6568,
+        "errors": 0
+      },
+      "twitter": {
+        "fetched": 0,
+        "after_keywords": 0,
+        "after_since": 0,
+        "saved": 0,
+        "time_ms": 0,
+        "errors": 0
+      }
+    }
+  },
+  "articles": [
+    {
+      "id": "1d442f92828aa19f005cd5f1d8d4cd6a05174324",
+      "source": "reddit",
+      "subsource": "search: test",
+      "author": "OutrageousField415",
+      "title": "Cat peeing everywhere non-stop. At my limit. Help needed",
+      "text": "Cat peeing everywhere non-stop. At my limit. Help needed\n\nHi I'm hoping someone may have some advice regarding my cat who continually pees all over my house. I'm at the end of my patience and really don't know what to do any more. My cat is 6 years old, and has been like this since I got her. Literally every day, she pees somewhere that she shouldn't. There are occasionally periods where she doesn't do this (sometimes a couple of months at a time) but it never lasts. She doesn't have an aversion to her litter tray. She regularly uses it with no issues, but still also chooses to pee elsewhere. Walls, carpet, beds, curtains, towels, bookcases, my PC, bags. Everything you can think of in a house, she has peed on. I have tried plug in calm scents, have been to the vet numerous times to no avail. I have tried every sort of litter available, different litter trays but nothing makes a difference. She has had tests to make sure she was neutered properly (no issues) and has no medical problems at all. Generally she is quite a relaxed cat. She was very anxious for the first few years of her life but in recent years has started to relax a lot more. She is an inside cat - Unfortunately due to where I live it's not really possible for her to go outside without supervision. She is an incredibly small cat (probably about 2.5kg and still looks very kitten-like) so would no doubt get eaten by a wild animal or get hit by a car as I live by a busy road. I've honestly run out of patience. I really don't want to have to rehome her as I worry that her next owner would not be as patient as me but I'm running out of options. Can anyone suggest anything to try? submitted by /u/OutrageousField415 to r/CatAdvice [link] [comments]",
+      "url": "https://www.reddit.com/r/CatAdvice/comments/1n4ado7/cat_peeing_everywhere_nonstop_at_my_limit_help/",
+      "published_at": "2025-08-30T19:30:54+00:00",
+      "lang": "en",
+      "raw": {
+        "authors": [
+          {
+            "name": "/u/OutrageousField415",
+            "href": "https://www.reddit.com/user/OutrageousField415"
+          }
+        ],
+        "author_detail": {
+          "name": "/u/OutrageousField415",
+          "href": "https://www.reddit.com/user/OutrageousField415"
+        },
+        "href": "https://www.reddit.com/user/OutrageousField415",
+        "author": "/u/OutrageousField415",
+        "tags": [
+          {
+            "term": "CatAdvice",
+            "scheme": null,
+            "label": "r/CatAdvice"
+          }
+        ],
+        "content": [
+          {
+            "type": "text/html",
+            "language": null,
+            "base": "",
+            "value": "<!-- SC_OFF --><div class=\"md\"><p>Hi I'm hoping someone may have some advice regarding my cat who continually pees all over my house. I'm at the end of my patience and really don't know what to do any more.</p> <p>My cat is 6 years old, and has been like this since I got her. Literally every day, she pees somewhere that she shouldn't. There are occasionally periods where she doesn't do this (sometimes a couple of months at a time) but it never lasts.</p> <p>She doesn't have an aversion to her litter tray. She regularly uses it with no issues, but still also chooses to pee elsewhere. Walls, carpet, beds, curtains, towels, bookcases, my PC, bags. Everything you can think of in a house, she has peed on.</p> <p>I have tried plug in calm scents, have been to the vet numerous times to no avail. I have tried every sort of litter available, different litter trays but nothing makes a difference. She has had tests to make sure she was neutered properly (no issues) and has no medical problems at all.</p> <p>Generally she is quite a relaxed cat. She was very anxious for the first few years of her life but in recent years has started to relax a lot more.</p> <p>She is an inside cat - Unfortunately due to where I live it's not really possible for her to go outside without supervision. She is an incredibly small cat (probably about 2.5kg and still looks very kitten-like) so would no doubt get eaten by a wild animal or get hit by a car as I live by a busy road.</p> <p>I've honestly run out of patience. I really don't want to have to rehome her as I worry that her next owner would not be as patient as me but I'm running out of options.</p> <p>Can anyone suggest anything to try? </p> </div><!-- SC_ON --> &#32; submitted by &#32; <a href=\"https://www.reddit.com/user/OutrageousField415\"> /u/OutrageousField415 </a> &#32; to &#32; <a href=\"https://www.reddit.com/r/CatAdvice/\"> r/CatAdvice </a> <br /> <span><a href=\"https://www.reddit.com/r/CatAdvice/comments/1n4ado7/cat_peeing_everywhere_nonstop_at_my_limit_help/\">[link]</a></span> &#32; <span><a href=\"https://www.reddit.com/r/CatAdvice/comments/1n4ado7/cat_peeing_everywhere_nonstop_at_my_limit_help/\">[comments]</a></span>"
+          }
+        ],
+        "summary": "<!-- SC_OFF --><div class=\"md\"><p>Hi I'm hoping someone may have some advice regarding my cat who continually pees all over my house. I'm at the end of my patience and really don't know what to do any more.</p> <p>My cat is 6 years old, and has been like this since I got her. Literally every day, she pees somewhere that she shouldn't. There are occasionally periods where she doesn't do this (sometimes a couple of months at a time) but it never lasts.</p> <p>She doesn't have an aversion to her litter tray. She regularly uses it with no issues, but still also chooses to pee elsewhere. Walls, carpet, beds, curtains, towels, bookcases, my PC, bags. Everything you can think of in a house, she has peed on.</p> <p>I have tried plug in calm scents, have been to the vet numerous times to no avail. I have tried every sort of litter available, different litter trays but nothing makes a difference. She has had tests to make sure she was neutered properly (no issues) and has no medical problems at all.</p> <p>Generally she is quite a relaxed cat. She was very anxious for the first few years of her life but in recent years has started to relax a lot more.</p> <p>She is an inside cat - Unfortunately due to where I live it's not really possible for her to go outside without supervision. She is an incredibly small cat (probably about 2.5kg and still looks very kitten-like) so would no doubt get eaten by a wild animal or get hit by a car as I live by a busy road.</p> <p>I've honestly run out of patience. I really don't want to have to rehome her as I worry that her next owner would not be as patient as me but I'm running out of options.</p> <p>Can anyone suggest anything to try? </p> </div><!-- SC_ON --> &#32; submitted by &#32; <a href=\"https://www.reddit.com/user/OutrageousField415\"> /u/OutrageousField415 </a> &#32; to &#32; <a href=\"https://www.reddit.com/r/CatAdvice/\"> r/CatAdvice </a> <br /> <span><a href=\"https://www.reddit.com/r/CatAdvice/comments/1n4ado7/cat_peeing_everywhere_nonstop_at_my_limit_help/\">[link]</a></span> &#32; <span><a href=\"https://www.reddit.com/r/CatAdvice/comments/1n4ado7/cat_peeing_everywhere_nonstop_at_my_limit_help/\">[comments]</a></span>",
+        "id": "t3_1n4ado7",
+        "guidislink": true,
+        "link": "https://www.reddit.com/r/CatAdvice/comments/1n4ado7/cat_peeing_everywhere_nonstop_at_my_limit_help/",
+        "links": [
+          {
+            "href": "https://www.reddit.com/r/CatAdvice/comments/1n4ado7/cat_peeing_everywhere_nonstop_at_my_limit_help/",
+            "rel": "alternate",
+            "type": "text/html"
+          }
+        ],
+        "updated": "2025-08-30T19:30:54+00:00",
+        "updated_parsed": [
+          2025,
+          8,
+          30,
+          19,
+          30,
+          54,
+          5,
+          242,
+          0
+        ],
+        "published": "2025-08-30T19:30:54+00:00",
+        "published_parsed": [
+          2025,
+          8,
+          30,
+          19,
+          30,
+          54,
+          5,
+          242,
+          0
+        ],
+        "title": "Cat peeing everywhere non-stop. At my limit. Help needed",
+        "title_detail": {
+          "type": "text/plain",
+          "language": null,
+          "base": "",
+          "value": "Cat peeing everywhere non-stop. At my limit. Help needed"
+        }
+      }
+    },
+    {
+      "id": "26127a293e4da5c6e2021072c748be2725f752bf",
+      "source": "reddit",
+      "subsource": "search: test",
+      "author": "originalsocialsloth",
+      "title": "I\u2019m drowning and just need to let it out",
+      "text": "I\u2019m drowning and just need to let it out\n\nSo to start, yes, I asked chatGPT to help me write this. Because what I originally wrote was so long and so incoherent it was a mess. If you have a problem with that then please move on to another post. Anyways- I have a 3yo, a 4yo, and I\u2019m pregnant with my 3rd. Honestly, I feel nothing but regret and frustration right now. My kids are out of control and I feel like a horrible mom who doesn\u2019t deserve to even be one. My 4yo (he has possible ADHD, and a past speech delay) just started preschool for 3 hours a day, and it\u2019s been a struggle. He hits, pushes, elopes out the door, and breaks things when he\u2019s angry or doesn\u2019t get to share during circle time. I\u2019m embarrassed. The teacher is kind and understanding, but seeing him destroy things in her classroom makes me feel like I\u2019m failing him and everyone around him. Yesterday he broke a potted plant on her desk because he wasn\u2019t listening and wouldn\u2019t settle down. His doctor doesn\u2019t think he needs to be evaluated for ADHD even though I\u2019ve brought it up multiple times. My 3yo is in that terrible defiant stage. Testing boundaries. He screams at the top of his lungs when he doesn\u2019t get what he wants. If I say no or \u201cnot right now,\u201d he whines and repeats it until I yell. I don\u2019t want to yell, but I can\u2019t take it anymore. Sometimes he just follows me around screaming. I get legitimately angry sometimes. At home, they destroy everything. They feed off each other. They ruined their carpet (I had to tear it out \u2014 smelled like pee from potty training). They\u2019ve flooded the bathroom, wasted soap, cotton balls, makeup, toothpaste, deodorant, candles, food \u2014 you name it, it\u2019s gone. They bent or tore apart hundreds of Hot Wheels, ruined books, destroyed new beds and sheets, and pulled apart anything nice they could get their hands on. Even my personal stuff. My bubble bath, perfume, lotion, jewelry, candy, my diary, it is all gone. I literally have nothing left that\u2019s mine. I don\u2019t have hobbies, I don\u2019t have space, I don\u2019t even get to just exist without chaos. I can\u2019t even eat without them in my face. I feel like I just exist for them, not for me. My husband works nights, sleeps during the day, eats, smokes, plays games, and doesn\u2019t help with doctors, appointments, benefits, school paperwork, or basically anything else. Sometimes he\u2019ll help do the dishes or pick up. And I know he\u2019s going through his own stuff at work and he just had a close friend pass away from cancer. But it makes me mad because they will listen to him. If he tells them to go pick up their toys or stop being so rowdy they listen. I have to repay myself until I yell. I\u2019ve applied for WIC and SNAP, arranged appointments, taken kids to evaluations, done all the paperwork \u2014 everything. And I usually have to do it with the kids in tow. I feel like I\u2019m drowning. My grandma and mom try to help sometimes, but it\u2019s complicated. Grandma is 82, has health problems, and I don\u2019t want my kids to stress her out. Mom has depression, a heart defect, rheumatoid arthritis, a messy house, and an elderly dog. She hasn\u2019t ever been the same since my dad was found out to be a piece of shit and locked away. But that\u2019s another story for another day. Plus they\u2019re both often busy taking care of my severely disabled sister. They can\u2019t give the kind of help I need, and it often just adds stress. I also feel judged when they watch the kids or when they tell me how bad the kids behaved. I don\u2019t want to burden them, but I also need a break, and it\u2019s exhausting to balance that guilt. Financially, it\u2019s a shit show. My car registration is expired, we can\u2019t pay rent on time most months, and bills are taking all our money. I\u2019ve applied to WIC and SNAP, but my appointment got canceled last time because I didn\u2019t have the correct paperwork and the next appointment was a month away. My husband\u2019s car has been in the shop for over a month, costing thousands of dollars, and still isn\u2019t fixed. Was supposed to be fixed two days ago, went to go pick it up and the motherfucker wouldn\u2019t even start. I lost my job in June, after I told them I was pregnant, which led to a gap in insurance. I\u2019ve been off my antidepressants for almost 2 months, and I can\u2019t get an OB appointment anywhere in my network \u2014 offices are full or on leave. The last place I called is 65 miles away and they hang up on me every time I call to make an appointment. I haven\u2019t seen a doctor since 12 weeks pregnant. I\u2019m now 26 weeks. My depression, anger, and exhaustion are out of control. I love my kids, but I feel like I\u2019m barely surviving. I regret having a third, even though it wasn\u2019t intentional. But I have to live with the decisions I made. Mom and grandma don\u2019t even know yet just because I don\u2019t want to hear it. The nagging the disapproving comments. All that bullshit. I don\u2019t have any personal space or belongings, I don\u2019t have time for myself, and I can\u2019t even breathe without chaos. Everything feels impossible. I\u2019m just existing. What am I supposed to do? My kids deserve better and I can\u2019t seem to give that to them. submitted by /u/originalsocialsloth to r/breakingmom [link] [comments]",
+      "url": "https://www.reddit.com/r/breakingmom/comments/1n4adh6/im_drowning_and_just_need_to_let_it_out/",
+      "published_at": "2025-08-30T19:30:40+00:00",
+      "lang": "en",
+      "raw": {
+        "authors": [
+          {
+            "name": "/u/originalsocialsloth",
+            "href": "https://www.reddit.com/user/originalsocialsloth"
+          }
+        ],
+        "author_detail": {
+          "name": "/u/originalsocialsloth",
+          "href": "https://www.reddit.com/user/originalsocialsloth"
+        },
+        "href": "https://www.reddit.com/user/originalsocialsloth",
+        "author": "/u/originalsocialsloth",
+        "tags": [
+          {
+            "term": "breakingmom",
+            "scheme": null,
+            "label": "r/breakingmom"
+          }
+        ],
+        "content": [
+          {
+            "type": "text/html",
+            "language": null,
+            "base": "",
+            "value": "<!-- SC_OFF --><div class=\"md\"><p>So to start, yes, I asked chatGPT to help me write this. Because what I originally wrote was so long and so incoherent it was a mess. If you have a problem with that then please move on to another post. </p> <p>Anyways- I have a 3yo, a 4yo, and I\u2019m pregnant with my 3rd. Honestly, I feel nothing but regret and frustration right now. My kids are out of control and I feel like a horrible mom who doesn\u2019t deserve to even be one.</p> <p>My 4yo (he has possible ADHD, and a past speech delay) just started preschool for 3 hours a day, and it\u2019s been a struggle. He hits, pushes, elopes out the door, and breaks things when he\u2019s angry or doesn\u2019t get to share during circle time. I\u2019m embarrassed. The teacher is kind and understanding, but seeing him destroy things in her classroom makes me feel like I\u2019m failing him and everyone around him. Yesterday he broke a potted plant on her desk because he wasn\u2019t listening and wouldn\u2019t settle down. His doctor doesn\u2019t think he needs to be evaluated for ADHD even though I\u2019ve brought it up multiple times. </p> <p>My 3yo is in that terrible defiant stage. Testing boundaries. He screams at the top of his lungs when he doesn\u2019t get what he wants. If I say no or \u201cnot right now,\u201d he whines and repeats it until I yell. I don\u2019t want to yell, but I can\u2019t take it anymore. Sometimes he just follows me around screaming. I get legitimately angry sometimes.</p> <p>At home, they destroy everything. They feed off each other. They ruined their carpet (I had to tear it out \u2014 smelled like pee from potty training). They\u2019ve flooded the bathroom, wasted soap, cotton balls, makeup, toothpaste, deodorant, candles, food \u2014 you name it, it\u2019s gone. They bent or tore apart hundreds of Hot Wheels, ruined books, destroyed new beds and sheets, and pulled apart anything nice they could get their hands on. Even my personal stuff. My bubble bath, perfume, lotion, jewelry, candy, my diary, it is all gone. I literally have nothing left that\u2019s mine. I don\u2019t have hobbies, I don\u2019t have space, I don\u2019t even get to just exist without chaos. I can\u2019t even eat without them in my face. I feel like I just exist for them, not for me.</p> <p>My husband works nights, sleeps during the day, eats, smokes, plays games, and doesn\u2019t help with doctors, appointments, benefits, school paperwork, or basically anything else. Sometimes he\u2019ll help do the dishes or pick up. And I know he\u2019s going through his own stuff at work and he just had a close friend pass away from cancer. But it makes me mad because they will listen to him. If he tells them to go pick up their toys or stop being so rowdy they listen. I have to repay myself until I yell. I\u2019ve applied for WIC and SNAP, arranged appointments, taken kids to evaluations, done all the paperwork \u2014 everything. And I usually have to do it with the kids in tow. I feel like I\u2019m drowning.</p> <p>My grandma and mom try to help sometimes, but it\u2019s complicated. Grandma is 82, has health problems, and I don\u2019t want my kids to stress her out. Mom has depression, a heart defect, rheumatoid arthritis, a messy house, and an elderly dog. She hasn\u2019t ever been the same since my dad was found out to be a piece of shit and locked away. But that\u2019s another story for another day. Plus they\u2019re both often busy taking care of my severely disabled sister. They can\u2019t give the kind of help I need, and it often just adds stress. I also feel judged when they watch the kids or when they tell me how bad the kids behaved. I don\u2019t want to burden them, but I also need a break, and it\u2019s exhausting to balance that guilt.</p> <p>Financially, it\u2019s a shit show. My car registration is expired, we can\u2019t pay rent on time most months, and bills are taking all our money. I\u2019ve applied to WIC and SNAP, but my appointment got canceled last time because I didn\u2019t have the correct paperwork and the next appointment was a month away. My husband\u2019s car has been in the shop for over a month, costing thousands of dollars, and still isn\u2019t fixed. Was supposed to be fixed two days ago, went to go pick it up and the motherfucker wouldn\u2019t even start. I lost my job in June, after I told them I was pregnant, which led to a gap in insurance. I\u2019ve been off my antidepressants for almost 2 months, and I can\u2019t get an OB appointment anywhere in my network \u2014 offices are full or on leave. The last place I called is 65 miles away and they hang up on me every time I call to make an appointment. I haven\u2019t seen a doctor since 12 weeks pregnant. I\u2019m now 26 weeks. My depression, anger, and exhaustion are out of control.</p> <p>I love my kids, but I feel like I\u2019m barely surviving. I regret having a third, even though it wasn\u2019t intentional. But I have to live with the decisions I made. Mom and grandma don\u2019t even know yet just because I don\u2019t want to hear it. The nagging the disapproving comments. All that bullshit. I don\u2019t have any personal space or belongings, I don\u2019t have time for myself, and I can\u2019t even breathe without chaos. Everything feels impossible. I\u2019m just existing. What am I supposed to do? My kids deserve better and I can\u2019t seem to give that to them. </p> </div><!-- SC_ON --> &#32; submitted by &#32; <a href=\"https://www.reddit.com/user/originalsocialsloth\"> /u/originalsocialsloth </a> &#32; to &#32; <a href=\"https://www.reddit.com/r/breakingmom/\"> r/breakingmom </a> <br /> <span><a href=\"https://www.reddit.com/r/breakingmom/comments/1n4adh6/im_drowning_and_just_need_to_let_it_out/\">[link]</a></span> &#32; <span><a href=\"https://www.reddit.com/r/breakingmom/comments/1n4adh6/im_drowning_and_just_need_to_let_it_out/\">[comments]</a></span>"
+          }
+        ],
+        "summary": "<!-- SC_OFF --><div class=\"md\"><p>So to start, yes, I asked chatGPT to help me write this. Because what I originally wrote was so long and so incoherent it was a mess. If you have a problem with that then please move on to another post. </p> <p>Anyways- I have a 3yo, a 4yo, and I\u2019m pregnant with my 3rd. Honestly, I feel nothing but regret and frustration right now. My kids are out of control and I feel like a horrible mom who doesn\u2019t deserve to even be one.</p> <p>My 4yo (he has possible ADHD, and a past speech delay) just started preschool for 3 hours a day, and it\u2019s been a struggle. He hits, pushes, elopes out the door, and breaks things when he\u2019s angry or doesn\u2019t get to share during circle time. I\u2019m embarrassed. The teacher is kind and understanding, but seeing him destroy things in her classroom makes me feel like I\u2019m failing him and everyone around him. Yesterday he broke a potted plant on her desk because he wasn\u2019t listening and wouldn\u2019t settle down. His doctor doesn\u2019t think he needs to be evaluated for ADHD even though I\u2019ve brought it up multiple times. </p> <p>My 3yo is in that terrible defiant stage. Testing boundaries. He screams at the top of his lungs when he doesn\u2019t get what he wants. If I say no or \u201cnot right now,\u201d he whines and repeats it until I yell. I don\u2019t want to yell, but I can\u2019t take it anymore. Sometimes he just follows me around screaming. I get legitimately angry sometimes.</p> <p>At home, they destroy everything. They feed off each other. They ruined their carpet (I had to tear it out \u2014 smelled like pee from potty training). They\u2019ve flooded the bathroom, wasted soap, cotton balls, makeup, toothpaste, deodorant, candles, food \u2014 you name it, it\u2019s gone. They bent or tore apart hundreds of Hot Wheels, ruined books, destroyed new beds and sheets, and pulled apart anything nice they could get their hands on. Even my personal stuff. My bubble bath, perfume, lotion, jewelry, candy, my diary, it is all gone. I literally have nothing left that\u2019s mine. I don\u2019t have hobbies, I don\u2019t have space, I don\u2019t even get to just exist without chaos. I can\u2019t even eat without them in my face. I feel like I just exist for them, not for me.</p> <p>My husband works nights, sleeps during the day, eats, smokes, plays games, and doesn\u2019t help with doctors, appointments, benefits, school paperwork, or basically anything else. Sometimes he\u2019ll help do the dishes or pick up. And I know he\u2019s going through his own stuff at work and he just had a close friend pass away from cancer. But it makes me mad because they will listen to him. If he tells them to go pick up their toys or stop being so rowdy they listen. I have to repay myself until I yell. I\u2019ve applied for WIC and SNAP, arranged appointments, taken kids to evaluations, done all the paperwork \u2014 everything. And I usually have to do it with the kids in tow. I feel like I\u2019m drowning.</p> <p>My grandma and mom try to help sometimes, but it\u2019s complicated. Grandma is 82, has health problems, and I don\u2019t want my kids to stress her out. Mom has depression, a heart defect, rheumatoid arthritis, a messy house, and an elderly dog. She hasn\u2019t ever been the same since my dad was found out to be a piece of shit and locked away. But that\u2019s another story for another day. Plus they\u2019re both often busy taking care of my severely disabled sister. They can\u2019t give the kind of help I need, and it often just adds stress. I also feel judged when they watch the kids or when they tell me how bad the kids behaved. I don\u2019t want to burden them, but I also need a break, and it\u2019s exhausting to balance that guilt.</p> <p>Financially, it\u2019s a shit show. My car registration is expired, we can\u2019t pay rent on time most months, and bills are taking all our money. I\u2019ve applied to WIC and SNAP, but my appointment got canceled last time because I didn\u2019t have the correct paperwork and the next appointment was a month away. My husband\u2019s car has been in the shop for over a month, costing thousands of dollars, and still isn\u2019t fixed. Was supposed to be fixed two days ago, went to go pick it up and the motherfucker wouldn\u2019t even start. I lost my job in June, after I told them I was pregnant, which led to a gap in insurance. I\u2019ve been off my antidepressants for almost 2 months, and I can\u2019t get an OB appointment anywhere in my network \u2014 offices are full or on leave. The last place I called is 65 miles away and they hang up on me every time I call to make an appointment. I haven\u2019t seen a doctor since 12 weeks pregnant. I\u2019m now 26 weeks. My depression, anger, and exhaustion are out of control.</p> <p>I love my kids, but I feel like I\u2019m barely surviving. I regret having a third, even though it wasn\u2019t intentional. But I have to live with the decisions I made. Mom and grandma don\u2019t even know yet just because I don\u2019t want to hear it. The nagging the disapproving comments. All that bullshit. I don\u2019t have any personal space or belongings, I don\u2019t have time for myself, and I can\u2019t even breathe without chaos. Everything feels impossible. I\u2019m just existing. What am I supposed to do? My kids deserve better and I can\u2019t seem to give that to them. </p> </div><!-- SC_ON --> &#32; submitted by &#32; <a href=\"https://www.reddit.com/user/originalsocialsloth\"> /u/originalsocialsloth </a> &#32; to &#32; <a href=\"https://www.reddit.com/r/breakingmom/\"> r/breakingmom </a> <br /> <span><a href=\"https://www.reddit.com/r/breakingmom/comments/1n4adh6/im_drowning_and_just_need_to_let_it_out/\">[link]</a></span> &#32; <span><a href=\"https://www.reddit.com/r/breakingmom/comments/1n4adh6/im_drowning_and_just_need_to_let_it_out/\">[comments]</a></span>",
+        "id": "t3_1n4adh6",
+        "guidislink": true,
+        "link": "https://www.reddit.com/r/breakingmom/comments/1n4adh6/im_drowning_and_just_need_to_let_it_out/",
+        "links": [
+          {
+            "href": "https://www.reddit.com/r/breakingmom/comments/1n4adh6/im_drowning_and_just_need_to_let_it_out/",
+            "rel": "alternate",
+            "type": "text/html"
+          }
+        ],
+        "updated": "2025-08-30T19:30:40+00:00",
+        "updated_parsed": [
+          2025,
+          8,
+          30,
+          19,
+          30,
+          40,
+          5,
+          242,
+          0
+        ],
+        "published": "2025-08-30T19:30:40+00:00",
+        "published_parsed": [
+          2025,
+          8,
+          30,
+          19,
+          30,
+          40,
+          5,
+          242,
+          0
+        ],
+        "title": "I\u2019m drowning and just need to let it out",
+        "title_detail": {
+          "type": "text/plain",
+          "language": null,
+          "base": "",
+          "value": "I\u2019m drowning and just need to let it out"
+        }
+      }
+    },
+    {
+      "id": "45956b768876ad65cc40a7d63c0b6b14a4a86f81",
+      "source": "reddit",
+      "subsource": "search: test",
+      "author": "Vincitus",
+      "title": "My brother needs $150,000 for his son's life-saving surgery, but I have strong reasons to believe the child isn't his. I've demanded a paternity test and now my family hates me.",
+      "text": "My brother needs $150,000 for his son's life-saving surgery, but I have strong reasons to believe the child isn't his. I've demanded a paternity test and now my family hates me.\n\nsubmitted by /u/Vincitus to r/AmITheAngel [link] [comments]",
+      "url": "https://www.reddit.com/r/AmITheAngel/comments/1n4addn/my_brother_needs_150000_for_his_sons_lifesaving/",
+      "published_at": "2025-08-30T19:30:34+00:00",
+      "lang": "en",
+      "raw": {
+        "authors": [
+          {
+            "name": "/u/Vincitus",
+            "href": "https://www.reddit.com/user/Vincitus"
+          }
+        ],
+        "author_detail": {
+          "name": "/u/Vincitus",
+          "href": "https://www.reddit.com/user/Vincitus"
+        },
+        "href": "https://www.reddit.com/user/Vincitus",
+        "author": "/u/Vincitus",
+        "tags": [
+          {
+            "term": "AmITheAngel",
+            "scheme": null,
+            "label": "r/AmITheAngel"
+          }
+        ],
+        "content": [
+          {
+            "type": "text/html",
+            "language": null,
+            "base": "",
+            "value": "&#32; submitted by &#32; <a href=\"https://www.reddit.com/user/Vincitus\"> /u/Vincitus </a> &#32; to &#32; <a href=\"https://www.reddit.com/r/AmITheAngel/\"> r/AmITheAngel </a> <br /> <span><a href=\"/r/whatdoIdo/comments/1n42w4i/my_brother_needs_150000_for_his_sons_lifesaving/\">[link]</a></span> &#32; <span><a href=\"https://www.reddit.com/r/AmITheAngel/comments/1n4addn/my_brother_needs_150000_for_his_sons_lifesaving/\">[comments]</a></span>"
+          }
+        ],
+        "summary": "&#32; submitted by &#32; <a href=\"https://www.reddit.com/user/Vincitus\"> /u/Vincitus </a> &#32; to &#32; <a href=\"https://www.reddit.com/r/AmITheAngel/\"> r/AmITheAngel </a> <br /> <span><a href=\"/r/whatdoIdo/comments/1n42w4i/my_brother_needs_150000_for_his_sons_lifesaving/\">[link]</a></span> &#32; <span><a href=\"https://www.reddit.com/r/AmITheAngel/comments/1n4addn/my_brother_needs_150000_for_his_sons_lifesaving/\">[comments]</a></span>",
+        "id": "t3_1n4addn",
+        "guidislink": true,
+        "link": "https://www.reddit.com/r/AmITheAngel/comments/1n4addn/my_brother_needs_150000_for_his_sons_lifesaving/",
+        "links": [
+          {
+            "href": "https://www.reddit.com/r/AmITheAngel/comments/1n4addn/my_brother_needs_150000_for_his_sons_lifesaving/",
+            "rel": "alternate",
+            "type": "text/html"
+          }
+        ],
+        "updated": "2025-08-30T19:30:34+00:00",
+        "updated_parsed": [
+          2025,
+          8,
+          30,
+          19,
+          30,
+          34,
+          5,
+          242,
+          0
+        ],
+        "published": "2025-08-30T19:30:34+00:00",
+        "published_parsed": [
+          2025,
+          8,
+          30,
+          19,
+          30,
+          34,
+          5,
+          242,
+          0
+        ],
+        "title": "My brother needs $150,000 for his son's life-saving surgery, but I have strong reasons to believe the child isn't his. I've demanded a paternity test and now my family hates me.",
+        "title_detail": {
+          "type": "text/plain",
+          "language": null,
+          "base": "",
+          "value": "My brother needs $150,000 for his son's life-saving surgery, but I have strong reasons to believe the child isn't his. I've demanded a paternity test and now my family hates me."
+        }
+      }
+    },
+    {
+      "id": "8d99cee8f1664e146dec107a5444ae0e0919ed6b",
+      "source": "reddit",
+      "subsource": "search: test",
+      "author": "PinheadLarry_",
+      "title": "So\u2026 Arch Manning? Yikes. That was a horrid performance.",
+      "text": "So\u2026 Arch Manning? Yikes. That was a horrid performance.\n\nLegitimately looked horrible. Just did not pass any sort of eye test, let alone his stats. Are people still feeling good about selling the farm for a shot at him in 2027? Sure, it\u2019s his first game as the starter. But goodness gracious that was a bad showing. Missed wide open throws, bad decision making, overthrowing receivers, etc\u2026 submitted by /u/PinheadLarry_ to r/DynastyFF [link] [comments]",
+      "url": "https://www.reddit.com/r/DynastyFF/comments/1n4adbj/so_arch_manning_yikes_that_was_a_horrid/",
+      "published_at": "2025-08-30T19:30:31+00:00",
+      "lang": "en",
+      "raw": {
+        "authors": [
+          {
+            "name": "/u/PinheadLarry_",
+            "href": "https://www.reddit.com/user/PinheadLarry_"
+          }
+        ],
+        "author_detail": {
+          "name": "/u/PinheadLarry_",
+          "href": "https://www.reddit.com/user/PinheadLarry_"
+        },
+        "href": "https://www.reddit.com/user/PinheadLarry_",
+        "author": "/u/PinheadLarry_",
+        "tags": [
+          {
+            "term": "DynastyFF",
+            "scheme": null,
+            "label": "r/DynastyFF"
+          }
+        ],
+        "content": [
+          {
+            "type": "text/html",
+            "language": null,
+            "base": "",
+            "value": "<!-- SC_OFF --><div class=\"md\"><p>Legitimately looked horrible. Just did not pass any sort of eye test, let alone his stats. Are people still feeling good about selling the farm for a shot at him in 2027? </p> <p>Sure, it\u2019s his first game as the starter. But goodness gracious that was a bad showing. Missed wide open throws, bad decision making, overthrowing receivers, etc\u2026</p> </div><!-- SC_ON --> &#32; submitted by &#32; <a href=\"https://www.reddit.com/user/PinheadLarry_\"> /u/PinheadLarry_ </a> &#32; to &#32; <a href=\"https://www.reddit.com/r/DynastyFF/\"> r/DynastyFF </a> <br /> <span><a href=\"https://www.reddit.com/r/DynastyFF/comments/1n4adbj/so_arch_manning_yikes_that_was_a_horrid/\">[link]</a></span> &#32; <span><a href=\"https://www.reddit.com/r/DynastyFF/comments/1n4adbj/so_arch_manning_yikes_that_was_a_horrid/\">[comments]</a></span>"
+          }
+        ],
+        "summary": "<!-- SC_OFF --><div class=\"md\"><p>Legitimately looked horrible. Just did not pass any sort of eye test, let alone his stats. Are people still feeling good about selling the farm for a shot at him in 2027? </p> <p>Sure, it\u2019s his first game as the starter. But goodness gracious that was a bad showing. Missed wide open throws, bad decision making, overthrowing receivers, etc\u2026</p> </div><!-- SC_ON --> &#32; submitted by &#32; <a href=\"https://www.reddit.com/user/PinheadLarry_\"> /u/PinheadLarry_ </a> &#32; to &#32; <a href=\"https://www.reddit.com/r/DynastyFF/\"> r/DynastyFF </a> <br /> <span><a href=\"https://www.reddit.com/r/DynastyFF/comments/1n4adbj/so_arch_manning_yikes_that_was_a_horrid/\">[link]</a></span> &#32; <span><a href=\"https://www.reddit.com/r/DynastyFF/comments/1n4adbj/so_arch_manning_yikes_that_was_a_horrid/\">[comments]</a></span>",
+        "id": "t3_1n4adbj",
+        "guidislink": true,
+        "link": "https://www.reddit.com/r/DynastyFF/comments/1n4adbj/so_arch_manning_yikes_that_was_a_horrid/",
+        "links": [
+          {
+            "href": "https://www.reddit.com/r/DynastyFF/comments/1n4adbj/so_arch_manning_yikes_that_was_a_horrid/",
+            "rel": "alternate",
+            "type": "text/html"
+          }
+        ],
+        "updated": "2025-08-30T19:30:31+00:00",
+        "updated_parsed": [
+          2025,
+          8,
+          30,
+          19,
+          30,
+          31,
+          5,
+          242,
+          0
+        ],
+        "published": "2025-08-30T19:30:31+00:00",
+        "published_parsed": [
+          2025,
+          8,
+          30,
+          19,
+          30,
+          31,
+          5,
+          242,
+          0
+        ],
+        "title": "So\u2026 Arch Manning? Yikes. That was a horrid performance.",
+        "title_detail": {
+          "type": "text/plain",
+          "language": null,
+          "base": "",
+          "value": "So\u2026 Arch Manning? Yikes. That was a horrid performance."
+        }
+      }
+    },
+    {
+      "id": "de2cc4528cce542c9f035be8bd3d5d448f0ff2ea",
+      "source": "reddit",
+      "subsource": "search: test",
+      "author": "Mommyca",
+      "title": "Testing recommendations please",
+      "text": "Testing recommendations please\n\nsubmitted by /u/Mommyca to r/lymedisease [link] [comments]",
+      "url": "https://www.reddit.com/r/lymedisease/comments/1n4adbb/testing_recommendations_please/",
+      "published_at": "2025-08-30T19:30:30+00:00",
+      "lang": "en",
+      "raw": {
+        "authors": [
+          {
+            "name": "/u/Mommyca",
+            "href": "https://www.reddit.com/user/Mommyca"
+          }
+        ],
+        "author_detail": {
+          "name": "/u/Mommyca",
+          "href": "https://www.reddit.com/user/Mommyca"
+        },
+        "href": "https://www.reddit.com/user/Mommyca",
+        "author": "/u/Mommyca",
+        "tags": [
+          {
+            "term": "lymedisease",
+            "scheme": null,
+            "label": "r/lymedisease"
+          }
+        ],
+        "content": [
+          {
+            "type": "text/html",
+            "language": null,
+            "base": "",
+            "value": "&#32; submitted by &#32; <a href=\"https://www.reddit.com/user/Mommyca\"> /u/Mommyca </a> &#32; to &#32; <a href=\"https://www.reddit.com/r/lymedisease/\"> r/lymedisease </a> <br /> <span><a href=\"https://www.reddit.com/gallery/1n4ac5h\">[link]</a></span> &#32; <span><a href=\"https://www.reddit.com/r/lymedisease/comments/1n4adbb/testing_recommendations_please/\">[comments]</a></span>"
+          }
+        ],
+        "summary": "&#32; submitted by &#32; <a href=\"https://www.reddit.com/user/Mommyca\"> /u/Mommyca </a> &#32; to &#32; <a href=\"https://www.reddit.com/r/lymedisease/\"> r/lymedisease </a> <br /> <span><a href=\"https://www.reddit.com/gallery/1n4ac5h\">[link]</a></span> &#32; <span><a href=\"https://www.reddit.com/r/lymedisease/comments/1n4adbb/testing_recommendations_please/\">[comments]</a></span>",
+        "id": "t3_1n4adbb",
+        "guidislink": true,
+        "link": "https://www.reddit.com/r/lymedisease/comments/1n4adbb/testing_recommendations_please/",
+        "links": [
+          {
+            "href": "https://www.reddit.com/r/lymedisease/comments/1n4adbb/testing_recommendations_please/",
+            "rel": "alternate",
+            "type": "text/html"
+          }
+        ],
+        "updated": "2025-08-30T19:30:30+00:00",
+        "updated_parsed": [
+          2025,
+          8,
+          30,
+          19,
+          30,
+          30,
+          5,
+          242,
+          0
+        ],
+        "published": "2025-08-30T19:30:30+00:00",
+        "published_parsed": [
+          2025,
+          8,
+          30,
+          19,
+          30,
+          30,
+          5,
+          242,
+          0
+        ],
+        "title": "Testing recommendations please",
+        "title_detail": {
+          "type": "text/plain",
+          "language": null,
+          "base": "",
+          "value": "Testing recommendations please"
+        }
+      }
+    },
+    {
+      "id": "bcead2157fca30ff71bfb86f25fabdb68494bf4e",
+      "source": "google_news",
+      "subsource": "en-US: test",
+      "author": "BBC",
+      "title": "Trump's tariff rebuke, Xi's handshake and Putin's oil are India's latest foreign policy test",
+      "text": "Trump's tariff rebuke, Xi's handshake and Putin's oil are India's latest foreign policy test BBC",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBjUEQxVldPTktraDdIY3hOR1JEaFowSXFIa0NFWFVKZTRlcjRJZnlOb1NSVE1PWFQ2SFdMRHRIUVVaWTdzQ2VTNThCYmRoang5VVNUclB3U3BkQdIBX0FVX3lxTFA2QjdrX2pLUGd2a2UxSXZkT0hkOS15LVM5dXp3LUxzRDk0Q1VzUmx0OWZsVm9WaXVzV3pjUXdDTHg1VWROSlhHREVZcm5keWRxREFCTWJFMXEwZXUtbFpZ?oc=5",
+      "published_at": "2025-08-29T23:38:20+00:00",
+      "lang": "en",
+      "raw": {
+        "title": "Trump's tariff rebuke, Xi's handshake and Putin's oil are India's latest foreign policy test - BBC",
+        "title_detail": {
+          "type": "text/plain",
+          "language": null,
+          "base": "",
+          "value": "Trump's tariff rebuke, Xi's handshake and Putin's oil are India's latest foreign policy test - BBC"
+        },
+        "links": [
+          {
+            "rel": "alternate",
+            "type": "text/html",
+            "href": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBjUEQxVldPTktraDdIY3hOR1JEaFowSXFIa0NFWFVKZTRlcjRJZnlOb1NSVE1PWFQ2SFdMRHRIUVVaWTdzQ2VTNThCYmRoang5VVNUclB3U3BkQdIBX0FVX3lxTFA2QjdrX2pLUGd2a2UxSXZkT0hkOS15LVM5dXp3LUxzRDk0Q1VzUmx0OWZsVm9WaXVzV3pjUXdDTHg1VWROSlhHREVZcm5keWRxREFCTWJFMXEwZXUtbFpZ?oc=5"
+          }
+        ],
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBjUEQxVldPTktraDdIY3hOR1JEaFowSXFIa0NFWFVKZTRlcjRJZnlOb1NSVE1PWFQ2SFdMRHRIUVVaWTdzQ2VTNThCYmRoang5VVNUclB3U3BkQdIBX0FVX3lxTFA2QjdrX2pLUGd2a2UxSXZkT0hkOS15LVM5dXp3LUxzRDk0Q1VzUmx0OWZsVm9WaXVzV3pjUXdDTHg1VWROSlhHREVZcm5keWRxREFCTWJFMXEwZXUtbFpZ?oc=5",
+        "id": "CBMiWkFVX3lxTFBjUEQxVldPTktraDdIY3hOR1JEaFowSXFIa0NFWFVKZTRlcjRJZnlOb1NSVE1PWFQ2SFdMRHRIUVVaWTdzQ2VTNThCYmRoang5VVNUclB3U3BkQdIBX0FVX3lxTFA2QjdrX2pLUGd2a2UxSXZkT0hkOS15LVM5dXp3LUxzRDk0Q1VzUmx0OWZsVm9WaXVzV3pjUXdDTHg1VWROSlhHREVZcm5keWRxREFCTWJFMXEwZXUtbFpZ",
+        "guidislink": false,
+        "published": "Fri, 29 Aug 2025 23:38:20 GMT",
+        "published_parsed": [
+          2025,
+          8,
+          29,
+          23,
+          38,
+          20,
+          4,
+          241,
+          0
+        ],
+        "summary": "<a href=\"https://news.google.com/rss/articles/CBMiWkFVX3lxTFBjUEQxVldPTktraDdIY3hOR1JEaFowSXFIa0NFWFVKZTRlcjRJZnlOb1NSVE1PWFQ2SFdMRHRIUVVaWTdzQ2VTNThCYmRoang5VVNUclB3U3BkQdIBX0FVX3lxTFA2QjdrX2pLUGd2a2UxSXZkT0hkOS15LVM5dXp3LUxzRDk0Q1VzUmx0OWZsVm9WaXVzV3pjUXdDTHg1VWROSlhHREVZcm5keWRxREFCTWJFMXEwZXUtbFpZ?oc=5\" target=\"_blank\">Trump's tariff rebuke, Xi's handshake and Putin's oil are India's latest foreign policy test</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">BBC</font>",
+        "summary_detail": {
+          "type": "text/html",
+          "language": null,
+          "base": "",
+          "value": "<a href=\"https://news.google.com/rss/articles/CBMiWkFVX3lxTFBjUEQxVldPTktraDdIY3hOR1JEaFowSXFIa0NFWFVKZTRlcjRJZnlOb1NSVE1PWFQ2SFdMRHRIUVVaWTdzQ2VTNThCYmRoang5VVNUclB3U3BkQdIBX0FVX3lxTFA2QjdrX2pLUGd2a2UxSXZkT0hkOS15LVM5dXp3LUxzRDk0Q1VzUmx0OWZsVm9WaXVzV3pjUXdDTHg1VWROSlhHREVZcm5keWRxREFCTWJFMXEwZXUtbFpZ?oc=5\" target=\"_blank\">Trump's tariff rebuke, Xi's handshake and Putin's oil are India's latest foreign policy test</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">BBC</font>"
+        },
+        "source": {
+          "href": "https://www.bbc.com",
+          "title": "BBC"
+        }
+      }
+    },
+    {
+      "id": "472b914162ae1bf4b20987228343ce09a17bc185",
+      "source": "google_news",
+      "subsource": "en-US: test",
+      "author": "NPR",
+      "title": "With newly approved maps in Texas, GOP puts its gains with Latinos to the test",
+      "text": "With newly approved maps in Texas, GOP puts its gains with Latinos to the test NPR",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOYzFSSjJOQ1NpaUZVTjJ1TVcwQzJyaXFNY1QxeVlSYkpoVGF3T0NYeTN6SDJFbU9XVWpSazZDRnQ5MEpIRjlHaldUNTJ3N0dCMklGeTJJNVV6a2N3LTJncWZHNWZXMWptV0JidnZ6VkRTek1wOFQ1YXVEcjQ0c2V1RGFEUDhzYjluUGNYOXF6bWl2OHZ6ekIya1hvcG45Z2lTcEduRnlFT280UjlSWnlWSDBoTGl5eG1ZQTJOeWt6ZXIwdw?oc=5",
+      "published_at": "2025-08-29T21:34:52+00:00",
+      "lang": "en",
+      "raw": {
+        "title": "With newly approved maps in Texas, GOP puts its gains with Latinos to the test - NPR",
+        "title_detail": {
+          "type": "text/plain",
+          "language": null,
+          "base": "",
+          "value": "With newly approved maps in Texas, GOP puts its gains with Latinos to the test - NPR"
+        },
+        "links": [
+          {
+            "rel": "alternate",
+            "type": "text/html",
+            "href": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOYzFSSjJOQ1NpaUZVTjJ1TVcwQzJyaXFNY1QxeVlSYkpoVGF3T0NYeTN6SDJFbU9XVWpSazZDRnQ5MEpIRjlHaldUNTJ3N0dCMklGeTJJNVV6a2N3LTJncWZHNWZXMWptV0JidnZ6VkRTek1wOFQ1YXVEcjQ0c2V1RGFEUDhzYjluUGNYOXF6bWl2OHZ6ekIya1hvcG45Z2lTcEduRnlFT280UjlSWnlWSDBoTGl5eG1ZQTJOeWt6ZXIwdw?oc=5"
+          }
+        ],
+        "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOYzFSSjJOQ1NpaUZVTjJ1TVcwQzJyaXFNY1QxeVlSYkpoVGF3T0NYeTN6SDJFbU9XVWpSazZDRnQ5MEpIRjlHaldUNTJ3N0dCMklGeTJJNVV6a2N3LTJncWZHNWZXMWptV0JidnZ6VkRTek1wOFQ1YXVEcjQ0c2V1RGFEUDhzYjluUGNYOXF6bWl2OHZ6ekIya1hvcG45Z2lTcEduRnlFT280UjlSWnlWSDBoTGl5eG1ZQTJOeWt6ZXIwdw?oc=5",
+        "id": "CBMiwgFBVV95cUxOYzFSSjJOQ1NpaUZVTjJ1TVcwQzJyaXFNY1QxeVlSYkpoVGF3T0NYeTN6SDJFbU9XVWpSazZDRnQ5MEpIRjlHaldUNTJ3N0dCMklGeTJJNVV6a2N3LTJncWZHNWZXMWptV0JidnZ6VkRTek1wOFQ1YXVEcjQ0c2V1RGFEUDhzYjluUGNYOXF6bWl2OHZ6ekIya1hvcG45Z2lTcEduRnlFT280UjlSWnlWSDBoTGl5eG1ZQTJOeWt6ZXIwdw",
+        "guidislink": false,
+        "published": "Fri, 29 Aug 2025 21:34:52 GMT",
+        "published_parsed": [
+          2025,
+          8,
+          29,
+          21,
+          34,
+          52,
+          4,
+          241,
+          0
+        ],
+        "summary": "<a href=\"https://news.google.com/rss/articles/CBMiwgFBVV95cUxOYzFSSjJOQ1NpaUZVTjJ1TVcwQzJyaXFNY1QxeVlSYkpoVGF3T0NYeTN6SDJFbU9XVWpSazZDRnQ5MEpIRjlHaldUNTJ3N0dCMklGeTJJNVV6a2N3LTJncWZHNWZXMWptV0JidnZ6VkRTek1wOFQ1YXVEcjQ0c2V1RGFEUDhzYjluUGNYOXF6bWl2OHZ6ekIya1hvcG45Z2lTcEduRnlFT280UjlSWnlWSDBoTGl5eG1ZQTJOeWt6ZXIwdw?oc=5\" target=\"_blank\">With newly approved maps in Texas, GOP puts its gains with Latinos to the test</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">NPR</font>",
+        "summary_detail": {
+          "type": "text/html",
+          "language": null,
+          "base": "",
+          "value": "<a href=\"https://news.google.com/rss/articles/CBMiwgFBVV95cUxOYzFSSjJOQ1NpaUZVTjJ1TVcwQzJyaXFNY1QxeVlSYkpoVGF3T0NYeTN6SDJFbU9XVWpSazZDRnQ5MEpIRjlHaldUNTJ3N0dCMklGeTJJNVV6a2N3LTJncWZHNWZXMWptV0JidnZ6VkRTek1wOFQ1YXVEcjQ0c2V1RGFEUDhzYjluUGNYOXF6bWl2OHZ6ekIya1hvcG45Z2lTcEduRnlFT280UjlSWnlWSDBoTGl5eG1ZQTJOeWt6ZXIwdw?oc=5\" target=\"_blank\">With newly approved maps in Texas, GOP puts its gains with Latinos to the test</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">NPR</font>"
+        },
+        "source": {
+          "href": "https://www.npr.org",
+          "title": "NPR"
+        }
+      }
+    },
+    {
+      "id": "6b1a7dd1ebe30cc6cf2101250776a4ddcb7231f2",
+      "source": "google_news",
+      "subsource": "en-US: test",
+      "author": "UN News",
+      "title": "World News in Brief: Executions surge in Iran, nuclear test threat, Burkina Faso declares top official unwelcome",
+      "text": "World News in Brief: Executions surge in Iran, nuclear test threat, Burkina Faso declares top official unwelcome UN News",
+      "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFBwbjNfNkMtVENjTG5ibW9GYUt2RGtzQkVjV0dKT0N1Qnk4WWJVZjJIWDNGdmgwM0tNSEdIb0N4bktHclVlNW8zVkVYZDdhU2RsMkUtbkdiYw?oc=5",
+      "published_at": "2025-08-29T20:39:19+00:00",
+      "lang": "en",
+      "raw": {
+        "title": "World News in Brief: Executions surge in Iran, nuclear test threat, Burkina Faso declares top official unwelcome - UN News",
+        "title_detail": {
+          "type": "text/plain",
+          "language": null,
+          "base": "",
+          "value": "World News in Brief: Executions surge in Iran, nuclear test threat, Burkina Faso declares top official unwelcome - UN News"
+        },
+        "links": [
+          {
+            "rel": "alternate",
+            "type": "text/html",
+            "href": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFBwbjNfNkMtVENjTG5ibW9GYUt2RGtzQkVjV0dKT0N1Qnk4WWJVZjJIWDNGdmgwM0tNSEdIb0N4bktHclVlNW8zVkVYZDdhU2RsMkUtbkdiYw?oc=5"
+          }
+        ],
+        "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFBwbjNfNkMtVENjTG5ibW9GYUt2RGtzQkVjV0dKT0N1Qnk4WWJVZjJIWDNGdmgwM0tNSEdIb0N4bktHclVlNW8zVkVYZDdhU2RsMkUtbkdiYw?oc=5",
+        "id": "CBMiV0FVX3lxTFBwbjNfNkMtVENjTG5ibW9GYUt2RGtzQkVjV0dKT0N1Qnk4WWJVZjJIWDNGdmgwM0tNSEdIb0N4bktHclVlNW8zVkVYZDdhU2RsMkUtbkdiYw",
+        "guidislink": false,
+        "published": "Fri, 29 Aug 2025 20:39:19 GMT",
+        "published_parsed": [
+          2025,
+          8,
+          29,
+          20,
+          39,
+          19,
+          4,
+          241,
+          0
+        ],
+        "summary": "<a href=\"https://news.google.com/rss/articles/CBMiV0FVX3lxTFBwbjNfNkMtVENjTG5ibW9GYUt2RGtzQkVjV0dKT0N1Qnk4WWJVZjJIWDNGdmgwM0tNSEdIb0N4bktHclVlNW8zVkVYZDdhU2RsMkUtbkdiYw?oc=5\" target=\"_blank\">World News in Brief: Executions surge in Iran, nuclear test threat, Burkina Faso declares top official unwelcome</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">UN News</font>",
+        "summary_detail": {
+          "type": "text/html",
+          "language": null,
+          "base": "",
+          "value": "<a href=\"https://news.google.com/rss/articles/CBMiV0FVX3lxTFBwbjNfNkMtVENjTG5ibW9GYUt2RGtzQkVjV0dKT0N1Qnk4WWJVZjJIWDNGdmgwM0tNSEdIb0N4bktHclVlNW8zVkVYZDdhU2RsMkUtbkdiYw?oc=5\" target=\"_blank\">World News in Brief: Executions surge in Iran, nuclear test threat, Burkina Faso declares top official unwelcome</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">UN News</font>"
+        },
+        "source": {
+          "href": "https://news.un.org",
+          "title": "UN News"
+        }
+      }
+    },
+    {
+      "id": "73d523c6c78fc01f335e291be6ee5d874b6a2355",
+      "source": "google_news",
+      "subsource": "en-US: test",
+      "author": "navalnews.com",
+      "title": "Patriot Missile System Paired With Littoral Combat Ship in Test",
+      "text": "Patriot Missile System Paired With Littoral Combat Ship in Test navalnews.com",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOTjRnNDltWnZRZDhUbWdQR25mdkdqVm9vRUtVX2d1Z25jX2pVUE5EQnVfb1o4aXFpb2lZZnd6Yk5WZU9rOWdNczA4UTJDN0F3VW1jWkNIQkdGaHBaTWdRXzVGUFk0dDhBSG9ZWTZJbGg3bTV6Sno2SDFVWVZld01pZlBaRXVxN0FCeWRVUWl4TTI1Y1pEbGtKS1NyLUxhMldwa2xWcXh0SFN3cU9ySGc?oc=5",
+      "published_at": "2025-08-30T08:29:41+00:00",
+      "lang": "en",
+      "raw": {
+        "title": "Patriot Missile System Paired With Littoral Combat Ship in Test - navalnews.com",
+        "title_detail": {
+          "type": "text/plain",
+          "language": null,
+          "base": "",
+          "value": "Patriot Missile System Paired With Littoral Combat Ship in Test - navalnews.com"
+        },
+        "links": [
+          {
+            "rel": "alternate",
+            "type": "text/html",
+            "href": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOTjRnNDltWnZRZDhUbWdQR25mdkdqVm9vRUtVX2d1Z25jX2pVUE5EQnVfb1o4aXFpb2lZZnd6Yk5WZU9rOWdNczA4UTJDN0F3VW1jWkNIQkdGaHBaTWdRXzVGUFk0dDhBSG9ZWTZJbGg3bTV6Sno2SDFVWVZld01pZlBaRXVxN0FCeWRVUWl4TTI1Y1pEbGtKS1NyLUxhMldwa2xWcXh0SFN3cU9ySGc?oc=5"
+          }
+        ],
+        "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOTjRnNDltWnZRZDhUbWdQR25mdkdqVm9vRUtVX2d1Z25jX2pVUE5EQnVfb1o4aXFpb2lZZnd6Yk5WZU9rOWdNczA4UTJDN0F3VW1jWkNIQkdGaHBaTWdRXzVGUFk0dDhBSG9ZWTZJbGg3bTV6Sno2SDFVWVZld01pZlBaRXVxN0FCeWRVUWl4TTI1Y1pEbGtKS1NyLUxhMldwa2xWcXh0SFN3cU9ySGc?oc=5",
+        "id": "CBMirgFBVV95cUxOTjRnNDltWnZRZDhUbWdQR25mdkdqVm9vRUtVX2d1Z25jX2pVUE5EQnVfb1o4aXFpb2lZZnd6Yk5WZU9rOWdNczA4UTJDN0F3VW1jWkNIQkdGaHBaTWdRXzVGUFk0dDhBSG9ZWTZJbGg3bTV6Sno2SDFVWVZld01pZlBaRXVxN0FCeWRVUWl4TTI1Y1pEbGtKS1NyLUxhMldwa2xWcXh0SFN3cU9ySGc",
+        "guidislink": false,
+        "published": "Sat, 30 Aug 2025 08:29:41 GMT",
+        "published_parsed": [
+          2025,
+          8,
+          30,
+          8,
+          29,
+          41,
+          5,
+          242,
+          0
+        ],
+        "summary": "<a href=\"https://news.google.com/rss/articles/CBMirgFBVV95cUxOTjRnNDltWnZRZDhUbWdQR25mdkdqVm9vRUtVX2d1Z25jX2pVUE5EQnVfb1o4aXFpb2lZZnd6Yk5WZU9rOWdNczA4UTJDN0F3VW1jWkNIQkdGaHBaTWdRXzVGUFk0dDhBSG9ZWTZJbGg3bTV6Sno2SDFVWVZld01pZlBaRXVxN0FCeWRVUWl4TTI1Y1pEbGtKS1NyLUxhMldwa2xWcXh0SFN3cU9ySGc?oc=5\" target=\"_blank\">Patriot Missile System Paired With Littoral Combat Ship in Test</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">navalnews.com</font>",
+        "summary_detail": {
+          "type": "text/html",
+          "language": null,
+          "base": "",
+          "value": "<a href=\"https://news.google.com/rss/articles/CBMirgFBVV95cUxOTjRnNDltWnZRZDhUbWdQR25mdkdqVm9vRUtVX2d1Z25jX2pVUE5EQnVfb1o4aXFpb2lZZnd6Yk5WZU9rOWdNczA4UTJDN0F3VW1jWkNIQkdGaHBaTWdRXzVGUFk0dDhBSG9ZWTZJbGg3bTV6Sno2SDFVWVZld01pZlBaRXVxN0FCeWRVUWl4TTI1Y1pEbGtKS1NyLUxhMldwa2xWcXh0SFN3cU9ySGc?oc=5\" target=\"_blank\">Patriot Missile System Paired With Littoral Combat Ship in Test</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">navalnews.com</font>"
+        },
+        "source": {
+          "href": "https://www.navalnews.com",
+          "title": "navalnews.com"
+        }
+      }
+    },
+    {
+      "id": "728fae908b9531bf12e230de58ea7f897e6e44e9",
+      "source": "google_news",
+      "subsource": "en-US: test",
+      "author": "The Atlantic",
+      "title": "Why the West Failed the \u2018Putin Test\u2019",
+      "text": "Why the West Failed the \u2018Putin Test\u2019 The Atlantic",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOV2FMbmJxWGI2bzlkdUJ2bC1pQzEzZHAxdm0wZWxZa3Q1SDBRNHlrZW5kNDBKQVZfU3RYVW1ZR2NuNF9BTE10R25XbG9nMGdtdWpEZnVPaUM2WGJaeWlGQ3hsMVRWTEFCZGN4U1pmWTNJYzVQWjZKczZWRWVTT0RxWE1nV1RXUGhVbEMzSFNOcGkybHJoeS1V?oc=5",
+      "published_at": "2025-08-29T10:00:00+00:00",
+      "lang": "en",
+      "raw": {
+        "title": "Why the West Failed the \u2018Putin Test\u2019 - The Atlantic",
+        "title_detail": {
+          "type": "text/plain",
+          "language": null,
+          "base": "",
+          "value": "Why the West Failed the \u2018Putin Test\u2019 - The Atlantic"
+        },
+        "links": [
+          {
+            "rel": "alternate",
+            "type": "text/html",
+            "href": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOV2FMbmJxWGI2bzlkdUJ2bC1pQzEzZHAxdm0wZWxZa3Q1SDBRNHlrZW5kNDBKQVZfU3RYVW1ZR2NuNF9BTE10R25XbG9nMGdtdWpEZnVPaUM2WGJaeWlGQ3hsMVRWTEFCZGN4U1pmWTNJYzVQWjZKczZWRWVTT0RxWE1nV1RXUGhVbEMzSFNOcGkybHJoeS1V?oc=5"
+          }
+        ],
+        "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOV2FMbmJxWGI2bzlkdUJ2bC1pQzEzZHAxdm0wZWxZa3Q1SDBRNHlrZW5kNDBKQVZfU3RYVW1ZR2NuNF9BTE10R25XbG9nMGdtdWpEZnVPaUM2WGJaeWlGQ3hsMVRWTEFCZGN4U1pmWTNJYzVQWjZKczZWRWVTT0RxWE1nV1RXUGhVbEMzSFNOcGkybHJoeS1V?oc=5",
+        "id": "CBMilwFBVV95cUxOV2FMbmJxWGI2bzlkdUJ2bC1pQzEzZHAxdm0wZWxZa3Q1SDBRNHlrZW5kNDBKQVZfU3RYVW1ZR2NuNF9BTE10R25XbG9nMGdtdWpEZnVPaUM2WGJaeWlGQ3hsMVRWTEFCZGN4U1pmWTNJYzVQWjZKczZWRWVTT0RxWE1nV1RXUGhVbEMzSFNOcGkybHJoeS1V",
+        "guidislink": false,
+        "published": "Fri, 29 Aug 2025 10:00:00 GMT",
+        "published_parsed": [
+          2025,
+          8,
+          29,
+          10,
+          0,
+          0,
+          4,
+          241,
+          0
+        ],
+        "summary": "<a href=\"https://news.google.com/rss/articles/CBMilwFBVV95cUxOV2FMbmJxWGI2bzlkdUJ2bC1pQzEzZHAxdm0wZWxZa3Q1SDBRNHlrZW5kNDBKQVZfU3RYVW1ZR2NuNF9BTE10R25XbG9nMGdtdWpEZnVPaUM2WGJaeWlGQ3hsMVRWTEFCZGN4U1pmWTNJYzVQWjZKczZWRWVTT0RxWE1nV1RXUGhVbEMzSFNOcGkybHJoeS1V?oc=5\" target=\"_blank\">Why the West Failed the \u2018Putin Test\u2019</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">The Atlantic</font>",
+        "summary_detail": {
+          "type": "text/html",
+          "language": null,
+          "base": "",
+          "value": "<a href=\"https://news.google.com/rss/articles/CBMilwFBVV95cUxOV2FMbmJxWGI2bzlkdUJ2bC1pQzEzZHAxdm0wZWxZa3Q1SDBRNHlrZW5kNDBKQVZfU3RYVW1ZR2NuNF9BTE10R25XbG9nMGdtdWpEZnVPaUM2WGJaeWlGQ3hsMVRWTEFCZGN4U1pmWTNJYzVQWjZKczZWRWVTT0RxWE1nV1RXUGhVbEMzSFNOcGkybHJoeS1V?oc=5\" target=\"_blank\">Why the West Failed the \u2018Putin Test\u2019</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">The Atlantic</font>"
+        },
+        "source": {
+          "href": "https://www.theatlantic.com",
+          "title": "The Atlantic"
+        }
+      }
+    },
+    {
+      "id": "1b9c9ab212770a986c7444d232598f3b9fbae8d5",
+      "source": "hackernews",
+      "subsource": "top",
+      "author": "indigodaddy",
+      "title": "University of Cambridge Cognitive Ability Test",
+      "text": "University of Cambridge Cognitive Ability Test",
+      "url": "https://planning.e-psychometrics.com/test/icar60",
+      "published_at": "2025-08-30T17:20:32+00:00",
+      "lang": "en",
+      "raw": {
+        "by": "indigodaddy",
+        "descendants": 32,
+        "id": 45076367,
+        "kids": [
+          45077200,
+          45077108,
+          45077182,
+          45077147,
+          45077080,
+          45077163,
+          45076975,
+          45076845
+        ],
+        "score": 42,
+        "time": 1756574432,
+        "title": "University of Cambridge Cognitive Ability Test",
+        "type": "story",
+        "url": "https://planning.e-psychometrics.com/test/icar60"
+      }
+    },
+    {
+      "id": "741068a69ff786ab5b5348b8c629b4060f4dc7ca",
+      "source": "hackernews",
+      "subsource": "top",
+      "author": "anishathalye",
+      "title": "Linearizability testing S2 with deterministic simulation",
+      "text": "Linearizability testing S2 with deterministic simulation",
+      "url": "https://s2.dev/blog/linearizability",
+      "published_at": "2025-08-30T13:45:21+00:00",
+      "lang": "en",
+      "raw": {
+        "by": "anishathalye",
+        "descendants": 0,
+        "id": 45074658,
+        "score": 4,
+        "time": 1756561521,
+        "title": "Linearizability testing S2 with deterministic simulation",
+        "type": "story",
+        "url": "https://s2.dev/blog/linearizability"
+      }
+    },
+    {
+      "id": "00b19524151adecda5248cf16e3b55f6cfdc7cd9",
+      "source": "hackernews",
+      "subsource": "top",
+      "author": "kylemacomber",
+      "title": "Launch HN: Bitrig (YC S25) \u2013 Build Swift apps on your iPhone",
+      "text": "Launch HN: Bitrig (YC S25) \u2013 Build Swift apps on your iPhone\n\nHi HN, we\u2019re Kyle, Jacob, and Tim. We\u2019re building Bitrig ( https://www.bitrig.app ). Bitrig lets you create native Swift apps for your phone, on your phone, just by chatting with AI. It\u2019s like Lovable for iPhone apps. Here's a video of Bitrig in action: https://youtu.be/CUlWhF3ERME We created SwiftUI at Apple to help developers make better apps with less code. Bitrig lets anyone build at this level of polish. If you've thought about making an iPhone app, Bitrig is the easiest possible way to get started with Swift. Bitrig uses Claude Sonnet 4.0 with a simple system prompt and tool definitions to generate native Swift code. Normally running this on an iPhone would require compiling and signing it with Xcode, and you can\u2019t run Xcode on an iPhone. So we did something\u2026 creative. We wrote a custom Swift interpreter! Among other things this lets you instantly preview your app in Bitrig and share it with just a URL. If you have a paid Apple developer account, you can connect it with Bitrig. We\u2019ll compile your app on our server and upload it to App Store Connect, so you can distribute it on TestFlight or the App Store. This last step also gives you a fully optimized build of your app that you can install right on your Home Screen. We think there\u2019s something electric about building apps directly on your phone. We hope you give Bitrig a try! We\u2019re ingesting Apple\u2019s SDK frameworks into Bitrig piece by piece. If you try to build something and hit a missing framework, let us know and we\u2019ll prioritize adding it. Download Bitrig on the App Store: https://apps.apple.com/us/app/bitrig/id6747835910",
+      "url": "https://news.ycombinator.com/item?id=45041185",
+      "published_at": "2025-08-27T15:39:33+00:00",
+      "lang": "en",
+      "raw": {
+        "by": "kylemacomber",
+        "descendants": 119,
+        "id": 45041185,
+        "kids": [
+          45045748,
+          45047444,
+          45053944,
+          45049059,
+          45049551,
+          45042481,
+          45041196,
+          45043851,
+          45043757,
+          45047045,
+          45043843,
+          45042377,
+          45047004,
+          45048540,
+          45046084,
+          45042497,
+          45052198,
+          45043702,
+          45046585,
+          45042924,
+          45043519,
+          45054636,
+          45045660,
+          45055476,
+          45059380,
+          45045391,
+          45048004,
+          45047224,
+          45048790,
+          45043647,
+          45046069,
+          45049087,
+          45042630,
+          45042627,
+          45046522,
+          45046451,
+          45046350,
+          45042654,
+          45049259,
+          45045989,
+          45045417,
+          45050681,
+          45048705,
+          45056324,
+          45043653,
+          45044883,
+          45043313,
+          45049466,
+          45043249,
+          45047226,
+          45043168
+        ],
+        "score": 183,
+        "text": "Hi HN, we\u2019re Kyle, Jacob, and Tim. We\u2019re building Bitrig (<a href=\"https:&#x2F;&#x2F;www.bitrig.app\">https:&#x2F;&#x2F;www.bitrig.app</a>).<p>Bitrig lets you create native Swift apps for your phone, on your phone, just by chatting with AI. It\u2019s like Lovable for iPhone apps.<p>Here&#x27;s a video of Bitrig in action:\n<a href=\"https:&#x2F;&#x2F;youtu.be&#x2F;CUlWhF3ERME\" rel=\"nofollow\">https:&#x2F;&#x2F;youtu.be&#x2F;CUlWhF3ERME</a><p>We created SwiftUI at Apple to help developers make better apps with less code. Bitrig lets anyone build at this level of polish. If you&#x27;ve thought about making an iPhone app, Bitrig is the easiest possible way to get started with Swift.<p>Bitrig uses Claude Sonnet 4.0 with a simple system prompt and tool definitions to generate native Swift code. Normally running this on an iPhone would require compiling and signing it with Xcode, and you can\u2019t run Xcode on an iPhone. So we did something\u2026 creative. We wrote a custom Swift interpreter! Among other things this lets you instantly preview your app in Bitrig and share it with just a URL.<p>If you have a paid Apple developer account, you can connect it with Bitrig. We\u2019ll compile your app on our server and upload it to App Store Connect, so you can distribute it on TestFlight or the App Store. This last step also gives you a fully optimized build of your app that you can install right on your Home Screen.<p>We think there\u2019s something electric about building apps directly on your phone. We hope you give Bitrig a try!<p>We\u2019re ingesting Apple\u2019s SDK frameworks into Bitrig piece by piece. If you try to build something and hit a missing framework, let us know and we\u2019ll prioritize adding it.<p>Download Bitrig on the App Store:\n<a href=\"https:&#x2F;&#x2F;apps.apple.com&#x2F;us&#x2F;app&#x2F;bitrig&#x2F;id6747835910\">https:&#x2F;&#x2F;apps.apple.com&#x2F;us&#x2F;app&#x2F;bitrig&#x2F;id6747835910</a>",
+        "time": 1756309173,
+        "title": "Launch HN: Bitrig (YC S25) \u2013 Build Swift apps on your iPhone",
+        "type": "story"
+      }
+    },
+    {
+      "id": "f2484b5880274df41864710cc69658435b938f83",
+      "source": "hackernews_search",
+      "subsource": "test",
+      "author": "metalman",
+      "title": "Starship's Tenth Flight Test",
+      "text": "Starship's Tenth Flight Test\n\nYouTube: https://www.youtube.com/watch?v=TpmTivdrQiQ",
+      "url": "https://www.spacex.com/",
+      "published_at": "2025-08-26T23:22:14+00:00",
+      "lang": "en",
+      "raw": {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "metalman"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "YouTube: <a href=\"https://www.youtube.com/watch?v=TpmTivdrQiQ\" rel=\"nofollow\">https://www.youtube.com/watch?v=TpmTivdrQiQ</a>"
+          },
+          "title": {
+            "fullyHighlighted": false,
+            "matchLevel": "full",
+            "matchedWords": [
+              "test"
+            ],
+            "value": "Starship's Tenth Flight <em>Test</em>"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.spacex.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_metalman",
+          "story_45033563"
+        ],
+        "author": "metalman",
+        "children": [
+          45033564,
+          45033571,
+          45033744,
+          45033813,
+          45033827,
+          45033842,
+          45033845,
+          45033856,
+          45033871,
+          45033902,
+          45033950,
+          45033993,
+          45034015,
+          45034078,
+          45034080,
+          45034091,
+          45034092,
+          45034094,
+          45034099,
+          45034103,
+          45034131,
+          45034189,
+          45034268,
+          45034459,
+          45034759,
+          45034912,
+          45035088,
+          45035257,
+          45035348,
+          45036446,
+          45037387,
+          45037987,
+          45041046
+        ],
+        "created_at": "2025-08-26T23:22:14Z",
+        "created_at_i": 1756250534,
+        "num_comments": 211,
+        "objectID": "45033563",
+        "points": 361,
+        "story_id": 45033563,
+        "story_text": "YouTube: <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=TpmTivdrQiQ\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=TpmTivdrQiQ</a>",
+        "title": "Starship's Tenth Flight Test",
+        "updated_at": "2025-08-30T18:53:49Z",
+        "url": "https://www.spacex.com/"
+      }
+    },
+    {
+      "id": "3d6b575d120a56a5d9d67f8bc2417b622da256ed",
+      "source": "hackernews_search",
+      "subsource": "test",
+      "author": "mpweiher",
+      "title": "SpaceX's giant Starship Mars rocket nails critical 10th test flight",
+      "text": "SpaceX's giant Starship Mars rocket nails critical 10th test flight",
+      "url": "https://www.space.com/space-exploration/private-spaceflight/spacex-launches-starship-flight-10-critical-test-flight-video",
+      "published_at": "2025-08-27T13:01:57+00:00",
+      "lang": "en",
+      "raw": {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mpweiher"
+          },
+          "title": {
+            "fullyHighlighted": false,
+            "matchLevel": "full",
+            "matchedWords": [
+              "test"
+            ],
+            "value": "SpaceX's giant Starship Mars rocket nails critical 10th <em>test</em> flight"
+          },
+          "url": {
+            "fullyHighlighted": false,
+            "matchLevel": "full",
+            "matchedWords": [
+              "test"
+            ],
+            "value": "https://www.space.com/space-exploration/private-spaceflight/spacex-launches-starship-flight-10-critical-<em>test</em>-flight-video"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mpweiher",
+          "story_45039075"
+        ],
+        "author": "mpweiher",
+        "children": [
+          45039519,
+          45039543,
+          45039748,
+          45040038,
+          45040062,
+          45040132,
+          45040147,
+          45040156,
+          45040494,
+          45040673,
+          45040754,
+          45041081,
+          45041186,
+          45041441,
+          45041470,
+          45041480,
+          45041528,
+          45041541,
+          45041949
+        ],
+        "created_at": "2025-08-27T13:01:57Z",
+        "created_at_i": 1756299717,
+        "num_comments": 329,
+        "objectID": "45039075",
+        "points": 288,
+        "story_id": 45039075,
+        "title": "SpaceX's giant Starship Mars rocket nails critical 10th test flight",
+        "updated_at": "2025-08-30T14:31:03Z",
+        "url": "https://www.space.com/space-exploration/private-spaceflight/spacex-launches-starship-flight-10-critical-test-flight-video"
+      }
+    },
+    {
+      "id": "77911cabb614002cba15d2ec2c8a2a6e44b11383",
+      "source": "mastodon",
+      "subsource": "mastodon.social/#test",
+      "author": "N-gated Hacker News",
+      "title": "Ah yes, the University of Cambridge's cognitive prowess test: can your browser handle JavaScript? \ud83e\udd14\ud83d\udd0d",
+      "text": "Ah yes, the University of Cambridge's cognitive prowess test: can your browser handle JavaScript? \ud83e\udd14\ud83d\udd0d Spoiler: if you're reading this, you already failed. \ud83d\udeab\ud83d\udcc9 https:// planning.e-psychometrics.com/t est/icar60 # UniversityOfCambridge # JavaScript # Test # CognitiveProwess # BrowserChallenge # SpoilerAlert # TechHumor # HackerNews # ngated",
+      "url": "https://mastodon.social/@ngate/115119064529526356",
+      "published_at": "2025-08-30T18:12:02.738000+00:00",
+      "lang": "en",
+      "raw": {
+        "id": "115119064529526356",
+        "created_at": "2025-08-30T18:12:02.738Z",
+        "in_reply_to_id": null,
+        "in_reply_to_account_id": null,
+        "sensitive": false,
+        "spoiler_text": "",
+        "visibility": "public",
+        "language": "en",
+        "uri": "https://mastodon.social/users/ngate/statuses/115119064529526356",
+        "url": "https://mastodon.social/@ngate/115119064529526356",
+        "replies_count": 0,
+        "reblogs_count": 0,
+        "favourites_count": 0,
+        "edited_at": null,
+        "content": "<p>Ah yes, the University of Cambridge&#39;s cognitive prowess test: can your browser handle JavaScript? \ud83e\udd14\ud83d\udd0d Spoiler: if you&#39;re reading this, you already failed. \ud83d\udeab\ud83d\udcc9<br /><a href=\"https://planning.e-psychometrics.com/test/icar60\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">planning.e-psychometrics.com/t</span><span class=\"invisible\">est/icar60</span></a> <a href=\"https://mastodon.social/tags/UniversityOfCambridge\" class=\"mention hashtag\" rel=\"tag\">#<span>UniversityOfCambridge</span></a> <a href=\"https://mastodon.social/tags/JavaScript\" class=\"mention hashtag\" rel=\"tag\">#<span>JavaScript</span></a> <a href=\"https://mastodon.social/tags/Test\" class=\"mention hashtag\" rel=\"tag\">#<span>Test</span></a> <a href=\"https://mastodon.social/tags/CognitiveProwess\" class=\"mention hashtag\" rel=\"tag\">#<span>CognitiveProwess</span></a> <a href=\"https://mastodon.social/tags/BrowserChallenge\" class=\"mention hashtag\" rel=\"tag\">#<span>BrowserChallenge</span></a> <a href=\"https://mastodon.social/tags/SpoilerAlert\" class=\"mention hashtag\" rel=\"tag\">#<span>SpoilerAlert</span></a> <a href=\"https://mastodon.social/tags/TechHumor\" class=\"mention hashtag\" rel=\"tag\">#<span>TechHumor</span></a> <a href=\"https://mastodon.social/tags/HackerNews\" class=\"mention hashtag\" rel=\"tag\">#<span>HackerNews</span></a> <a href=\"https://mastodon.social/tags/ngated\" class=\"mention hashtag\" rel=\"tag\">#<span>ngated</span></a></p>",
+        "reblog": null,
+        "application": {
+          "name": "Hacker News n-gate",
+          "website": "https://news.ycombinator.com/"
+        },
+        "account": {
+          "id": "114053503262903476",
+          "username": "ngate",
+          "acct": "ngate",
+          "display_name": "N-gated Hacker News",
+          "locked": false,
+          "bot": true,
+          "discoverable": true,
+          "indexable": true,
+          "group": false,
+          "created_at": "2025-02-23T00:00:00.000Z",
+          "note": "<p>Unofficial Hacker News Bot, posting Top 10 stories in ngate style.</p>",
+          "url": "https://mastodon.social/@ngate",
+          "uri": "https://mastodon.social/users/ngate",
+          "avatar": "https://files.mastodon.social/accounts/avatars/114/053/503/262/903/476/original/dce7681e0a12d41e.png",
+          "avatar_static": "https://files.mastodon.social/accounts/avatars/114/053/503/262/903/476/original/dce7681e0a12d41e.png",
+          "header": "https://mastodon.social/headers/original/missing.png",
+          "header_static": "https://mastodon.social/headers/original/missing.png",
+          "followers_count": 197,
+          "following_count": 2,
+          "statuses_count": 8403,
+          "last_status_at": "2025-08-30",
+          "hide_collections": null,
+          "noindex": false,
+          "emojis": [],
+          "roles": [],
+          "fields": [
+            {
+              "name": "Source",
+              "value": "<a href=\"https://news.ycombinator.com\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">news.ycombinator.com</span><span class=\"invisible\"></span></a>",
+              "verified_at": null
+            },
+            {
+              "name": "Maintained by",
+              "value": "<span class=\"h-card\" translate=\"no\"><a href=\"https://mastodon.social/@TheFox21\" class=\"u-url mention\">@<span>TheFox21</span></a></span>",
+              "verified_at": null
+            },
+            {
+              "name": "Hashtags created by",
+              "value": "OpenAI",
+              "verified_at": null
+            }
+          ]
+        },
+        "media_attachments": [],
+        "mentions": [],
+        "tags": [
+          {
+            "name": "universityofcambridge",
+            "url": "https://mastodon.social/tags/universityofcambridge"
+          },
+          {
+            "name": "javascript",
+            "url": "https://mastodon.social/tags/javascript"
+          },
+          {
+            "name": "test",
+            "url": "https://mastodon.social/tags/test"
+          },
+          {
+            "name": "cognitiveprowess",
+            "url": "https://mastodon.social/tags/cognitiveprowess"
+          },
+          {
+            "name": "browserchallenge",
+            "url": "https://mastodon.social/tags/browserchallenge"
+          },
+          {
+            "name": "spoileralert",
+            "url": "https://mastodon.social/tags/spoileralert"
+          },
+          {
+            "name": "techhumor",
+            "url": "https://mastodon.social/tags/techhumor"
+          },
+          {
+            "name": "hackernews",
+            "url": "https://mastodon.social/tags/hackernews"
+          },
+          {
+            "name": "ngated",
+            "url": "https://mastodon.social/tags/ngated"
+          }
+        ],
+        "emojis": [],
+        "quote": null,
+        "card": {
+          "url": "https://planning.e-psychometrics.com/test/icar60",
+          "title": "Concerto Platform",
+          "description": "",
+          "language": null,
+          "type": "link",
+          "author_name": "",
+          "author_url": "",
+          "provider_name": "",
+          "provider_url": "",
+          "html": "",
+          "width": 0,
+          "height": 0,
+          "image": null,
+          "image_description": "",
+          "embed_url": "",
+          "blurhash": null,
+          "published_at": null,
+          "authors": []
+        },
+        "poll": null
+      }
+    },
+    {
+      "id": "e1429eed845e22591126448a1d1d9d856cf88159",
+      "source": "mastodon",
+      "subsource": "mastodon.social/#test",
+      "author": "Hacker News",
+      "title": "University of Cambridge Cognitive Ability Test https:// planning.e-psychometrics.com/t est/icar60 # ",
+      "text": "University of Cambridge Cognitive Ability Test https:// planning.e-psychometrics.com/t est/icar60 # HackerNews # UniversityOfCambridge # CognitiveAbility # Test # EPsychometrics # CognitiveTesting # EducationInnovation",
+      "url": "https://mastodon.social/@h4ckernews/115119064260716014",
+      "published_at": "2025-08-30T18:11:58.630000+00:00",
+      "lang": "en",
+      "raw": {
+        "id": "115119064260716014",
+        "created_at": "2025-08-30T18:11:58.630Z",
+        "in_reply_to_id": null,
+        "in_reply_to_account_id": null,
+        "sensitive": false,
+        "spoiler_text": "",
+        "visibility": "public",
+        "language": "en",
+        "uri": "https://mastodon.social/users/h4ckernews/statuses/115119064260716014",
+        "url": "https://mastodon.social/@h4ckernews/115119064260716014",
+        "replies_count": 0,
+        "reblogs_count": 0,
+        "favourites_count": 0,
+        "edited_at": null,
+        "content": "<p>University of Cambridge Cognitive Ability Test</p><p><a href=\"https://planning.e-psychometrics.com/test/icar60\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">planning.e-psychometrics.com/t</span><span class=\"invisible\">est/icar60</span></a></p><p><a href=\"https://mastodon.social/tags/HackerNews\" class=\"mention hashtag\" rel=\"tag\">#<span>HackerNews</span></a> <a href=\"https://mastodon.social/tags/UniversityOfCambridge\" class=\"mention hashtag\" rel=\"tag\">#<span>UniversityOfCambridge</span></a> <a href=\"https://mastodon.social/tags/CognitiveAbility\" class=\"mention hashtag\" rel=\"tag\">#<span>CognitiveAbility</span></a> <a href=\"https://mastodon.social/tags/Test\" class=\"mention hashtag\" rel=\"tag\">#<span>Test</span></a> <a href=\"https://mastodon.social/tags/EPsychometrics\" class=\"mention hashtag\" rel=\"tag\">#<span>EPsychometrics</span></a> <a href=\"https://mastodon.social/tags/CognitiveTesting\" class=\"mention hashtag\" rel=\"tag\">#<span>CognitiveTesting</span></a> <a href=\"https://mastodon.social/tags/EducationInnovation\" class=\"mention hashtag\" rel=\"tag\">#<span>EducationInnovation</span></a></p>",
+        "reblog": null,
+        "application": {
+          "name": "Hacker News Top 15",
+          "website": "https://news.ycombinator.com/"
+        },
+        "account": {
+          "id": "114048194944023530",
+          "username": "h4ckernews",
+          "acct": "h4ckernews",
+          "display_name": "Hacker News",
+          "locked": false,
+          "bot": true,
+          "discoverable": true,
+          "indexable": true,
+          "group": false,
+          "created_at": "2025-02-22T00:00:00.000Z",
+          "note": "<p>Unofficial Hacker News Bot, posting Top 10 stories.</p>",
+          "url": "https://mastodon.social/@h4ckernews",
+          "uri": "https://mastodon.social/users/h4ckernews",
+          "avatar": "https://files.mastodon.social/accounts/avatars/114/048/194/944/023/530/original/3a6b93b37c67427d.png",
+          "avatar_static": "https://files.mastodon.social/accounts/avatars/114/048/194/944/023/530/original/3a6b93b37c67427d.png",
+          "header": "https://mastodon.social/headers/original/missing.png",
+          "header_static": "https://mastodon.social/headers/original/missing.png",
+          "followers_count": 703,
+          "following_count": 2,
+          "statuses_count": 10943,
+          "last_status_at": "2025-08-30",
+          "hide_collections": null,
+          "noindex": false,
+          "emojis": [],
+          "roles": [],
+          "fields": [
+            {
+              "name": "Source",
+              "value": "<a href=\"https://news.ycombinator.com\" target=\"_blank\" rel=\"nofollow noopener me\" translate=\"no\"><span class=\"invisible\">https://</span><span class=\"\">news.ycombinator.com</span><span class=\"invisible\"></span></a>",
+              "verified_at": null
+            },
+            {
+              "name": "Maintained by",
+              "value": "<span class=\"h-card\" translate=\"no\"><a href=\"https://mastodon.social/@TheFox21\" class=\"u-url mention\">@<span>TheFox21</span></a></span>",
+              "verified_at": null
+            },
+            {
+              "name": "Hashtags created by",
+              "value": "OpenAI",
+              "verified_at": null
+            }
+          ]
+        },
+        "media_attachments": [],
+        "mentions": [],
+        "tags": [
+          {
+            "name": "hackernews",
+            "url": "https://mastodon.social/tags/hackernews"
+          },
+          {
+            "name": "universityofcambridge",
+            "url": "https://mastodon.social/tags/universityofcambridge"
+          },
+          {
+            "name": "CognitiveAbility",
+            "url": "https://mastodon.social/tags/CognitiveAbility"
+          },
+          {
+            "name": "test",
+            "url": "https://mastodon.social/tags/test"
+          },
+          {
+            "name": "epsychometrics",
+            "url": "https://mastodon.social/tags/epsychometrics"
+          },
+          {
+            "name": "cognitivetesting",
+            "url": "https://mastodon.social/tags/cognitivetesting"
+          },
+          {
+            "name": "EducationInnovation",
+            "url": "https://mastodon.social/tags/EducationInnovation"
+          }
+        ],
+        "emojis": [],
+        "quote": null,
+        "card": {
+          "url": "https://planning.e-psychometrics.com/test/icar60",
+          "title": "Concerto Platform",
+          "description": "",
+          "language": null,
+          "type": "link",
+          "author_name": "",
+          "author_url": "",
+          "provider_name": "",
+          "provider_url": "",
+          "html": "",
+          "width": 0,
+          "height": 0,
+          "image": null,
+          "image_description": "",
+          "embed_url": "",
+          "blurhash": null,
+          "published_at": null,
+          "authors": []
+        },
+        "poll": null
+      }
+    },
+    {
+      "id": "4c024687b553aa21ba8a5ec13658b554df258554",
+      "source": "mastodon",
+      "subsource": "mastodon.social/#test",
+      "author": "Rod2ik \ud83c\uddea\ud83c\uddfa \ud83c\udde8\ud83c\uddf5 \ud83c\uddea\ud83c\uddf8 \ud83c\uddfa\ud83c\udde6 \ud83c\udde8\ud83c\udde6 \ud83c\udde9\ud83c\uddf0 \ud83c\uddec\ud83c\uddf1\u262e\ud83d\udd4a\ufe0f",
+      "title": "A # WOKE # TEACHER # TEST IN # OKLAHOMA ...\ud83d\ude31\ud83d\ude31\ud83d\ude31 https://www. instagram.com/reel/DMkpRDSufjK /?igsh=MX",
+      "text": "A # WOKE # TEACHER # TEST IN # OKLAHOMA ...\ud83d\ude31\ud83d\ude31\ud83d\ude31 https://www. instagram.com/reel/DMkpRDSufjK /?igsh=MXI3MnU4M2p0NDlpdQ==",
+      "url": "https://mastodon.social/@rod2ik/115117042002980826",
+      "published_at": "2025-08-30T09:37:41.428000+00:00",
+      "lang": "fr",
+      "raw": {
+        "id": "115117042002980826",
+        "created_at": "2025-08-30T09:37:41.428Z",
+        "in_reply_to_id": null,
+        "in_reply_to_account_id": null,
+        "sensitive": false,
+        "spoiler_text": "",
+        "visibility": "public",
+        "language": "fr",
+        "uri": "https://mastodon.social/users/rod2ik/statuses/115117042002980826",
+        "url": "https://mastodon.social/@rod2ik/115117042002980826",
+        "replies_count": 0,
+        "reblogs_count": 1,
+        "favourites_count": 1,
+        "edited_at": null,
+        "content": "<p>A <a href=\"https://mastodon.social/tags/WOKE\" class=\"mention hashtag\" rel=\"tag\">#<span>WOKE</span></a> <a href=\"https://mastodon.social/tags/TEACHER\" class=\"mention hashtag\" rel=\"tag\">#<span>TEACHER</span></a> <a href=\"https://mastodon.social/tags/TEST\" class=\"mention hashtag\" rel=\"tag\">#<span>TEST</span></a> IN <a href=\"https://mastodon.social/tags/OKLAHOMA\" class=\"mention hashtag\" rel=\"tag\">#<span>OKLAHOMA</span></a> ...\ud83d\ude31\ud83d\ude31\ud83d\ude31</p><p><a href=\"https://www.instagram.com/reel/DMkpRDSufjK/?igsh=MXI3MnU4M2p0NDlpdQ==\" target=\"_blank\" rel=\"nofollow noopener\" translate=\"no\"><span class=\"invisible\">https://www.</span><span class=\"ellipsis\">instagram.com/reel/DMkpRDSufjK</span><span class=\"invisible\">/?igsh=MXI3MnU4M2p0NDlpdQ==</span></a></p>",
+        "reblog": null,
+        "application": {
+          "name": "Mastodon for Android",
+          "website": "https://app.joinmastodon.org/android"
+        },
+        "account": {
+          "id": "109249077539522039",
+          "username": "rod2ik",
+          "acct": "rod2ik",
+          "display_name": "Rod2ik \ud83c\uddea\ud83c\uddfa \ud83c\udde8\ud83c\uddf5 \ud83c\uddea\ud83c\uddf8 \ud83c\uddfa\ud83c\udde6 \ud83c\udde8\ud83c\udde6 \ud83c\udde9\ud83c\uddf0 \ud83c\uddec\ud83c\uddf1\u262e\ud83d\udd4a\ufe0f",
+          "locked": false,
+          "bot": false,
+          "discoverable": true,
+          "indexable": false,
+          "group": false,
+          "created_at": "2022-10-29T00:00:00.000Z",
+          "note": "<p>Teacher in <a href=\"https://mastodon.social/tags/Maths\" class=\"mention hashtag\" rel=\"tag\">#<span>Maths</span></a> &amp; <a href=\"https://mastodon.social/tags/ComputerScience\" class=\"mention hashtag\" rel=\"tag\">#<span>ComputerScience</span></a><br /><a href=\"https://mastodon.social/tags/OpenSource\" class=\"mention hashtag\" rel=\"tag\">#<span>OpenSource</span></a> <a href=\"https://mastodon.social/tags/foss\" class=\"mention hashtag\" rel=\"tag\">#<span>foss</span></a> <a href=\"https://mastodon.social/tags/dev\" class=\"mention hashtag\" rel=\"tag\">#<span>dev</span></a> <a href=\"https://mastodon.social/tags/AI\" class=\"mention hashtag\" rel=\"tag\">#<span>AI</span></a> <a href=\"https://mastodon.social/tags/IA\" class=\"mention hashtag\" rel=\"tag\">#<span>IA</span></a><br />&amp; Team <a href=\"https://mastodon.social/tags/NSI\" class=\"mention hashtag\" rel=\"tag\">#<span>NSI</span></a> :arch:<br />Posts on <a href=\"https://mastodon.social/tags/Politics\" class=\"mention hashtag\" rel=\"tag\">#<span>Politics</span></a>, <a href=\"https://mastodon.social/tags/Science\" class=\"mention hashtag\" rel=\"tag\">#<span>Science</span></a>, <a href=\"https://mastodon.social/tags/Tech\" class=\"mention hashtag\" rel=\"tag\">#<span>Tech</span></a>, <a href=\"https://mastodon.social/tags/Education\" class=\"mention hashtag\" rel=\"tag\">#<span>Education</span></a>,  <a href=\"https://mastodon.social/tags/AI\" class=\"mention hashtag\" rel=\"tag\">#<span>AI</span></a> <a href=\"https://mastodon.social/tags/crypto\" class=\"mention hashtag\" rel=\"tag\">#<span>crypto</span></a> <a href=\"https://mastodon.social/tags/infosec\" class=\"mention hashtag\" rel=\"tag\">#<span>infosec</span></a> &amp; any stuff. <br />RTs\u2260Endorsement</p><p><a href=\"https://mastodon.social/tags/free\" class=\"mention hashtag\" rel=\"tag\">#<span>free</span></a> as in <a href=\"https://mastodon.social/tags/f\" class=\"mention hashtag\" rel=\"tag\">#<span>f</span></a>..cking <a href=\"https://mastodon.social/tags/free\" class=\"mention hashtag\" rel=\"tag\">#<span>free</span></a> (software, mind &amp; world)</p><p>Let&#39;s follow ! \ud83e\udd18\ud83e\udd19</p>",
+          "url": "https://mastodon.social/@rod2ik",
+          "uri": "https://mastodon.social/users/rod2ik",
+          "avatar": "https://files.mastodon.social/accounts/avatars/109/249/077/539/522/039/original/e1c1e6f9a90f22e1.png",
+          "avatar_static": "https://files.mastodon.social/accounts/avatars/109/249/077/539/522/039/original/e1c1e6f9a90f22e1.png",
+          "header": "https://files.mastodon.social/accounts/headers/109/249/077/539/522/039/original/f54aa6518bf7cd43.jpg",
+          "header_static": "https://files.mastodon.social/accounts/headers/109/249/077/539/522/039/original/f54aa6518bf7cd43.jpg",
+          "followers_count": 698,
+          "following_count": 2410,
+          "statuses_count": 7342,
+          "last_status_at": "2025-08-30",
+          "hide_collections": false,
+          "noindex": false,
+          "emojis": [],
+          "roles": [],
+          "fields": [
+            {
+              "name": "Ici depuis",
+              "value": "29 oct. 2022",
+              "verified_at": null
+            }
+          ]
+        },
+        "media_attachments": [],
+        "mentions": [],
+        "tags": [
+          {
+            "name": "woke",
+            "url": "https://mastodon.social/tags/woke"
+          },
+          {
+            "name": "teacher",
+            "url": "https://mastodon.social/tags/teacher"
+          },
+          {
+            "name": "test",
+            "url": "https://mastodon.social/tags/test"
+          },
+          {
+            "name": "oklahoma",
+            "url": "https://mastodon.social/tags/oklahoma"
+          }
+        ],
+        "emojis": [],
+        "quote": null,
+        "card": {
+          "url": "https://www.instagram.com/reel/DMkpRDSufjK/?igsh=MXI3MnU4M2p0NDlpdQ==",
+          "title": "Colleen Borgert on Instagram: \"Oklahoma\u2019s State Superintendent of Education, Ryan Walters, has just announced that his teachers will take a WOKE test that proves loyalty to the President before they can be even be employed in his state. This is not normal. This is not okay. \n\n#teacher #teacherlife #oklahoma #sooners #teacherlife #mom #dad #parents #backtoschool #educationn#usa #america #mrscolleenb #sendhelp #teaching\"",
+          "description": "68K likes, 6,641 comments - mrs._colleen_b on July 26, 2025: \"Oklahoma\u2019s State Superintendent of Education, Ryan Walters, has just announced that his teachers will take a WOKE test that proves loyalty to the President before they can be even be employed in his state. This is not normal. This is not okay. \n\n#teacher #teacherlife #oklahoma #sooners #teacherlife #mom #dad #parents #backtoschool #educationn#usa #america #mrscolleenb #sendhelp #teaching\". ",
+          "language": "en",
+          "type": "link",
+          "author_name": "",
+          "author_url": "",
+          "provider_name": "Instagram",
+          "provider_url": "",
+          "html": "",
+          "width": 360,
+          "height": 638,
+          "image": "https://files.mastodon.social/cache/preview_cards/images/156/821/828/original/cb0470835775fbc4.jpg",
+          "image_description": "",
+          "embed_url": "",
+          "blurhash": "UWI;q_+tkBS2~WTKRO$%-pxGsAShKQRPXmWA",
+          "published_at": null,
+          "authors": []
+        },
+        "poll": null
+      }
+    },
+    {
+      "id": "efe4574aeade5fe9ed8a56abf69fddcf28e0353f",
+      "source": "mastodon",
+      "subsource": "mastodon.social/#test",
+      "author": "Rod2ik \ud83c\uddea\ud83c\uddfa \ud83c\udde8\ud83c\uddf5 \ud83c\uddea\ud83c\uddf8 \ud83c\uddfa\ud83c\udde6 \ud83c\udde8\ud83c\udde6 \ud83c\udde9\ud83c\uddf0 \ud83c\uddec\ud83c\uddf1 \u262e\ud83d\udd4a\ufe0f",
+      "title": "A #WOKE #TEACHER #TEST IN #OKLAHOMA ...\ud83d\ude31\ud83d\ude31\ud83d\ude31 www.instagram.com/reel/DMkpRDS... Login \u2022 Instagram",
+      "text": "A #WOKE #TEACHER #TEST IN #OKLAHOMA ...\ud83d\ude31\ud83d\ude31\ud83d\ude31 www.instagram.com/reel/DMkpRDS... Login \u2022 Instagram",
+      "url": "https://fed.brid.gy/r/https://bsky.app/profile/did:plc:epi5fsta2mfja2jqbua4dl2f/post/3lxmbloy6ek2l",
+      "published_at": "2025-08-30T09:37:33.426000+00:00",
+      "lang": "fr",
+      "raw": {
+        "id": "115117041631058373",
+        "created_at": "2025-08-30T09:37:33.426Z",
+        "in_reply_to_id": null,
+        "in_reply_to_account_id": null,
+        "sensitive": false,
+        "spoiler_text": "",
+        "visibility": "public",
+        "language": "fr",
+        "uri": "https://bsky.brid.gy/convert/ap/at://did:plc:epi5fsta2mfja2jqbua4dl2f/app.bsky.feed.post/3lxmbloy6ek2l",
+        "url": "https://fed.brid.gy/r/https://bsky.app/profile/did:plc:epi5fsta2mfja2jqbua4dl2f/post/3lxmbloy6ek2l",
+        "replies_count": 0,
+        "reblogs_count": 0,
+        "favourites_count": 0,
+        "edited_at": null,
+        "content": "<p>A <a class=\"hashtag\" rel=\"nofollow noopener\" href=\"https://bsky.app/search?q=%23WOKE\" target=\"_blank\">#WOKE</a> <a class=\"hashtag\" rel=\"nofollow noopener\" href=\"https://bsky.app/search?q=%23TEACHER\" target=\"_blank\">#TEACHER</a> <a class=\"hashtag\" rel=\"nofollow noopener\" href=\"https://bsky.app/search?q=%23TEST\" target=\"_blank\">#TEST</a> IN <a class=\"hashtag\" rel=\"nofollow noopener\" href=\"https://bsky.app/search?q=%23OKLAHOMA\" target=\"_blank\">#OKLAHOMA</a> ...\ud83d\ude31\ud83d\ude31\ud83d\ude31\n\n<a href=\"https://www.instagram.com/reel/DMkpRDSufjK/?igsh=MXI3MnU4M2p0NDlpdQ==\" rel=\"nofollow noopener\" target=\"_blank\">www.instagram.com/reel/DMkpRDS...</a><br><br><a href=\"https://www.instagram.com/reel/DMkpRDSufjK/?igsh=MXI3MnU4M2p0NDlpdQ==\" rel=\"nofollow noopener\" target=\"_blank\">Login \u2022 Instagram</a></p>",
+        "reblog": null,
+        "account": {
+          "id": "113872904008879580",
+          "username": "rod2ik.bsky.social",
+          "acct": "rod2ik.bsky.social@bsky.brid.gy",
+          "display_name": "Rod2ik \ud83c\uddea\ud83c\uddfa \ud83c\udde8\ud83c\uddf5 \ud83c\uddea\ud83c\uddf8 \ud83c\uddfa\ud83c\udde6 \ud83c\udde8\ud83c\udde6 \ud83c\udde9\ud83c\uddf0 \ud83c\uddec\ud83c\uddf1 \u262e\ud83d\udd4a\ufe0f",
+          "locked": false,
+          "bot": false,
+          "discoverable": true,
+          "indexable": true,
+          "group": false,
+          "created_at": "2025-01-22T00:00:00.000Z",
+          "note": "Teacher in #Maths &amp; #ComputerScience\n#OpenSource #foss #dev #AI #IA\n&amp; Team #NSI\nPosts on #Politics, #Science, #Tech, #Education,  #AI #crypto #infosec &amp; any stuff. \nRTs\u2260Endorsement\n\n#free as in #f..cking #free (software, mind &amp; world)\n\nLet's follow ! \ud83e\udd18\ud83e\udd19<br><br>\ud83c\udf09 <a href=\"https://fed.brid.gy/bsky/rod2ik.bsky.social\" rel=\"nofollow noopener\" target=\"_blank\">bridged</a> from \ud83e\udd8b <a href=\"https://bsky.app/profile/rod2ik.bsky.social\" rel=\"nofollow noopener\" target=\"_blank\">rod2ik.bsky.social</a>, follow <a class=\"h-card u-author mention\" rel=\"nofollow noopener\" href=\"https://bsky.brid.gy/bsky.brid.gy\" target=\"_blank\">@bsky.brid.gy</a> to interact",
+          "url": "https://bsky.brid.gy/r/https://bsky.app/profile/rod2ik.bsky.social",
+          "uri": "https://bsky.brid.gy/ap/did:plc:epi5fsta2mfja2jqbua4dl2f",
+          "avatar": "https://files.mastodon.social/cache/accounts/avatars/113/872/904/008/879/580/original/fd461ebb57679778.jpeg",
+          "avatar_static": "https://files.mastodon.social/cache/accounts/avatars/113/872/904/008/879/580/original/fd461ebb57679778.jpeg",
+          "header": "https://files.mastodon.social/cache/accounts/headers/113/872/904/008/879/580/original/c3f3dd43198fc6ec.jpeg",
+          "header_static": "https://files.mastodon.social/cache/accounts/headers/113/872/904/008/879/580/original/c3f3dd43198fc6ec.jpeg",
+          "followers_count": 27,
+          "following_count": 21,
+          "statuses_count": 16,
+          "last_status_at": "2025-08-30",
+          "hide_collections": false,
+          "emojis": [],
+          "fields": [
+            {
+              "name": "Web site",
+              "value": "<a rel=\"nofollow noopener\" href=\"https://bsky.app/profile/rod2ik.bsky.social\" target=\"_blank\"><span class=\"invisible\">https://</span>bsky.app/profile/rod2ik.bsky.social</a>",
+              "verified_at": null
+            }
+          ]
+        },
+        "media_attachments": [],
+        "mentions": [],
+        "tags": [
+          {
+            "name": "woke",
+            "url": "https://mastodon.social/tags/woke"
+          },
+          {
+            "name": "teacher",
+            "url": "https://mastodon.social/tags/teacher"
+          },
+          {
+            "name": "test",
+            "url": "https://mastodon.social/tags/test"
+          },
+          {
+            "name": "oklahoma",
+            "url": "https://mastodon.social/tags/oklahoma"
+          }
+        ],
+        "emojis": [],
+        "quote": null,
+        "card": {
+          "url": "https://www.instagram.com/reel/DMkpRDSufjK/?igsh=MXI3MnU4M2p0NDlpdQ==",
+          "title": "Colleen Borgert on Instagram: \"Oklahoma\u2019s State Superintendent of Education, Ryan Walters, has just announced that his teachers will take a WOKE test that proves loyalty to the President before they can be even be employed in his state. This is not normal. This is not okay. \n\n#teacher #teacherlife #oklahoma #sooners #teacherlife #mom #dad #parents #backtoschool #educationn#usa #america #mrscolleenb #sendhelp #teaching\"",
+          "description": "68K likes, 6,641 comments - mrs._colleen_b on July 26, 2025: \"Oklahoma\u2019s State Superintendent of Education, Ryan Walters, has just announced that his teachers will take a WOKE test that proves loyalty to the President before they can be even be employed in his state. This is not normal. This is not okay. \n\n#teacher #teacherlife #oklahoma #sooners #teacherlife #mom #dad #parents #backtoschool #educationn#usa #america #mrscolleenb #sendhelp #teaching\". ",
+          "language": "en",
+          "type": "link",
+          "author_name": "",
+          "author_url": "",
+          "provider_name": "Instagram",
+          "provider_url": "",
+          "html": "",
+          "width": 360,
+          "height": 638,
+          "image": "https://files.mastodon.social/cache/preview_cards/images/156/821/828/original/cb0470835775fbc4.jpg",
+          "image_description": "",
+          "embed_url": "",
+          "blurhash": "UWI;q_+tkBS2~WTKRO$%-pxGsAShKQRPXmWA",
+          "published_at": null,
+          "authors": []
+        },
+        "poll": null
+      }
+    },
+    {
+      "id": "f97778308cca3ac66aca4380d75bdd1b9f3621ff",
+      "source": "mastodon",
+      "subsource": "mastodon.social/#test",
+      "author": "apfeltalk :verified:",
+      "title": "Insta360 Go Ultra \u2013 Gr\u00f6\u00dfer und bessere Videoqualit\u00e4t Die Insta360 Go Ultra bringt viele Ver\u00e4nderunge",
+      "text": "Insta360 Go Ultra \u2013 Gr\u00f6\u00dfer und bessere Videoqualit\u00e4t Die Insta360 Go Ultra bringt viele Ver\u00e4nderunge gegen\u00fcber der Go 3S, darunter eine bessere Videoqualit\u00e4t und neues Design. Lest hier, ob sich das Update f\u00fcr eure Action-Aufnahmen lohnt. Sensor und Videoqu https://www. apfeltalk.de/magazin/news/inst a360-go-ultra-groesser-und-bessere-videoqualitaet/ # News # Zubehr # Actionkamera # Bildsensor # Bildstabilisierung # DJI # GoUltra # GoPro # Insta360 # MicroSD # Test # Videoqualitt # Weitwinkel",
+      "url": "https://creators.social/@apfeltalk/115116660810401164",
+      "published_at": "2025-08-30T08:00:44+00:00",
+      "lang": "de",
+      "raw": {
+        "id": "115116660766705252",
+        "created_at": "2025-08-30T08:00:44.000Z",
+        "in_reply_to_id": null,
+        "in_reply_to_account_id": null,
+        "sensitive": false,
+        "spoiler_text": "",
+        "visibility": "public",
+        "language": "de",
+        "uri": "https://creators.social/users/apfeltalk/statuses/115116660810401164",
+        "url": "https://creators.social/@apfeltalk/115116660810401164",
+        "replies_count": 0,
+        "reblogs_count": 2,
+        "favourites_count": 0,
+        "edited_at": null,
+        "content": "<p>Insta360 Go Ultra \u2013 Gr\u00f6\u00dfer und bessere Videoqualit\u00e4t<br>Die Insta360 Go Ultra bringt viele Ver\u00e4nderunge gegen\u00fcber der Go 3S, darunter eine bessere Videoqualit\u00e4t und neues Design. Lest hier, ob sich das Update f\u00fcr eure Action-Aufnahmen lohnt.</p><p>Sensor und Videoqu<br><a href=\"https://www.apfeltalk.de/magazin/news/insta360-go-ultra-groesser-und-bessere-videoqualitaet/\" rel=\"nofollow noopener\" target=\"_blank\"><span class=\"invisible\">https://www.</span><span class=\"ellipsis\">apfeltalk.de/magazin/news/inst</span><span class=\"invisible\">a360-go-ultra-groesser-und-bessere-videoqualitaet/</span></a><br><a href=\"https://creators.social/tags/News\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>News</span></a> <a href=\"https://creators.social/tags/Zubehr\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Zubehr</span></a> <a href=\"https://creators.social/tags/Actionkamera\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Actionkamera</span></a> <a href=\"https://creators.social/tags/Bildsensor\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Bildsensor</span></a> <a href=\"https://creators.social/tags/Bildstabilisierung\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Bildstabilisierung</span></a> <a href=\"https://creators.social/tags/DJI\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>DJI</span></a> <a href=\"https://creators.social/tags/GoUltra\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>GoUltra</span></a> <a href=\"https://creators.social/tags/GoPro\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>GoPro</span></a> <a href=\"https://creators.social/tags/Insta360\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Insta360</span></a> <a href=\"https://creators.social/tags/MicroSD\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>MicroSD</span></a> <a href=\"https://creators.social/tags/Test\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Test</span></a> <a href=\"https://creators.social/tags/Videoqualitt\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Videoqualitt</span></a> <a href=\"https://creators.social/tags/Weitwinkel\" class=\"mention hashtag\" rel=\"nofollow noopener\" target=\"_blank\">#<span>Weitwinkel</span></a></p>",
+        "reblog": null,
+        "account": {
+          "id": "109462718185511125",
+          "username": "apfeltalk",
+          "acct": "apfeltalk@creators.social",
+          "display_name": "apfeltalk :verified:",
+          "locked": false,
+          "bot": false,
+          "discoverable": true,
+          "indexable": false,
+          "group": false,
+          "created_at": "2022-12-03T00:00:00.000Z",
+          "note": "<p>Deutschlands gr\u00f6\u00dfte Apple-Community mit Redaktion.</p>",
+          "url": "https://creators.social/@apfeltalk",
+          "uri": "https://creators.social/users/apfeltalk",
+          "avatar": "https://files.mastodon.social/cache/accounts/avatars/109/462/718/185/511/125/original/850061a6063ad333.jpg",
+          "avatar_static": "https://files.mastodon.social/cache/accounts/avatars/109/462/718/185/511/125/original/850061a6063ad333.jpg",
+          "header": "https://files.mastodon.social/cache/accounts/headers/109/462/718/185/511/125/original/9db9ac9a15003a3f.jpg",
+          "header_static": "https://files.mastodon.social/cache/accounts/headers/109/462/718/185/511/125/original/9db9ac9a15003a3f.jpg",
+          "followers_count": 1768,
+          "following_count": 18,
+          "statuses_count": 4189,
+          "last_status_at": "2025-08-30",
+          "hide_collections": false,
+          "emojis": [
+            {
+              "shortcode": "verified",
+              "url": "https://files.mastodon.social/cache/custom_emojis/images/000/455/189/original/76315e921c034992.png",
+              "static_url": "https://files.mastodon.social/cache/custom_emojis/images/000/455/189/static/76315e921c034992.png",
+              "visible_in_picker": true
+            }
+          ],
+          "fields": [
+            {
+              "name": "Community",
+              "value": "<a href=\"https://www.apfeltalk.de\" rel=\"nofollow noopener\" target=\"_blank\"><span class=\"invisible\">https://www.</span><span class=\"\">apfeltalk.de</span><span class=\"invisible\"></span></a>",
+              "verified_at": null
+            },
+            {
+              "name": "Youtube",
+              "value": "<a href=\"https://www.youtube.com/apfeltalk\" rel=\"nofollow noopener\" target=\"_blank\"><span class=\"invisible\">https://www.</span><span class=\"\">youtube.com/apfeltalk</span><span class=\"invisible\"></span></a>",
+              "verified_at": null
+            },
+            {
+              "name": "Instagram",
+              "value": "<a href=\"https://www.instagram.com/apfeltalk_gmbh\" rel=\"nofollow noopener\" target=\"_blank\"><span class=\"invisible\">https://www.</span><span class=\"\">instagram.com/apfeltalk_gmbh</span><span class=\"invisible\"></span></a>",
+              "verified_at": null
+            }
+          ]
+        },
+        "media_attachments": [],
+        "mentions": [],
+        "tags": [
+          {
+            "name": "news",
+            "url": "https://mastodon.social/tags/news"
+          },
+          {
+            "name": "zubehr",
+            "url": "https://mastodon.social/tags/zubehr"
+          },
+          {
+            "name": "Actionkamera",
+            "url": "https://mastodon.social/tags/Actionkamera"
+          },
+          {
+            "name": "bildsensor",
+            "url": "https://mastodon.social/tags/bildsensor"
+          },
+          {
+            "name": "bildstabilisierung",
+            "url": "https://mastodon.social/tags/bildstabilisierung"
+          },
+          {
+            "name": "dji",
+            "url": "https://mastodon.social/tags/dji"
+          },
+          {
+            "name": "goultra",
+            "url": "https://mastodon.social/tags/goultra"
+          },
+          {
+            "name": "gopro",
+            "url": "https://mastodon.social/tags/gopro"
+          },
+          {
+            "name": "insta360",
+            "url": "https://mastodon.social/tags/insta360"
+          },
+          {
+            "name": "microsd",
+            "url": "https://mastodon.social/tags/microsd"
+          },
+          {
+            "name": "test",
+            "url": "https://mastodon.social/tags/test"
+          },
+          {
+            "name": "videoqualitt",
+            "url": "https://mastodon.social/tags/videoqualitt"
+          },
+          {
+            "name": "weitwinkel",
+            "url": "https://mastodon.social/tags/weitwinkel"
+          }
+        ],
+        "emojis": [],
+        "quote": null,
+        "card": {
+          "url": "https://www.apfeltalk.de/magazin/news/insta360-go-ultra-groesser-und-bessere-videoqualitaet/",
+          "title": "Insta360 Go Ultra - Gr\u00f6\u00dfer und bessere Videoqualit\u00e4t",
+          "description": "Ist die Insta360 Go Ultra eine Verbesserung im Vergleich zur Go 3S? Lest unseren Test \u00fcber die neuen Features und Qualit\u00e4t.",
+          "language": "de",
+          "type": "link",
+          "author_name": "",
+          "author_url": "",
+          "provider_name": "Apfeltalk Magazin",
+          "provider_url": "",
+          "html": "",
+          "width": 634,
+          "height": 363,
+          "image": "https://files.mastodon.social/cache/preview_cards/images/160/734/046/original/23dd4ffddf744e14.png",
+          "image_description": "",
+          "embed_url": "",
+          "blurhash": "UdQvwRof?bxut7WBoLt7~qRjD%xut7t7f6Rj",
+          "published_at": "2025-08-30T08:00:43.000Z",
+          "authors": []
+        },
+        "poll": null
+      }
+    },
+    {
+      "id": "2966afa49245e125e54753c0524e70fedf80e03d",
+      "source": "generic_web",
+      "subsource": "Ars Technica",
+      "author": null,
+      "title": "Starship\u2019s heat shield appears to have performed quite well in test",
+      "text": "Starship\u2019s heat shield appears to have performed quite well in test",
+      "url": "https://arstechnica.com/space/2025/08/spacex-got-good-heat-shield-data-for-starship-so-what-comes-next/",
+      "published_at": "2025-08-29T00:00:00",
+      "lang": "en",
+      "raw": null
+    }
+  ]
+}

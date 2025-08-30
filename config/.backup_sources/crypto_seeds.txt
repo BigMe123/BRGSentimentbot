@@ -1,0 +1,21 @@
+# Crypto/Blockchain focused sources
+- coindesk.com
+- cointelegraph.com
+- decrypt.co
+- theblock.co
+- cryptonews.com
+- bitcoinmagazine.com
+- coinjournal.net
+- cryptoslate.com
+- blockworks.co
+- defiant.news
+- ambcrypto.com
+- u.today
+- bitcoinist.com
+- newsbtc.com
+- cryptopotato.com
+- cryptobriefing.com
+- beincrypto.com
+- crypto.news
+- coingape.com
+- dailyhodl.com

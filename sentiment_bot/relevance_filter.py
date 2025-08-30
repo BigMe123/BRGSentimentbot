@@ -694,6 +694,10 @@ class RelevanceFilter:
             # Take best topic score
             score.topic_score = max(topic_scores) if topic_scores else 0.0
             score.topic_signals = list(set(all_signals))  # Deduplicate signals
+        else:
+            # No specific topics = all topics are relevant
+            score.topic_score = 1.0
+            score.topic_signals = ["all_topics"]
 
         # NER enhancement (if available)
         if nlp and (target_region or target_topics):
@@ -719,9 +723,9 @@ class RelevanceFilter:
         if strict:
             if target_region and score.region_score < 0.5:
                 score.drop_reason = "region_mismatch"
-            elif target_topic and score.topic_score < 0.5:
+            elif target_topics and score.topic_score < 0.5:
                 score.drop_reason = "topic_mismatch"
-            elif target_region and target_topic:
+            elif target_region and target_topics:
                 if score.region_score < 0.5 or score.topic_score < 0.5:
                     score.drop_reason = "strict_criteria_not_met"
         else:

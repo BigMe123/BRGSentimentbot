@@ -1,0 +1,4 @@
+# Most challenging European sources (heavy bot protection)
+- politico.eu
+- economist.com
+- telegraph.co.uk

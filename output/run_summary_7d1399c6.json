@@ -1,0 +1,189 @@
+{
+  "run_id": "7d1399c6",
+  "started_at": "2025-08-30T18:28:27.194349",
+  "finished_at": "2025-08-30T18:32:12.747677",
+  "config": {
+    "region": "europe",
+    "topic": "security",
+    "budget_sec": 300,
+    "min_sources": 30,
+    "discover": false,
+    "max_age_hours": 24
+  },
+  "collection": {
+    "attempted_feeds": 120,
+    "articles_raw": 602,
+    "unique_after_dedupe": 578,
+    "fresh_window_h": 24,
+    "fresh_count": 471,
+    "relevant_count": 99
+  },
+  "analysis": {
+    "sentiment_total": -16,
+    "breakdown": {
+      "positive": 21,
+      "negative": 41,
+      "neutral": 37
+    },
+    "avg_sentiment": -0.16071919191919193,
+    "top_triggers": [
+      "ai_disruption",
+      "fx_markets",
+      "geopolitical_risk",
+      "monetary_policy",
+      "energy_prices"
+    ],
+    "top_entities": [
+      {
+        "text": "EU",
+        "type": "ORG",
+        "count": 13
+      },
+      {
+        "text": "Russia",
+        "type": "GPE",
+        "count": 11
+      },
+      {
+        "text": "Europe",
+        "type": "GPE",
+        "count": 11
+      },
+      {
+        "text": "EU",
+        "type": "TICKER",
+        "count": 11
+      },
+      {
+        "text": "France",
+        "type": "GPE",
+        "count": 8
+      },
+      {
+        "text": "FC",
+        "type": "TICKER",
+        "count": 4
+      },
+      {
+        "text": "IE",
+        "type": "TICKER",
+        "count": 4
+      },
+      {
+        "text": "US",
+        "type": "GPE",
+        "count": 3
+      },
+      {
+        "text": "UK",
+        "type": "GPE",
+        "count": 3
+      },
+      {
+        "text": "Britain",
+        "type": "GPE",
+        "count": 3
+      }
+    ],
+    "volatility_index": 0.014516111419274105
+  },
+  "sources": [
+    {
+      "domain": "Latest News From Euronews | Euronews RSS",
+      "articles": 9
+    },
+    {
+      "domain": "Lalibre.be - Les derniers articles",
+      "articles": 8
+    },
+    {
+      "domain": "World news | The Guardian",
+      "articles": 7
+    },
+    {
+      "domain": "France 24 - International breaking news, top stories and headlines",
+      "articles": 6
+    },
+    {
+      "domain": "The Sun",
+      "articles": 6
+    },
+    {
+      "domain": "Blesk.cz",
+      "articles": 6
+    },
+    {
+      "domain": "NU",
+      "articles": 5
+    },
+    {
+      "domain": "n-tv.de - Startseite",
+      "articles": 5
+    },
+    {
+      "domain": "elespanol - Home",
+      "articles": 5
+    },
+    {
+      "domain": "De Telegraaf",
+      "articles": 5
+    },
+    {
+      "domain": "ElDiario.es - ElDiario.es",
+      "articles": 5
+    },
+    {
+      "domain": "BBC News",
+      "articles": 4
+    },
+    {
+      "domain": "HVG",
+      "articles": 4
+    },
+    {
+      "domain": "Nieuwsblad",
+      "articles": 4
+    },
+    {
+      "domain": "The Scotsman",
+      "articles": 4
+    },
+    {
+      "domain": "POLITICO",
+      "articles": 3
+    },
+    {
+      "domain": "Euractiv",
+      "articles": 3
+    },
+    {
+      "domain": "Nieuws, achtergronden en onderzoeksjournalistiek - NRC",
+      "articles": 3
+    },
+    {
+      "domain": "EUbusiness.com | EU news, business and politics",
+      "articles": 2
+    },
+    {
+      "domain": "Aftenposten Title",
+      "articles": 2
+    },
+    {
+      "domain": "Tutte le notizie di  oggi - Giorno",
+      "articles": 2
+    },
+    {
+      "domain": "EUobserver",
+      "articles": 1
+    }
+  ],
+  "diversity": {
+    "sources": 22,
+    "languages": 1,
+    "regions": 1,
+    "editorial_families": 2,
+    "score": 0.8900000000000001
+  },
+  "errors": [],
+  "schema_version": "1.0.0"
+}

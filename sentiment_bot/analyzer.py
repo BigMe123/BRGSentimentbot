@@ -420,6 +420,41 @@ def analyze(text: str) -> Analysis:
     which is ``True`` when the result was produced by the lightweight
     fallback analyzer rather than the full VADER implementation.
     """
+    import threading
+    from functools import wraps
+
+    def timeout(seconds):
+        def decorator(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                result = [None]
+                exception = [None]
+
+                def target():
+                    try:
+                        result[0] = func(*args, **kwargs)
+                    except Exception as e:
+                        exception[0] = e
+
+                thread = threading.Thread(target=target)
+                thread.daemon = True
+                thread.start()
+                thread.join(seconds)
+
+                if thread.is_alive():
+                    # Thread is still running - timeout
+                    raise TimeoutError(
+                        f"Function {func.__name__} timed out after {seconds}s"
+                    )
+
+                if exception[0]:
+                    raise exception[0]
+
+                return result[0]
+
+            return wrapper
+
+        return decorator
 
     # Basic VADER analysis
     vader_scores = _vader.polarity_scores(text)
@@ -432,61 +467,81 @@ def analyze(text: str) -> Analysis:
         "neutral": vader_scores.get("neu", 0.0),
     }
 
-    # BERT sentiment
+    # BERT sentiment with timeout
     bert_score = 0.0
     if _bert:
         try:
-            res = _bert(text[:512])[0]  # BERT has token limit
+
+            @timeout(5)  # 5 second timeout
+            def run_bert():
+                return _bert(text[:512])[0]  # BERT has token limit
+
+            res = run_bert()
             bert_score = res.get("score", 0.0) * (
                 1 if res.get("label") == "POSITIVE" else -1
             )
-        except Exception:
+        except (Exception, TimeoutError):
             pass
 
-    # Zero-shot classification
+    # Zero-shot classification with timeout
     labels: List[str] = []
     if _nli:
         try:
-            candidate_labels = [
-                "threat",
-                "opportunity",
-                "risk",
-                "safe",
-                "urgent",
-                "stable",
-            ]
-            nli_res = _nli(text[:512], candidate_labels=candidate_labels)
+
+            @timeout(5)  # 5 second timeout
+            def run_nli():
+                candidate_labels = [
+                    "threat",
+                    "opportunity",
+                    "risk",
+                    "safe",
+                    "urgent",
+                    "stable",
+                ]
+                return _nli(text[:512], candidate_labels=candidate_labels)
+
+            nli_res = run_nli()
             cand = nli_res.get("labels", [])
             scores = nli_res.get("scores", [])
             # Get top 2 labels with scores > 0.3
             labels = [cand[i] for i, score in enumerate(scores[:2]) if score > 0.3]
-        except Exception:
+        except (Exception, TimeoutError):
             pass
 
-    # Emotion detection
+    # Emotion detection with timeout
     emotion_scores: Dict[str, float] = {}
     if _emotion:
         try:
-            emotions = _emotion(text[:512])
+
+            @timeout(5)  # 5 second timeout
+            def run_emotion():
+                return _emotion(text[:512])
+
+            emotions = run_emotion()
             for emotion in emotions:
                 emotion_scores[emotion["label"]] = emotion["score"]
-        except Exception:
+        except (Exception, TimeoutError):
             pass
 
-    # Text summarization
+    # Text summarization with timeout
     summary = text[:200]
     if _summarizer and len(text) > 300:
         try:
-            # Dynamically adjust max_length based on input length
-            input_text = text[:1000]
-            input_tokens = len(input_text.split())
-            max_length = min(150, max(50, input_tokens // 2))
-            min_length = min(50, max(10, max_length // 3))
 
-            summary = _summarizer(
-                input_text, max_length=max_length, min_length=min_length
-            )[0]["summary_text"]
-        except Exception:
+            @timeout(10)  # 10 second timeout for summarization
+            def run_summarizer():
+                # Dynamically adjust max_length based on input length
+                input_text = text[:1000]
+                input_tokens = len(input_text.split())
+                max_length = min(150, max(50, input_tokens // 2))
+                min_length = min(50, max(10, max_length // 3))
+
+                return _summarizer(
+                    input_text, max_length=max_length, min_length=min_length
+                )[0]["summary_text"]
+
+            summary = run_summarizer()
+        except (Exception, TimeoutError):
             pass
 
     # Calculate text metrics

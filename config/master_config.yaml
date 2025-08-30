@@ -1,0 +1,156 @@
+# Master Configuration for BSG Sentiment Bot
+# This configuration uses the unified master source list
+
+# Source configuration
+sources:
+  use_master_list: true  # Always use the master source manager
+  database: "skb_catalog.db"  # Path to SKB catalog database
+  
+  # Filtering options (optional - use all sources if not specified)
+  filters:
+    # Regions to include (leave empty for all)
+    regions: []  # e.g., ["americas", "europe", "asia"]
+    
+    # Topics to focus on (leave empty for all)
+    topics: []  # e.g., ["economy", "politics", "tech"]
+    
+    # Minimum priority threshold (0.0-1.0)
+    min_priority: 0.0  # Use all sources regardless of priority
+    
+    # Maximum number of sources to use (null for unlimited)
+    max_sources: null
+    
+    # Languages to include (leave empty for all)
+    languages: []  # e.g., ["en", "es", "fr"]
+
+# Bot configuration
+bot:
+  # Analysis settings
+  analysis:
+    sentiment_threshold: 0.3
+    volatility_window: 24  # hours
+    
+  # Performance settings
+  performance:
+    max_concurrent_sources: 10
+    request_timeout: 30  # seconds
+    cache_ttl: 300  # seconds
+    
+  # Output settings
+  output:
+    format: "json"  # json, yaml, or markdown
+    include_statistics: true
+    include_source_metadata: true
+
+# Connector configuration
+connectors:
+  # RSS/Web scraping
+  rss:
+    enabled: true
+    max_items_per_feed: 50
+    
+  # Reddit
+  reddit:
+    enabled: true
+    subreddits: ["worldnews", "economics", "technology"]
+    
+  # Hacker News
+  hackernews:
+    enabled: true
+    max_stories: 100
+    
+  # Twitter/X
+  twitter:
+    enabled: false  # Requires API keys
+    
+  # GDELT
+  gdelt:
+    enabled: true
+    themes: ["ECON_", "POL_", "TECH_"]
+    
+  # Generic web
+  web:
+    enabled: true
+    use_stealth: true  # Use stealth harvester for protected sites
+
+# Harvesting configuration
+harvesting:
+  # Stealth harvester settings
+  stealth:
+    enabled: true
+    use_browser: true
+    max_workers: 5
+    captcha_solver: false  # Set to true if you have 2Captcha API key
+    
+  # RSS discovery
+  rss_discovery:
+    enabled: true
+    auto_discover: true
+    common_paths:
+      - "/rss"
+      - "/feed"
+      - "/rss.xml"
+      - "/feed.xml"
+      - "/atom.xml"
+
+# Logging configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "logs/sentiment_bot.log"
+  max_size: 10485760  # 10MB
+  backup_count: 5
+
+# Scheduling (for automated runs)
+schedule:
+  enabled: false
+  interval: 3600  # seconds (1 hour)
+  
+# Export settings
+export:
+  # Auto-export results
+  auto_export: true
+  export_path: "output"
+  export_formats:
+    - "json"
+    - "csv"
+    - "markdown"
+  
+  # Archive old results
+  archive:
+    enabled: true
+    days_to_keep: 30
+    
+# Advanced settings
+advanced:
+  # Use persistent browser contexts for better performance
+  persistent_browser: true
+  
+  # Enable geolocation spoofing
+  geolocation_spoofing: true
+  
+  # WebRTC leak prevention
+  webrtc_protection: true
+  
+  # Fingerprint rotation frequency
+  fingerprint_rotation: 8  # Rotate every N requests
+  
+  # Database optimization
+  vacuum_on_startup: false
+  optimize_indexes: true
+  
+  # Source validation
+  validate_sources: true
+  remove_dead_sources: false
+  
+# Monitoring and alerts
+monitoring:
+  enabled: false
+  metrics:
+    - "sources_processed"
+    - "articles_analyzed"
+    - "sentiment_scores"
+    - "error_rates"
+  
+  alerts:
+    error_threshold: 0.1  # Alert if error rate > 10%
+    min_sources: 100  # Alert if fewer than 100 sources available

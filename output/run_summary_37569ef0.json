@@ -1,0 +1,102 @@
+{
+  "run_id": "37569ef0",
+  "started_at": "2025-08-30T00:11:06.936522",
+  "finished_at": "2025-08-30T00:11:27.945983",
+  "config": {
+    "region": "europe",
+    "budget_sec": 600,
+    "min_sources": 100,
+    "discover": false,
+    "max_age_hours": 24
+  },
+  "collection": {
+    "attempted_feeds": 54,
+    "articles_raw": 23,
+    "unique_after_dedupe": 23,
+    "fresh_window_h": 24,
+    "fresh_count": 23,
+    "relevant_count": 10
+  },
+  "analysis": {
+    "sentiment_total": -20,
+    "breakdown": {
+      "positive": 2,
+      "negative": 5,
+      "neutral": 3
+    },
+    "avg_sentiment": -0.20727,
+    "top_triggers": [
+      "ai_disruption",
+      "geopolitical_risk",
+      "fx_markets"
+    ],
+    "top_entities": [
+      {
+        "text": "Germany",
+        "type": "GPE",
+        "count": 5
+      },
+      {
+        "text": "France",
+        "type": "GPE",
+        "count": 5
+      },
+      {
+        "text": "Russia",
+        "type": "GPE",
+        "count": 4
+      },
+      {
+        "text": "UN",
+        "type": "ORG",
+        "count": 2
+      },
+      {
+        "text": "Britain",
+        "type": "GPE",
+        "count": 2
+      },
+      {
+        "text": "UN",
+        "type": "TICKER",
+        "count": 2
+      },
+      {
+        "text": "EU",
+        "type": "ORG",
+        "count": 2
+      },
+      {
+        "text": "US",
+        "type": "GPE",
+        "count": 2
+      },
+      {
+        "text": "US",
+        "type": "TICKER",
+        "count": 2
+      },
+      {
+        "text": "EU",
+        "type": "TICKER",
+        "count": 2
+      }
+    ],
+    "volatility_index": 0.1
+  },
+  "sources": [
+    {
+      "domain": "France 24 - International breaking news, top stories and headlines",
+      "articles": 10
+    }
+  ],
+  "diversity": {
+    "sources": 1,
+    "languages": 13,
+    "regions": 1,
+    "editorial_families": 2,
+    "score": 0.7336
+  },
+  "errors": [],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,185 @@
+# Enhanced Stealth Harvester Configuration
+# Advanced anti-detection settings for military-grade web scraping
+
+# Database configuration
+database:
+  path: ".stealth_harvest.db"  # SQLite database file location
+  
+# Performance settings
+performance:
+  max_workers: 5  # Number of concurrent workers for parallel processing
+  base_delay: 3.0  # Base delay between requests (seconds)
+  jitter: 1.5  # Random jitter added to delays (seconds)
+  
+# Browser automation settings
+browser:
+  headless: true  # Run browser in headless mode
+  persistent_contexts: true  # Use persistent browser contexts per domain
+  enable_webrtc_leak_prevention: true  # Prevent WebRTC IP leaks
+  
+# CAPTCHA solving configuration
+captcha:
+  service: "twocaptcha"  # CAPTCHA solving service (twocaptcha, anticaptcha)
+  api_key: ""  # Add your 2Captcha API key here or set CAPTCHA_API_KEY env var
+  
+# Proxy configuration (optional)
+# Add your proxy servers here for IP rotation
+proxies: []
+  # - "http://user:pass@proxy1.example.com:8080"
+  # - "http://user:pass@proxy2.example.com:8080"
+  # - "socks5://user:pass@proxy3.example.com:1080"
+  
+# Geolocation spoofing settings
+geolocation:
+  enabled: true  # Enable geolocation spoofing
+  locations:
+    # New York, USA
+    - latitude: 40.7128
+      longitude: -74.0060
+    # London, UK
+    - latitude: 51.5074
+      longitude: -0.1278
+    # Tokyo, Japan
+    - latitude: 35.6762
+      longitude: 139.6503
+    # San Francisco, USA
+    - latitude: 37.7749
+      longitude: -122.4194
+    # Berlin, Germany
+    - latitude: 52.5200
+      longitude: 13.4050
+    # Sydney, Australia
+    - latitude: -33.8688
+      longitude: 151.2093
+      
+# Advanced bypass strategies
+bypass_strategies:
+  cloudflare:
+    wait_time: 10  # Seconds to wait for Cloudflare challenge
+    retry_count: 3
+  perimeterx:
+    enabled: false  # Requires additional implementation
+  akamai:
+    enabled: false  # Requires additional implementation
+    
+# Request patterns to avoid detection
+stealth_patterns:
+  # Decoy sites to visit for realistic browsing patterns
+  decoy_sites:
+    - "https://www.google.com"
+    - "https://www.wikipedia.org"
+    - "https://www.reddit.com"
+    - "https://www.twitter.com"
+    - "https://www.youtube.com"
+    - "https://www.amazon.com"
+    - "https://news.ycombinator.com"
+    - "https://www.github.com"
+    - "https://www.stackoverflow.com"
+    - "https://www.linkedin.com"
+  
+  # Pattern detection thresholds
+  suspicious_pattern_threshold:
+    timing_variance: 0.5  # Minimum variance in request timing
+    domain_frequency: 0.5  # Maximum frequency for single domain
+    
+# Browser fingerprint profiles
+# These are auto-generated but can be customized here
+fingerprint_profiles:
+  rotate_frequency: 8  # Rotate profile every N requests
+  
+  # Hardware fingerprints to use
+  hardware_options:
+    cpu_cores: [4, 8, 16]
+    memory_gb: [4, 8, 16, 32]
+    
+  # Screen resolutions to rotate through
+  screen_resolutions:
+    - [1920, 1080]
+    - [1366, 768]
+    - [1440, 900]
+    - [2560, 1440]
+    - [1680, 1050]
+    
+# RSS feed discovery settings
+rss_discovery:
+  # Common RSS paths to check
+  common_paths:
+    - "/rss"
+    - "/feed"
+    - "/rss.xml"
+    - "/feed.xml"
+    - "/atom.xml"
+    - "/news.rss"
+    - "/blog/feed"
+    - "/feeds/posts/default"
+    
+  # Validation settings
+  validation:
+    min_content_length: 100  # Minimum RSS content length
+    timeout: 10  # Timeout for RSS validation (seconds)
+    
+# Protection level scoring
+protection_scoring:
+  # Bonus priority for sites with protection
+  protection_bonus:
+    none: 0.0
+    basic: 0.05
+    advanced: 0.10
+    fortress: 0.15
+    
+# Topic detection keywords
+topic_keywords:
+  economy:
+    - "economic"
+    - "finance"
+    - "business"
+    - "market"
+    - "trade"
+    - "investment"
+    - "banking"
+    - "currency"
+  politics:
+    - "politic"
+    - "government"
+    - "policy"
+    - "election"
+    - "parliament"
+    - "congress"
+    - "legislation"
+  security:
+    - "security"
+    - "defense"
+    - "military"
+    - "conflict"
+    - "warfare"
+    - "intelligence"
+    - "terrorism"
+  tech:
+    - "technology"
+    - "tech"
+    - "digital"
+    - "ai"
+    - "software"
+    - "hardware"
+    - "cyber"
+    - "innovation"
+  diplomacy:
+    - "foreign"
+    - "international"
+    - "diplomatic"
+    - "treaty"
+    - "sanctions"
+    - "embassy"
+    
+# Trusted source patterns for priority scoring
+trusted_sources:
+  - "gov"
+  - "edu"
+  - "reuters"
+  - "bbc"
+  - "economist"
+  - "wsj"
+  - "nytimes"
+  - "washingtonpost"
+  - "guardian"
+  - "ft.com"

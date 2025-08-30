@@ -1,0 +1,159 @@
+- domain: "euronews.com"
+  name: "Euronews"
+  topics: ["politics", "economy", "general"]
+  priority: 0.85
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://feeds.feedburner.com/euronews/en/home/"]
+
+- domain: "politico.eu"
+  name: "POLITICO Europe"
+  topics: ["politics", "economy", "elections"]
+  priority: 0.90
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.politico.eu/rss/"]
+
+- domain: "euractiv.com"
+  name: "EurActiv"
+  topics: ["politics", "economy", "tech"]
+  priority: 0.80
+  policy: "allow"  
+  region: "europe"
+  rss_endpoints: ["https://www.euractiv.com/feed/"]
+
+- domain: "europapress.es"
+  name: "Europa Press"
+  topics: ["politics", "general"]
+  priority: 0.75
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.europapress.es/rss/rss.aspx"]
+
+- domain: "thelocal.de"
+  name: "The Local Germany"
+  topics: ["politics", "society"]
+  priority: 0.70
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.thelocal.de/rss"]
+
+- domain: "thelocal.fr"
+  name: "The Local France"
+  topics: ["politics", "society"]
+  priority: 0.70
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.thelocal.fr/rss"]
+
+- domain: "thelocal.it"
+  name: "The Local Italy"
+  topics: ["politics", "society"]
+  priority: 0.70
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.thelocal.it/rss"]
+
+- domain: "thelocal.es"
+  name: "The Local Spain"
+  topics: ["politics", "society"]
+  priority: 0.70
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.thelocal.es/rss"]
+
+- domain: "dw.com"
+  name: "Deutsche Welle"
+  topics: ["politics", "economy", "general"]
+  priority: 0.85
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://rss.dw.com/rdf/rss-en-all"]
+
+- domain: "france24.com"
+  name: "France 24"
+  topics: ["politics", "economy", "general"]
+  priority: 0.85
+  policy: "js_allowed"
+  region: "europe" 
+  rss_endpoints: ["https://www.france24.com/en/rss"]
+
+- domain: "swissinfo.ch"
+  name: "SWI swissinfo.ch"
+  topics: ["politics", "economy"]
+  priority: 0.75
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.swissinfo.ch/rss/eng/news/latest"]
+
+- domain: "yle.fi"
+  name: "Yle News"
+  topics: ["politics", "general"]
+  priority: 0.70
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_UUTISET"]
+
+- domain: "rte.ie"
+  name: "RTÉ News"
+  topics: ["politics", "general"]
+  priority: 0.75
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.rte.ie/rss/news.xml"]
+
+- domain: "thejournal.ie"
+  name: "TheJournal.ie"
+  topics: ["politics", "general"]
+  priority: 0.70
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.thejournal.ie/rss/news"]
+
+- domain: "brusselstimes.com"
+  name: "The Brussels Times"
+  topics: ["politics", "economy"]
+  priority: 0.75
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.brusselstimes.com/rss"]
+
+- domain: "cyprus-mail.com"
+  name: "Cyprus Mail"
+  topics: ["politics", "general"]
+  priority: 0.60
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://cyprus-mail.com/feed/"]
+
+- domain: "neweurope.eu"
+  name: "New Europe"
+  topics: ["politics", "economy"]
+  priority: 0.70
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.neweurope.eu/feed/"]
+
+- domain: "europeanfiles.eu"
+  name: "The European Files"
+  topics: ["politics", "economy"]
+  priority: 0.65
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.europeanfiles.eu/feed"]
+
+- domain: "eubusiness.com"
+  name: "EUbusiness"
+  topics: ["economy", "politics"]
+  priority: 0.70
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.eubusiness.com/rss/news"]
+
+- domain: "euractiv.de"
+  name: "EurActiv Deutschland"
+  topics: ["politics", "economy"]
+  priority: 0.75
+  policy: "allow"
+  region: "europe"
+  rss_endpoints: ["https://www.euractiv.de/feed/"]

@@ -1,0 +1,108 @@
+{
+  "run_id": "c2e8bbca",
+  "started_at": "2025-08-30T14:41:42.061894",
+  "finished_at": "2025-08-30T14:42:14.926953",
+  "config": {
+    "region": "middle_east",
+    "budget_sec": 300,
+    "min_sources": 30,
+    "discover": false,
+    "max_age_hours": 24
+  },
+  "collection": {
+    "attempted_feeds": 2,
+    "articles_raw": 45,
+    "unique_after_dedupe": 42,
+    "fresh_window_h": 24,
+    "fresh_count": 41,
+    "relevant_count": 15
+  },
+  "analysis": {
+    "sentiment_total": -39,
+    "breakdown": {
+      "positive": 2,
+      "negative": 11,
+      "neutral": 2
+    },
+    "avg_sentiment": -0.3996066666666666,
+    "top_triggers": [
+      "ai_disruption",
+      "geopolitical_risk",
+      "monetary_policy",
+      "energy_prices",
+      "green_transition"
+    ],
+    "top_entities": [
+      {
+        "text": "Italy",
+        "type": "GPE",
+        "count": 2
+      },
+      {
+        "text": "EU",
+        "type": "ORG",
+        "count": 1
+      },
+      {
+        "text": "EU",
+        "type": "TICKER",
+        "count": 1
+      },
+      {
+        "text": "UN",
+        "type": "ORG",
+        "count": 1
+      },
+      {
+        "text": "Britain",
+        "type": "GPE",
+        "count": 1
+      },
+      {
+        "text": "Europe",
+        "type": "GPE",
+        "count": 1
+      },
+      {
+        "text": "France",
+        "type": "GPE",
+        "count": 1
+      },
+      {
+        "text": "Germany",
+        "type": "GPE",
+        "count": 1
+      },
+      {
+        "text": "UN",
+        "type": "TICKER",
+        "count": 1
+      },
+      {
+        "text": "United States",
+        "type": "GPE",
+        "count": 1
+      }
+    ],
+    "volatility_index": 0.0
+  },
+  "sources": [
+    {
+      "domain": "Al-Monitor: The Pulse of The Middle East",
+      "articles": 8
+    },
+    {
+      "domain": "Al Jazeera – Breaking News, World News and Video from Al Jazeera",
+      "articles": 7
+    }
+  ],
+  "diversity": {
+    "sources": 2,
+    "languages": 2,
+    "regions": 1,
+    "editorial_families": 1,
+    "score": 0.46266666666666667
+  },
+  "errors": [],
+  "schema_version": "1.0.0"
+}

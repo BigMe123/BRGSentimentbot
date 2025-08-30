@@ -1,0 +1,12 @@
+RUN 1ebb6cb4 | americas · General | 110 relevant | Sentiment +2 (avg 0.03) | Volatility 0.03
+Signals: ai_disruption · monetary_policy · geopolitical_risk · equity_markets · crypto_markets
+Entities: US(16), America(10), AI(8), TO(8), US(7)
+Skews: Pos: 0%, Neg: 0%, Neu: 0%
+Notables:
+ - 🔴 'Yogurt Shop Murders': Austin’s unsolved cold case continues to raise questions 
+ - 🟢 Dyan Cannon denied White House entry after lying about her age on passport docum
+ - 🟢 How to turn a USB flash drive into a portable games console
+ - 🔴 Eliza Labs files antitrust lawsuit against X, alleging AI agent monopolization
+ - 🟢 Bitcoin is for payments; store of value is ‘just a neat byproduct’: BitVM creato
+Actions:
+ - Increase feed refresh frequency or add real-time sources

@@ -12,6 +12,7 @@ from typing import Optional, List, Dict
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
+import rich.box
 from rich.progress import (
     Progress,
     SpinnerColumn,
@@ -25,6 +26,7 @@ from datetime import datetime
 from collections import Counter
 
 from .skb_catalog import get_catalog
+from .master_sources import get_master_sources
 from .selection_planner import SelectionPlanner, SelectionQuotas
 from .source_discovery import SourceDiscovery
 from .relevance_filter import RelevanceFilter
@@ -115,6 +117,11 @@ def run(
         "-d",
         help="Enable active source discovery for obscure topics",
     ),
+    llm_analysis: bool = typer.Option(
+        False,
+        "--llm",
+        help="Use LLM-based analysis (GPT-4.1-mini) instead of HuggingFace models",
+    ),
     output: Optional[str] = typer.Option(
         None, "--output", "-f", help="Output file for results (JSON format)"
     ),
@@ -185,6 +192,7 @@ Target Words: {target_words}"""
             output_dir=output_dir,
             run_id_seed=run_id_seed,
             export_csv=export_csv,
+            llm_analysis=llm_analysis,
         )
     )
 
@@ -204,6 +212,7 @@ async def _run_async(
     output_dir: str,
     run_id_seed: Optional[str],
     export_csv: bool,
+    llm_analysis: bool,
 ):
     """Async main execution."""
 
@@ -336,9 +345,12 @@ async def _run_async(
     )
 
     # Step 4: Analysis
-    console.print("\n[bold]🧠 Analyzing Sentiment...[/bold]")
-
-    results = await _analyze_articles(filtered_articles)
+    if llm_analysis:
+        console.print("\n[bold]🧠 Analyzing Sentiment (LLM)...[/bold]")
+        results = await _analyze_articles_llm(filtered_articles)
+    else:
+        console.print("\n[bold]🧠 Analyzing Sentiment...[/bold]")
+        results = await _analyze_articles(filtered_articles)
 
     # Add freshness metrics to results
     results["freshness_rate"] = freshness_rate
@@ -346,6 +358,7 @@ async def _run_async(
 
     # Build article records for institutional output
     article_records = []
+    all_country_sentiments = []  # Collect country sentiments from all articles
     for article in filtered_articles:
         # Get text content
         text = (
@@ -370,6 +383,13 @@ async def _run_async(
 
         risk_level = entity_extractor.detect_risk_level(text, sentiment_score)
         themes = entity_extractor.extract_themes(text, topic or other)
+
+        # Extract country mentions and analyze sentiment
+        country_mentions = entity_extractor.extract_country_mentions(text)
+        country_sentiments = entity_extractor.analyze_country_sentiment(
+            country_mentions, sentiment_score, text
+        )
+        all_country_sentiments.append(country_sentiments)  # Store for aggregation
 
         # Create article record
         record = ArticleRecord(
@@ -412,7 +432,14 @@ async def _run_async(
     # Step 6: Display Results
     console.print("\n[bold]📊 Results Summary[/bold]")
 
-    _display_results(results, monitor.get_run_metrics())
+    # Generate country insights
+    country_insights = entity_extractor.generate_country_insights(
+        all_country_sentiments
+    )
+
+    _display_results(
+        results, monitor.get_run_metrics(), article_records, country_insights
+    )
 
     # Step 7: Generate institutional outputs
     console.print("\n[bold]💾 Writing Institutional Outputs...[/bold]")
@@ -719,13 +746,16 @@ async def _analyze_articles(articles: List[Dict]) -> Dict:
             "key_insights": [],
         }
 
-    # Analyze each article individually with progress
+    # Analyze each article individually with detailed progress
     console.print(f"Analyzing {len(articles)} articles...")
     analysis_results = []
 
     for i, article in enumerate(articles):
-        if i % 10 == 0:
-            console.print(f"  Progress: {i}/{len(articles)} articles analyzed...")
+        # Show progress for every article
+        title = article.get("title", "Untitled")[:60]
+        console.print(
+            f"  [{i+1}/{len(articles)}] Analyzing: {title}{'...' if len(article.get('title', '')) > 60 else ''}"
+        )
 
         # Get the text content from the article
         text = (
@@ -736,9 +766,41 @@ async def _analyze_articles(articles: List[Dict]) -> Dict:
 
         if text:
             try:
-                # Analyze the text content with a reasonable limit
+                # Show what we're analyzing
                 text_sample = text[:1000]  # Limit text to first 1000 chars for speed
-                analysis = analyze(text_sample)
+                word_count = len(text_sample.split())
+                console.print(
+                    f"    📝 Processing {word_count} words from: {article.get('domain', 'unknown')}"
+                )
+
+                # Add timeout wrapper for individual article analysis
+                import time
+                import threading
+                from concurrent.futures import (
+                    ThreadPoolExecutor,
+                    TimeoutError as FuturesTimeoutError,
+                )
+
+                def analyze_with_timeout(text_sample):
+                    return analyze(text_sample)
+
+                start_time = time.time()
+                console.print(f"    🧠 Running sentiment analysis...")
+
+                # Use ThreadPoolExecutor for timeout
+                with ThreadPoolExecutor(max_workers=1) as executor:
+                    future = executor.submit(analyze_with_timeout, text_sample)
+                    try:
+                        analysis = future.result(timeout=30)  # 30 second timeout
+                    except FuturesTimeoutError:
+                        raise TimeoutError(
+                            f"Article analysis timed out after 30 seconds"
+                        )
+
+                analysis_time = time.time() - start_time
+                console.print(
+                    f"    ✅ Completed in {analysis_time:.2f}s (sentiment: {analysis.vader:.3f})"
+                )
 
                 # Create result dict with the analysis
                 result = {
@@ -751,9 +813,45 @@ async def _analyze_articles(articles: List[Dict]) -> Dict:
                     "sentiment_score": analysis.vader,
                 }
                 analysis_results.append(result)
-            except Exception as e:
-                logger.warning(f"Failed to analyze article: {e}")
+            except (TimeoutError, FuturesTimeoutError) as e:
+                console.print(f"    ❌ TIMEOUT: Article analysis timed out after 30s")
+                logger.error(
+                    f"Article timeout: {title} from {article.get('domain', 'unknown')}"
+                )
                 continue
+            except Exception as e:
+                console.print(f"    ❌ ERROR: {str(e)[:100]}")
+                logger.error(
+                    f"Failed to analyze article '{title}' from {article.get('domain', 'unknown')}: {e}"
+                )
+                import traceback
+
+                logger.debug(f"Full traceback: {traceback.format_exc()}")
+
+                # Try to get more diagnostic info
+                try:
+                    console.print(
+                        f"    🔍 Article details: domain={article.get('domain')}, url={article.get('link', '')[:80]}"
+                    )
+                    console.print(
+                        f"    🔍 Text length: {len(text)} chars, first 100: {text[:100].replace(chr(10), ' ')}"
+                    )
+                except:
+                    console.print(f"    🔍 Could not extract article details")
+                continue
+        else:
+            console.print(f"    ⚠️ SKIPPED: No text content found")
+            continue
+
+    # Final summary
+    total_processed = len(analysis_results)
+    total_attempted = len(articles)
+    success_rate = (
+        (total_processed / total_attempted * 100) if total_attempted > 0 else 0
+    )
+    console.print(
+        f"\n📊 Analysis Complete: {total_processed}/{total_attempted} articles processed ({success_rate:.1f}% success rate)"
+    )
 
     # Calculate aggregate sentiment score (-100 to +100)
     if analysis_results:
@@ -796,6 +894,157 @@ async def _analyze_articles(articles: List[Dict]) -> Dict:
             )
 
     return results
+
+
+async def _analyze_articles_llm(articles: List[Dict]) -> Dict:
+    """Analyze article sentiment using LLM (GPT-4.1-mini)."""
+
+    if not articles:
+        return {
+            "total_articles": 0,
+            "sentiment": {"positive": 0, "negative": 0, "neutral": 0},
+            "sentiment_score": 0,
+            "top_topics": [],
+            "key_insights": [],
+        }
+
+    try:
+        from sentiment_bot.analyzers.llm_analyzer import LLMAnalyzer
+
+        analyzer = LLMAnalyzer()
+
+        console.print(f"Analyzing {len(articles)} articles with LLM...")
+
+        # Prepare documents for LLM analysis
+        docs = []
+        for i, article in enumerate(articles):
+            text = (
+                article.get("content", "")
+                or article.get("description", "")
+                or article.get("title", "")
+            )
+            if text:
+                docs.append({"id": f"article_{i}", "text": text})
+
+        if not docs:
+            return {
+                "total_articles": len(articles),
+                "sentiment": {"positive": 0, "negative": 0, "neutral": 0},
+                "sentiment_score": 0,
+                "top_topics": [],
+                "key_insights": [],
+            }
+
+        # Batch analyze with LLM
+        llm_results = await analyzer.analyze_batch(docs)
+
+        # Convert LLM results to standard format
+        analysis_results = []
+        sentiment_scores = []
+
+        for i, llm_result in enumerate(llm_results):
+            # Map LLM sentiment to standard labels
+            sentiment_label = llm_result.get("sentiment", "neutral").upper()
+            if sentiment_label not in ["POSITIVE", "NEGATIVE", "NEUTRAL"]:
+                sentiment_label = "NEUTRAL"
+
+            # Convert confidence-weighted sentiment to score (-1 to 1 scale)
+            confidence = float(llm_result.get("confidence", 0.5))
+            if sentiment_label == "POSITIVE":
+                sentiment_score = confidence
+            elif sentiment_label == "NEGATIVE":
+                sentiment_score = -confidence
+            else:
+                sentiment_score = 0.0
+
+            result = {
+                "title": articles[i].get("title", "Untitled"),
+                "sentiment_label": sentiment_label,
+                "sentiment_score": sentiment_score,
+                "llm_confidence": confidence,
+                "llm_rationale": llm_result.get("rationale", ""),
+                "llm_entities": llm_result.get("entities", []),
+                "llm_signals": llm_result.get("signals", {}),
+                "llm_summary": llm_result.get("summary", ""),
+            }
+            analysis_results.append(result)
+            sentiment_scores.append(sentiment_score)
+
+        # Calculate aggregate sentiment score
+        aggregate_score = (
+            round(sum(sentiment_scores) / len(sentiment_scores) * 100)
+            if sentiment_scores
+            else 0
+        )
+
+        # Count sentiment distribution
+        sentiment_counts = {
+            "positive": sum(
+                1 for r in analysis_results if r["sentiment_label"] == "POSITIVE"
+            ),
+            "negative": sum(
+                1 for r in analysis_results if r["sentiment_label"] == "NEGATIVE"
+            ),
+            "neutral": sum(
+                1 for r in analysis_results if r["sentiment_label"] == "NEUTRAL"
+            ),
+        }
+
+        # Extract key insights from high-confidence extreme sentiments
+        key_insights = []
+        for result in analysis_results:
+            confidence = result.get("llm_confidence", 0)
+            score = abs(result.get("sentiment_score", 0))
+            if confidence > 0.8 and score > 0.6:  # High confidence + strong sentiment
+                key_insights.append(
+                    {
+                        "title": result["title"],
+                        "sentiment": result["sentiment_label"],
+                        "score": result["sentiment_score"],
+                        "confidence": confidence,
+                        "summary": result.get("llm_summary", ""),
+                        "rationale": result.get("llm_rationale", ""),
+                    }
+                )
+
+        # Extract top topics from entities
+        entity_counts = {}
+        for result in analysis_results:
+            for entity in result.get("llm_entities", []):
+                name = entity.get("name", "")
+                if name and len(name) > 2:  # Filter out very short entities
+                    entity_counts[name] = entity_counts.get(name, 0) + 1
+
+        top_topics = [
+            {"topic": name, "count": count}
+            for name, count in sorted(
+                entity_counts.items(), key=lambda x: x[1], reverse=True
+            )[:10]
+        ]
+
+        results = {
+            "total_articles": len(articles),
+            "sentiment_score": aggregate_score,
+            "sentiment": sentiment_counts,
+            "top_topics": top_topics,
+            "key_insights": key_insights[:5],  # Top 5 insights
+            "llm_stats": analyzer.get_stats(),
+        }
+
+        console.print(
+            f"[green]LLM analysis completed: {len(analysis_results)} articles processed[/green]"
+        )
+        return results
+
+    except ImportError:
+        console.print(
+            "[red]LLM analysis requires OpenAI API key. Check your .env file.[/red]"
+        )
+        return await _analyze_articles(articles)  # Fallback to standard analysis
+    except Exception as e:
+        console.print(f"[red]LLM analysis failed: {e}[/red]")
+        console.print("[yellow]Falling back to standard sentiment analysis...[/yellow]")
+        return await _analyze_articles(articles)  # Fallback to standard analysis
 
 
 def _display_selection_summary(plan):
@@ -846,51 +1095,215 @@ def _display_tuning_actions(actions: Dict):
         console.print(f"[red]✗ Parked: {', '.join(actions['parked'][:5])}[/red]")
 
 
-def _display_results(results: Dict, metrics: Dict):
-    """Display analysis results."""
+def _display_results(
+    results: Dict, metrics: Dict, article_records=None, country_insights=None
+):
+    """Display enhanced analysis results with interactive insights."""
 
-    # Results table
-    table = Table(title="Analysis Results", show_header=False)
-    table.add_column("Metric", style="cyan")
-    table.add_column("Value", style="yellow")
+    # Main Results table
+    table = Table(title="📊 Analysis Overview", show_header=False, box=rich.box.ROUNDED)
+    table.add_column("Metric", style="cyan bold", width=20)
+    table.add_column("Value", style="yellow", width=30)
 
-    table.add_row("Total Articles", str(results["total_articles"]))
+    table.add_row("📄 Total Articles", str(results["total_articles"]))
 
-    # Display sentiment score with color based on value
+    # Enhanced sentiment display with emoji indicators
     score = results.get("sentiment_score", 0)
     if score > 20:
-        score_style = "[green]"
+        score_style = "[bold green]📈 "
+        sentiment_emoji = "🟢"
     elif score < -20:
-        score_style = "[red]"
+        score_style = "[bold red]📉 "
+        sentiment_emoji = "🔴"
     else:
-        score_style = "[yellow]"
+        score_style = "[bold yellow]📊 "
+        sentiment_emoji = "🟡"
 
-    table.add_row("Sentiment Score", f"{score_style}{score:+d}[/]")
-    table.add_row(
-        "Breakdown",
-        f"Pos: {results['sentiment']['positive']}, "
-        f"Neg: {results['sentiment']['negative']}, "
-        f"Neu: {results['sentiment']['neutral']}",
-    )
+    table.add_row("🎯 Sentiment Score", f"{score_style}{score:+d}[/] {sentiment_emoji}")
+
+    # Enhanced breakdown with percentages
+    pos = results["sentiment"]["positive"]
+    neg = results["sentiment"]["negative"]
+    neu = results["sentiment"]["neutral"]
+    total = pos + neg + neu
+    if total > 0:
+        pos_pct = (pos / total) * 100
+        neg_pct = (neg / total) * 100
+        neu_pct = (neu / total) * 100
+        breakdown_text = f"[green]✅ {pos} ({pos_pct:.0f}%)[/] [red]❌ {neg} ({neg_pct:.0f}%)[/] [dim]⚪ {neu} ({neu_pct:.0f}%)[/]"
+    else:
+        breakdown_text = f"Pos: {pos}, Neg: {neg}, Neu: {neu}"
+
+    table.add_row("📋 Distribution", breakdown_text)
 
     console.print(table)
 
-    # Metrics table
-    if metrics:
-        metrics_table = Table(title="Run Metrics", show_header=False)
-        metrics_table.add_column("Metric", style="cyan")
-        metrics_table.add_column("Value", style="green")
+    # Interactive Insights Section
+    if article_records:
+        console.print("\n[bold]🔍 Key Insights[/bold]")
 
-        metrics_table.add_row(
-            "Fetch Success Rate", f"{metrics.get('fetch_success_rate', 0):.1%}"
+        # Find most extreme sentiments
+        if article_records:
+            most_positive = max(
+                article_records, key=lambda x: x.sentiment.score if x.sentiment else -1
+            )
+            most_negative = min(
+                article_records, key=lambda x: x.sentiment.score if x.sentiment else 1
+            )
+
+            # Top themes/issues
+            all_themes = []
+            high_volatility_articles = []
+            for record in article_records:
+                if record.signals and record.signals.themes:
+                    all_themes.extend(record.signals.themes)
+                if record.signals and record.signals.volatility > 0.5:
+                    high_volatility_articles.append(record)
+
+            from collections import Counter
+
+            theme_counts = Counter(all_themes)
+            top_themes = theme_counts.most_common(3)
+
+            # Create insights panel
+            insights = []
+            if most_positive.sentiment and most_positive.sentiment.score > 0.3:
+                insights.append(
+                    f"[green]📈 Most Positive:[/green] \"{most_positive.title[:60]}{'...' if len(most_positive.title) > 60 else ''}\" ({most_positive.sentiment.score:+.2f})"
+                )
+
+            if most_negative.sentiment and most_negative.sentiment.score < -0.3:
+                insights.append(
+                    f"[red]📉 Most Negative:[/red] \"{most_negative.title[:60]}{'...' if len(most_negative.title) > 60 else ''}\" ({most_negative.sentiment.score:+.2f})"
+                )
+
+            if top_themes:
+                theme_list = ", ".join([f"{theme}" for theme, count in top_themes])
+                insights.append(f"[yellow]🏷️ Top Themes:[/yellow] {theme_list}")
+
+            if high_volatility_articles:
+                insights.append(
+                    f"[bold red]⚠️ High Volatility:[/bold red] {len(high_volatility_articles)} articles show significant market risk"
+                )
+
+            # Display relevance insights
+            high_relevance = [r for r in article_records if r.relevance > 0.7]
+            if high_relevance:
+                insights.append(
+                    f"[blue]🎯 High Relevance:[/blue] {len(high_relevance)} articles highly relevant to search"
+                )
+
+            if insights:
+                for insight in insights[:4]:  # Show top 4 insights
+                    console.print(f"  {insight}")
+            else:
+                console.print("  [dim]No significant patterns detected[/dim]")
+
+    # Country Risk & Sentiment Insights
+    if country_insights and (
+        country_insights["most_mentioned"] or country_insights["highest_risk"]
+    ):
+        console.print("\n[bold]🌍 Global Country Analysis[/bold]")
+
+        # Most mentioned countries
+        if country_insights["most_mentioned"]:
+            mentioned_list = []
+            for country_data in country_insights["most_mentioned"][:5]:
+                flag_emoji = _get_country_flag(country_data["country"])
+                mentioned_list.append(
+                    f"{flag_emoji} {country_data['country']} ({country_data['mentions']} mentions)"
+                )
+            console.print(
+                f"  [cyan]📊 Most Mentioned:[/cyan] {', '.join(mentioned_list)}"
+            )
+
+        # Highest risk countries
+        if country_insights["highest_risk"]:
+            risk_list = []
+            for country_data in country_insights["highest_risk"][:3]:
+                flag_emoji = _get_country_flag(country_data["country"])
+                risk_pct = int(country_data["risk_ratio"] * 100)
+                risk_list.append(
+                    f"{flag_emoji} {country_data['country']} ({risk_pct}% high-risk)"
+                )
+            console.print(f"  [red]⚠️ Highest Risk:[/red] {', '.join(risk_list)}")
+
+        # Most positive sentiment
+        if country_insights["most_positive"]:
+            positive_list = []
+            for country_data in country_insights["most_positive"][:3]:
+                flag_emoji = _get_country_flag(country_data["country"])
+                positive_list.append(f"{flag_emoji} {country_data['country']}")
+            console.print(
+                f"  [green]🟢 Positive Sentiment:[/green] {', '.join(positive_list)}"
+            )
+
+        # Most negative sentiment
+        if country_insights["most_negative"]:
+            negative_list = []
+            for country_data in country_insights["most_negative"][:3]:
+                flag_emoji = _get_country_flag(country_data["country"])
+                negative_list.append(f"{flag_emoji} {country_data['country']}")
+            console.print(
+                f"  [red]🔴 Negative Sentiment:[/red] {', '.join(negative_list)}"
+            )
+
+        # Regional summary
+        if country_insights["regional_summary"]:
+            regional_risks = []
+            for region, data in country_insights["regional_summary"].items():
+                total_mentions = data["positive"] + data["negative"] + data["neutral"]
+                if total_mentions > 5:  # Only show active regions
+                    neg_pct = (
+                        int((data["negative"] / total_mentions) * 100)
+                        if total_mentions > 0
+                        else 0
+                    )
+                    if data["high_risk"] > 0:
+                        regional_risks.append(
+                            f"{region} ({data['high_risk']} high-risk, {neg_pct}% negative)"
+                        )
+            if regional_risks:
+                console.print(
+                    f"  [yellow]🌐 Regional Risks:[/yellow] {', '.join(regional_risks)}"
+                )
+
+    # Enhanced Metrics table
+    if metrics:
+        console.print()
+        metrics_table = Table(
+            title="⚡ Performance Metrics", show_header=False, box=rich.box.ROUNDED
+        )
+        metrics_table.add_column("Metric", style="cyan bold", width=20)
+        metrics_table.add_column("Value", style="green", width=15)
+        metrics_table.add_column("Status", style="white", width=15)
+
+        success_rate = metrics.get("fetch_success_rate", 0)
+        success_status = (
+            "🟢 Excellent"
+            if success_rate > 0.9
+            else "🟡 Good" if success_rate > 0.7 else "🔴 Poor"
+        )
+        metrics_table.add_row("🌐 Fetch Success", f"{success_rate:.1%}", success_status)
+
+        freshness_rate = metrics.get("freshness_rate", 0)
+        fresh_status = (
+            "🟢 Fresh"
+            if freshness_rate > 0.5
+            else "🟡 Mixed" if freshness_rate > 0.2 else "🔴 Stale"
         )
         metrics_table.add_row(
-            "Freshness Rate", f"{metrics.get('freshness_rate', 0):.1%}"
+            "🕒 Freshness Rate", f"{freshness_rate:.1%}", fresh_status
         )
-        metrics_table.add_row("Fresh Words", f"{metrics.get('fresh_words', 0):,}")
-        metrics_table.add_row(
-            "Avg Latency", f"{metrics.get('avg_latency_ms', 0):.0f}ms"
+
+        fresh_words = metrics.get("fresh_words", 0)
+        metrics_table.add_row("📝 Fresh Content", f"{fresh_words:,} words", "")
+
+        latency = metrics.get("avg_latency_ms", 0)
+        latency_status = (
+            "🟢 Fast" if latency < 200 else "🟡 OK" if latency < 500 else "🔴 Slow"
         )
+        metrics_table.add_row("⚡ Avg Latency", f"{latency:.0f}ms", latency_status)
 
         console.print(metrics_table)
 
@@ -1097,7 +1510,7 @@ def health(
 @app.command()
 def connectors(
     config: str = typer.Option(
-        "config/sources.yaml",
+        "config/master_config.yaml",
         "--config",
         "-c",
         help="Path to connector configuration YAML",
@@ -1149,14 +1562,16 @@ def connectors(
         output_path.mkdir(parents=True, exist_ok=True)
 
         # Initialize registry
+        console.print(f"[dim]Loading connectors from: {config}[/dim]")
         registry = ConnectorRegistry(config)
+        console.print(f"[dim]Loaded {len(registry.connectors)} connectors[/dim]")
 
         if not registry.connectors:
             console.print(
                 "[red]No connectors configured. Check your config file.[/red]"
             )
             console.print(
-                f"[yellow]Copy config/sources.example.yaml to {config} to get started[/yellow]"
+                f"[yellow]Using master source configuration. Run 'bsgbot stats' to see available sources[/yellow]"
             )
             return
 
@@ -1449,6 +1864,100 @@ def connectors(
     asyncio.run(run_connectors())
 
 
+def _get_country_flag(country: str) -> str:
+    """Get flag emoji for country name."""
+    # Simple mapping of some major countries to flag emojis
+    flag_map = {
+        "United States": "🇺🇸",
+        "USA": "🇺🇸",
+        "US": "🇺🇸",
+        "America": "🇺🇸",
+        "China": "🇨🇳",
+        "Japan": "🇯🇵",
+        "Germany": "🇩🇪",
+        "France": "🇫🇷",
+        "United Kingdom": "🇬🇧",
+        "UK": "🇬🇧",
+        "Britain": "🇬🇧",
+        "Italy": "🇮🇹",
+        "Spain": "🇪🇸",
+        "Canada": "🇨🇦",
+        "Australia": "🇦🇺",
+        "India": "🇮🇳",
+        "Brazil": "🇧🇷",
+        "Russia": "🇷🇺",
+        "South Korea": "🇰🇷",
+        "Mexico": "🇲🇽",
+        "Indonesia": "🇮🇩",
+        "Turkey": "🇹🇷",
+        "Netherlands": "🇳🇱",
+        "Belgium": "🇧🇪",
+        "Switzerland": "🇨🇭",
+        "Austria": "🇦🇹",
+        "Sweden": "🇸🇪",
+        "Norway": "🇳🇴",
+        "Denmark": "🇩🇰",
+        "Finland": "🇫🇮",
+        "Poland": "🇵🇱",
+        "Ukraine": "🇺🇦",
+        "Greece": "🇬🇷",
+        "Portugal": "🇵🇹",
+        "Ireland": "🇮🇪",
+        "Czech Republic": "🇨🇿",
+        "Hungary": "🇭🇺",
+        "Romania": "🇷🇴",
+        "Bulgaria": "🇧🇬",
+        "Croatia": "🇭🇷",
+        "Slovakia": "🇸🇰",
+        "Slovenia": "🇸🇮",
+        "Lithuania": "🇱🇹",
+        "Latvia": "🇱🇻",
+        "Estonia": "🇪🇪",
+        "Israel": "🇮🇱",
+        "Saudi Arabia": "🇸🇦",
+        "Iran": "🇮🇷",
+        "Iraq": "🇮🇶",
+        "Egypt": "🇪🇬",
+        "South Africa": "🇿🇦",
+        "Nigeria": "🇳🇬",
+        "Kenya": "🇰🇪",
+        "Ethiopia": "🇪🇹",
+        "Ghana": "🇬🇭",
+        "Argentina": "🇦🇷",
+        "Chile": "🇨🇱",
+        "Peru": "🇵🇪",
+        "Colombia": "🇨🇴",
+        "Venezuela": "🇻🇪",
+        "Ecuador": "🇪🇨",
+        "Uruguay": "🇺🇾",
+        "Paraguay": "🇵🇾",
+        "Thailand": "🇹🇭",
+        "Vietnam": "🇻🇳",
+        "Philippines": "🇵🇭",
+        "Malaysia": "🇲🇾",
+        "Singapore": "🇸🇬",
+        "Myanmar": "🇲🇲",
+        "Bangladesh": "🇧🇩",
+        "Pakistan": "🇵🇰",
+        "Afghanistan": "🇦🇫",
+        "Sri Lanka": "🇱🇰",
+        "Nepal": "🇳🇵",
+        "Mongolia": "🇲🇳",
+        "New Zealand": "🇳🇿",
+        "Papua New Guinea": "🇵🇬",
+        "Fiji": "🇫🇯",
+        "UAE": "🇦🇪",
+        "Qatar": "🇶🇦",
+        "Kuwait": "🇰🇼",
+        "Jordan": "🇯🇴",
+        "Lebanon": "🇱🇧",
+        "Syria": "🇸🇾",
+        "Yemen": "🇾🇪",
+        "Oman": "🇴🇲",
+    }
+    return flag_map.get(country, "🏳️")  # Default flag for unknown countries
+
+
 @app.command()
 def list_connectors():
     """List all available connector types."""
@@ -1467,7 +1976,7 @@ def list_connectors():
 
     console.print(table)
     console.print(
-        "\n[yellow]To use connectors, create config/sources.yaml based on config/sources.example.yaml[/yellow]"
+        "\n[green]Using master source configuration with unified source list[/green]"
     )
 
 
