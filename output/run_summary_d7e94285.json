@@ -1,0 +1,42 @@
+{
+  "run_id": "d7e94285",
+  "started_at": "2025-08-29T23:53:55.574462",
+  "finished_at": "2025-08-29T23:53:59.137974",
+  "config": {
+    "topic": "economy",
+    "budget_sec": 60,
+    "min_sources": 10,
+    "discover": false,
+    "max_age_hours": 24
+  },
+  "collection": {
+    "attempted_feeds": 31,
+    "articles_raw": 478,
+    "unique_after_dedupe": 470,
+    "fresh_window_h": 24,
+    "fresh_count": 379,
+    "relevant_count": 0
+  },
+  "analysis": {
+    "sentiment_total": 0,
+    "breakdown": {
+      "positive": 0,
+      "negative": 0,
+      "neutral": 0
+    },
+    "avg_sentiment": 0.0,
+    "top_triggers": [],
+    "top_entities": [],
+    "volatility_index": 0.0
+  },
+  "sources": [],
+  "diversity": {
+    "sources": 0,
+    "languages": 5,
+    "regions": 5,
+    "editorial_families": 1,
+    "score": 0.78
+  },
+  "errors": [],
+  "schema_version": "1.0.0"
+}

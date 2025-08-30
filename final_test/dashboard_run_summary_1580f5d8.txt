@@ -1,0 +1,9 @@
+RUN 1580f5d8 | europe · tech | 1 relevant | Sentiment -97 (avg -0.98) | Volatility 0.00
+Signals: fx_markets · ai_disruption
+Entities: EU(1), Russia(1), Europe(1), UK(1), EU(1)
+Skews: Pos: 0%, Neg: 0%, Neu: 0%
+Notables:
+ - 🔴 At least 23 dead in overnight Kyiv attack as UK and EU summon Russian envoys
+Actions:
+ - Review negative sentiment drivers in tech
+ - Expand source coverage for europe

@@ -12,6 +12,7 @@ from langchain.vectorstores import FAISS
 from .chat_agent import ChatAgent
 from .config import settings
 
+
 def launch() -> None:  # pragma: no cover – requires network & UI
     """
     Start a Gradio chat UI on settings.GRADIO_PORT.
@@ -24,17 +25,13 @@ def launch() -> None:  # pragma: no cover – requires network & UI
 
     if vector_path.exists():
         vs = FAISS.load_local(
-            str(vector_path),
-            embeddings,
-            allow_dangerous_deserialization=True
+            str(vector_path), embeddings, allow_dangerous_deserialization=True
         )
     else:
         vs = FAISS.from_texts([], embeddings)
 
     # Instantiate chat agent with an OpenAI API key from env or settings
-    openai_key = os.getenv("OPENAI_API_KEY") or getattr(
-        settings, "OPENAI_API_KEY", ""
-    )
+    openai_key = os.getenv("OPENAI_API_KEY") or getattr(settings, "OPENAI_API_KEY", "")
     if not openai_key:
         raise RuntimeError(
             "OpenAI API key not provided. Set OPENAI_API_KEY in the environment or"
@@ -56,8 +53,12 @@ def launch() -> None:  # pragma: no cover – requires network & UI
             history = history + [(message, reply)]
             return "", history
 
-        send_btn.click(respond, inputs=[user_input, chatbot], outputs=[user_input, chatbot])
-        user_input.submit(respond, inputs=[user_input, chatbot], outputs=[user_input, chatbot])
+        send_btn.click(
+            respond, inputs=[user_input, chatbot], outputs=[user_input, chatbot]
+        )
+        user_input.submit(
+            respond, inputs=[user_input, chatbot], outputs=[user_input, chatbot]
+        )
 
     demo.launch(
         server_name="0.0.0.0",

@@ -16,9 +16,7 @@ def load_example_data(path: Path | None = None) -> pd.DataFrame:
     if db_path.exists():
         try:
             con = sqlite3.connect(db_path)
-            df = pd.read_sql_query(
-                "SELECT sector, time, volatility FROM snapshot", con
-            )
+            df = pd.read_sql_query("SELECT sector, time, volatility FROM snapshot", con)
             con.close()
             if not df.empty:
                 return df
@@ -41,7 +39,9 @@ class InferenceResult:
     ppc: dict
 
 
-def fit_hierarchical(data: pd.DataFrame, draws: int = 500, tune: int = 500) -> InferenceResult:
+def fit_hierarchical(
+    data: pd.DataFrame, draws: int = 500, tune: int = 500
+) -> InferenceResult:
     """Fit the hierarchical volatility model using PyMC."""
 
     import pymc as pm
@@ -87,7 +87,8 @@ def sample_predictive(
     beta = posterior["beta"].stack(sample=("chain", "draw")).values
     sigma = posterior["sigma_obs"].stack(sample=("chain", "draw")).values
     alpha = (
-        posterior["alpha"].stack(sample=("chain", "draw"))
+        posterior["alpha"]
+        .stack(sample=("chain", "draw"))
         .transpose("sample", "sector")
         .values
     )

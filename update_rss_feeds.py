@@ -17,30 +17,32 @@ RSS_UPDATES = {
     "economist.com": ["https://www.economist.com/feeds/print-sections/77/business.xml"],
 }
 
+
 def update_rss_feeds():
     """Update RSS feeds in the database."""
-    conn = sqlite3.connect('skb_catalog.db')
+    conn = sqlite3.connect("skb_catalog.db")
     cursor = conn.cursor()
-    
+
     for domain, rss_endpoints in RSS_UPDATES.items():
         # Get current data
         cursor.execute("SELECT data FROM sources WHERE domain = ?", (domain,))
         row = cursor.fetchone()
-        
+
         if row:
             data = json.loads(row[0])
-            data['rss_endpoints'] = rss_endpoints
-            
+            data["rss_endpoints"] = rss_endpoints
+
             # Update the record
             cursor.execute(
                 "UPDATE sources SET data = ? WHERE domain = ?",
-                (json.dumps(data), domain)
+                (json.dumps(data), domain),
             )
             print(f"Updated {domain} with RSS: {rss_endpoints}")
-    
+
     conn.commit()
     conn.close()
     print("RSS feeds updated successfully")
+
 
 if __name__ == "__main__":
     update_rss_feeds()

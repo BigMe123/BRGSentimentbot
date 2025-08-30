@@ -1,0 +1,117 @@
+{
+  "run_id": "0589c8a1",
+  "started_at": "2025-08-29T23:57:22.226893",
+  "finished_at": "2025-08-29T23:58:24.809293",
+  "config": {
+    "region": "asia",
+    "topic": "elections",
+    "budget_sec": 300,
+    "min_sources": 30,
+    "discover": false,
+    "max_age_hours": 24
+  },
+  "collection": {
+    "attempted_feeds": 5,
+    "articles_raw": 100,
+    "unique_after_dedupe": 100,
+    "fresh_window_h": 24,
+    "fresh_count": 81,
+    "relevant_count": 17
+  },
+  "analysis": {
+    "sentiment_total": 22,
+    "breakdown": {
+      "positive": 8,
+      "negative": 5,
+      "neutral": 4
+    },
+    "avg_sentiment": 0.22096470588235295,
+    "top_triggers": [
+      "ai_disruption",
+      "geopolitical_risk",
+      "monetary_policy",
+      "energy_prices",
+      "green_transition"
+    ],
+    "top_entities": [
+      {
+        "text": "India",
+        "type": "GPE",
+        "count": 6
+      },
+      {
+        "text": "Japan",
+        "type": "GPE",
+        "count": 5
+      },
+      {
+        "text": "China",
+        "type": "GPE",
+        "count": 4
+      },
+      {
+        "text": "PM",
+        "type": "TICKER",
+        "count": 3
+      },
+      {
+        "text": "US",
+        "type": "GPE",
+        "count": 3
+      },
+      {
+        "text": "US",
+        "type": "TICKER",
+        "count": 3
+      },
+      {
+        "text": "AFP",
+        "type": "TICKER",
+        "count": 2
+      },
+      {
+        "text": "Asia",
+        "type": "GPE",
+        "count": 2
+      },
+      {
+        "text": "TTP",
+        "type": "TICKER",
+        "count": 2
+      },
+      {
+        "text": "FO",
+        "type": "TICKER",
+        "count": 2
+      }
+    ],
+    "volatility_index": 0.02486785591695689
+  },
+  "sources": [
+    {
+      "domain": "The Dawn News - Home",
+      "articles": 6
+    },
+    {
+      "domain": "Times of India",
+      "articles": 5
+    },
+    {
+      "domain": "The News International - National",
+      "articles": 4
+    },
+    {
+      "domain": "India Latest News: Top National Headlines Today & Breaking News | The Hindu",
+      "articles": 2
+    }
+  ],
+  "diversity": {
+    "sources": 4,
+    "languages": 1,
+    "regions": 1,
+    "editorial_families": 1,
+    "score": 0.4966666666666667
+  },
+  "errors": [],
+  "schema_version": "1.0.0"
+}

@@ -31,6 +31,4 @@ class ChatAgent:
             print(
                 "[ERROR] Model returned None. Possible issue with OpenAI API or input."
             )
-            return (
-                "[Error] No response received from model. Try again later or check logs."
-            )
+            return "[Error] No response received from model. Try again later or check logs."

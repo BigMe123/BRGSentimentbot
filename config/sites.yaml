@@ -1,0 +1,33 @@
+# Configuration for generic web scraping
+# Define CSS selectors for different sites
+
+sites:
+  - name: "TechCrunch"
+    url: "https://techcrunch.com/"
+    selector: "article"
+    title: "h2.post-block__title"
+    body: "div.post-block__content"
+    link: "h2.post-block__title a"
+    date: "time"
+    lang: "en"
+    limit: 20
+    
+  - name: "Ars Technica"
+    url: "https://arstechnica.com/"
+    selector: "article"
+    title: "h2"
+    body: "p.excerpt"
+    link: "h2 a"
+    date: "time"
+    lang: "en"
+    limit: 20
+    
+  - name: "The Register"
+    url: "https://www.theregister.com/"
+    selector: "article.story"
+    title: "h4"
+    body: "div.standfirst"
+    link: "h4 a"
+    date: "span.time_stamp"
+    lang: "en"
+    limit: 20

@@ -1,4 +1,5 @@
 """Explainability tools using gradient-based attributions."""
+
 from __future__ import annotations
 
 from typing import Dict
@@ -7,9 +8,7 @@ import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 _tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
-_model = AutoModelForSequenceClassification.from_pretrained(
-    "distilbert-base-uncased"
-)
+_model = AutoModelForSequenceClassification.from_pretrained("distilbert-base-uncased")
 _model.eval()
 
 

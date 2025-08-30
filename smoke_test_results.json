@@ -1,0 +1,56 @@
+{
+  "timestamp": "2025-08-29T23:07:15.678431",
+  "tests": {
+    "utility_functions": [
+      "\u2713 parse_since_window('7d') works",
+      "\u2713 parse_since_window('24h') works",
+      "\u2713 keyword_match with title match works",
+      "\u2713 keyword_match with text match works",
+      "\u2713 keyword_match correctly rejects non-matches",
+      "\u2705 PASS: utility_functions "
+    ],
+    "connector_registry": [
+      "\u2713 reddit connector registered",
+      "\u2713 google_news connector registered",
+      "\u2713 hackernews connector registered",
+      "\u2713 hackernews_search connector registered",
+      "\u2713 stackexchange connector registered",
+      "\u2713 mastodon connector registered",
+      "\u2713 bluesky connector registered",
+      "\u2713 youtube connector registered",
+      "\u2713 wikipedia connector registered",
+      "\u2713 gdelt connector registered",
+      "\u2713 generic_web connector registered",
+      "\u2713 twitter connector registered",
+      "\u2713 HackerNews search connector properly registered",
+      "\u2705 PASS: connector_registry "
+    ],
+    "connector_initialization": [
+      "\u2713 Reddit search mode initialization",
+      "\u2713 Google News fan-out initialization",
+      "\u2713 HackerNews search initialization",
+      "\u2705 PASS: connector_initialization "
+    ],
+    "configuration_loading": [
+      "\u2713 Configuration loaded successfully",
+      "\u2705 PASS: configuration_loading "
+    ],
+    "acceptance_criteria": [
+      "\u2713 Google News potential: 4800",
+      "\u2713 Reddit potential: 1200",
+      "\u2713 Twitter potential: 2400",
+      "\u2713 HackerNews Search potential: 1800",
+      "\u2713 Total potential yield: 10200",
+      "\u2713 Conservative estimate (1020) exceeds 'dozens+'",
+      "\u2705 PASS: acceptance_criteria Potential yield: 10200, Conservative: 1020"
+    ],
+    "live_connector": [
+      "\u23ed\ufe0f  SKIP: live_connector Skipped in quick mode"
+    ]
+  },
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "skipped": 1
+  }
+}

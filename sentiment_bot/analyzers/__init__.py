@@ -8,10 +8,10 @@ from .cluster import DocumentClusterer
 from .sarcasm import SarcasmDetector
 
 __all__ = [
-    'SentimentEnsemble',
-    'AspectExtractor', 
-    'AspectSentimentAnalyzer',
-    'TopicAnalyzer',
-    'DocumentClusterer',
-    'SarcasmDetector'
+    "SentimentEnsemble",
+    "AspectExtractor",
+    "AspectSentimentAnalyzer",
+    "TopicAnalyzer",
+    "DocumentClusterer",
+    "SarcasmDetector",
 ]

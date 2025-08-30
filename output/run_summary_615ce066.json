@@ -1,0 +1,104 @@
+{
+  "run_id": "615ce066",
+  "started_at": "2025-08-29T23:53:36.359530",
+  "finished_at": "2025-08-29T23:54:10.361647",
+  "config": {
+    "region": "americas",
+    "budget_sec": 300,
+    "min_sources": 30,
+    "discover": false,
+    "max_age_hours": 24
+  },
+  "collection": {
+    "attempted_feeds": 7,
+    "articles_raw": 73,
+    "unique_after_dedupe": 73,
+    "fresh_window_h": 24,
+    "fresh_count": 64,
+    "relevant_count": 4
+  },
+  "analysis": {
+    "sentiment_total": -96,
+    "breakdown": {
+      "positive": 0,
+      "negative": 4,
+      "neutral": 0
+    },
+    "avg_sentiment": -0.96865,
+    "top_triggers": [
+      "geopolitical_risk",
+      "ai_disruption",
+      "green_transition",
+      "monetary_policy",
+      "political_risk"
+    ],
+    "top_entities": [
+      {
+        "text": "US",
+        "type": "GPE",
+        "count": 3
+      },
+      {
+        "text": "CLICK",
+        "type": "TICKER",
+        "count": 3
+      },
+      {
+        "text": "HERE",
+        "type": "TICKER",
+        "count": 3
+      },
+      {
+        "text": "TO",
+        "type": "TICKER",
+        "count": 3
+      },
+      {
+        "text": "GET",
+        "type": "TICKER",
+        "count": 3
+      },
+      {
+        "text": "FOX",
+        "type": "TICKER",
+        "count": 3
+      },
+      {
+        "text": "NEWS",
+        "type": "TICKER",
+        "count": 3
+      },
+      {
+        "text": "APP",
+        "type": "TICKER",
+        "count": 3
+      },
+      {
+        "text": "US",
+        "type": "TICKER",
+        "count": 2
+      },
+      {
+        "text": "AMID",
+        "type": "TICKER",
+        "count": 2
+      }
+    ],
+    "volatility_index": 0.1336373627942163
+  },
+  "sources": [
+    {
+      "domain": "Latest & Breaking News on Fox News",
+      "articles": 4
+    }
+  ],
+  "diversity": {
+    "sources": 1,
+    "languages": 1,
+    "regions": 1,
+    "editorial_families": 1,
+    "score": 0.5193333333333333
+  },
+  "errors": [],
+  "schema_version": "1.0.0"
+}

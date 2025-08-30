@@ -1,0 +1,12 @@
+RUN faf271f4 | asia · elections | 17 relevant | Sentiment +22 (avg 0.22) | Volatility 0.02
+Signals: ai_disruption · geopolitical_risk · monetary_policy · energy_prices · green_transition
+Entities: India(6), Japan(5), China(4), PM(3), US(3)
+Skews: Pos: 0%, Neg: 0%, Neu: 0%
+Notables:
+ - 🟢 Pakistan shaping up well, says skipper Salman ahead of tri-series
+ - 🔴 Kabul tries to pin blame for ‘drone strike’ on Pakistan
+ - 🟢 European nuclear research body reviews Pakistan’s progress in science and techno
+ - 🟢 Pakistan agrees to consider ‘diplomatic relations’ with Armenia
+ - 🟢 Agha, Rauf star as Pakistan down Afghanistan in tri-series opener
+Actions:
+ - Expand source coverage for asia

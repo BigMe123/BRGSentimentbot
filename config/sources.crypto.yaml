@@ -1,0 +1,127 @@
+# Crypto-focused Configuration Example
+# Demonstrates keyword fan-out with "crypto,blockchain,bitcoin,ethereum,web3,defi"
+# Usage: bsgbot connectors --config config/sources.crypto.yaml --keywords "crypto,blockchain,bitcoin,ethereum,web3,defi" --limit 400 --since 7d
+
+sources:
+  # Google News - Fan-out across editions and queries  
+  - type: google_news
+    queries:
+      - "(crypto OR cryptocurrency)"
+      - "blockchain"
+      - "bitcoin"
+      - "ethereum"
+      - "web3"
+      - "defi"
+    editions:
+      - "en-US"
+      - "en-GB"
+      - "en-CA"
+    per_query_cap: 100
+    delay_ms: 300
+
+  # Reddit Search - Fan-out across crypto queries
+  - type: reddit
+    queries:
+      - "cryptocurrency"
+      - "blockchain"
+      - "bitcoin"
+      - "ethereum"
+      - "defi"
+      - "web3"
+    sort: new
+    time: week
+    limit_per_sub: 100
+    delay_ms: 300
+
+  # Twitter/X - Fan-out with date filters
+  - type: twitter
+    queries:
+      - '"crypto" OR "cryptocurrency" since:2025-08-20'
+      - '"blockchain" lang:en since:2025-08-20'
+      - '"bitcoin" lang:en since:2025-08-20'
+      - '"ethereum" lang:en since:2025-08-20'
+      - '"defi" lang:en since:2025-08-20'
+      - '"web3" lang:en since:2025-08-20'
+    max_per_query: 100
+    delay_ms: 0
+
+  # HackerNews Search via Algolia
+  - type: hackernews_search
+    queries:
+      - "cryptocurrency"
+      - "blockchain"
+      - "bitcoin"
+      - "ethereum"
+      - "web3"
+      - "defi"
+    hits_per_page: 50
+    pages: 2
+    delay_ms: 100
+
+  # HackerNews Traditional (for comparison)
+  - type: hackernews
+    categories:
+      - top
+      - new
+    max_stories: 50
+    
+  # StackExchange - Crypto-specific sites
+  - type: stackexchange
+    sites:
+      - bitcoin
+      - ethereum
+      - monero
+    queries:
+      - "cryptocurrency"
+      - "blockchain"
+      - "defi"
+    pages: 2
+    pagesize: 50
+    delay_ms: 200
+
+  # Mastodon - Crypto hashtags
+  - type: mastodon
+    instance: mastodon.social
+    hashtags:
+      - "crypto"
+      - "blockchain" 
+      - "bitcoin"
+      - "ethereum"
+      - "defi"
+      - "web3"
+    limit_per_tag: 50
+    delay_ms: 500
+
+  # Bluesky - Crypto queries
+  - type: bluesky
+    queries:
+      - "crypto"
+      - "blockchain"
+      - "bitcoin"
+      - "ethereum"
+      - "defi"
+      - "web3"
+    limit_per_query: 50
+    delay_ms: 1000
+
+  # Wikipedia - Crypto topics
+  - type: wikipedia
+    queries:
+      - "cryptocurrency"
+      - "blockchain"
+      - "bitcoin"
+      - "ethereum"
+      - "decentralized finance"
+      - "web3"
+    max_per_query: 5
+    delay_ms: 200
+
+  # GDELT - Crypto news events
+  - type: gdelt
+    queries:
+      - "cryptocurrency"
+      - "blockchain"
+      - "bitcoin"
+      - "ethereum"
+    max_per_query: 100
+    delay_ms: 500

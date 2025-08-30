@@ -1,0 +1,12 @@
+RUN 0a922ea6 | americas · General | 4 relevant | Sentiment -96 (avg -0.97) | Volatility 0.13
+Signals: geopolitical_risk · ai_disruption · green_transition · monetary_policy · political_risk
+Entities: US(3), CLICK(3), HERE(3), TO(3), GET(3)
+Skews: Pos: 0%, Neg: 0%, Neu: 0%
+Notables:
+ - 🔴 CDC warns of 'enhanced' virus risk for travelers amid outbreak spread by mosquit
+ - 🔴 Fox News Politics Newsletter: Complex Russia and US relationship continues
+ - 🔴 Minnesota Gov. Tim Walz says it's time to 'take serious action' after deadly sch
+ - 🔴 Pro-Palestinian conference panelist calls US ‘evil,’ urges ‘destroying the idea 
+Actions:
+ - Review negative sentiment drivers in sector
+ - Expand source coverage for americas

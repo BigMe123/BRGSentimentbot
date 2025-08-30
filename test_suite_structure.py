@@ -14,14 +14,14 @@ suite = ProductionReadinessSuite()
 
 # Check all 8 phases exist
 phases = [
-    'phase1_canary',
-    'phase2_functional', 
-    'phase3_incrementality',
-    'phase4_chaos',
-    'phase5_load',
-    'phase6_soak',
-    'phase7_governance',
-    'phase8_modeling',
+    "phase1_canary",
+    "phase2_functional",
+    "phase3_incrementality",
+    "phase4_chaos",
+    "phase5_load",
+    "phase6_soak",
+    "phase7_governance",
+    "phase8_modeling",
 ]
 
 print("\n✅ PHASE METHODS:")
@@ -37,12 +37,12 @@ for phase_name in phases:
 
 # Check key helper methods
 helpers = [
-    '_generate_final_report',
-    '_create_failure_report',
-    '_save_artifact',
-    '_verify_long_doc_capped',
-    '_analyze_sources',
-    '_analyze_freshness',
+    "_generate_final_report",
+    "_create_failure_report",
+    "_save_artifact",
+    "_verify_long_doc_capped",
+    "_analyze_sources",
+    "_analyze_freshness",
 ]
 
 print("\n✅ HELPER METHODS:")
@@ -67,11 +67,11 @@ print(f"  • SLOs configured: {len(suite.config['slos'])}")
 # Show acceptance criteria structure from Phase 1
 print("\n✅ PHASE 1 ACCEPTANCE CRITERIA (Example):")
 example_criteria = {
-    'success_ge_85': 'Fetch success rate ≥ 85%',
-    'p95_le_6s': 'P95 latency ≤ 6 seconds',
-    'headless_le_5': 'Headless usage ≤ 5%',
-    'top1_le_25': 'Top-1 source share ≤ 25%',
-    'fresh_ge_70': 'Fresh articles ≥ 70%',
+    "success_ge_85": "Fetch success rate ≥ 85%",
+    "p95_le_6s": "P95 latency ≤ 6 seconds",
+    "headless_le_5": "Headless usage ≤ 5%",
+    "top1_le_25": "Top-1 source share ≤ 25%",
+    "fresh_ge_70": "Fresh articles ≥ 70%",
 }
 
 for key, desc in example_criteria.items():

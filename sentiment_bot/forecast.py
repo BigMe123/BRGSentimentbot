@@ -31,7 +31,9 @@ class VAEForecast:
         Length of the training windows used for reconstruction.
     """
 
-    def __init__(self, hidden_dim: int = 32, latent_dim: int = 16, seq_len: int = 10) -> None:
+    def __init__(
+        self, hidden_dim: int = 32, latent_dim: int = 16, seq_len: int = 10
+    ) -> None:
         torch.manual_seed(0)
         self.seq_len = seq_len
 
@@ -88,7 +90,9 @@ class VAEForecast:
             loss.backward()
             self.optim.step()
 
-        self.last_seq = torch.tensor(series.values[-self.seq_len :], dtype=torch.float32)
+        self.last_seq = torch.tensor(
+            series.values[-self.seq_len :], dtype=torch.float32
+        )
         return self
 
     # ------------------------------------------------------------------
@@ -131,7 +135,9 @@ class VAEForecast:
 class GANForecast:
     """Tiny WGAN‑GP for sequence generation."""
 
-    def __init__(self, noise_dim: int = 16, hidden_dim: int = 32, seq_len: int = 10) -> None:
+    def __init__(
+        self, noise_dim: int = 16, hidden_dim: int = 32, seq_len: int = 10
+    ) -> None:
         torch.manual_seed(0)
         self.seq_len = seq_len
         self.noise_dim = noise_dim
@@ -191,7 +197,9 @@ class GANForecast:
             gen_loss.backward()
             self.gen_opt.step()
 
-        self.last_seq = torch.tensor(series.values[-self.seq_len :], dtype=torch.float32)
+        self.last_seq = torch.tensor(
+            series.values[-self.seq_len :], dtype=torch.float32
+        )
         return self
 
     # ------------------------------------------------------------------
@@ -224,4 +232,3 @@ class GANForecast:
 
 
 __all__ = ["VAEForecast", "GANForecast"]
-

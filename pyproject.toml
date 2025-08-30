@@ -76,12 +76,58 @@ ruff = "^0.4.8"
 black = "^24.4.2"
 mypy = "^1.8"
 coverage = "^7.5"
+pre-commit = "^4.3.0"
+pytest-cov = "^6.2.1"
+types-pyyaml = "^6.0.12.20250822"
+types-requests = "^2.32.4.20250809"
+pandas-stubs = "^2.3.2.250827"
+types-python-dateutil = "^2.9.0.20250822"
+types-networkx = "^3.5.0.20250830"
 
 [tool.poetry.scripts]
 # Unified CLI - the ONLY command you need
 bsgbot = "sentiment_bot.cli_unified:app"
 # Enhanced v2 with all fixes
 bsgbot-v2 = "sentiment_bot.cli_enhanced_v2:app"
+
+[tool.mypy]
+python_version = "3.12"
+strict = false
+ignore_missing_imports = true
+# comment out the next line later if you want stricter style
+no_implicit_optional = false
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unreachable = true
+exclude = [
+  "tests/fixtures/.*",
+]
+
+# Silence noisy third-party ecosystems explicitly (optional but clearer)
+[[tool.mypy.overrides]]
+module = [
+  "pyspark.*",
+  "qiskit.*",
+  "qiskit_aer.*",
+  "faiss",
+  "whisper",
+  "feedparser",
+  "vaderSentiment.*",
+  "newsapi",
+  "datasketch",
+  "langdetect",
+  "pytesseract",
+  "ffmpeg",
+  "datasets",
+  "torch_geometric.*",
+  "sklearn.*",
+  "newspaper",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-q --cov=sentiment_bot --cov-report=term-missing"
+testpaths = ["tests"]
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,4 +1,5 @@
 """Knowledge graph construction and GNN embeddings."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

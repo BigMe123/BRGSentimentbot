@@ -1,4 +1,5 @@
 """QAOA-inspired portfolio optimisation using Qiskit Aer."""
+
 from __future__ import annotations
 
 from typing import Sequence

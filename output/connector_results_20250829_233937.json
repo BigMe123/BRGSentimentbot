@@ -1,0 +1,65 @@
+{
+  "run_timestamp": "2025-08-29T23:39:37.789015",
+  "config": {
+    "keywords": [
+      "bitcoin",
+      "ethereum"
+    ],
+    "since": "24h",
+    "limit": 10,
+    "analyze": false,
+    "connector_type": "hackernews"
+  },
+  "metrics": {
+    "total_time_sec": 14.461023092269897,
+    "connectors_used": 1,
+    "total_fetched": 100,
+    "after_keywords": 1,
+    "after_since": 1,
+    "final_saved": 1,
+    "errors": 0,
+    "connector_stats": {
+      "hackernews": {
+        "fetched": 100,
+        "after_keywords": 1,
+        "after_since": 1,
+        "saved": 1,
+        "time_ms": 14455,
+        "errors": 0
+      }
+    }
+  },
+  "articles": [
+    {
+      "id": "290ec6d97dd611cfd9d688dcca52d3786af1f74a",
+      "source": "hackernews",
+      "subsource": "top",
+      "author": "ibobev",
+      "title": "Probability of typing a wrong Bitcoin address",
+      "text": "Probability of typing a wrong Bitcoin address",
+      "url": "https://www.johndcook.com/blog/2025/08/28/wrong-address/",
+      "published_at": "2025-08-29T09:28:50+00:00",
+      "lang": "en",
+      "raw": {
+        "by": "ibobev",
+        "descendants": 40,
+        "id": 45061980,
+        "kids": [
+          45062826,
+          45063215,
+          45069388,
+          45068368,
+          45064111,
+          45063594,
+          45068369,
+          45068064
+        ],
+        "score": 55,
+        "time": 1756459730,
+        "title": "Probability of typing a wrong Bitcoin address",
+        "type": "story",
+        "url": "https://www.johndcook.com/blog/2025/08/28/wrong-address/"
+      }
+    }
+  ]
+}

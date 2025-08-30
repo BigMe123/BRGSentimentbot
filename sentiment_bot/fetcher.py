@@ -26,12 +26,14 @@ from .config import NEWS_OFFLINE, settings
 # Try to import advanced libraries (optional for enhanced features)
 try:
     import curl_cffi
+
     HAS_CURL_CFFI = True
 except ImportError:
     HAS_CURL_CFFI = False
 
 try:
     from playwright.async_api import async_playwright
+
     HAS_PLAYWRIGHT = True
 except ImportError:
     HAS_PLAYWRIGHT = False
@@ -320,79 +322,64 @@ USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Windows NT 11.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    
     # Chrome - macOS
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-    
     # Chrome - Linux
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
     "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    
     # Firefox - Windows
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/120.0",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0",
     "Mozilla/5.0 (Windows NT 11.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0",
-    
     # Firefox - macOS
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/121.0",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/120.0",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14.0; rv:109.0) Gecko/20100101 Firefox/121.0",
-    
     # Firefox - Linux
     "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/121.0",
     "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/120.0",
     "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/121.0",
-    
     # Safari - macOS
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.15",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15",
-    
     # Edge - Windows
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0",
     "Mozilla/5.0 (Windows NT 11.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
-    
     # Mobile Chrome - Android
     "Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
     "Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
     "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
     "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36",
-    
     # Mobile Safari - iOS
     "Mozilla/5.0 (iPhone; CPU iPhone OS 17_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Mobile/15E148 Safari/604.1",
     "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
     "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1",
     "Mozilla/5.0 (iPad; CPU OS 17_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Mobile/15E148 Safari/604.1",
-    
     # Opera
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 OPR/106.0.0.0",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 OPR/106.0.0.0",
-    
     # Additional varied Chrome versions
     "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36",
-    
     # Additional Firefox versions
     "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/120.0",
     "Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/119.0",
-    
     # Brave (Chrome-based)
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Brave/120",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Brave/120",
-    
     # Vivaldi
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Vivaldi/6.4.3160.47",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Vivaldi/6.4.3160.47",
-    
     # Additional Chrome mobile variant
     "Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
 ]
@@ -407,7 +394,7 @@ ACCEPT_LANGUAGES = [
     "en-CA,en;q=0.9,fr;q=0.8",
     "en-AU,en;q=0.9,en-GB;q=0.8",
     "en,en-US;q=0.9,en-GB;q=0.8",
-    "en-US,en;q=0.5"
+    "en-US,en;q=0.5",
 ]
 
 # Referer variations to simulate different entry points
@@ -440,16 +427,18 @@ _domain_semaphores: Dict[str, asyncio.Semaphore] = {}
 _offline_domains: set[str] = set()
 
 
-def generate_random_headers(browser_profile: Optional[Dict[str, Any]] = None) -> Dict[str, str]:
+def generate_random_headers(
+    browser_profile: Optional[Dict[str, Any]] = None,
+) -> Dict[str, str]:
     """Generate randomized headers with human-like variations and browser profile support."""
     headers = BASE_HEADERS.copy()
-    
+
     if browser_profile:
         # Use browser profile for consistency
         headers["User-Agent"] = browser_profile["user_agent"]
         if "accept_encoding" in browser_profile:
             headers["Accept-Encoding"] = browser_profile["accept_encoding"]
-        
+
         # Add browser-specific headers
         for key in ["sec_ch_ua", "sec_ch_ua_mobile", "sec_ch_ua_platform"]:
             if key in browser_profile:
@@ -457,27 +446,33 @@ def generate_random_headers(browser_profile: Optional[Dict[str, Any]] = None) ->
     else:
         # Fallback to random selection
         headers["User-Agent"] = random.choice(USER_AGENTS)
-        
+
         # Add Chrome-specific headers for Chrome UAs
         if "Chrome/" in headers["User-Agent"] and "Edg/" not in headers["User-Agent"]:
-            headers["Sec-CH-UA"] = '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"'
+            headers["Sec-CH-UA"] = (
+                '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"'
+            )
             headers["Sec-CH-UA-Mobile"] = "?0"
-            headers["Sec-CH-UA-Platform"] = f'"{random.choice(["Windows", "macOS", "Linux"])}"'
-    
+            headers["Sec-CH-UA-Platform"] = (
+                f'"{random.choice(["Windows", "macOS", "Linux"])}"'
+            )
+
     headers["Accept-Language"] = random.choice(ACCEPT_LANGUAGES)
-    
+
     # Randomly add referer (80% of the time)
     if random.random() < 0.8:
         headers["Referer"] = random.choice(REFERERS)
-    
+
     # Platform-specific adjustments
     ua = headers["User-Agent"]
     if "Windows" in ua:
         if random.random() < 0.3:
             headers["Sec-CH-UA-Arch"] = '"x86"' if random.random() < 0.5 else '"arm"'
     elif "Mac" in ua:
-        headers["Sec-CH-UA-Platform-Version"] = f'"{random.choice(["10.15", "11.0", "12.0", "13.0"])}"'
-    
+        headers["Sec-CH-UA-Platform-Version"] = (
+            f'"{random.choice(["10.15", "11.0", "12.0", "13.0"])}"'
+        )
+
     return headers
 
 
@@ -501,14 +496,14 @@ def create_random_connector() -> aiohttp.TCPConnector:
             port = random.randint(40000, 65000)
             local_addr = ("0.0.0.0", port)
             logger.debug(f"[FEATURE] IPv4 source rotation: port {port}")
-        
+
         return aiohttp.TCPConnector(
             local_addr=local_addr,
             limit=10,
             limit_per_host=3,
             ttl_dns_cache=300,
             use_dns_cache=True,
-            ssl=True
+            ssl=True,
         )
     except Exception:
         # Fallback to IPv4 if IPv6 fails
@@ -518,7 +513,7 @@ def create_random_connector() -> aiohttp.TCPConnector:
             limit_per_host=3,
             ttl_dns_cache=300,
             use_dns_cache=True,
-            ssl=True
+            ssl=True,
         )
 
 
@@ -528,12 +523,12 @@ def add_random_query_params(url: str) -> str:
         separator = "&"
     else:
         separator = "?"
-    
+
     # Only add params occasionally to avoid pattern detection
     if random.random() < 0.3:
         logger.debug(f"[FEATURE] Adding random query parameters to RSS URL")
         random_params = []
-        
+
         # Common tracking parameters
         if random.random() < 0.5:
             random_params.append(f"utm_source=feed_reader_{random.randint(100, 999)}")
@@ -541,28 +536,29 @@ def add_random_query_params(url: str) -> str:
             random_params.append(f"v={random.randint(1000000, 9999999)}")
         if random.random() < 0.2:
             random_params.append(f"t={int(time.time())}")
-        
+
         if random_params:
             url += separator + "&".join(random_params)
-    
+
     return url
 
 
 async def decompress_response(content: bytes, encoding: str) -> str:
     """Decompress response content based on encoding."""
     try:
-        if encoding == 'br':
-            return brotli.decompress(content).decode('utf-8', errors='ignore')
-        elif encoding == 'gzip':
-            return gzip.decompress(content).decode('utf-8', errors='ignore')
-        elif encoding == 'deflate':
+        if encoding == "br":
+            return brotli.decompress(content).decode("utf-8", errors="ignore")
+        elif encoding == "gzip":
+            return gzip.decompress(content).decode("utf-8", errors="ignore")
+        elif encoding == "deflate":
             import zlib
-            return zlib.decompress(content).decode('utf-8', errors='ignore')
+
+            return zlib.decompress(content).decode("utf-8", errors="ignore")
         else:
-            return content.decode('utf-8', errors='ignore')
+            return content.decode("utf-8", errors="ignore")
     except Exception as e:
         logger.debug(f"Decompression failed for {encoding}: {e}")
-        return content.decode('utf-8', errors='ignore')
+        return content.decode("utf-8", errors="ignore")
 
 
 def select_browser_profile() -> Dict[str, Any]:
@@ -572,27 +568,26 @@ def select_browser_profile() -> Dict[str, Any]:
     return BROWSER_PROFILES[profile_name]
 
 
-async def fetch_with_curl_cffi(url: str, headers: Dict[str, str], profile: Dict[str, Any]) -> Optional[str]:
+async def fetch_with_curl_cffi(
+    url: str, headers: Dict[str, str], profile: Dict[str, Any]
+) -> Optional[str]:
     """Fetch URL using curl_cffi for TLS fingerprint spoofing."""
     if not HAS_CURL_CFFI or not profile.get("tls_client_id"):
         logger.debug(f"[FEATURE] curl_cffi not available or no TLS client ID")
         return None
-        
+
     try:
         from curl_cffi.requests import AsyncSession
-        
+
         tls_client_id = profile["tls_client_id"]
         timeout = 30
         logger.info(f"[FEATURE] curl_cffi using TLS fingerprint: {tls_client_id}")
-        
+
         async with AsyncSession() as session:
             response = await session.get(
-                url,
-                headers=headers,
-                timeout=timeout,
-                impersonate=tls_client_id
+                url, headers=headers, timeout=timeout, impersonate=tls_client_id
             )
-            
+
             if response.status_code < 400:
                 return response.text
             elif response.status_code in (403, 429):
@@ -600,68 +595,80 @@ async def fetch_with_curl_cffi(url: str, headers: Dict[str, str], profile: Dict[
                 return None
             else:
                 response.raise_for_status()
-                
+
     except Exception as e:
         logger.debug(f"curl_cffi failed for {url}: {e}")
         return None
 
 
-async def fetch_with_playwright(url: str, profile: Optional[Dict[str, Any]] = None) -> Optional[str]:
+async def fetch_with_playwright(
+    url: str, profile: Optional[Dict[str, Any]] = None
+) -> Optional[str]:
     """Fetch URL using Playwright for JavaScript-heavy sites with enhanced stealth."""
     if not HAS_PLAYWRIGHT:
         logger.debug(f"[FEATURE] Playwright not available for {url}")
         return None
-        
+
     try:
         logger.info(f"[FEATURE] Activating Playwright JS rendering fallback for {url}")
         async with async_playwright() as p:
             # Random browser choice
-            browser_type = random.choice(['chromium', 'firefox', 'webkit'])
+            browser_type = random.choice(["chromium", "firefox", "webkit"])
             logger.debug(f"[FEATURE] Using {browser_type} browser engine")
-            
+
             browser = await getattr(p, browser_type).launch(
                 headless=True,
-                args=['--disable-blink-features=AutomationControlled'] if browser_type == 'chromium' else []
+                args=(
+                    ["--disable-blink-features=AutomationControlled"]
+                    if browser_type == "chromium"
+                    else []
+                ),
             )
-            
+
             # Use profile if provided, otherwise random
-            user_agent = profile["user_agent"] if profile else random.choice(USER_AGENTS)
-            
+            user_agent = (
+                profile["user_agent"] if profile else random.choice(USER_AGENTS)
+            )
+
             context = await browser.new_context(
                 user_agent=user_agent,
-                viewport={'width': 1920, 'height': 1080},
-                locale='en-US',
+                viewport={"width": 1920, "height": 1080},
+                locale="en-US",
                 java_script_enabled=True,
                 ignore_https_errors=False,  # Keep SSL verification ON
             )
-            
+
             # Additional stealth settings
-            await context.add_init_script("""
+            await context.add_init_script(
+                """
                 Object.defineProperty(navigator, 'webdriver', {
                     get: () => undefined
                 });
-            """)
-            
+            """
+            )
+
             page = await context.new_page()
-            
+
             # Mimic human behavior with random timing
             await asyncio.sleep(random.uniform(0.1, 0.3))
-            
+
             # Set headers
             headers = {
-                'Accept-Language': random.choice(ACCEPT_LANGUAGES),
+                "Accept-Language": random.choice(ACCEPT_LANGUAGES),
             }
             if random.random() < 0.8:
-                headers['Referer'] = random.choice(REFERERS)
-            
+                headers["Referer"] = random.choice(REFERERS)
+
             await page.set_extra_http_headers(headers)
             logger.debug(f"[FEATURE] Playwright headers set, navigating to {url}")
-            
-            response = await page.goto(url, timeout=30000, wait_until='domcontentloaded')
-            
+
+            response = await page.goto(
+                url, timeout=30000, wait_until="domcontentloaded"
+            )
+
             # Wait for additional content to load
             await asyncio.sleep(random.uniform(0.5, 1.0))
-            
+
             if response and response.status < 400:
                 content = await page.content()
                 await browser.close()
@@ -669,9 +676,11 @@ async def fetch_with_playwright(url: str, profile: Optional[Dict[str, Any]] = No
                 return content
             else:
                 await browser.close()
-                logger.warning(f"[FEATURE] Playwright got status {response.status if response else 'None'} for {url}")
+                logger.warning(
+                    f"[FEATURE] Playwright got status {response.status if response else 'None'} for {url}"
+                )
                 return None
-                
+
     except Exception as e:
         logger.warning(f"[FEATURE] Playwright failed for {url}: {e}")
         return None
@@ -692,7 +701,9 @@ def _get_domain_semaphore(domain: str) -> asyncio.Semaphore:
         # Randomize between 2-3 concurrent requests per domain for load distribution
         limit = random.choice([2, 3])
         _domain_semaphores[domain] = asyncio.Semaphore(limit)
-        logger.info(f"[FEATURE] Domain concurrency limiter: {domain} max {limit} concurrent requests")
+        logger.info(
+            f"[FEATURE] Domain concurrency limiter: {domain} max {limit} concurrent requests"
+        )
     return _domain_semaphores[domain]
 
 
@@ -717,120 +728,168 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
 
     # Select browser profile for consistency across transports
     browser_profile = select_browser_profile()
-    logger.info(f"[FEATURE] Selected browser profile: {list(browser_profile.keys())[0] if browser_profile else 'random'}")
-    
+    logger.info(
+        f"[FEATURE] Selected browser profile: {list(browser_profile.keys())[0] if browser_profile else 'random'}"
+    )
+
     # Try curl_cffi first for TLS fingerprinting
     if HAS_CURL_CFFI and browser_profile.get("tls_client_id"):
-        logger.info(f"[FEATURE] Attempting curl_cffi with TLS fingerprint: {browser_profile.get('tls_client_id')}")
+        logger.info(
+            f"[FEATURE] Attempting curl_cffi with TLS fingerprint: {browser_profile.get('tls_client_id')}"
+        )
         headers = shuffle_headers(generate_random_headers(browser_profile))
         html = await fetch_with_curl_cffi(url, headers, browser_profile)
         if html:
             logger.info(f"[FEATURE] curl_cffi succeeded for {url}")
         else:
             logger.debug(f"[FEATURE] curl_cffi failed, falling back to aiohttp")
-    
+
     # Enhanced fetch with compression handling and better retry logic
     max_retries = 3 if not html else 0  # Skip if curl_cffi succeeded
     backoff = 1
-    
+
     for attempt in range(max_retries):
         # Generate fresh headers and connector for each attempt
         headers = shuffle_headers(generate_random_headers(browser_profile))
         connector = create_random_connector()
         sem = _get_domain_semaphore(domain)
-        
+
         logger.info(f"[FEATURE] aiohttp attempt {attempt + 1}/{max_retries} for {url}")
-        logger.debug(f"[FEATURE] Using connector with local_addr: {connector._local_addr if hasattr(connector, '_local_addr') else 'default'}")
-        
+        logger.debug(
+            f"[FEATURE] Using connector with local_addr: {connector._local_addr if hasattr(connector, '_local_addr') else 'default'}"
+        )
+
         try:
             async with sem:
                 # Random delay before DNS resolution
                 await asyncio.sleep(random.uniform(0.05, 0.2))
-                
+
                 timeout = aiohttp.ClientTimeout(total=30, connect=10)
                 async with aiohttp.ClientSession(
-                    headers=headers, 
-                    timeout=timeout,
-                    connector=connector
+                    headers=headers, timeout=timeout, connector=connector
                 ) as session:
-                    
+
                     # Optional HEAD request check for better stealth
                     if random.random() < 0.3:  # 30% of requests do HEAD first
-                        logger.info(f"[FEATURE] Performing HEAD request check (30% probability)")
+                        logger.info(
+                            f"[FEATURE] Performing HEAD request check (30% probability)"
+                        )
                         head_ok = await soft_check_url_head(session, url)
                         if not head_ok:
-                            logger.debug(f"[FEATURE] HEAD check failed for {url}, skipping")
+                            logger.debug(
+                                f"[FEATURE] HEAD check failed for {url}, skipping"
+                            )
                             continue
                         else:
-                            logger.debug(f"[FEATURE] HEAD check passed, proceeding with GET")
-                    
+                            logger.debug(
+                                f"[FEATURE] HEAD check passed, proceeding with GET"
+                            )
+
                     try:
                         # Mimic browser timing with small delay before request
                         delay = random.uniform(0.1, 0.5)
-                        logger.debug(f"[FEATURE] Browser-like timing: {delay:.2f}s delay before request")
+                        logger.debug(
+                            f"[FEATURE] Browser-like timing: {delay:.2f}s delay before request"
+                        )
                         await asyncio.sleep(delay)
-                        
+
                         async with session.get(url) as resp:
                             # Soft retry for 403/429 with different headers before backoff
                             if resp.status in (403, 429):
-                                if attempt == 0:  # First attempt - try once more immediately
-                                    logger.warning(f"[FEATURE] Status {resp.status} for {url}, activating soft retry")
+                                if (
+                                    attempt == 0
+                                ):  # First attempt - try once more immediately
+                                    logger.warning(
+                                        f"[FEATURE] Status {resp.status} for {url}, activating soft retry"
+                                    )
                                     await asyncio.sleep(random.uniform(0.5, 1.0))
-                                    
+
                                     # Quick retry with different UA and connector
-                                    retry_headers = shuffle_headers(generate_random_headers())
+                                    retry_headers = shuffle_headers(
+                                        generate_random_headers()
+                                    )
                                     retry_connector = create_random_connector()
-                                    
+
                                     async with aiohttp.ClientSession(
-                                        headers=retry_headers, 
+                                        headers=retry_headers,
                                         timeout=timeout,
-                                        connector=retry_connector
+                                        connector=retry_connector,
                                     ) as retry_session:
                                         try:
-                                            async with retry_session.get(url) as retry_resp:
+                                            async with retry_session.get(
+                                                url
+                                            ) as retry_resp:
                                                 if retry_resp.status < 400:
                                                     # Enhanced compression handling for retry
-                                                    content_bytes = await retry_resp.read()
-                                                    encoding = retry_resp.headers.get('content-encoding', '').lower()
-                                                    logger.info(f"[FEATURE] Decompressing response with encoding: {encoding or 'none'}")
-                                                    html = await decompress_response(content_bytes, encoding)
-                                                    logger.info(f"[FEATURE] Soft retry succeeded for {url}")
+                                                    content_bytes = (
+                                                        await retry_resp.read()
+                                                    )
+                                                    encoding = retry_resp.headers.get(
+                                                        "content-encoding", ""
+                                                    ).lower()
+                                                    logger.info(
+                                                        f"[FEATURE] Decompressing response with encoding: {encoding or 'none'}"
+                                                    )
+                                                    html = await decompress_response(
+                                                        content_bytes, encoding
+                                                    )
+                                                    logger.info(
+                                                        f"[FEATURE] Soft retry succeeded for {url}"
+                                                    )
                                                     break
                                         except Exception:
                                             pass
-                                
+
                                 # If still failing, use normal backoff
-                                if not html and attempt < max_retries - 1 and not NEWS_OFFLINE:
-                                    logger.warning(f"Status {resp.status} for {url}, backing off")
+                                if (
+                                    not html
+                                    and attempt < max_retries - 1
+                                    and not NEWS_OFFLINE
+                                ):
+                                    logger.warning(
+                                        f"Status {resp.status} for {url}, backing off"
+                                    )
                                     await asyncio.sleep(random.uniform(2, 5))
                                     continue
-                                
+
                                 if not html:
                                     circuit_breaker.record_failure(url)
-                                    return ArticleData(url=url, title="", text="", published=None)
-                            
+                                    return ArticleData(
+                                        url=url, title="", text="", published=None
+                                    )
+
                             if not html:
                                 resp.raise_for_status()
-                                
+
                                 # Enhanced compression handling
                                 try:
                                     content_bytes = await resp.read()
-                                    encoding = resp.headers.get('content-encoding', '').lower()
-                                    logger.info(f"[FEATURE] Response encoding: {encoding or 'none'}, decompressing")
-                                    html = await decompress_response(content_bytes, encoding)
-                                    
+                                    encoding = resp.headers.get(
+                                        "content-encoding", ""
+                                    ).lower()
+                                    logger.info(
+                                        f"[FEATURE] Response encoding: {encoding or 'none'}, decompressing"
+                                    )
+                                    html = await decompress_response(
+                                        content_bytes, encoding
+                                    )
+
                                 except asyncio.TimeoutError:
                                     logger.warning(f"Timeout reading {url}")
                                     raise
                     except asyncio.TimeoutError:
                         logger.warning(f"Timeout connecting {url}")
                         raise
-            
+
             if html:
                 break
-                
+
         except (aiohttp.ClientError, asyncio.TimeoutError, OSError) as e:
-            if "Network is unreachable" in str(e) and attempt < max_retries - 1 and not NEWS_OFFLINE:
+            if (
+                "Network is unreachable" in str(e)
+                and attempt < max_retries - 1
+                and not NEWS_OFFLINE
+            ):
                 await asyncio.sleep(backoff)
                 backoff *= 2
                 continue
@@ -845,16 +904,18 @@ async def _fetch_and_parse_url(url: str) -> ArticleData:
 
     # If no HTML content obtained, try Playwright as final fallback
     if not html:
-        logger.warning(f"[FEATURE] aiohttp failed, attempting Playwright JS rendering as final fallback")
+        logger.warning(
+            f"[FEATURE] aiohttp failed, attempting Playwright JS rendering as final fallback"
+        )
         html = await fetch_with_playwright(url, browser_profile)
-        
+
         if not html:
             circuit_breaker.record_failure(url)
             logger.error(f"[FEATURE] All transport methods failed for {url}")
             return ArticleData(url=url, title="", text="", published=None)
         else:
             logger.info(f"[FEATURE] Playwright fallback succeeded for {url}")
-    
+
     # Parse HTML with smart extraction
     try:
         soup = await asyncio.wait_for(
@@ -915,32 +976,29 @@ async def gather_rss(
     topic: Optional[str] = None,
 ) -> tuple[List[ArticleData], Dict[str, Any]]:
     """Parse RSS feeds and return articles with collection stats.
-    
+
     Args:
         feeds: Optional list of RSS feed URLs
         region: Optional region filter (e.g., 'asia', 'europe')
         topic: Optional topic filter (e.g., 'elections', 'defense')
     """
     console = Console()
-    
+
     # Import filter if region/topic specified
     filter_func = None
     if region or topic:
         try:
             from .filter import is_relevant
+
             filter_func = is_relevant
             logger.info(f"Filtering enabled - Region: {region}, Topic: {topic}")
         except ImportError:
             logger.warning("Filter module not available, skipping filtering")
-    
+
     if NEWS_OFFLINE:
         return [
-            ArticleData(
-                url="http://stub/a", title="Asia trade", text="trade asia"
-            ),
-            ArticleData(
-                url="http://stub/b", title="Africa oil", text="energy africa"
-            ),
+            ArticleData(url="http://stub/a", title="Asia trade", text="trade asia"),
+            ArticleData(url="http://stub/b", title="Africa oil", text="energy africa"),
         ], {"total": 2}
     feed_urls = list(feeds or settings.RSS_FEEDS)
     all_article_urls: List[str] = []
@@ -956,13 +1014,17 @@ async def gather_rss(
             # Apply random query params to RSS feed URL
             modified_feed_url = add_random_query_params(feed_url)
             headers = shuffle_headers(generate_random_headers())
-            logger.debug(f"[FEATURE] RSS feed headers randomized with {len(headers)} headers")
+            logger.debug(
+                f"[FEATURE] RSS feed headers randomized with {len(headers)} headers"
+            )
             sem = _get_domain_semaphore(domain)
             try:
                 async with sem:
                     # Random delay with browser-like timing
                     delay = random.uniform(0.1, 0.8)
-                    logger.debug(f"[FEATURE] RSS feed delay: {delay:.2f}s for natural timing")
+                    logger.debug(
+                        f"[FEATURE] RSS feed delay: {delay:.2f}s for natural timing"
+                    )
                     await asyncio.sleep(delay)
                     parsed = await asyncio.wait_for(
                         asyncio.to_thread(
@@ -983,7 +1045,11 @@ async def gather_rss(
                 logger.warning(f"[feed timeout attempt {attempt}] {feed_url}")
             except Exception as e:
                 last_error = str(e)
-                if "Network is unreachable" in last_error and attempt < max_retries and not NEWS_OFFLINE:
+                if (
+                    "Network is unreachable" in last_error
+                    and attempt < max_retries
+                    and not NEWS_OFFLINE
+                ):
                     await asyncio.sleep(backoff)
                     backoff *= 2
                     continue
@@ -1043,11 +1109,15 @@ async def gather_rss(
                             if not is_relevant_result:
                                 filtered_count += 1
                                 logger.debug(f"[FILTER] Dropped {link} - {reason}")
-                                logger.debug(f"         Scores: region={scores['region']:.2f}, topic={scores['topic']:.2f}")
+                                logger.debug(
+                                    f"         Scores: region={scores['region']:.2f}, topic={scores['topic']:.2f}"
+                                )
                                 return
                             else:
-                                logger.debug(f"[KEEP] {link} - Scores: region={scores['region']:.2f}, topic={scores['topic']:.2f}")
-                        
+                                logger.debug(
+                                    f"[KEEP] {link} - Scores: region={scores['region']:.2f}, topic={scores['topic']:.2f}"
+                                )
+
                         results.append(art)
                         return
                 except asyncio.TimeoutError:
@@ -1109,120 +1179,124 @@ async def fetch_html(url: str) -> Tuple[Optional[str], Dict[str, Any]]:
     """
     Fetch HTML using advanced anti-bot stack (curl_cffi → aiohttp).
     Used by the fast pipeline for concurrent fetching.
-    
+
     Returns:
         Tuple of (html_content, metadata_dict)
     """
     meta = {
-        'url': url,
-        'timestamp': time.time(),
-        'transport': 'unknown',
-        'status_code': None,
+        "url": url,
+        "timestamp": time.time(),
+        "transport": "unknown",
+        "status_code": None,
     }
-    
+
     # Generate random headers and profile
     profile = select_browser_profile()
     headers = shuffle_headers(generate_random_headers(profile))
-    
+
     # Try curl_cffi first
     try:
         html = await fetch_with_curl_cffi(url, headers, profile)
         if html:
-            meta['transport'] = 'curl_cffi'
-            meta['status_code'] = 200
+            meta["transport"] = "curl_cffi"
+            meta["status_code"] = 200
             return html, meta
     except Exception as e:
         logger.debug(f"curl_cffi failed for {url}: {e}")
-    
+
     # Fallback to aiohttp
     try:
         connector = create_random_connector()
         timeout = aiohttp.ClientTimeout(total=10)
-        
-        async with aiohttp.ClientSession(connector=connector, timeout=timeout) as session:
-            async with session.get(url, headers=headers, allow_redirects=True) as response:
-                meta['status_code'] = response.status
-                
+
+        async with aiohttp.ClientSession(
+            connector=connector, timeout=timeout
+        ) as session:
+            async with session.get(
+                url, headers=headers, allow_redirects=True
+            ) as response:
+                meta["status_code"] = response.status
+
                 if response.status == 200:
                     content = await response.read()
-                    
+
                     # Handle compression
-                    encoding = response.headers.get('Content-Encoding', '').lower()
-                    if encoding and encoding in ('gzip', 'br', 'deflate'):
+                    encoding = response.headers.get("Content-Encoding", "").lower()
+                    if encoding and encoding in ("gzip", "br", "deflate"):
                         try:
                             html = await decompress_response(content, encoding)
                         except:
                             # If decompression fails, try as plain text
-                            html = content.decode('utf-8', errors='ignore')
+                            html = content.decode("utf-8", errors="ignore")
                     else:
-                        html = content.decode('utf-8', errors='ignore')
-                    
-                    meta['transport'] = 'aiohttp'
+                        html = content.decode("utf-8", errors="ignore")
+
+                    meta["transport"] = "aiohttp"
                     return html, meta
                 else:
                     return None, meta
-                    
+
     except Exception as e:
         logger.debug(f"aiohttp failed for {url}: {e}")
-        meta['error'] = str(e)
+        meta["error"] = str(e)
         return None, meta
 
 
 def needs_js_fallback(
-    html: Optional[str], 
-    status: Optional[int], 
-    domain: str, 
-    parse_hint: str = 'ok',
-    js_domains: Optional[Any] = None
+    html: Optional[str],
+    status: Optional[int],
+    domain: str,
+    parse_hint: str = "ok",
+    js_domains: Optional[Any] = None,
 ) -> bool:
     """
     Determine if JS rendering is needed based on heuristics.
     Used by the fast pipeline to decide when to use Playwright.
-    
+
     Args:
         html: HTML content (may be None or partial)
         status: HTTP status code
         domain: Domain of the URL
         parse_hint: Hint about parse quality ('ok', 'maybe_js', etc.)
         js_domains: Optional LRUSet of known JS-required domains
-    
+
     Returns:
         True if JS rendering is recommended
     """
     # Check if domain is known to require JS
     if js_domains and domain in js_domains:
         return True
-    
+
     # Check status code
     if status in (403, 429):
         return True  # Likely bot detection
-    
+
     # Check HTML size (too small = likely JS-rendered)
     if html and len(html) < 1024:
         return True
-    
+
     # Check for common JS framework indicators
     if html:
         js_indicators = [
-            'window.__INITIAL_STATE__',
-            'window.__PRELOADED_STATE__',
-            'React.createElement',
-            'angular.module',
-            'Vue.component',
-            '__NEXT_DATA__',
-            'data-reactroot',
-            'ng-app',
-            'v-app',
+            "window.__INITIAL_STATE__",
+            "window.__PRELOADED_STATE__",
+            "React.createElement",
+            "angular.module",
+            "Vue.component",
+            "__NEXT_DATA__",
+            "data-reactroot",
+            "ng-app",
+            "v-app",
         ]
-        
+
         for indicator in js_indicators:
             if indicator in html:
                 return True
-    
+
     # Check parse hint
-    if parse_hint == 'maybe_js':
+    if parse_hint == "maybe_js":
         return True
-    
+
     return False
 
 
@@ -1232,7 +1306,7 @@ async def gather_all_sources(
     topic: Optional[str] = None,
 ) -> List[ArticleData]:
     """Compatibility wrapper returning only articles with optional filtering.
-    
+
     Args:
         feeds: Optional list of RSS feed URLs
         region: Optional region filter (e.g., 'asia', 'europe')

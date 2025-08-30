@@ -249,7 +249,7 @@ try:  # pragma: no cover - optional dependency
         OPENAI_API_KEY: str = (
             "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"
         )
-        
+
         # Fast pipeline settings
         FAST_MAX_CONCURRENCY: int = 200
         FAST_PER_DOMAIN: int = 3
@@ -294,7 +294,7 @@ except ImportError:  # pragma: no cover - fallback without pydantic
         WEBSOCKET_PORT: int = int(os.getenv("WEBSOCKET_PORT", "8765"))
         GRADIO_PORT: int = int(os.getenv("GRADIO_PORT", "7860"))
         OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
-        
+
         # Fast pipeline settings
         FAST_MAX_CONCURRENCY: int = int(os.getenv("FAST_MAX_CONCURRENCY", "200"))
         FAST_PER_DOMAIN: int = int(os.getenv("FAST_PER_DOMAIN", "3"))
@@ -302,7 +302,13 @@ except ImportError:  # pragma: no cover - fallback without pydantic
         FAST_RENDER_WORKERS: int = int(os.getenv("FAST_RENDER_WORKERS", "6"))
         FAST_PARSE_WORKERS: int = int(os.getenv("FAST_PARSE_WORKERS", "8"))
         FAST_BROWSER_POOL_SIZE: int = int(os.getenv("FAST_BROWSER_POOL_SIZE", "5"))
-        FAST_JS_DOMAIN_CACHE_SIZE: int = int(os.getenv("FAST_JS_DOMAIN_CACHE_SIZE", "200"))
-        FAST_DEBUG_LOGGING: bool = os.getenv("FAST_DEBUG_LOGGING", "0").lower() in ("1", "true", "yes")
+        FAST_JS_DOMAIN_CACHE_SIZE: int = int(
+            os.getenv("FAST_JS_DOMAIN_CACHE_SIZE", "200")
+        )
+        FAST_DEBUG_LOGGING: bool = os.getenv("FAST_DEBUG_LOGGING", "0").lower() in (
+            "1",
+            "true",
+            "yes",
+        )
 
     settings = Settings()

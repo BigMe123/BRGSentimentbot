@@ -1,4 +1,5 @@
 """Streaming analytics using Spark Structured Streaming."""
+
 from __future__ import annotations
 
 from pyspark.sql import SparkSession
@@ -9,10 +10,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 def start_stream(kafka_bootstrap: str, topic: str) -> None:
-    spark = (
-        SparkSession.builder.appName("sentiment-stream")
-        .getOrCreate()
-    )
+    spark = SparkSession.builder.appName("sentiment-stream").getOrCreate()
     df = (
         spark.readStream.format("kafka")
         .option("kafka.bootstrap.servers", kafka_bootstrap)

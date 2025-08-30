@@ -25,6 +25,7 @@ def test_chat_agent(monkeypatch):
 
     class DummyResp:
         choices = [types.SimpleNamespace(message=types.SimpleNamespace(content="hi"))]
+
         def dict(self):
             return {"choices": [{"message": {"role": "assistant", "content": "hi"}}]}
 
