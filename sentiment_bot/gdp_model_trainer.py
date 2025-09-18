@@ -26,10 +26,13 @@ import warnings
 try:
     from sentiment_bot.gdp_stacking_ensemble import RegimeAwareStackingEnsemble, generate_oof_predictions
     from sentiment_bot.gdp_shock_robust import RobustGDPEstimator
+    from sentiment_bot.fallback_data_sources import enhanced_fred_fetch
     STACKING_AVAILABLE = True
+    FALLBACK_AVAILABLE = True
 except ImportError:
     logger.warning("Stacking ensemble and robust estimator not available")
     STACKING_AVAILABLE = False
+    FALLBACK_AVAILABLE = False
 
 warnings.filterwarnings('ignore')
 
@@ -190,9 +193,13 @@ class GDPModelTrainer:
 
         for feature_name, series_id in country_features.items():
             try:
-                data = self.data_integration.get_fred_data(series_id)
+                # Use enhanced fetch with fallback
+                if FALLBACK_AVAILABLE:
+                    data = enhanced_fred_fetch(self.data_integration, series_id, start_date)
+                else:
+                    data = self.data_integration.get_fred_data(series_id)
 
-                if not data.empty:
+                if data is not None and not data.empty:
                     # Process based on feature type
                     if feature_name in ['cpi', 'industrial', 'exports', 'imports', 'retail_sales']:
                         # Convert to growth rates
@@ -512,15 +519,27 @@ class GDPModelTrainer:
 
                 if oof_models:
                     # Generate out-of-fold predictions
-                    oof_preds = generate_oof_predictions(oof_models, pd.DataFrame(X_scaled, columns=X.columns), y)
+                    X_df = pd.DataFrame(X_scaled, columns=X.columns, index=y.index)
+                    oof_preds = generate_oof_predictions(oof_models, X_df, y)
 
-                    # Detect regimes
+                    # Detect regimes based on GDP growth
                     gdp_growth = y.pct_change(periods=4) * 100
                     regimes = self._detect_regimes(gdp_growth)
 
-                    # Train stacking ensemble
-                    stacking = RegimeAwareStackingEnsemble()
-                    stacking.fit(oof_preds, y, regimes, pd.Series([country] * len(y)))
+                    # Ensure all indices are aligned
+                    common_index = oof_preds.index.intersection(regimes.index).intersection(y.index)
+
+                    if len(common_index) > 10:  # Need sufficient aligned data
+                        oof_preds_aligned = oof_preds.loc[common_index]
+                        y_aligned = y.loc[common_index]
+                        regimes_aligned = regimes.loc[common_index]
+                        countries_aligned = pd.Series([country] * len(common_index), index=common_index)
+
+                        # Train stacking ensemble
+                        stacking = RegimeAwareStackingEnsemble()
+                        stacking.fit(oof_preds_aligned, y_aligned, regimes_aligned, countries_aligned)
+                    else:
+                        raise ValueError(f"Insufficient aligned data: {len(common_index)} samples")
 
                     self.stacking_ensembles[country] = stacking
 
@@ -634,8 +653,48 @@ class GDPModelTrainer:
 
             predictions['ensemble'] = float(ensemble)
 
+            # Apply shock detection and robust adjustments
+            if STACKING_AVAILABLE and country in self.robust_estimators:
+                try:
+                    current_date = pd.Timestamp.now()
+                    robust_est = self.robust_estimators[country]
+
+                    # Check for shock conditions
+                    is_shock, shock = robust_est.break_detector.get_shock_indicator(current_date)
+                    predictions['is_shock'] = is_shock
+
+                    if is_shock:
+                        # Apply shock-specific adjustments
+                        original_ensemble = ensemble
+                        shock_adjustments = robust_est._get_shock_adjustments(shock.type, shock.severity)
+
+                        # Apply adjustment to ensemble if significant shock
+                        if shock.severity > 0.5:
+                            # Dampen optimistic predictions during severe shocks
+                            if ensemble > 2.0:
+                                ensemble = ensemble * (1 - shock.severity * 0.2)
+
+                            # Apply model-specific adjustments (average them)
+                            avg_adjustment = np.mean(list(shock_adjustments.values()))
+                            ensemble += avg_adjustment
+
+                            predictions['ensemble'] = float(ensemble)
+                            predictions['shock_type'] = shock.type
+                            predictions['shock_severity'] = shock.severity
+                            predictions['shock_adjustment'] = ensemble - original_ensemble
+
+                            logger.info(f"Applied {shock.type} shock adjustment: {original_ensemble:.2f} → {ensemble:.2f}")
+
+                except Exception as e:
+                    logger.warning(f"Shock detection failed: {e}")
+
             # Add confidence based on model agreement
-            std = np.std(list(predictions.values()))
+            model_predictions = [v for k, v in predictions.items()
+                               if k in ['gbm', 'rf', 'ridge', 'elastic'] and isinstance(v, (int, float))]
+            if model_predictions:
+                std = np.std(model_predictions)
+            else:
+                std = 0.5  # Default
 
             # Better confidence formula:
             # - High confidence (>80%) when std < 0.5%

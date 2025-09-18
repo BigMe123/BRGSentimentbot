@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-09-17T20:44:42.324078",
+  "gbr_mae": 3.076032179787346,
+  "individual_maes": {
+    "gbm": 2.927084303465475,
+    "rf": 3.070311470500215,
+    "ridge": 3.1554001402712757,
+    "elastic": 3.1513328049124176
+  },
+  "improvements_status": {
+    "dfm_working": false,
+    "stacking_working": false,
+    "feature_count": "unknown",
+    "fallback_enabled": false
+  }
+}

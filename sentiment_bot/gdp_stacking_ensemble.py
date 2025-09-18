@@ -317,8 +317,9 @@ def generate_oof_predictions(models: Dict, X: pd.DataFrame, y: pd.Series,
             # Train
             model.fit(X_train, y_train)
 
-            # Predict on validation
-            oof_preds.loc[val_idx, model_name] = model.predict(X_val)
+            # Predict on validation - use iloc for integer indexing
+            val_predictions = model.predict(X_val)
+            oof_preds.iloc[val_idx, oof_preds.columns.get_loc(model_name)] = val_predictions
 
     return oof_preds
 
