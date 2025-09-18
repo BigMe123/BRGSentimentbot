@@ -1,0 +1,56 @@
+{
+  "date": "2025-09-17",
+  "countries": [
+    {
+      "iso3": "CHE",
+      "name": "Switzerland",
+      "score": 39.0508600899293
+    },
+    {
+      "iso3": "SGP",
+      "name": "Singapore",
+      "score": 37.34084951190323
+    },
+    {
+      "iso3": "NOR",
+      "name": "Norway",
+      "score": 34.42814903418223
+    },
+    {
+      "iso3": "USA",
+      "name": "United States",
+      "score": 14.306419862243901
+    },
+    {
+      "iso3": "CHN",
+      "name": "China",
+      "score": -22.657489507075304
+    },
+    {
+      "iso3": "GBR",
+      "name": "United Kingdom",
+      "score": 24.46272074811793
+    },
+    {
+      "iso3": "DEU",
+      "name": "Germany",
+      "score": 14.401410880425114
+    },
+    {
+      "iso3": "JPN",
+      "name": "Japan",
+      "score": 20.18489885035881
+    },
+    {
+      "iso3": "FRA",
+      "name": "France",
+      "score": 14.549432841433484
+    },
+    {
+      "iso3": "RUS",
+      "name": "Russia",
+      "score": -31.003610430925026
+    }
+  ],
+  "timestamp": "2025-09-17T03:45:53.166268"
+}

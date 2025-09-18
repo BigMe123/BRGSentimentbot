@@ -1,0 +1,132 @@
+{
+  "run_id": "1391f490",
+  "started_at": "2025-09-15T02:13:42.513565",
+  "finished_at": "2025-09-15T02:26:19.947507",
+  "config": {
+    "topic": "economy",
+    "budget_sec": 300,
+    "min_sources": 30,
+    "discover": false,
+    "max_age_hours": 24
+  },
+  "collection": {
+    "attempted_feeds": 30,
+    "articles_raw": 317,
+    "unique_after_dedupe": 316,
+    "fresh_window_h": 24,
+    "fresh_count": 96,
+    "relevant_count": 96
+  },
+  "analysis": {
+    "sentiment_total": 16,
+    "breakdown": {
+      "positive": 45,
+      "negative": 26,
+      "neutral": 25
+    },
+    "avg_sentiment": 0.1659875,
+    "top_triggers": [
+      "ai_disruption",
+      "equity_markets",
+      "monetary_policy",
+      "inflation",
+      "economic_growth"
+    ],
+    "top_entities": [
+      {
+        "text": "US",
+        "type": "GPE",
+        "count": 15
+      },
+      {
+        "text": "Fed",
+        "type": "ORG",
+        "count": 12
+      },
+      {
+        "text": "China",
+        "type": "GPE",
+        "count": 10
+      },
+      {
+        "text": "JOIN",
+        "type": "TICKER",
+        "count": 9
+      },
+      {
+        "text": "MOON",
+        "type": "TICKER",
+        "count": 9
+      },
+      {
+        "text": "OR",
+        "type": "TICKER",
+        "count": 9
+      },
+      {
+        "text": "BUST",
+        "type": "TICKER",
+        "count": 9
+      },
+      {
+        "text": "EMAIL",
+        "type": "TICKER",
+        "count": 9
+      },
+      {
+        "text": "LIST",
+        "type": "TICKER",
+        "count": 9
+      },
+      {
+        "text": "Federal Reserve",
+        "type": "ORG",
+        "count": 8
+      }
+    ],
+    "volatility_index": 0.08251254418795996
+  },
+  "sources": [
+    {
+      "domain": "Bloomberg Markets",
+      "articles": 25
+    },
+    {
+      "domain": "Latest Article Feed",
+      "articles": 15
+    },
+    {
+      "domain": "Markets",
+      "articles": 12
+    },
+    {
+      "domain": "All News",
+      "articles": 10
+    },
+    {
+      "domain": "Benzinga",
+      "articles": 10
+    },
+    {
+      "domain": "MarketWatch.com - Top Stories",
+      "articles": 10
+    },
+    {
+      "domain": "Breaking News on Seeking Alpha",
+      "articles": 7
+    },
+    {
+      "domain": "Oilprice.com",
+      "articles": 7
+    }
+  ],
+  "diversity": {
+    "sources": 8,
+    "languages": 1,
+    "regions": 1,
+    "editorial_families": 23,
+    "score": 1.0
+  },
+  "errors": [],
+  "schema_version": "1.0.0"
+}

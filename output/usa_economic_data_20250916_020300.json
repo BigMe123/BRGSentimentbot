@@ -1,0 +1,372 @@
+{
+  "timestamp": "2025-09-16T02:03:00.981432",
+  "analysis_type": "USA_Comprehensive_Economic",
+  "articles_analyzed": 87,
+  "working_feeds": [
+    "Federal Reserve",
+    "Financial Times",
+    "MarketWatch",
+    "NPR Business",
+    "Wall Street Journal",
+    "CNN Business",
+    "Bloomberg"
+  ],
+  "predictions": {
+    "fx_USD/EUR": {
+      "type": "currency_fx",
+      "prediction": -3.49,
+      "confidence": 0.86,
+      "direction": "weaken",
+      "timeframe": "1-4_weeks",
+      "drivers": [
+        "Monetary policy divergence",
+        "Geopolitical concerns"
+      ],
+      "confidence_band": [
+        -4.99,
+        -1.99
+      ],
+      "metadata": {
+        "currency_pair": "USD/EUR",
+        "base_sentiment": -1.2000000000000002,
+        "quote_sentiment": 0.0
+      }
+    },
+    "fx_USD/CNY": {
+      "type": "currency_fx",
+      "prediction": -1.82,
+      "confidence": 0.86,
+      "direction": "weaken",
+      "timeframe": "1-4_weeks",
+      "drivers": [
+        "Monetary policy divergence",
+        "Geopolitical concerns"
+      ],
+      "confidence_band": [
+        -3.32,
+        -0.32
+      ],
+      "metadata": {
+        "currency_pair": "USD/CNY",
+        "base_sentiment": -1.2000000000000002,
+        "quote_sentiment": 0
+      }
+    },
+    "fx_USD/JPY": {
+      "type": "currency_fx",
+      "prediction": -2.53,
+      "confidence": 0.86,
+      "direction": "weaken",
+      "timeframe": "1-4_weeks",
+      "drivers": [
+        "Monetary policy divergence",
+        "Geopolitical concerns"
+      ],
+      "confidence_band": [
+        -4.03,
+        -1.03
+      ],
+      "metadata": {
+        "currency_pair": "USD/JPY",
+        "base_sentiment": -1.2000000000000002,
+        "quote_sentiment": 0
+      }
+    },
+    "sp500": {
+      "type": "equity_index",
+      "prediction": -0.28,
+      "confidence": 0.7,
+      "direction": "neutral",
+      "timeframe": "1_week",
+      "drivers": [
+        "Strong earnings sentiment"
+      ],
+      "confidence_band": [
+        -3.28,
+        2.72
+      ],
+      "metadata": {
+        "index": "S&P500",
+        "country": "US",
+        "top_sectors": {}
+      }
+    },
+    "inflation": {
+      "type": "inflation_cpi",
+      "prediction": 0.42,
+      "confidence": 0.75,
+      "direction": "up",
+      "timeframe": "1_month",
+      "drivers": [],
+      "confidence_band": [
+        0.03,
+        0.82
+      ],
+      "metadata": {
+        "energy_sentiment": -0.003448275862068966,
+        "supply_chain_sentiment": -0.003448275862068966,
+        "base_rate": 0.42174915905249305
+      }
+    },
+    "geopolitical_risk": {
+      "type": "geopolitical_risk",
+      "prediction": 89.8,
+      "confidence": 0.78,
+      "direction": "high",
+      "timeframe": "current",
+      "drivers": [
+        "Trade War (22.1)",
+        "Diplomatic (21.0)",
+        "Sanctions (5.6)"
+      ],
+      "confidence_band": [
+        79.76598295001648,
+        99.76598295001648
+      ],
+      "metadata": {
+        "risk_breakdown": {
+          "sanctions": 5.6,
+          "trade_war": 22.1,
+          "military": 0.0,
+          "diplomatic": 21.0,
+          "cyber": 0.0
+        },
+        "total_risk_mentions": 9
+      }
+    },
+    "consumer_confidence": {
+      "type": "consumer_confidence",
+      "prediction": 54.2,
+      "confidence": 0.75,
+      "direction": "neutral",
+      "timeframe": "current_month",
+      "drivers": [
+        "Wages positive"
+      ],
+      "confidence_band": [
+        49.2,
+        59.2
+      ],
+      "metadata": {
+        "month_change": -2.6,
+        "factor_breakdown": {
+          "employment": 0.0,
+          "prices": -0.04,
+          "wages": 0.28,
+          "retail": 0.2,
+          "housing": 0.1
+        }
+      }
+    },
+    "fdi_global": {
+      "type": "fdi_sentiment",
+      "prediction": 0.0,
+      "confidence": 0.7,
+      "direction": "stable",
+      "timeframe": "3-6_months",
+      "drivers": [],
+      "confidence_band": [
+        -30.0,
+        30.0
+      ],
+      "metadata": {
+        "country": "Global",
+        "sentiment_breakdown": {
+          "incentive": 0.0,
+          "expansion": 0.0,
+          "regulation": 0.0,
+          "stability": 0.0,
+          "relocation": 0
+        },
+        "data_points": 4
+      }
+    },
+    "commodity_oil": {
+      "type": "commodity_price",
+      "prediction": 4.65,
+      "confidence": 0.5,
+      "direction": "up",
+      "timeframe": "1-4_weeks",
+      "drivers": [],
+      "confidence_band": [
+        0.15,
+        9.15
+      ],
+      "metadata": {
+        "commodity": "oil",
+        "unit": "$/barrel",
+        "supply_demand_balance": 0
+      }
+    },
+    "commodity_gold": {
+      "type": "commodity_price",
+      "prediction": 2.61,
+      "confidence": 0.5,
+      "direction": "up",
+      "timeframe": "1-4_weeks",
+      "drivers": [
+        "Inventory build"
+      ],
+      "confidence_band": [
+        0.36,
+        4.86
+      ],
+      "metadata": {
+        "commodity": "gold",
+        "unit": "$/oz",
+        "supply_demand_balance": 0
+      }
+    },
+    "commodity_copper": {
+      "type": "commodity_price",
+      "prediction": -5.91,
+      "confidence": 0.5,
+      "direction": "down",
+      "timeframe": "1-4_weeks",
+      "drivers": [],
+      "confidence_band": [
+        -9.66,
+        -2.16
+      ],
+      "metadata": {
+        "commodity": "copper",
+        "unit": "$/ton",
+        "supply_demand_balance": 0
+      }
+    },
+    "commodity_wheat": {
+      "type": "commodity_price",
+      "prediction": 3.73,
+      "confidence": 0.5,
+      "direction": "up",
+      "timeframe": "1-4_weeks",
+      "drivers": [],
+      "confidence_band": [
+        -0.77,
+        8.23
+      ],
+      "metadata": {
+        "commodity": "wheat",
+        "unit": "$/bushel",
+        "supply_demand_balance": 0
+      }
+    },
+    "trade_us_china": {
+      "type": "trade_flow",
+      "prediction": 0.94,
+      "confidence": 0.5,
+      "direction": "stable",
+      "timeframe": "3_months",
+      "drivers": [],
+      "confidence_band": [
+        -4.06,
+        5.94
+      ],
+      "metadata": {
+        "exporter": "US",
+        "importer": "China",
+        "trade_pair": "US-China"
+      }
+    }
+  },
+  "sector_analysis": {
+    "technology": {
+      "articles": 31,
+      "sentiment": 0.9000000000000001,
+      "avg_sentiment": 0.029032258064516134
+    },
+    "finance": {
+      "articles": 16,
+      "sentiment": 0.30000000000000004,
+      "avg_sentiment": 0.018750000000000003
+    },
+    "healthcare": {
+      "articles": 3,
+      "sentiment": -0.30000000000000004,
+      "avg_sentiment": -0.10000000000000002
+    },
+    "energy": {
+      "articles": 2,
+      "sentiment": 0.0,
+      "avg_sentiment": 0.0
+    },
+    "consumer": {
+      "articles": 4,
+      "sentiment": 0.7000000000000001,
+      "avg_sentiment": 0.17500000000000002
+    },
+    "industrial": {
+      "articles": 1,
+      "sentiment": 0.0,
+      "avg_sentiment": 0.0
+    },
+    "real_estate": {
+      "articles": 3,
+      "sentiment": 0.30000000000000004,
+      "avg_sentiment": 0.10000000000000002
+    }
+  },
+  "feed_success_rate": "7 / 13",
+  "top_articles": [
+    {
+      "title": "Federal Reserve Board announces it will host a conference on payments innovation on Tuesday, October 21",
+      "source": "Federal Reserve",
+      "sentiment": 0.0,
+      "relevance": 1.0
+    },
+    {
+      "title": "Minutes of the Federal Open Market Committee, July 29\u201330, 2025",
+      "source": "Federal Reserve",
+      "sentiment": 0.0,
+      "relevance": 1.0
+    },
+    {
+      "title": "Barr, Booms and Busts and the Regulatory Cycle",
+      "source": "Federal Reserve",
+      "sentiment": 0.0,
+      "relevance": 1.0
+    },
+    {
+      "title": "It's getting a lot harder for global brands to win in China",
+      "source": "CNN Business",
+      "sentiment": 0.0,
+      "relevance": 1.0
+    },
+    {
+      "title": "Federal Reserve Board announces termination of enforcement action with Sumitomo Mitsui Banking Corporation and Sumitomo Mitsui Banking Corporation New York Branch",
+      "source": "Federal Reserve",
+      "sentiment": 0.0,
+      "relevance": 1.0
+    },
+    {
+      "title": "Powell, Opening Remarks",
+      "source": "Federal Reserve",
+      "sentiment": 0.0,
+      "relevance": 1.0
+    },
+    {
+      "title": "Federal Reserve Board issues enforcement action with former employee of Regions Bank",
+      "source": "Federal Reserve",
+      "sentiment": 0.0,
+      "relevance": 1.0
+    },
+    {
+      "title": "What the Fed should do",
+      "source": "Financial Times",
+      "sentiment": -0.30000000000000004,
+      "relevance": 1.0
+    },
+    {
+      "title": "What the Fed should do",
+      "source": "Financial Times",
+      "sentiment": -0.30000000000000004,
+      "relevance": 1.0
+    },
+    {
+      "title": "Israel Intensifies Gaza City Strikes as Rubio Heads to Qatar",
+      "source": "Bloomberg",
+      "sentiment": 0.0,
+      "relevance": 1.0
+    }
+  ]
+}

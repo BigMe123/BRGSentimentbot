@@ -1,0 +1,1517 @@
+{
+  "timestamp": "2025-09-16T22:27:38.294712",
+  "total_sources": 80,
+  "total_feeds": 80,
+  "successful_feeds": 78,
+  "failed_feeds": 2,
+  "sources": [
+    {
+      "domain": "cnbc.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html",
+          "status": "success",
+          "articles": 30,
+          "title": "US Top News and Analysis",
+          "last_updated": "Wed, 17 Sep 2025 02:25 GMT",
+          "sample_titles": [
+            "Fed set to cut rates, but forecast for rest of 2025 is key to markets with politics clouding the picture",
+            "Oracle and Silver Lake part of TikTok investor group as Trump extends deal deadline",
+            "China keeps tight grip on rare earths, costing at least one company 'millions of euros'"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "marketwatch.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://feeds.marketwatch.com/marketwatch/topstories/",
+          "status": "success",
+          "articles": 10,
+          "title": "MarketWatch.com - Top Stories",
+          "last_updated": "Wed, 17 Sep 2025 02:26:33 GMT",
+          "sample_titles": [
+            "Bloom Energy\u2019s stock is surging \u2014 and could ride Oracle\u2019s growth to even more gains",
+            "Does Palantir face a new threat from Salesforce? Software giants clash over lucrative government contracts.",
+            "StubHub\u2019s stock starts trading Wednesday. The IPO is a bet on the polarizing practice of ticket resale."
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "yahoo.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://finance.yahoo.com/rss/",
+          "status": "success",
+          "articles": 41,
+          "title": "Yahoo Finance",
+          "last_updated": "Tue, 16 Sep 2025 22:18:05 -0400",
+          "sample_titles": [
+            "Alaska Air Sees Quarterly Profit Hurt by Fuel Costs, Operational Challenges",
+            "Dollar Weighed Down by Fed Rate Cut Expectations",
+            "Prediction: Bank of America Will Soar Over the Next 5 Years. Here's 1 Reason Why."
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "cnn.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "http://rss.cnn.com/rss/edition.rss",
+          "status": "success",
+          "articles": 50,
+          "title": "CNN.com - RSS Channel - App International Edition",
+          "last_updated": "Thu, 22 Aug 2024 15:12:36 GMT",
+          "sample_titles": [
+            "Trump pleads not guilty to 34 felony counts",
+            "Haberman reveals why Trump attacked judge and his family in speech",
+            "What to know about the Trump indictment on the eve of his court appearance"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "foxnews.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "http://feeds.foxnews.com/foxnews/latest",
+          "status": "success",
+          "articles": 25,
+          "title": "Latest & Breaking News on Fox News",
+          "last_updated": "Tue, 16 Sep 2025 22:08:13 -0400",
+          "sample_titles": [
+            "Dearborn\u2019s Muslim mayor tells Christian he\u2019s \u2018not welcome\u2019 in debate on honoring pro-terror Arab leader",
+            "Minnesota House deadlocked after Democrats win special election to fill seat of slain lawmaker",
+            "FBI, NCIS bust former midshipman for alleged online threat against US Naval Academy"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "npr.org",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://feeds.npr.org/1001/rss.xml",
+          "status": "success",
+          "articles": 10,
+          "title": "NPR Topics: News",
+          "last_updated": "Tue, 16 Sep 2025 22:20:38 -0400",
+          "sample_titles": [
+            "Trump extends TikTok reprieve as deal nears",
+            "'People are scared': Congress grapples with increasing political violence",
+            "The U.S. said it would burn $9.7 million of birth control. Its fate is still unclear"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "businessinsider.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://feeds.businessinsider.com/custom/all",
+          "status": "success",
+          "articles": 20,
+          "title": "All Content from Business Insider",
+          "last_updated": "2025-09-17T02:27:42Z",
+          "sample_titles": [
+            "The founder of $2 billion AI website builder Framer says this is what designers should focus on to thrive in the age of AI",
+            "Belly is not the villain of 'The Summer I Turned Pretty.' This toxic VC bro is.",
+            "I've lived in Florida for 25 years. There's so much to do here in the fall, which is also the best time to visit."
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "techcrunch.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://techcrunch.com/feed/",
+          "status": "success",
+          "articles": 20,
+          "title": "TechCrunch",
+          "last_updated": "Wed, 17 Sep 2025 01:32:26 +0000",
+          "sample_titles": [
+            "Groww, backed by Satya Nadella, set to become first Indian startup to go public after U.S.-to-India move",
+            "Al Gore on China\u2019s climate rise: \u2018I would not have seen this coming\u2019",
+            "Meta Connect 2025: What to expect and how to watch"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "forbes.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://www.forbes.com/real-time/feed2/",
+          "status": "success",
+          "articles": 25,
+          "title": "Latest from Forbes",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Surprising Data On College Majors, Poverty Rates, And Gender Pay Gaps",
+            "\u2018Dancing With The Stars\u2019 Premiere Recap\u2014See The Week 1 Scores And Leaderboard",
+            "Modern Society And The Infrastructure Imperative"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "bloomberg.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://feeds.bloomberg.com/markets/news.rss",
+          "status": "success",
+          "articles": 30,
+          "title": "Bloomberg Markets",
+          "last_updated": "Wed, 17 Sep 2025 02:25:58 GMT",
+          "sample_titles": [
+            "India\u2019s Most Popular Big IPO of the Year Poised to Begin Trading",
+            "Asian Stock Index\u2019s New Record Shows Drivers Far Beyond China",
+            "Tencent, Baidu Sell Record Dim Sum Bonds for Cheap Funding"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "wsj.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
+          "status": "success",
+          "articles": 20,
+          "title": "WSJ.com: Markets",
+          "last_updated": "Mon, 27 Jan 2025 14:27:15 -0500",
+          "sample_titles": [
+            "Stocks Sink in Broad AI Rout Sparked by China's DeepSeek",
+            "Comex Gold, Silver Settle Lower",
+            "DeepSeek Won't Sink U.S. AI Titans"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "nytimes.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml",
+          "status": "success",
+          "articles": 50,
+          "title": "NYT > Business",
+          "last_updated": "Wed, 17 Sep 2025 02:27:30 +0000",
+          "sample_titles": [
+            "Fired by Trump, a Former Labor Official Warns Against Politicizing Economic Data",
+            "Surgeon General Nominee Pledges to Divest From Wellness Interests",
+            "G.O.P. Again Cedes Power on Tariffs to Avoid Crossing Trump"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "washingtonpost.com",
+      "country": "united_states",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "http://feeds.washingtonpost.com/rss/business",
+          "status": "success",
+          "articles": 13,
+          "title": "Business",
+          "last_updated": "Wed, 17 Sep 2025 02:27:27 +0000",
+          "sample_titles": [
+            "Republicans plan short-term funding extension, daring Democrats on shutdown",
+            "More employers fire workers over Kirk posts as pressure from right mounts",
+            "Trump files defamation and libel lawsuit against New York Times"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "xinhuanet.com",
+      "country": "china",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "http://www.xinhuanet.com/english/rss/worldrss.xml",
+          "status": "success",
+          "articles": 20,
+          "title": "XINHUANEWS",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Palestinians clash with Israeli soldiers after protest against Pence visit",
+            "U.S. failure to appoint Australian ambassador \"diplomatic insult\": former deputy PM",
+            "Speaker of Hungarian Parliament addresses in Budapest"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "chinadaily.com.cn",
+      "country": "china",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "http://www.chinadaily.com.cn/rss/china_rss.xml",
+          "status": "success",
+          "articles": 100,
+          "title": "China Daily > China News",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Education, health fees among key concerns",
+            "Education, health fees among key concerns",
+            "International group praises green revival"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "cgtn.com",
+      "country": "china",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.cgtn.com/subscribe/rss/section/business.xml",
+          "status": "success",
+          "articles": 50,
+          "title": "Business",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Investing in China is investing in future: Vice commerce minister",
+            "Chinese vice president to attend opening ceremony of China-ASEAN Expo",
+            "International postal traffic down over 80% amid tariff policies"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "scmp.com",
+      "country": "china",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.scmp.com/rss/91/feed",
+          "status": "success",
+          "articles": 50,
+          "title": "News - South China Morning Post",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "\u2018Quiet\u2019: Trump angry at Australian reporter for asking about his wealth",
+            "British Queen Camilla falls ill before Trump\u2019s UK state visit",
+            "\u2018A force for good\u2019: Filipino content creators mobilise against corruption"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "dw.com",
+      "country": "germany",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://rss.dw.com/rdf/rss-en-bus",
+          "status": "success",
+          "articles": 20,
+          "title": "Deutsche Welle: DW.com - Business",
+          "last_updated": "2025-09-17T02:26:36Z",
+          "sample_titles": [
+            "Is Europe winter-ready despite lower gas stocks?",
+            "Trump turns crypto king \u2014 but at what cost?",
+            "Africa sees space as 'a means to an end'"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "spiegel.de",
+      "country": "germany",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.spiegel.de/international/index.rss",
+          "status": "success",
+          "articles": 20,
+          "title": "DER SPIEGEL - International",
+          "last_updated": "Thu, 11 Sep 2025 20:11:00 +0200",
+          "sample_titles": [
+            "Trump's Prisoners in El Salvador: Returning Home from Hell",
+            "Killings of Civilians in Gaza: How DER SPIEGEL Reported on a Suspected War Crime",
+            "Targeted Killings: Israeli soldier from Munich allegedly shot unarmed men in Gaza"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "faz.net",
+      "country": "germany",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.faz.net/rss/aktuell/",
+          "status": "success",
+          "articles": 71,
+          "title": "Aktuell - FAZ.NET",
+          "last_updated": "Wed, 17 Sep 2025 02:22:45 GMT",
+          "sample_titles": [
+            "Anklage gegen Tyler R.: \u201eIch hatte genug von seinem Hass\u201c",
+            "USA unter Trump: Mutma\u00dflicher Kirk-Attent\u00e4ter wegen Mordes angeklagt",
+            "Tyler R. und die Gamer-Kultur: Wie radikalisierte sich der Kirk-Attent\u00e4ter?"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "tagesschau.de",
+      "country": "germany",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.tagesschau.de/xml/rss2/",
+          "status": "success",
+          "articles": 40,
+          "title": "tagesschau.de - Die Nachrichten der ARD",
+          "last_updated": "2023-04-14T07:19:20Z",
+          "sample_titles": [
+            "Tausende demonstrieren in Slowakei gegen Fico-Regierung",
+            "Streit um TikTok: Trump verk\u00fcndet Einigung mit China",
+            "Marktbericht: Gespanntes Warten auf die Fed"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "zeit.de",
+      "country": "germany",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://newsfeed.zeit.de/wirtschaft/index",
+          "status": "success",
+          "articles": 15,
+          "title": "Wirtschaft - Neuigkeiten von der B\u00f6rse und aus Unternehmen",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Handelskonflikt zwischen USA und China: Trump verl\u00e4ngert Deadline f\u00fcr Sperre von TikTok erneut",
+            "Jindal Steel: Indischer Konzern legt Angebot f\u00fcr Thyssenkrupp-Stahlsparte vor",
+            "Automobilindustrie: Ford k\u00fcndigt Abbau von bis zu 1.000 Stellen in K\u00f6ln an"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "welt.de",
+      "country": "germany",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.welt.de/wirtschaft/?service=Rss",
+          "status": "success",
+          "articles": 30,
+          "title": "Wirtschaft - WELT",
+          "last_updated": "Tue, 16 Sep 2025 19:26:43 GMT",
+          "sample_titles": [
+            "Deutschland fliegt aus Top 10 der innovativsten L\u00e4nder",
+            "ETF oder Aktienfonds? So lautet die neue Antwort auf diese gro\u00dfe Geldfrage",
+            "\u201eDie Lage ist bedrohlich\u201c"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "manager-magazin.de",
+      "country": "germany",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.manager-magazin.de/news/index.rss",
+          "status": "success",
+          "articles": 30,
+          "title": "manager magazin - Schlagzeilen",
+          "last_updated": "Tue, 16 Sep 2025 18:51:00 +0200",
+          "sample_titles": [
+            "Nestl\u00e9: F\u00fchrungswechsel bei Nestl\u00e9 - Pablo Isla folgt auf Paul Bulcke",
+            "Journalisten sp\u00fcren Jan Marsalek in Moskau auf",
+            "ProSiebenSat.1: Konzern senkt Umsatz- und Gewinnerwartungen"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "wiwo.de",
+      "country": "germany",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.wiwo.de/contentexport/feed/rss/schlagzeilen",
+          "status": "success",
+          "articles": 20,
+          "title": "WirtschaftsWoche Online Schlagzeilen",
+          "last_updated": "Wed, 17 Sep 2025 04:27:08 +0200",
+          "sample_titles": [
+            "Neobroker: Die versteckten Details des neuen Superreichen-Investments bei Trade Republic",
+            "Nach Kritik: Nestl\u00e9-Verwaltungsratschef tritt fr\u00fcher zur\u00fcck als geplant",
+            "Angebot f\u00fcr Thyssenkrupps Stahlsparte: Die indische Verlockung"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "n-tv.de",
+      "country": "germany",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.n-tv.de/wirtschaft/rss",
+          "status": "success",
+          "articles": 30,
+          "title": "n-tv.de - Wirtschaft",
+          "last_updated": "Wed, 17 Sep 2025 04:25:52 +0200",
+          "sample_titles": [
+            "Gold weiter auf Rekordjagd: US-Anleger bleiben vor Fed-Entscheid in Deckung",
+            "Nebenkosten stark gestiegen: Energierechnungen f\u00fcr Millionen Haushalte unbezahlbar",
+            "China-Schmuggel im gro\u00dfen Stil: Gro\u00dfrazzia im Hafen von Pir\u00e4us zeigt Europas Schwachstellen"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "bbc.com",
+      "country": "united_kingdom",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "http://feeds.bbci.co.uk/news/business/rss.xml",
+          "status": "success",
+          "articles": 50,
+          "title": "BBC News",
+          "last_updated": "Wed, 17 Sep 2025 02:27:59 GMT",
+          "sample_titles": [
+            "End of the road for manual drivers? More learners opt for automatics in tests",
+            "AI could boost UK economy by 10% in five years, says Microsoft boss",
+            "Why the US is expected to cut interest rates"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "ft.com",
+      "country": "united_kingdom",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.ft.com/rss/home/uk",
+          "status": "success",
+          "articles": 11,
+          "title": "UK homepage",
+          "last_updated": "Wed, 17 Sep 2025 02:28:09 GMT",
+          "sample_titles": [
+            "UK watchdog to downgrade productivity forecast, deepening fiscal gap",
+            "UK wage growth signals inflation-busting increase in state pension",
+            "UK hopes pomp and ceremony of Trump\u2019s state visit will distract from tricky questions"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "theguardian.com",
+      "country": "united_kingdom",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.theguardian.com/uk/business/rss",
+          "status": "success",
+          "articles": 40,
+          "title": "Business | The Guardian",
+          "last_updated": "2025-09-17T02:23:15Z",
+          "sample_titles": [
+            "UK set on resolving standoff with big pharma, science minister says",
+            "UK state pension likely to rise by 4.7% under triple lock",
+            "New headache for Rachel Reeves as OBR expected to lower productivity forecast"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "independent.co.uk",
+      "country": "united_kingdom",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.independent.co.uk/news/business/rss",
+          "status": "success",
+          "articles": 14,
+          "title": "The Independent Business",
+          "last_updated": "2025-09-17T02:22:19Z",
+          "sample_titles": [
+            "UK \u2018difficult\u2019 operating environment says Merck boss after \u00a31bn London site axed",
+            "Stocks end down as Fed policy meeting begins",
+            "Another high street bank joins the cash offer war in bid to win your current account"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "cityam.com",
+      "country": "united_kingdom",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.cityam.com/feed/",
+          "status": "success",
+          "articles": 30,
+          "title": "City AM",
+          "last_updated": "Tue, 16 Sep 2025 18:16:17 +0000",
+          "sample_titles": [
+            "\u2018Exhausting\u2019 house buying process damaging the economy, says Santander",
+            "Trump visit brings \u2018historic\u2019 \u00a330bn investment into UK tech and AI",
+            "OBR \u2018downgrades productivity\u2019 in major pre-Budget blow to Rachel Reeves"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "economist.com",
+      "country": "united_kingdom",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.economist.com/britain/rss.xml",
+          "status": "success",
+          "articles": 300,
+          "title": "Britain",
+          "last_updated": "Tue, 16 Sep 2025 16:53:38 +0000",
+          "sample_titles": [
+            "King Charles III has mellowed over the past 30 years",
+            "Donald Trump is unpopular in Britain. Trumpism is thriving",
+            "Rebellious tube drivers have less bargaining power than before"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "standard.co.uk",
+      "country": "united_kingdom",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.standard.co.uk/business/rss",
+          "status": "success",
+          "articles": 4,
+          "title": "The Standard Business",
+          "last_updated": "2025-09-17T02:18:49Z",
+          "sample_titles": [
+            "State pension set to rise by more than \u00a3500 next year",
+            "Government payroll surges to record 4.04 million on NHS and civil service hiring spree",
+            "Hedonistic nightclub Tramp to open huge new Mayfair wellness centre"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "economictimes.indiatimes.com",
+      "country": "india",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://economictimes.indiatimes.com/rssfeedstopstories.cms",
+          "status": "success",
+          "articles": 51,
+          "title": "Economic Times",
+          "last_updated": "Wed, 17 Sep 2025 07:32:55 +0530",
+          "sample_titles": [
+            "On birthday eve, Modi gets Trump's call",
+            "The $16 mn reason why Pak agreed to play with UAE",
+            "US rejects India's for WTO talks on copper tariffs"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "thehindu.com",
+      "country": "india",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.thehindu.com/business/feeder/default.rss",
+          "status": "success",
+          "articles": 100,
+          "title": "Business News Today, Latest Finance News | The Hindu",
+          "last_updated": "Wed, 17 Sep 2025 07:55:13 +0530",
+          "sample_titles": [
+            "Finance Ministry\u2019s financial inclusion push sees 61 lakh new bank accounts, 2.6 crore insurance enrolments so far",
+            "Simple Energy makes country's first rare earth free motors",
+            "Cyient arm, Anora to set up semicon validation, production test facility in Bengaluru"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "indianexpress.com",
+      "country": "india",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://indianexpress.com/section/business/rss/",
+          "status": "success",
+          "articles": 200,
+          "title": "Business | The Indian Express",
+          "last_updated": "Tue, 16 Sep 2025 21:09:35 +0000",
+          "sample_titles": [
+            "India\u2019s Russian oil imports robust in Sept so far, crude loadings from ports stable",
+            "GST 2.0: Re-labelling of drugs, medical devices not mandatory for stocks issued before Sept 22",
+            "Trade talks \u2018positive\u2019, govt says will intensify efforts to close US deal early"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "livemint.com",
+      "country": "india",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.livemint.com/rss/markets",
+          "status": "success",
+          "articles": 35,
+          "title": "mint - markets",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Stocks to watch: RailTel, Coal India, Apollo Tyres, BEL among shares in focus today",
+            "Nifty 50, Sensex today: What to expect from Indian stock market in trade on September 17, ahead of US Fed policy",
+            "Buy or sell: Vaishali Parekh recommends three stocks to buy today ahead of the US Fed meeting \u2014 17 September 2025"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "ndtv.com",
+      "country": "india",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://feeds.feedburner.com/ndtvprofit-latest",
+          "status": "success",
+          "articles": 20,
+          "title": "NDTV News Search Records Found 1000",
+          "last_updated": "Wed, 17 Sep 2025 06:43:41 +0530",
+          "sample_titles": [
+            "'Adani Cement FutureX' Programme Launched To Prepare Future Innovators",
+            "Income Tax Return DeadlineToday: Over 1 Crore Tax Filings Expected",
+            "Adani Power To Supply Power From Greenfield 1,600 MW Thermal Plant In Madhya Pradesh"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "lefigaro.fr",
+      "country": "france",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.lefigaro.fr/rss/figaro_economie.xml",
+          "status": "success",
+          "articles": 20,
+          "title": "Le Figaro - Economie - Actualit\u00e9 \u00e9conomique et financi\u00e8re, conseils en gestion de patrimoine",
+          "last_updated": "Wed, 17 Sep 2025 04:25:30 +0200",
+          "sample_titles": [
+            "Gr\u00e8ve du 18 septembre : SNCF, RATP, a\u00e9rien\u2026 Retrouvez les pr\u00e9visions compl\u00e8tes de trafic dans les transports",
+            "Gr\u00e8ve du 18 septembre : RATP, SNCF, \u00e9coles... \u00c0 quelles perturbations faut-il s\u2019attendre ?",
+            "Gr\u00e8ve du 18 septembre : quel parcours pour la manifestation intersyndicale \u00e0 Paris ?"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "lemonde.fr",
+      "country": "france",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.lemonde.fr/economie/rss_full.xml",
+          "status": "success",
+          "articles": 20,
+          "title": "\u00c9conomie : Toute l\u2019actualit\u00e9 sur Le Monde.fr.",
+          "last_updated": "Wed, 17 Sep 2025 02:25:56 +0000",
+          "sample_titles": [
+            "Mobilisation du 18\u00a0septembre\u00a0: des \u00e9coles aux transports, une journ\u00e9e de\u00a0gr\u00e8ve sur tous les fronts",
+            "Nestl\u00e9 annonce la\u00a0d\u00e9mission de\u00a0Paul Bulcke, le\u00a0pr\u00e9sident de\u00a0son conseil d\u2019administration",
+            "Municipales 2026\u00a0: \u00e0 Marseille, Martine Vassal candidate d\u2019une union de\u00a0la\u00a0droite et\u00a0du\u00a0centre \u00e0\u00a0concr\u00e9tiser"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "liberation.fr",
+      "country": "france",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.liberation.fr/arc/outboundfeeds/rss/category/economie/",
+          "status": "success",
+          "articles": 50,
+          "title": "Lib\u00e9ration",
+          "last_updated": "Wed, 17 Sep 2025 02:28:21 +0000",
+          "sample_titles": [
+            "Fraude fiscale : les salari\u00e9s spoli\u00e9s de Lactalis vont r\u00e9clamer leur d\u00fb devant la justice",
+            "\u00abJourn\u00e9e noire\u00bb dans les transports, un tiers de gr\u00e9vistes dans les \u00e9coles\u2026 A quoi s\u2019attendre\u00a0pour le 18\u00a0septembre\u00a0?",
+            "P\u00e9nurie de Mont Roucous dans les rayons des supermarch\u00e9s\u00a0: \u00abIl y a plein d\u2019autres eaux min\u00e9rales adapt\u00e9es aux nourrissons\u00bb"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "challenges.fr",
+      "country": "france",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.challenges.fr/rss.xml",
+          "status": "success",
+          "articles": 50,
+          "title": "Challenges en temps r\u00e9el : accueil",
+          "last_updated": "Wed, 17 Sep 2025 01:58:57 +0000",
+          "sample_titles": [
+            "Sous pression, le pr\u00e9sident de Nestl\u00e9 jette l\u2019\u00e9ponge",
+            "\u00ab Porter la part de logements publics \u00e0 40 % d\u2019ici dix ans \u00bb : l\u2019ambitieux plan de David Belliard pour les municipales parisiennes",
+            "Trump au Royaume-Uni : faste royal, enjeux politiques et manifestations"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "bfmtv.com",
+      "country": "france",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.bfmtv.com/rss/economie/",
+          "status": "success",
+          "articles": 30,
+          "title": "Homepage Economie - actualit\u00e9s",
+          "last_updated": "Wed, 17 Sep 2025 02:27:19 GMT",
+          "sample_titles": [
+            "BFM Acad\u00e9mie, saison 18, \u00e9pisode 1 : Le choix des coachs",
+            "Tech & Co Business - Mardi 16 septembre",
+            "L'int\u00e9grale de Tech & Co Business du mardi 16 septembre"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "franceinfo.fr",
+      "country": "france",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.francetvinfo.fr/economie.rss",
+          "status": "success",
+          "articles": 20,
+          "title": "Franceinfo- \u00c9co / Conso",
+          "last_updated": "Wed, 17 Sep 2025 04:26:20 +0200",
+          "sample_titles": [
+            "\"Il faut plus de justice fiscale tout en permettant \u00e0 la France de rester attractive pour les entrepreneurs\", affirme Arthur Mensch, cofondateur de Mistral AI.",
+            "\"Au d\u00e9but du mois \u00e7a va encore, mais \u00e0 la fin c'est une catastrophe\" : quand le budget dicte les courses d'alimentation",
+            "Mobilisation du 18\u00a0septembre\u00a0: 98% des pharmacies seront en gr\u00e8ve, selon le sondage de deux syndicats"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "nhk.or.jp",
+      "country": "japan",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www3.nhk.or.jp/rss/news/cat0.xml",
+          "status": "success",
+          "articles": 7,
+          "title": "NHK\u30cb\u30e5\u30fc\u30b9",
+          "last_updated": "Wed, 17 Sep 2025 11:12:40 +0900",
+          "sample_titles": [
+            "\u7dca\u6025\u5bfe\u7b56\u5fc5\u8981\u306a\u4e0b\u6c34\u9053\u7ba1 \u5168\u56fd\u306b\u7d0472km \u56fd\u4ea4\u7701\u304c\u8abf\u67fb\u7d50\u679c\u3092\u516c\u8868",
+            "\u30ec\u30b9\u30ea\u30f3\u30b0\u4e16\u754c\u9078\u624b\u6a29 \u5c3e\u897f\u685c\u304c\u91d1\u30e1\u30c0\u30eb\u7372\u5f97 \u5973\u5b5059\u30ad\u30ed\u7d1a",
+            "8\u6708\u8cbf\u6613\u7d71\u8a08 \u7c73\u56fd\u5411\u3051\u8f38\u51fa\u984d 5\u304b\u6708\u9023\u7d9a\u6e1b\u5c11 \u81ea\u52d5\u8eca\u306f28\uff05\u4f59\u6e1b"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "koreaherald.com",
+      "country": "south_korea",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.koreaherald.com/rss/",
+          "status": "warning",
+          "error": "Parse error: <unknown>:52:2: mismatched tag",
+          "articles": 0
+        }
+      ]
+    },
+    {
+      "domain": "folha.uol.com.br",
+      "country": "brazil",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml",
+          "status": "success",
+          "articles": 100,
+          "title": "Folha de S.Paulo - Em cima da hora - Principal",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "A Fazenda 17: Infiltrado, Matheus perde R$ 5 mil por n\u00e3o cantar 'Macarena'",
+            "BC deve manter Selic em 15% nesta quarta, e Fed tem previs\u00e3o de baixar juros em meio \u00e0 press\u00e3o de Trump",
+            "Governo dos EUA quer anular a pr\u00f3pria autoridade de regular emiss\u00f5es de gases, dizem cientistas"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "cbc.ca",
+      "country": "canada",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://rss.cbc.ca/lineup/topstories.xml",
+          "status": "success",
+          "articles": 20,
+          "title": "CBC | Top Stories News",
+          "last_updated": "Tue, 16 Sep 2025 21:17:57 EDT",
+          "sample_titles": [
+            "Minister dismisses concerns over discrimination as Alberta's citizenship marker on IDs draws skepticism",
+            "Tributes pour in for Hollywood 'golden boy' Robert Redford after his death at 89",
+            "Freeland leaving cabinet, won't run in next federal election"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "cbc.ca",
+      "country": "canada",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://rss.cbc.ca/lineup/business.xml",
+          "status": "success",
+          "articles": 20,
+          "title": "CBC | Business News",
+          "last_updated": "Tue, 16 Sep 2025 13:49:07 EDT",
+          "sample_titles": [
+            "Air Canada flight attendants' union asks to cancel mediation process, sending wage issue to arbitration",
+            "Canada's inflation rate rose to 1.9% in August",
+            "Joly says Teck, Anglo CEOs will have to convince her merger is in national interest"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "globalnews.ca",
+      "country": "canada",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://globalnews.ca/news/feed/",
+          "status": "success",
+          "articles": 10,
+          "title": ": News",
+          "last_updated": "Tue, 16 Sep 2025 16:09:10 +0000",
+          "sample_titles": [
+            "WATCH: Global News Hour at 6 BC: Sept. 15",
+            "Lethbridge first responders celebrate 1 year of youth initiative",
+            "WATCH: Global Okanagan News at 5:30 p.m. \u2013 Sept. 15, 2025"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "abc.net.au",
+      "country": "australia",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.abc.net.au/news/feed/51120/rss.xml",
+          "status": "success",
+          "articles": 25,
+          "title": "Just In",
+          "last_updated": "Wed, 17 Sep 2025 01:31:02 +0000",
+          "sample_titles": [
+            "Major threat to Australian grains industry found in imported nappy pants",
+            "Qld man accused of assisting suicides also allegedly posed as lawyer",
+            "Quicker, less destructive renewables rollout possible, report finds"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "smh.com.au",
+      "country": "australia",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.smh.com.au/rss/feed.xml",
+          "status": "success",
+          "articles": 20,
+          "title": "Sydney Morning Herald - Latest News",
+          "last_updated": "Wed, 17 Sep 2025 12:27:26 +1000",
+          "sample_titles": [
+            "\u2018Entire ecosystem being torn apart\u2019: Starving wallabies will be sedated and relocated after mass deaths",
+            "Planners slam Hobart stadium",
+            "Blow for Devils: Planning commission says no to Hobart stadium"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "nos.nl",
+      "country": "netherlands",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://feeds.nos.nl/nosnieuwsalgemeen",
+          "status": "success",
+          "articles": 20,
+          "title": "NOS Nieuws",
+          "last_updated": "Wed, 17 Sep 2025 04:27:50 +0200",
+          "sample_titles": [
+            "Brand in Heiloo bij filiaal van pizzaketen door opladende accu's",
+            "Toezichthouder VS onderzoekt defect bij openen van deuren Tesla's",
+            "Veiling Downton Abbey-kostuums en rekwisieten levert bijna 2 miljoen euro op"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "svt.se",
+      "country": "sweden",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.svt.se/nyheter/rss.xml",
+          "status": "success",
+          "articles": 20,
+          "title": "SVT Nyheter",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Folkr\u00e4ttsprofessorn om utredningen: \u201d\u00c4r v\u00e4l s\u00e5 n\u00e4ra man kan komma\u201d",
+            "Polisinsats i Abrahamsberg \u2013 misst\u00e4nkt farligt f\u00f6rem\u00e5l",
+            "Fr\u00e5n h\u00f6ga betyg till misst\u00e4nkt m\u00f6rdare \u2013 vem \u00e4r Tyler Robinson?"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "nrk.no",
+      "country": "norway",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.nrk.no/toppsaker.rss",
+          "status": "success",
+          "articles": 100,
+          "title": "NRK",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Fire arrestert etter projisering av Trump- og Epstein-bilder p\u00e5 Windsor Castle",
+            "N\u00e5 kommer sola tilbake: \u2013 Et blaff av sommer",
+            "Trump har landet i Storbritannia"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "elpais.com",
+      "country": "spain",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
+          "status": "success",
+          "articles": 137,
+          "title": "EL PA\u00cdS: el peri\u00f3dico global",
+          "last_updated": "Wed, 17 Sep 2025 02:09:18 GMT",
+          "sample_titles": [
+            "Israel inicia su ofensiva terrestre en Ciudad de Gaza, donde a\u00fan permanecen 600.000 civiles",
+            "La UE aprobar\u00e1 este mi\u00e9rcoles la suspensi\u00f3n parcial del acuerdo comercial con Israel por la masacre de Gaza",
+            "El Rey critica la \u201cinsoportable\u201d crisis humanitaria de Gaza en su viaje de Estado a Egipto"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "repubblica.it",
+      "country": "italy",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
+          "status": "success",
+          "articles": 30,
+          "title": "Repubblica.it",
+          "last_updated": "Wed, 17 Sep 2025 04:02:10 +0200",
+          "sample_titles": [
+            "Guerra Ucraina - Russia, le news di oggi. Zelensky: \u201cDrone su Varsavia \u00e8 un\u2019intimidazione di Mosca alla Nato\u201d",
+            "Tank e raid, Israele all\u2019assalto finale: \u201cGaza brucia\u201d. Cento i morti",
+            "Fuoco, acciaio e ira: nell\u2019attacco di Israele i migliori reparti dell\u2019esercito"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "rt.com",
+      "country": "russia",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.rt.com/rss/",
+          "status": "success",
+          "articles": 100,
+          "title": "RT - Daily news",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "4 arrested after photos of Trump and Epstein projected onto Windsor Castle",
+            "Putin names purpose of Russia-Belarus drills",
+            "Suspect in Charlie Kirk murder held \u2018trans-oriented\u2019 views \u2013 attorney"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "milenio.com",
+      "country": "mexico",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://www.milenio.com/rss",
+          "status": "success",
+          "articles": 20,
+          "title": "MILENIO - Noticias de hoy en M\u00e9xico y el mundo",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Poncho Herrera rechaz\u00f3 pel\u00edcula en EU para protagonizar \u2018Las Muertas\u2019: \u201cSiempre voy a ser leal con Luis Estrada\u201d",
+            "Arrancan foros para reforma electoral: misma esencia del Plan A pero con t\u00e9rminos matizados",
+            "'Piojo' Alvarado es baja de Chivas para jugar ante Tigres por lesi\u00f3n"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "clarin.com",
+      "country": "argentina",
+      "region": "americas",
+      "feeds": [
+        {
+          "url": "https://www.clarin.com/rss/lo-ultimo/",
+          "status": "success",
+          "articles": 10,
+          "title": "Clarin.com - Home - Lo \u00faltimo",
+          "last_updated": "Wed, 17 Sep 2025 01:13:38 +0000",
+          "sample_titles": [
+            "Hor\u00f3scopo de hoy, mi\u00e9rcoles 17 de septiembre: las predicciones para la salud, el amor y el dinero",
+            "Milei esconde la motosierra en el placard para darle un poco de aire a la econom\u00eda",
+            "Qu\u00e9 significa cuando \"cr\u00edas\" a tu pareja, seg\u00fan la psicolog\u00eda"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "news24.com",
+      "country": "south_africa",
+      "region": "africa",
+      "feeds": [
+        {
+          "url": "https://feeds.news24.com/articles/news24/topstories/rss",
+          "status": "success",
+          "articles": 18,
+          "title": "News24 news24/topstories/rss",
+          "last_updated": "Wednesday Sep 17 2025 04:28:43",
+          "sample_titles": [
+            "News24 | Utah prosecutors seek death penalty for suspect in Charlie Kirk assassination",
+            "News24 | Cape Town mayoral race shakeup; Mashatile\u2019s kids score R91m tender: Today\u2019s top 7 stories",
+            "News24 | Pay white farmers first \u2014 US lawmaker wants to block loans to Zim"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "channelnewsasia.com",
+      "country": "singapore",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml",
+          "status": "success",
+          "articles": 20,
+          "title": "Latest News",
+          "last_updated": "Wed, 17 Sep 2025 10:25:26 +0800",
+          "sample_titles": [
+            "Oil prices hold steady as markets await Fed rate decision",
+            "Jane Fonda, Leonardo DiCaprio, Barbra Streisand and more mourn the death of Robert Redford",
+            "FBI chief Kash Patel spars with Democrats in heated Senate hearing"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "bangkokpost.com",
+      "country": "thailand",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.bangkokpost.com/rss/data/topstories.xml",
+          "status": "success",
+          "articles": 10,
+          "title": "Bangkokpost.com : Top Stories",
+          "last_updated": "Wed, 17 Sep 2025 09:27:12",
+          "sample_titles": [
+            "EVs sales grow despite downbeat market",
+            "Local market bullish on likely Fed rate cut",
+            "Budget for elderly welfare ballooning"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "inquirer.net",
+      "country": "philippines",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.inquirer.net/fullfeed",
+          "status": "success",
+          "articles": 20,
+          "title": "INQUIRER.net",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Floods devastate India's breadbasket of Punjab",
+            "Jane Fonda, Leonardo DiCaprio, Barbra Streisand mourn Robert Redford's death",
+            "PCC extends review on Grab driver\u2019s perks"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "polsatnews.pl",
+      "country": "poland",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.polsatnews.pl/rss/swiat.xml",
+          "status": "success",
+          "articles": 50,
+          "title": "Polsat News - Wiadomo\u015bci - \u015awiat",
+          "last_updated": "Wed, 17 Sep 2025 00:19:34 +0200",
+          "sample_titles": [
+            "Donald Trump dosta\u0142 niewygodne pytanie. \"Szkodzisz swemu krajowi\"",
+            "100 tysi\u0119cy \u017co\u0142nierzy na manewrach. Putin pojawi\u0142 si\u0119 na poligonie",
+            "\u0141ukaszenka u\u0142askawi\u0142 wi\u0119\u017ani\u00f3w politycznych. Byli skazani za \"przest\u0119pstwa ekstremistyczne\""
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "ct24.ceskatelevize.cz",
+      "country": "czech_republic",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://ct24.ceskatelevize.cz/rss/hlavni-zpravy",
+          "status": "success",
+          "articles": 30,
+          "title": "\u010cT24 \u2014 V\u00fdb\u011br redakce",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Mu\u017ee, kter\u00fd m\u011bl zast\u0159elit aktivistu Kirka, ob\u017ealovali. Hroz\u00ed mu i trest smrti",
+            "P\u0159edvolebn\u00ed debata o soci\u00e1ln\u00edch v\u011bcech",
+            "Exkandid\u00e1ta na rumunsk\u00e9ho prezidenta Georgesca ob\u017ealovali z pokusu o pu\u010d"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "index.hu",
+      "country": "hungary",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://index.hu/24ora/rss/",
+          "status": "success",
+          "articles": 50,
+          "title": "Index - 24\u00f3ra",
+          "last_updated": "Wed, 17 Sep 2025 00:15:00 +0200",
+          "sample_titles": [
+            "Erre figyeljen, ha seg\u00edteni szeretne baj eset\u00e9n!",
+            "A Real Madrid kiszenvedte a sikert, a Fradi kiejt\u0151je csod\u00e1t tett a BL-rajton",
+            "Ejtett\u00e9k a terrorizmus v\u00e1dj\u00e1t Luigi Mangione ellen"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "digi24.ro",
+      "country": "romania",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.digi24.ro/rss",
+          "status": "success",
+          "articles": 263,
+          "title": "Digi24",
+          "last_updated": "Wed, 17 Sep 2025 05:28:04 +0300",
+          "sample_titles": [
+            "Premierul anun\u021b\u0103 o nou\u0103 conducere la Vam\u0103, de miercuri: Altfel nu putem avea banii s\u0103 mergem c\u0103tre investi\u021bii",
+            "Donald Trump anun\u021b\u0103 distrugerea unei a treia ambarca\u021biuni venezuelene: \u201eNu mai trimite\u021bi droguri \u00een Statele Unite\u201d",
+            "Donald Trump a ajuns \u00een Marea Britanie, \u00eentr-o vizit\u0103 de stat atent coregrafiat\u0103: \u201e\u00cel flatezi, \u00eel \u00eembunezi, \u00eel distragi\u201d"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "kyivpost.com",
+      "country": "ukraine",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.kyivpost.com/rss.xml",
+          "status": "warning",
+          "error": "Parse error: <unknown>:2:0: syntax error",
+          "articles": 0
+        }
+      ]
+    },
+    {
+      "domain": "stuff.co.nz",
+      "country": "new_zealand",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.stuff.co.nz/rss",
+          "status": "success",
+          "articles": 87,
+          "title": "Stuff - /",
+          "last_updated": "2025-09-17T02:23:22Z",
+          "sample_titles": [
+            "NZ\u2019s security service defends \u2018operational activities\u2019 after Chinese embassy accuses its staff of harassment",
+            "\u2018Go big aunty\u2019: Portia Woodman-Wickliffe\u2019s biggest fan is the son of a Black Ferns team-mate",
+            "Truck rolls in Canterbury amid gusts of up to 130kph"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "orf.at",
+      "country": "austria",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://rss.orf.at/news.xml",
+          "status": "success",
+          "articles": 25,
+          "title": "news.ORF.at",
+          "last_updated": "2025-09-16T23:58:13+02:00",
+          "sample_titles": [
+            "Royaler Pomp und heikle Politik",
+            "Von der Leyen: Gespr\u00e4ch mit Trump zu Druck auf Russland",
+            "Draghi tadelt Europas Tr\u00e4gheit"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "dr.dk",
+      "country": "denmark",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://www.dr.dk/nyheder/service/feeds/allenyheder",
+          "status": "success",
+          "articles": 20,
+          "title": "Kort nyt | DR",
+          "last_updated": "Wed, 17 Sep 2025 02:27:16 GMT",
+          "sample_titles": [
+            "Tyler Robinson tonede frem p\u00e5 sk\u00e6rmen i beskyttelsesvest og bekr\u00e6ftede sit navn",
+            "Bolsonaro sendt p\u00e5 hospitalet med opkastning og lavt blodtryk",
+            "Mineselskaber med tr\u00e5de til Kina sags\u00f8gt for milj\u00f8katastrofe i Zambia"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "thedailystar.net",
+      "country": "bangladesh",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.thedailystar.net/rss.xml",
+          "status": "success",
+          "articles": 10,
+          "title": "The Daily Star",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "AusChamp",
+            "momentaus",
+            "MomentIndia"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "dawn.com",
+      "country": "pakistan",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.dawn.com/feeds/home",
+          "status": "success",
+          "articles": 24,
+          "title": "Dawn - Home",
+          "last_updated": "Wed, 17 Sep 2025 07:28:35 +0500",
+          "sample_titles": [
+            "Pakistan warns of \u2018dangerous escalation\u2019 as UNHRC urges accountability for Israel\u2019s Qatar attack",
+            "IHC\u2019s Justice Babar Sattar orders removal of PTA chairman over \u2018illegal\u2019 appointment to office",
+            "Asia Cup: Pakistan cancel pre-match press conference ahead of UAE encounter as crisis deepens"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "adaderana.lk",
+      "country": "sri_lanka",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "http://www.adaderana.lk/rss.php",
+          "status": "success",
+          "articles": 20,
+          "title": "AdaDerana RSS",
+          "last_updated": "Wed, 17 Sep 2025 07:21:25 +0530",
+          "sample_titles": [
+            "Construction of Kadawatha\u2013Mirigama section of Central Expressway resumes today",
+            "Court grants CID permission to probe bank accounts of Panadura Nilanga",
+            "Mexico s President Claudia Sheinbaum makes history as first woman to lead Independence Day gala"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "thestar.com.my",
+      "country": "malaysia",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://www.thestar.com.my/rss/news/nation/",
+          "status": "success",
+          "articles": 10,
+          "title": "The Star : News Feed",
+          "last_updated": "Unknown",
+          "sample_titles": [
+            "Melaka cops nab drug pusher, seize car used as storage",
+            "One missing, two escape after floodwaters sweep utility workers in Keningau",
+            "Music in the forest \u2013 jazz for turtles"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "feeds.bbci.co.uk",
+      "country": "united_kingdom",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://feeds.bbci.co.uk/news/rss.xml",
+          "status": "success",
+          "articles": 36,
+          "title": "BBC News",
+          "last_updated": "Wed, 17 Sep 2025 02:28:59 GMT",
+          "sample_titles": [
+            "Trump hails 'very good' relationship as he arrives in UK for state visit",
+            "'Completely different, yet genuinely get on' - watch BBC correspondents on Starmer and Trump",
+            "Eritrean man wins block on removal to France under 'one in, one out' deal"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "feeds.bbci.co.uk",
+      "country": "united_kingdom",
+      "region": "europe",
+      "feeds": [
+        {
+          "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
+          "status": "success",
+          "articles": 50,
+          "title": "BBC News",
+          "last_updated": "Wed, 17 Sep 2025 02:28:54 GMT",
+          "sample_titles": [
+            "End of the road for manual drivers? More learners opt for automatics in tests",
+            "AI could boost UK economy by 10% in five years, says Microsoft boss",
+            "Why the US is expected to cut interest rates"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "feeds.bbci.co.uk",
+      "country": "india",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://feeds.bbci.co.uk/news/world/asia/india/rss.xml",
+          "status": "success",
+          "articles": 43,
+          "title": "BBC News",
+          "last_updated": "Wed, 17 Sep 2025 02:29:00 GMT",
+          "sample_titles": [
+            "Why more women get cancer in India - but more men die",
+            "Delhi's toxic air is turning iconic Red Fort black - study",
+            "Homes damaged, cars swept away as rains flood India's Uttarakhand"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "feeds.bbci.co.uk",
+      "country": "china",
+      "region": "asia",
+      "feeds": [
+        {
+          "url": "https://feeds.bbci.co.uk/news/world/asia/china/rss.xml",
+          "status": "success",
+          "articles": 12,
+          "title": "BBC News",
+          "last_updated": "Wed, 17 Sep 2025 02:29:05 GMT",
+          "sample_titles": [
+            "Chinese teens to pay $300,000 for urinating in soup",
+            "US says 'framework' for TikTok ownership deal agreed with China",
+            "China accuses Nvidia of violating anti-monopoly laws"
+          ]
+        }
+      ]
+    }
+  ]
+}

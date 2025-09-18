@@ -1,0 +1,594 @@
+{
+  "timestamp": "2025-09-17T03:42:37.573068",
+  "top_{top_count}": [
+    {
+      "rank": 1,
+      "country": "Switzerland",
+      "iso3": "CHE",
+      "region": "Europe",
+      "headline_gpi": 40.7,
+      "confidence": "Medium",
+      "n_eff": 542,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 80.7,
+        "governance": 56.0,
+        "security": 70.3,
+        "society": 63.7,
+        "environment": 38.3
+      },
+      "top_drivers": [
+        "Economy: \u219180.7 pts",
+        "Security: \u219170.3 pts"
+      ],
+      "why": "Strong positive perception driven by economy (+80.7) and security (+70.3). High investor confidence and stable governance.",
+      "headlines": [
+        "Swiss economy shows resilience amid global uncertainty",
+        "Switzerland tops innovation index for 13th consecutive year",
+        "Swiss pharmaceutical exports surge to record highs"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": 0.5
+    },
+    {
+      "rank": 2,
+      "country": "Singapore",
+      "iso3": "SGP",
+      "region": "Asia",
+      "headline_gpi": 38.7,
+      "confidence": "Medium",
+      "n_eff": 489,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 85.3,
+        "governance": 64.3,
+        "security": 84.8,
+        "society": 72.7,
+        "environment": 55.5
+      },
+      "top_drivers": [
+        "Economy: \u219185.3 pts",
+        "Security: \u219184.8 pts"
+      ],
+      "why": "Strong positive perception driven by economy (+85.3) and security (+84.8). High investor confidence and stable governance.",
+      "headlines": [
+        "Singapore emerges as Asia's premier tech hub",
+        "MAS maintains stable monetary policy amid growth",
+        "Singapore leads ASEAN in green finance initiatives"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": -7.3
+    },
+    {
+      "rank": 3,
+      "country": "Norway",
+      "iso3": "NOR",
+      "region": "Europe",
+      "headline_gpi": 37.1,
+      "confidence": "Medium",
+      "n_eff": 461,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 72.3,
+        "governance": 73.7,
+        "security": 51.6,
+        "society": 50.5,
+        "environment": 42.9
+      },
+      "top_drivers": [
+        "Governance: \u219173.7 pts",
+        "Economy: \u219172.3 pts"
+      ],
+      "why": "Strong positive perception driven by governance (+73.7) and economy (+72.3). High investor confidence and stable governance.",
+      "headlines": [
+        "Norway's sovereign wealth fund exceeds $1.6 trillion",
+        "Norwegian energy exports stabilize European markets",
+        "Norway leads in EV adoption with 80% market share"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": -3.6
+    },
+    {
+      "rank": 4,
+      "country": "New Zealand",
+      "iso3": "NZL",
+      "region": "Oceania",
+      "headline_gpi": 35.0,
+      "confidence": "Medium",
+      "n_eff": 387,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 52.0,
+        "governance": 40.0,
+        "security": 46.6,
+        "society": 68.8,
+        "environment": 63.9
+      },
+      "top_drivers": [
+        "Society: \u219168.8 pts",
+        "Environment: \u219163.9 pts"
+      ],
+      "why": "Strong positive perception driven by society (+68.8) and environment (+63.9). High investor confidence and stable governance.",
+      "headlines": [
+        "New Zealand tourism recovery exceeds expectations",
+        "RBNZ signals end to rate hike cycle",
+        "NZ trade surplus widens on agricultural exports"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": -5.6
+    },
+    {
+      "rank": 5,
+      "country": "Australia",
+      "iso3": "AUS",
+      "region": "Oceania",
+      "headline_gpi": 33.5,
+      "confidence": "Medium",
+      "n_eff": 724,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 69.7,
+        "governance": 64.8,
+        "security": 57.9,
+        "society": 48.3,
+        "environment": 47.5
+      },
+      "top_drivers": [
+        "Economy: \u219169.7 pts",
+        "Governance: \u219164.8 pts"
+      ],
+      "why": "Strong positive perception driven by economy (+69.7) and governance (+64.8). High investor confidence and stable governance.",
+      "headlines": [
+        "Australian critical minerals boom attracts global investment",
+        "RBA holds rates steady as inflation moderates",
+        "Australia-India trade deal boosts economic ties"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": 4.5
+    },
+    {
+      "rank": 6,
+      "country": "Canada",
+      "iso3": "CAN",
+      "region": "Americas",
+      "headline_gpi": 31.9,
+      "confidence": "Medium",
+      "n_eff": 682,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 37.9,
+        "governance": 68.2,
+        "security": 91.4,
+        "society": 44.6,
+        "environment": 38.2
+      },
+      "top_drivers": [
+        "Security: \u219191.4 pts",
+        "Governance: \u219168.2 pts"
+      ],
+      "why": "Strong positive perception driven by security (+91.4) and governance (+68.2). High investor confidence and stable governance.",
+      "headlines": [
+        "Canadian tech sector attracts record venture capital",
+        "Bank of Canada pauses rate hikes amid cooling inflation",
+        "Canada-US trade remains robust despite challenges"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": -6.4
+    },
+    {
+      "rank": 7,
+      "country": "Sweden",
+      "iso3": "SWE",
+      "region": "Europe",
+      "headline_gpi": 30.2,
+      "confidence": "Medium",
+      "n_eff": 521,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 55.8,
+        "governance": 37.6,
+        "security": 60.6,
+        "society": 68.5,
+        "environment": 43.5
+      },
+      "top_drivers": [
+        "Society: \u219168.5 pts",
+        "Security: \u219160.6 pts"
+      ],
+      "why": "Strong positive perception driven by society (+68.5) and security (+60.6). High investor confidence and stable governance.",
+      "headlines": [
+        "Swedish green steel production attracts EU funding",
+        "Sweden's tech unicorns lead European startup scene",
+        "Riksbank signals potential rate cuts in 2024"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": -2.3
+    },
+    {
+      "rank": 8,
+      "country": "Denmark",
+      "iso3": "DNK",
+      "region": "Europe",
+      "headline_gpi": 28.6,
+      "confidence": "Medium",
+      "n_eff": 478,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 47.8,
+        "governance": 55.8,
+        "security": 25.1,
+        "society": 42.1,
+        "environment": 41.4
+      },
+      "top_drivers": [
+        "Governance: \u219155.8 pts",
+        "Economy: \u219147.8 pts"
+      ],
+      "why": "Moderate positive sentiment with governance strength. Balanced growth outlook despite global challenges.",
+      "headlines": [
+        "Denmark's Novo Nordisk becomes Europe's most valuable company",
+        "Danish wind energy exports hit record levels",
+        "Copenhagen ranked world's most liveable city"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": 2.1
+    },
+    {
+      "rank": 9,
+      "country": "Netherlands",
+      "iso3": "NLD",
+      "region": "Europe",
+      "headline_gpi": 26.9,
+      "confidence": "Medium",
+      "n_eff": 598,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 47.1,
+        "governance": 47.3,
+        "security": 54.7,
+        "society": 40.3,
+        "environment": 25.6
+      },
+      "top_drivers": [
+        "Security: \u219154.7 pts",
+        "Governance: \u219147.3 pts"
+      ],
+      "why": "Moderate positive sentiment with security strength. Balanced growth outlook despite global challenges.",
+      "headlines": [
+        "ASML maintains chip equipment dominance despite restrictions",
+        "Dutch housing market shows signs of stabilization",
+        "Netherlands faces political uncertainty after election"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": 0.9
+    },
+    {
+      "rank": 10,
+      "country": "Finland",
+      "iso3": "FIN",
+      "region": "Europe",
+      "headline_gpi": 25.2,
+      "confidence": "Medium",
+      "n_eff": 412,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 47.0,
+        "governance": 42.9,
+        "security": 29.0,
+        "society": 40.9,
+        "environment": 37.7
+      },
+      "top_drivers": [
+        "Economy: \u219147.0 pts",
+        "Governance: \u219142.9 pts"
+      ],
+      "why": "Moderate positive sentiment with economy strength. Balanced growth outlook despite global challenges.",
+      "headlines": [
+        "FIN economic indicators show positive momentum",
+        "International investment flows increase to FIN",
+        "FIN stability attracts global confidence"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": 2.0
+    }
+  ],
+  "bottom_{bottom_count}": [
+    {
+      "rank": 31,
+      "country": "Israel",
+      "iso3": "ISR",
+      "region": "Middle East",
+      "headline_gpi": -42.2,
+      "confidence": "Medium",
+      "n_eff": 789,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -103.4,
+        "governance": -85.4,
+        "security": -84.7,
+        "society": -67.7,
+        "environment": -45.7
+      },
+      "top_drivers": [
+        "Economy: \u2193103.4 pts",
+        "Governance: \u219385.4 pts"
+      ],
+      "why": "Negative perception due to weak environment (-45.7) and society (-67.7). Significant headwinds impact investor sentiment.",
+      "headlines": [
+        "Ongoing conflict severely impacts Israeli economy",
+        "Tech sector faces uncertainty amid tensions",
+        "Shekel weakens on geopolitical risks"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": 6.8
+    },
+    {
+      "rank": 30,
+      "country": "South Africa",
+      "iso3": "ZAF",
+      "region": "Africa",
+      "headline_gpi": -38.7,
+      "confidence": "Medium",
+      "n_eff": 412,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -59.8,
+        "governance": -84.3,
+        "security": -71.2,
+        "society": -51.2,
+        "environment": -51.6
+      },
+      "top_drivers": [
+        "Governance: \u219384.3 pts",
+        "Security: \u219371.2 pts"
+      ],
+      "why": "Negative perception due to weak society (-51.2) and environment (-51.6). Significant headwinds impact investor sentiment.",
+      "headlines": [
+        "South Africa power crisis deepens with daily blackouts",
+        "Rand weakens on political uncertainty",
+        "Crime and corruption deter foreign investment"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": 2.1
+    },
+    {
+      "rank": 29,
+      "country": "Turkey",
+      "iso3": "TUR",
+      "region": "Middle East",
+      "headline_gpi": -37.1,
+      "confidence": "Medium",
+      "n_eff": 534,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -65.3,
+        "governance": -55.5,
+        "security": -64.9,
+        "society": -66.8,
+        "environment": -19.6
+      },
+      "top_drivers": [
+        "Society: \u219366.8 pts",
+        "Economy: \u219365.3 pts"
+      ],
+      "why": "Negative perception due to weak environment (-19.6) and governance (-55.5). Significant headwinds impact investor sentiment.",
+      "headlines": [
+        "Turkish lira hits new lows despite rate hikes",
+        "Inflation in Turkey exceeds 60% annually",
+        "Erdogan's unorthodox policies deter investors"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": -6.3
+    },
+    {
+      "rank": 28,
+      "country": "Argentina",
+      "iso3": "ARG",
+      "region": "Americas",
+      "headline_gpi": -36.0,
+      "confidence": "Low",
+      "n_eff": 298,
+      "coverage_quality": "Low",
+      "pillars": {
+        "economy": -87.2,
+        "governance": -82.3,
+        "security": -55.3,
+        "society": -63.0,
+        "environment": -47.4
+      },
+      "top_drivers": [
+        "Economy: \u219387.2 pts",
+        "Governance: \u219382.3 pts"
+      ],
+      "why": "Negative perception due to weak environment (-47.4) and security (-55.3). Significant headwinds impact investor sentiment.",
+      "headlines": [
+        "Argentina inflation surpasses 140% ahead of election",
+        "IMF negotiations stall on policy disagreements",
+        "Peso devaluation accelerates economic crisis"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": -5.1
+    },
+    {
+      "rank": 27,
+      "country": "Russia",
+      "iso3": "RUS",
+      "region": "Europe",
+      "headline_gpi": -33.5,
+      "confidence": "Medium",
+      "n_eff": 867,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -70.4,
+        "governance": -55.7,
+        "security": -66.9,
+        "society": -59.2,
+        "environment": -61.1
+      },
+      "top_drivers": [
+        "Economy: \u219370.4 pts",
+        "Security: \u219366.9 pts"
+      ],
+      "why": "Negative perception due to weak governance (-55.7) and society (-59.2). Significant headwinds impact investor sentiment.",
+      "headlines": [
+        "Russian economy contracts under sustained sanctions",
+        "Ruble volatility increases on capital controls",
+        "Russia pivots trade to Asia amid Western isolation"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": 1.9
+    },
+    {
+      "rank": 26,
+      "country": "China",
+      "iso3": "CHN",
+      "region": "Asia",
+      "headline_gpi": -24.7,
+      "confidence": "Medium",
+      "n_eff": 1123,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -45.5,
+        "governance": -27.3,
+        "security": -43.2,
+        "society": -37.7,
+        "environment": -25.1
+      },
+      "top_drivers": [
+        "Economy: \u219345.5 pts",
+        "Security: \u219343.2 pts"
+      ],
+      "why": "Slightly negative sentiment driven by environment concerns. Structural challenges offset some positive developments.",
+      "headlines": [
+        "China property sector crisis deepens with developer defaults",
+        "Youth unemployment in China hits record highs",
+        "Foreign investment in China falls to 30-year low"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": 0.3
+    },
+    {
+      "rank": 25,
+      "country": "United Arab Emirates",
+      "iso3": "UAE",
+      "region": "Middle East",
+      "headline_gpi": -19.0,
+      "confidence": "Medium",
+      "n_eff": 356,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -33.6,
+        "governance": -61.0,
+        "security": -34.1,
+        "society": -27.9,
+        "environment": -15.7
+      },
+      "top_drivers": [
+        "Governance: \u219361.0 pts",
+        "Security: \u219334.1 pts"
+      ],
+      "why": "Slightly negative sentiment driven by environment concerns. Structural challenges offset some positive developments.",
+      "headlines": [
+        "UAE becomes global hub for crypto and Web3",
+        "Dubai property market sees record transactions",
+        "UAE-India trade corridor enhances connectivity"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": 2.8
+    },
+    {
+      "rank": 24,
+      "country": "Saudi Arabia",
+      "iso3": "SAU",
+      "region": "Middle East",
+      "headline_gpi": -16.6,
+      "confidence": "Medium",
+      "n_eff": 389,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -26.5,
+        "governance": -22.7,
+        "security": -28.5,
+        "society": -21.3,
+        "environment": -26.7
+      },
+      "top_drivers": [
+        "Security: \u219328.5 pts",
+        "Environment: \u219326.7 pts"
+      ],
+      "why": "Slightly negative sentiment driven by society concerns. Structural challenges offset some positive developments.",
+      "headlines": [
+        "Saudi Vision 2030 attracts mega-project investments",
+        "Oil production cuts support Saudi budget",
+        "NEOM project faces implementation challenges"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": -2.5
+    },
+    {
+      "rank": 23,
+      "country": "Indonesia",
+      "iso3": "IDN",
+      "region": "Asia",
+      "headline_gpi": -13.1,
+      "confidence": "Medium",
+      "n_eff": 423,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -46.6,
+        "governance": -2.0,
+        "security": 4.2,
+        "society": -22.0,
+        "environment": 4.6
+      },
+      "top_drivers": [
+        "Economy: \u219346.6 pts",
+        "Society: \u219322.0 pts"
+      ],
+      "why": "Slightly negative sentiment driven by governance concerns. Structural challenges offset some positive developments.",
+      "headlines": [
+        "Indonesia's nickel dominance attracts EV investments",
+        "Jakarta-Bandung high-speed rail begins operations",
+        "Indonesian GDP growth remains robust at 5.0%"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": -4.4
+    },
+    {
+      "rank": 22,
+      "country": "Mexico",
+      "iso3": "MEX",
+      "region": "Americas",
+      "headline_gpi": -10.8,
+      "confidence": "Medium",
+      "n_eff": 512,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -47.5,
+        "governance": -21.5,
+        "security": -27.0,
+        "society": -32.7,
+        "environment": -7.4
+      },
+      "top_drivers": [
+        "Economy: \u219347.5 pts",
+        "Society: \u219332.7 pts"
+      ],
+      "why": "Slightly negative sentiment driven by environment concerns. Structural challenges offset some positive developments.",
+      "headlines": [
+        "Mexico benefits from US nearshoring trend",
+        "Peso strengthens to 8-year high against dollar",
+        "Security concerns impact investment climate"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": 9.4
+    }
+  ],
+  "statistics": {
+    "total_countries": 31,
+    "avg_neff": 627.3225806451613,
+    "high_confidence": 1,
+    "medium_confidence": 29,
+    "low_confidence": 1
+  }
+}

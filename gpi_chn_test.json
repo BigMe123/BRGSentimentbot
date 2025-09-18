@@ -1,0 +1,85 @@
+{
+  "country": {
+    "iso3": "CHN",
+    "name": "China"
+  },
+  "headline_gpi": -99.9,
+  "confidence": "Low",
+  "coverage": {
+    "events": 125,
+    "n_eff": 122,
+    "bucket": "Low",
+    "se": 9.1
+  },
+  "pillars": {
+    "economy": -100.0,
+    "governance": -100.0,
+    "security": -100.0,
+    "society": -100.0,
+    "environment": -99.5,
+    "ci95": {
+      "economy": [
+        -115.0,
+        -85.0
+      ],
+      "governance": [
+        -115.0,
+        -85.0
+      ],
+      "security": [
+        -115.0,
+        -85.0
+      ],
+      "society": [
+        -115.0,
+        -85.0
+      ],
+      "environment": [
+        -114.5,
+        -84.5
+      ]
+    }
+  },
+  "speaker_breakdown": [
+    {
+      "region": "North America",
+      "weight": 0.74,
+      "score": 4.5
+    },
+    {
+      "region": "Asia",
+      "weight": 0.13,
+      "score": -4.1
+    },
+    {
+      "region": "Rest of World",
+      "weight": 0.11,
+      "score": -7.4
+    },
+    {
+      "region": "Europe",
+      "weight": 0.01,
+      "score": -3.0
+    }
+  ],
+  "top_drivers": [
+    "Security: \u2193100.0 pts",
+    "Economy: \u2193100.0 pts",
+    "Trend: declining (-4.1 pts)"
+  ],
+  "trend_7d": [
+    -104.9,
+    -96.8,
+    -98.6,
+    -96.0,
+    -97.7,
+    -95.2,
+    -101.8
+  ],
+  "delta_1d": -6.6,
+  "delta_7d": 3.1,
+  "alerts": [
+    "Low coverage\u2014interpret with caution"
+  ],
+  "notes": ""
+}

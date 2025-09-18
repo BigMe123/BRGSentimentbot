@@ -1,0 +1,9 @@
+{
+  "country": "USA",
+  "source": "World Bank",
+  "indicator": "GDP growth (annual %)",
+  "data": {
+    "2024": 2.79619035621393
+  },
+  "fetched_at": "2025-09-17T17:30:59.943594"
+}

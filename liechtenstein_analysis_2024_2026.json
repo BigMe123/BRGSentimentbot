@@ -1,0 +1,189 @@
+{
+  "timestamp": "2025-09-15T13:14:13.783637",
+  "topic": "Liechtenstein economy banking financial services",
+  "sentiment": {
+    "overall_score": 0.5,
+    "confidence": 0.6,
+    "sentiment_label": "neutral"
+  },
+  "economic_predictions": {
+    "gdp": {
+      "baseline": 2.5,
+      "impact": 0.0,
+      "forecast_1q": 2.49,
+      "forecast_1y": 2.44,
+      "forecast_quarters": [
+        2.5,
+        2.38,
+        2.46,
+        2.4
+      ],
+      "confidence_interval": [
+        1.49,
+        3.49
+      ]
+    },
+    "employment": {
+      "baseline_unemployment": 3.5,
+      "impact": 0.0,
+      "forecast_rate": 3.5,
+      "jobs_created": 0,
+      "confidence": "medium"
+    },
+    "inflation": {
+      "baseline": 2.0,
+      "impact": 0.0,
+      "forecast": 2.0,
+      "risk_level": "moderate"
+    },
+    "model_metadata": {
+      "arima_available": true,
+      "ml_model": "RandomForest",
+      "data_points": 60,
+      "sentiment_weight": 0.4,
+      "quantitative_weight": 0.6
+    }
+  },
+  "scenario_analysis": {
+    "bull": {
+      "gdp": {
+        "baseline": 2.5,
+        "impact": 2.83,
+        "forecast_1q": 3.56,
+        "forecast_1y": 2.44,
+        "forecast_quarters": [
+          2.5,
+          2.38,
+          2.46,
+          2.4
+        ],
+        "confidence_interval": [
+          2.56,
+          4.56
+        ]
+      },
+      "employment": {
+        "baseline_unemployment": 3.5,
+        "impact": 0.85,
+        "forecast_rate": 2.65,
+        "jobs_created": 127349,
+        "confidence": "medium"
+      },
+      "inflation": {
+        "baseline": 2.0,
+        "impact": 0.43,
+        "forecast": 2.43,
+        "risk_level": "moderate"
+      },
+      "model_metadata": {
+        "arima_available": true,
+        "ml_model": "RandomForest",
+        "data_points": 60,
+        "sentiment_weight": 0.4,
+        "quantitative_weight": 0.6
+      }
+    },
+    "base": {
+      "gdp": {
+        "baseline": 2.5,
+        "impact": 0.87,
+        "forecast_1q": 2.81,
+        "forecast_1y": 2.44,
+        "forecast_quarters": [
+          2.5,
+          2.38,
+          2.46,
+          2.4
+        ],
+        "confidence_interval": [
+          1.81,
+          3.81
+        ]
+      },
+      "employment": {
+        "baseline_unemployment": 3.5,
+        "impact": 0.26,
+        "forecast_rate": 3.24,
+        "jobs_created": 39150,
+        "confidence": "medium"
+      },
+      "inflation": {
+        "baseline": 2.0,
+        "impact": 0.0,
+        "forecast": 2.0,
+        "risk_level": "moderate"
+      },
+      "model_metadata": {
+        "arima_available": true,
+        "ml_model": "RandomForest",
+        "data_points": 60,
+        "sentiment_weight": 0.4,
+        "quantitative_weight": 0.6
+      }
+    },
+    "bear": {
+      "gdp": {
+        "baseline": 2.5,
+        "impact": -1.16,
+        "forecast_1q": 2.0,
+        "forecast_1y": 2.44,
+        "forecast_quarters": [
+          2.5,
+          2.38,
+          2.46,
+          2.4
+        ],
+        "confidence_interval": [
+          1.0,
+          3.0
+        ]
+      },
+      "employment": {
+        "baseline_unemployment": 3.5,
+        "impact": -0.58,
+        "forecast_rate": 4.08,
+        "jobs_created": -87000,
+        "confidence": "medium"
+      },
+      "inflation": {
+        "baseline": 2.0,
+        "impact": -0.43,
+        "forecast": 1.57,
+        "risk_level": "moderate"
+      },
+      "model_metadata": {
+        "arima_available": true,
+        "ml_model": "RandomForest",
+        "data_points": 60,
+        "sentiment_weight": 0.4,
+        "quantitative_weight": 0.6
+      }
+    }
+  },
+  "trading_implications": {
+    "market_direction": "neutral",
+    "recommended_sectors": [
+      "healthcare",
+      "financials"
+    ],
+    "avoid_sectors": [
+      "real_estate"
+    ],
+    "volatility_expectation": "moderate",
+    "time_horizon": "3-6 months",
+    "confidence": "medium"
+  },
+  "risk_assessment": {
+    "uncertainty_level": "moderate",
+    "gdp_spread": 1.56,
+    "inflation_risk": "moderate",
+    "employment_confidence": "medium",
+    "key_risks": [
+      "No major risks identified"
+    ],
+    "hedging_recommended": "False"
+  },
+  "policy_recommendations": [
+    "Maintain current policy stance"
+  ]
+}

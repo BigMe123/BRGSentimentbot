@@ -1,0 +1,60 @@
+{
+  "timestamp": "2025-09-17T12:49:08.493696",
+  "test_type": "sample_countries",
+  "results": {
+    "USA": {
+      "tier": "High Quality",
+      "gdp": 0.81,
+      "confidence": 0.75,
+      "source": "FRED"
+    },
+    "Germany": {
+      "tier": "High Quality",
+      "gdp": 1.5,
+      "confidence": 0.3,
+      "source": "N/A"
+    },
+    "Japan": {
+      "tier": "High Quality",
+      "gdp": 0.26,
+      "confidence": 0.75,
+      "source": "FRED"
+    },
+    "Brazil": {
+      "tier": "Medium Quality",
+      "gdp": 2.5,
+      "confidence": 0.3,
+      "source": "N/A"
+    },
+    "India": {
+      "tier": "Medium Quality",
+      "gdp": 4.07,
+      "confidence": 0.75,
+      "source": "FRED"
+    },
+    "South Korea": {
+      "tier": "Medium Quality",
+      "gdp": 0.55,
+      "confidence": 0.75,
+      "source": "FRED"
+    },
+    "Saudi Arabia": {
+      "tier": "Limited Data",
+      "gdp": 4.07,
+      "confidence": 0.75,
+      "source": "FRED"
+    },
+    "Vietnam": {
+      "tier": "Limited Data",
+      "gdp": 0.81,
+      "confidence": 0.75,
+      "source": "FRED"
+    },
+    "Nigeria": {
+      "tier": "Limited Data",
+      "gdp": 0.81,
+      "confidence": 0.75,
+      "source": "FRED"
+    }
+  }
+}

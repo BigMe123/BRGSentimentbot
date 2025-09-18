@@ -68,7 +68,53 @@ class MasterSourceManager:
         self._load_all_sources()
 
     def _load_all_sources(self):
-        """Load all sources from the SKB catalog database."""
+        """Load all sources from YAML first, then supplement with database if needed."""
+        # Always add Liechtenstein sources first
+        self._add_liechtenstein_sources()
+
+        # First, try to load from master_sources.yaml
+        master_yaml = self.config_dir / "master_sources.yaml"
+        if master_yaml.exists():
+            try:
+                logger.info(f"Loading sources from {master_yaml}")
+                with open(master_yaml, "r") as f:
+                    data = yaml.safe_load(f)
+
+                if "sources" in data:
+                    for source_data in data["sources"]:
+                        try:
+                            source = NewsSource(
+                                domain=source_data["domain"],
+                                name=source_data.get("name", source_data["domain"]),
+                                region=source_data.get("region", "unknown"),
+                                country=source_data.get("country", "Unknown"),
+                                priority=source_data.get("priority", 0.5),
+                                topics=source_data.get("topics", ["general"]),
+                                rss_feeds=source_data.get("rss_endpoints", []),
+                                language=source_data.get("language", "en"),
+                                category=source_data.get("category", "general"),
+                                policy=source_data.get("policy", "allow"),
+                                reliability_score=0.5,
+                                freshness_score=0.5,
+                                validation_status="active",
+                            )
+                            source.connector_type = self._determine_connector_type(
+                                source.domain
+                            )
+                            self.sources[source.domain] = source
+
+                        except Exception as e:
+                            logger.error(f"Error loading source from YAML {source_data.get('domain', 'unknown')}: {e}")
+                            continue
+
+                    logger.info(f"Loaded {len(self.sources)} sources from master YAML file and Liechtenstein sources")
+                    return  # Successfully loaded from YAML, no need to check database
+
+            except Exception as e:
+                logger.error(f"Error loading master YAML file: {e}")
+
+        # If YAML loading fails, fall back to database
+        logger.info("Falling back to SKB catalog database...")
         if not os.path.exists(self.db_path):
             logger.warning(f"SKB catalog database not found at {self.db_path}")
             self._create_default_catalog()
@@ -82,7 +128,7 @@ class MasterSourceManager:
             cursor.execute(
                 """
                 SELECT domain, name, region, country, data, priority,
-                       policy, freshness_score, reliability_score, 
+                       policy, freshness_score, reliability_score,
                        validation_status
                 FROM sources
                 WHERE validation_status = 'active'
@@ -199,9 +245,217 @@ class MasterSourceManager:
         conn.commit()
         conn.close()
 
+    def _add_liechtenstein_sources(self):
+        """Add Liechtenstein RSS feeds and social media sources."""
+        logger.info("Adding Liechtenstein sources...")
+
+        # Liechtenstein RSS feeds
+        liechtenstein_sources = [
+            NewsSource(
+                domain="vaterland.li",
+                name="Liechtensteiner Vaterland",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.85,
+                topics=["politics", "economics", "local", "business"],
+                rss_feeds=[
+                    "https://www.vaterland.li/rss/",
+                    "https://www.vaterland.li/liechtenstein/rss/",
+                    "https://www.vaterland.li/politik/rss/",
+                    "https://www.vaterland.li/wirtschaft/rss/"
+                ],
+                language="de",
+                category="news",
+                policy="allow",
+                reliability_score=0.9,
+                freshness_score=0.9,
+                validation_status="active",
+                connector_type="rss"
+            ),
+            NewsSource(
+                domain="volksblatt.li",
+                name="Liechtensteiner Volksblatt",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.85,
+                topics=["politics", "economics", "local", "business"],
+                rss_feeds=[
+                    "https://www.volksblatt.li/rss/",
+                    "https://www.volksblatt.li/nachrichten/rss/",
+                    "https://www.volksblatt.li/liechtenstein/rss/",
+                    "https://www.volksblatt.li/wirtschaft/rss/"
+                ],
+                language="de",
+                category="news",
+                policy="allow",
+                reliability_score=0.9,
+                freshness_score=0.9,
+                validation_status="active",
+                connector_type="rss"
+            ),
+            NewsSource(
+                domain="1fl.li",
+                name="1FL - Radio Liechtenstein",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.8,
+                topics=["local", "news", "culture"],
+                rss_feeds=["https://www.1fl.li/rss/"],
+                language="de",
+                category="media",
+                policy="allow",
+                reliability_score=0.85,
+                freshness_score=0.85,
+                validation_status="active",
+                connector_type="rss"
+            ),
+            NewsSource(
+                domain="regierung.li",
+                name="Government of Liechtenstein",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.9,
+                topics=["politics", "government", "policy"],
+                rss_feeds=[
+                    "https://www.regierung.li/rss/",
+                    "https://www.llv.li/rss/"
+                ],
+                language="de",
+                category="government",
+                policy="allow",
+                reliability_score=0.95,
+                freshness_score=0.85,
+                validation_status="active",
+                connector_type="rss"
+            ),
+            NewsSource(
+                domain="landtag.li",
+                name="Landtag of Liechtenstein",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.85,
+                topics=["politics", "parliament", "legislation"],
+                rss_feeds=["https://www.landtag.li/rss/"],
+                language="de",
+                category="government",
+                policy="allow",
+                reliability_score=0.95,
+                freshness_score=0.8,
+                validation_status="active",
+                connector_type="rss"
+            ),
+            NewsSource(
+                domain="lie-zeit.li",
+                name="Lie:Zeit",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.75,
+                topics=["local", "culture", "society"],
+                rss_feeds=["https://www.lie-zeit.li/feed/"],
+                language="de",
+                category="magazine",
+                policy="allow",
+                reliability_score=0.8,
+                freshness_score=0.75,
+                validation_status="active",
+                connector_type="rss"
+            ),
+            # Social Media Sources for Liechtenstein
+            NewsSource(
+                domain="twitter.com/liechtenstein",
+                name="Liechtenstein Twitter/X",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.7,
+                topics=["social", "news", "local"],
+                rss_feeds=[],
+                language="multi",
+                category="social",
+                policy="allow",
+                reliability_score=0.7,
+                freshness_score=0.9,
+                validation_status="active",
+                connector_type="twitter"
+            ),
+            NewsSource(
+                domain="mastodon.social/liechtenstein",
+                name="Liechtenstein Mastodon",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.65,
+                topics=["social", "tech", "local"],
+                rss_feeds=[],
+                language="de",
+                category="social",
+                policy="allow",
+                reliability_score=0.7,
+                freshness_score=0.85,
+                validation_status="active",
+                connector_type="mastodon"
+            ),
+            NewsSource(
+                domain="reddit.com/r/liechtenstein",
+                name="Liechtenstein Reddit",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.6,
+                topics=["social", "discussion", "local"],
+                rss_feeds=["https://www.reddit.com/r/liechtenstein/.rss"],
+                language="en",
+                category="social",
+                policy="allow",
+                reliability_score=0.65,
+                freshness_score=0.8,
+                validation_status="active",
+                connector_type="reddit"
+            ),
+            # Swiss sources covering Liechtenstein
+            NewsSource(
+                domain="nzz.ch/liechtenstein",
+                name="NZZ - Liechtenstein Coverage",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.8,
+                topics=["economics", "politics", "business"],
+                rss_feeds=["https://www.nzz.ch/international.rss"],
+                language="de",
+                category="news",
+                policy="allow",
+                reliability_score=0.9,
+                freshness_score=0.85,
+                validation_status="active",
+                connector_type="rss"
+            ),
+            NewsSource(
+                domain="swissinfo.ch/liechtenstein",
+                name="SwissInfo - Liechtenstein",
+                region="europe",
+                country="Liechtenstein",
+                priority=0.75,
+                topics=["international", "economics", "politics"],
+                rss_feeds=["https://www.swissinfo.ch/eng/latest-news/rss"],
+                language="en",
+                category="news",
+                policy="allow",
+                reliability_score=0.85,
+                freshness_score=0.8,
+                validation_status="active",
+                connector_type="rss"
+            )
+        ]
+
+        # Add each Liechtenstein source to the manager
+        for source in liechtenstein_sources:
+            self.sources[source.domain] = source
+
+        logger.info(f"Added {len(liechtenstein_sources)} Liechtenstein sources")
+
     def _load_fallback_sources(self):
         """Load fallback sources from YAML files if database fails."""
         logger.info("Loading fallback sources from YAML files...")
+
+        # Add Liechtenstein sources manually
+        self._add_liechtenstein_sources()
 
         # Try to load from various YAML files
         yaml_files = [
@@ -323,6 +577,8 @@ class MasterSourceManager:
                 "priority": source.priority,
                 "policy": source.policy,
                 "region": source.region,
+                "country": source.country,  # Fixed: Include country field
+                "language": source.language,  # Also include language field
                 "rss_endpoints": source.rss_feeds if source.rss_feeds else None,
                 "connector_type": source.connector_type,
             }

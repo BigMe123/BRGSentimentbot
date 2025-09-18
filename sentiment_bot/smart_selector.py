@@ -433,19 +433,25 @@ class SmartSelector:
     def _score_regional_relevance(
         self, domain: str, source_region: str, target_region: str
     ) -> float:
-        """Score how relevant a source is to the target region."""
+        """Score how relevant a source is to the target region or country."""
 
         if not target_region:
             return 0.5
 
         score = 0.0
-        region_config = self.REGIONAL_TRAITS.get(target_region, {})
+        actual_region = self._get_region_for_target(target_region)
+        region_config = self.REGIONAL_TRAITS.get(actual_region, {})
 
         # Direct region match
-        if source_region == target_region:
+        if source_region == actual_region:
             score += 0.5
         elif source_region == "global":
             score += 0.3  # Global sources are somewhat relevant
+
+        # Country-specific matching
+        if target_region != actual_region:  # It's a country, not a region
+            country_boost = self._get_country_boost(domain, target_region)
+            score += country_boost
 
         # Domain name bonus
         boost_domains = region_config.get("boost_domains", [])
@@ -475,6 +481,62 @@ class SmartSelector:
         }
 
         return quality_scores.get(editorial_family, 0.5)
+
+    def _get_region_for_target(self, target: str) -> str:
+        """Map a country name to its region, or return the region if already a region."""
+
+        # Country to region mapping
+        country_to_region = {
+            "united_states": "americas", "usa": "americas", "us": "americas",
+            "china": "asia", "japan": "asia", "south_korea": "asia", "korea": "asia",
+            "india": "asia", "indonesia": "asia", "thailand": "asia", "vietnam": "asia",
+            "singapore": "asia", "malaysia": "asia", "philippines": "asia",
+            "germany": "europe", "france": "europe", "united_kingdom": "europe", "uk": "europe",
+            "italy": "europe", "spain": "europe", "netherlands": "europe", "belgium": "europe",
+            "switzerland": "europe", "austria": "europe", "poland": "europe", "sweden": "europe",
+            "norway": "europe", "denmark": "europe", "finland": "europe", "russia": "europe",
+            "canada": "americas", "mexico": "americas", "brazil": "americas", "argentina": "americas",
+            "chile": "americas", "colombia": "americas", "peru": "americas", "venezuela": "americas",
+            "australia": "oceania", "new_zealand": "oceania",
+            "saudi_arabia": "middle_east", "uae": "middle_east", "israel": "middle_east",
+            "iran": "middle_east", "turkey": "middle_east", "egypt": "middle_east",
+            "south_africa": "africa", "nigeria": "africa", "kenya": "africa", "ethiopia": "africa",
+            "ghana": "africa", "morocco": "africa", "algeria": "africa"
+        }
+
+        target_lower = target.lower().replace(" ", "_")
+        return country_to_region.get(target_lower, target)
+
+    def _get_country_boost(self, domain: str, country: str) -> float:
+        """Get country-specific boost for domain matching."""
+
+        country_keywords = {
+            "united_states": ["cnn", "nytimes", "washingtonpost", "wsj", "usa", "american", "fox", "npr"],
+            "china": ["china", "chinese", "scmp", "xinhua", "globaltimes", "caixin"],
+            "japan": ["japan", "japanese", "nikkei", "asahi", "mainichi", "yomiuri"],
+            "germany": ["german", "deutschland", "spiegel", "zeit", "faz", "sueddeutsche"],
+            "france": ["france", "french", "lemonde", "figaro", "liberation", "franceinfo"],
+            "united_kingdom": ["uk", "british", "bbc", "guardian", "telegraph", "independent", "times"],
+            "italy": ["italy", "italian", "corriere", "repubblica", "gazzetta"],
+            "spain": ["spain", "spanish", "elpais", "elmundo", "abc"],
+            "russia": ["russia", "russian", "rt", "sputnik", "tass", "interfax"],
+            "brazil": ["brazil", "brazilian", "globo", "folha", "estadao"],
+            "india": ["india", "indian", "hindu", "indianexpress", "timesofindia"],
+            "australia": ["australia", "australian", "abc.net.au", "smh", "theage"],
+            "canada": ["canada", "canadian", "cbc", "globeandmail", "nationalpost"],
+            "saudi_arabia": ["saudi", "arabia", "arabiya", "arab"],
+            "turkey": ["turkey", "turkish", "hurriyet", "sabah"]
+        }
+
+        domain_lower = domain.lower()
+        country_lower = country.lower().replace(" ", "_")
+        keywords = country_keywords.get(country_lower, [])
+
+        for keyword in keywords:
+            if keyword in domain_lower:
+                return 0.4  # Strong country-specific boost
+
+        return 0.0
 
     def _generate_explanation(
         self,

@@ -1,0 +1,53 @@
+{
+  "timestamp": "2025-09-17T03:43:03.981678",
+  "country": "USA",
+  "predictions": {
+    "gdp": {
+      "indicator": "GDP Growth",
+      "country": "USA",
+      "status": "success",
+      "prediction": 2.07,
+      "confidence": 0.75,
+      "source": "FRED"
+    },
+    "inflation": {
+      "indicator": "CPI/Inflation",
+      "country": "USA",
+      "status": "success",
+      "prediction": 2.94,
+      "confidence": 0.8,
+      "source": "FRED"
+    },
+    "currency": {
+      "indicator": "USD/EUR",
+      "status": "success",
+      "prediction": 0.844,
+      "confidence": 0.9,
+      "source": "Alpha Vantage",
+      "bid": 0.8439,
+      "ask": 0.844
+    },
+    "investor_confidence": {
+      "indicator": "Investor Confidence",
+      "country": "USA",
+      "status": "success",
+      "prediction": 61.7,
+      "confidence": 0.6,
+      "source": "FRED Consumer Sentiment"
+    },
+    "employment": {
+      "indicator": "Employment/Nonfarm Payrolls",
+      "country": "USA",
+      "status": "success",
+      "prediction": 22000.0,
+      "confidence": 0.75,
+      "source": "FRED",
+      "unemployment_rate": 4.3
+    }
+  },
+  "summary": {
+    "successful_predictions": 5,
+    "total_predictions": 5,
+    "success_rate": "100.0%"
+  }
+}

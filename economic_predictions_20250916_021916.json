@@ -1,0 +1,312 @@
+{
+  "timestamp": "2025-09-16T02:19:16.062189",
+  "articles_analyzed": 15,
+  "predictions": {
+    "inflation": {
+      "type": "inflation_cpi",
+      "prediction": 0.22,
+      "confidence": 0.75,
+      "direction": "up",
+      "timeframe": "1_month",
+      "drivers": [],
+      "confidence_band": [
+        -0.17,
+        0.61
+      ],
+      "metadata": {
+        "energy_sentiment": -0.08000000000000002,
+        "supply_chain_sentiment": 0.013333333333333334,
+        "base_rate": 0.1792948575669851
+      }
+    },
+    "fx_USD/EUR": {
+      "type": "currency_fx",
+      "prediction": 1.85,
+      "confidence": 0.8,
+      "direction": "strengthen",
+      "timeframe": "1-4_weeks",
+      "drivers": [
+        "Trade sentiment differential",
+        "Geopolitical concerns"
+      ],
+      "confidence_band": [
+        0.35,
+        3.35
+      ],
+      "metadata": {
+        "currency_pair": "USD/EUR",
+        "base_sentiment": -0.5,
+        "quote_sentiment": -1.5
+      }
+    },
+    "fx_USD/CNY": {
+      "type": "currency_fx",
+      "prediction": -0.83,
+      "confidence": 0.65,
+      "direction": "weaken",
+      "timeframe": "1-4_weeks",
+      "drivers": [
+        "Monetary policy divergence"
+      ],
+      "confidence_band": [
+        -2.33,
+        0.67
+      ],
+      "metadata": {
+        "currency_pair": "USD/CNY",
+        "base_sentiment": -0.5,
+        "quote_sentiment": 0
+      }
+    },
+    "fx_USD/JPY": {
+      "type": "currency_fx",
+      "prediction": -0.84,
+      "confidence": 0.65,
+      "direction": "weaken",
+      "timeframe": "1-4_weeks",
+      "drivers": [
+        "Monetary policy divergence"
+      ],
+      "confidence_band": [
+        -2.34,
+        0.66
+      ],
+      "metadata": {
+        "currency_pair": "USD/JPY",
+        "base_sentiment": -0.5,
+        "quote_sentiment": 0
+      }
+    },
+    "equity_US": {
+      "type": "equity_index",
+      "prediction": 0.24,
+      "confidence": 0.5,
+      "direction": "neutral",
+      "timeframe": "1_week",
+      "drivers": [],
+      "confidence_band": [
+        -2.76,
+        3.24
+      ],
+      "metadata": {
+        "index": "S&P500",
+        "country": "US",
+        "top_sectors": {}
+      }
+    },
+    "equity_China": {
+      "type": "equity_index",
+      "prediction": 0.95,
+      "confidence": 0.7,
+      "direction": "neutral",
+      "timeframe": "1_week",
+      "drivers": [
+        "Policy support",
+        "Technology outperformance"
+      ],
+      "confidence_band": [
+        -2.05,
+        3.95
+      ],
+      "metadata": {
+        "index": "SSE",
+        "country": "China",
+        "top_sectors": {
+          "technology": 0.6
+        }
+      }
+    },
+    "equity_India": {
+      "type": "equity_index",
+      "prediction": 2.11,
+      "confidence": 0.7,
+      "direction": "bullish",
+      "timeframe": "1_week",
+      "drivers": [
+        "Strong earnings sentiment",
+        "Technology outperformance"
+      ],
+      "confidence_band": [
+        -0.89,
+        5.11
+      ],
+      "metadata": {
+        "index": "NIFTY",
+        "country": "India",
+        "top_sectors": {
+          "technology": 0.7
+        }
+      }
+    },
+    "commodity_oil": {
+      "type": "commodity_price",
+      "prediction": 0.94,
+      "confidence": 0.5,
+      "direction": "sideways",
+      "timeframe": "1-4_weeks",
+      "drivers": [],
+      "confidence_band": [
+        -3.56,
+        5.44
+      ],
+      "metadata": {
+        "commodity": "oil",
+        "unit": "$/barrel",
+        "supply_demand_balance": 0.0
+      }
+    },
+    "commodity_gold": {
+      "type": "commodity_price",
+      "prediction": -0.38,
+      "confidence": 0.56,
+      "direction": "sideways",
+      "timeframe": "1-4_weeks",
+      "drivers": [],
+      "confidence_band": [
+        -2.63,
+        1.87
+      ],
+      "metadata": {
+        "commodity": "gold",
+        "unit": "$/oz",
+        "supply_demand_balance": 0.3
+      }
+    },
+    "commodity_copper": {
+      "type": "commodity_price",
+      "prediction": -0.74,
+      "confidence": 0.6,
+      "direction": "sideways",
+      "timeframe": "1-4_weeks",
+      "drivers": [
+        "Supply pressure"
+      ],
+      "confidence_band": [
+        -4.49,
+        3.01
+      ],
+      "metadata": {
+        "commodity": "copper",
+        "unit": "$/ton",
+        "supply_demand_balance": -0.5
+      }
+    },
+    "commodity_wheat": {
+      "type": "commodity_price",
+      "prediction": 4.46,
+      "confidence": 0.58,
+      "direction": "up",
+      "timeframe": "1-4_weeks",
+      "drivers": [
+        "Demand pressure"
+      ],
+      "confidence_band": [
+        -0.04,
+        8.96
+      ],
+      "metadata": {
+        "commodity": "wheat",
+        "unit": "$/bushel",
+        "supply_demand_balance": 0.4
+      }
+    },
+    "trade_US_China": {
+      "type": "trade_flow",
+      "prediction": -6.67,
+      "confidence": 0.55,
+      "direction": "decrease",
+      "timeframe": "3_months",
+      "drivers": [
+        "Tariff increases"
+      ],
+      "confidence_band": [
+        -11.67,
+        -1.67
+      ],
+      "metadata": {
+        "exporter": "US",
+        "importer": "China",
+        "trade_pair": "US-China"
+      }
+    },
+    "geopolitical_risk": {
+      "type": "geopolitical_risk",
+      "prediction": 100,
+      "confidence": 0.6799999999999999,
+      "direction": "high",
+      "timeframe": "current",
+      "drivers": [
+        "Sanctions (34.5)",
+        "Diplomatic (23.6)",
+        "Trade War (11.8)"
+      ],
+      "confidence_band": [
+        90,
+        100
+      ],
+      "metadata": {
+        "risk_breakdown": {
+          "sanctions": 34.5,
+          "trade_war": 11.8,
+          "military": 0.0,
+          "diplomatic": 23.6,
+          "cyber": 0.0
+        },
+        "total_risk_mentions": 4
+      }
+    },
+    "fdi_global": {
+      "type": "fdi_sentiment",
+      "prediction": 60.0,
+      "confidence": 0.6,
+      "direction": "increasing",
+      "timeframe": "3-6_months",
+      "drivers": [
+        "Incentive sentiment",
+        "Expansion sentiment"
+      ],
+      "confidence_band": [
+        30.0,
+        90.0
+      ],
+      "metadata": {
+        "country": "Global",
+        "sentiment_breakdown": {
+          "incentive": 0.6,
+          "expansion": 0.6,
+          "regulation": 0,
+          "stability": 0,
+          "relocation": 0
+        },
+        "data_points": 2
+      }
+    },
+    "consumer_confidence": {
+      "type": "consumer_confidence",
+      "prediction": 63.6,
+      "confidence": 0.75,
+      "direction": "optimistic",
+      "timeframe": "current_month",
+      "drivers": [
+        "Employment positive",
+        "Wages positive",
+        "Retail positive",
+        "Housing negative"
+      ],
+      "confidence_band": [
+        58.6,
+        68.6
+      ],
+      "metadata": {
+        "month_change": 0.9,
+        "factor_breakdown": {
+          "employment": 0.5,
+          "prices": -0.17,
+          "wages": 0.6,
+          "retail": 0.5,
+          "housing": -0.3
+        }
+      }
+    }
+  }
+}

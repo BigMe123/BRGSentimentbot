@@ -1,0 +1,182 @@
+{
+  "timestamp": "2025-09-17T03:34:48.308991",
+  "test_summary": {
+    "imports": {
+      "imports": {
+        "sentiment_bot.comprehensive_economic_predictors": "SUCCESS",
+        "sentiment_bot.enhanced_economic_predictors": "SUCCESS",
+        "sentiment_bot.advanced_economic_predictors": "SUCCESS",
+        "sentiment_bot.production_economic_predictor": "SUCCESS",
+        "sentiment_bot.economic_predictor": "SUCCESS",
+        "sentiment_bot.improved_economic_predictor": "SUCCESS",
+        "sentiment_bot.country_aware_predictor": "SUCCESS"
+      },
+      "classes_found": {
+        "sentiment_bot.comprehensive_economic_predictors": [
+          "CommodityPredictor",
+          "ComprehensiveEconomicPredictor",
+          "EmploymentPredictor",
+          "EquityMarketPredictor",
+          "FDIPredictor",
+          "ForexPredictor",
+          "InflationPredictor",
+          "TradeFlowPredictor"
+        ],
+        "sentiment_bot.enhanced_economic_predictors": [
+          "EnhancedCommodityPredictor",
+          "EnhancedEconomicPredictor",
+          "EnhancedEmploymentPredictor",
+          "EnhancedEquityPredictor",
+          "EnhancedFXPredictor",
+          "EnhancedInflationPredictor",
+          "FDIPredictor",
+          "MLCommodityPredictor",
+          "MLEmploymentPredictor",
+          "MLFXPredictor",
+          "MLInflationPredictor",
+          "TradeFlowPredictor"
+        ],
+        "sentiment_bot.advanced_economic_predictors": [
+          "CommodityPricePredictor",
+          "CurrencyFXPredictor",
+          "EquityMarketPredictor",
+          "FDIPredictor",
+          "InflationPredictor",
+          "TradeFlowPredictor",
+          "UnifiedEconomicPredictor"
+        ],
+        "sentiment_bot.production_economic_predictor": [
+          "DualRegimePredictor",
+          "ProductionEconomicPredictor"
+        ],
+        "sentiment_bot.economic_predictor": [
+          "EconomicPredictor"
+        ],
+        "sentiment_bot.improved_economic_predictor": [
+          "ImprovedEconomicPredictor"
+        ],
+        "sentiment_bot.country_aware_predictor": [
+          "CountryAwareGDPPredictor"
+        ]
+      },
+      "methods_available": {
+        "sentiment_bot.comprehensive_economic_predictors.CommodityPredictor": [
+          "predict_commodity"
+        ],
+        "sentiment_bot.comprehensive_economic_predictors.ComprehensiveEconomicPredictor": [],
+        "sentiment_bot.comprehensive_economic_predictors.EmploymentPredictor": [
+          "predict_job_growth"
+        ],
+        "sentiment_bot.comprehensive_economic_predictors.EquityMarketPredictor": [
+          "predict_index"
+        ],
+        "sentiment_bot.comprehensive_economic_predictors.FDIPredictor": [
+          "predict_fdi"
+        ],
+        "sentiment_bot.comprehensive_economic_predictors.ForexPredictor": [
+          "predict_currency"
+        ],
+        "sentiment_bot.comprehensive_economic_predictors.InflationPredictor": [
+          "predict_cpi"
+        ],
+        "sentiment_bot.comprehensive_economic_predictors.TradeFlowPredictor": [
+          "predict_trade_flow"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.EnhancedCommodityPredictor": [
+          "predict"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.EnhancedEconomicPredictor": [],
+        "sentiment_bot.enhanced_economic_predictors.EnhancedEmploymentPredictor": [
+          "predict"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.EnhancedEquityPredictor": [
+          "predict"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.EnhancedFXPredictor": [
+          "predict"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.EnhancedInflationPredictor": [
+          "predict"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.FDIPredictor": [
+          "predict_fdi"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.MLCommodityPredictor": [
+          "predict"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.MLEmploymentPredictor": [
+          "predict"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.MLFXPredictor": [
+          "predict"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.MLInflationPredictor": [
+          "predict"
+        ],
+        "sentiment_bot.enhanced_economic_predictors.TradeFlowPredictor": [
+          "predict_trade_flow"
+        ],
+        "sentiment_bot.advanced_economic_predictors.CommodityPricePredictor": [
+          "predict_commodity_price"
+        ],
+        "sentiment_bot.advanced_economic_predictors.CurrencyFXPredictor": [
+          "predict_fx"
+        ],
+        "sentiment_bot.advanced_economic_predictors.EquityMarketPredictor": [
+          "predict_index"
+        ],
+        "sentiment_bot.advanced_economic_predictors.FDIPredictor": [
+          "predict_fdi"
+        ],
+        "sentiment_bot.advanced_economic_predictors.InflationPredictor": [
+          "predict_cpi"
+        ],
+        "sentiment_bot.advanced_economic_predictors.TradeFlowPredictor": [
+          "predict_trade_flow"
+        ],
+        "sentiment_bot.advanced_economic_predictors.UnifiedEconomicPredictor": [
+          "run_all_predictions"
+        ],
+        "sentiment_bot.production_economic_predictor.DualRegimePredictor": [
+          "predict_crisis",
+          "predict_normal"
+        ],
+        "sentiment_bot.production_economic_predictor.ProductionEconomicPredictor": [
+          "_generate_confidence_intervals",
+          "predict_with_transparency"
+        ],
+        "sentiment_bot.economic_predictor.EconomicPredictor": [
+          "predict_gdp_arima",
+          "predict_gdp_ml"
+        ],
+        "sentiment_bot.improved_economic_predictor.ImprovedEconomicPredictor": [
+          "_predict_arima",
+          "_predict_neural_network",
+          "_predict_random_forest",
+          "ensemble_predict",
+          "predict_with_confidence_intervals"
+        ],
+        "sentiment_bot.country_aware_predictor.CountryAwareGDPPredictor": [
+          "predict"
+        ]
+      }
+    },
+    "comprehensive_predictors": {
+      "module_import": "FAILED: cannot import name 'GDPPredictor' from 'sentiment_bot.comprehensive_economic_predictors' (/Users/marcod/Desktop/BSG/BSGBOT/sentiment_bot/comprehensive_economic_predictors.py)",
+      "error_details": "Traceback (most recent call last):\n  File \"/Users/marcod/Desktop/BSG/BSGBOT/test_all_economic_predictors.py\", line 69, in test_comprehensive_predictors\n    from sentiment_bot.comprehensive_economic_predictors import (\n    ...<6 lines>...\n    )\nImportError: cannot import name 'GDPPredictor' from 'sentiment_bot.comprehensive_economic_predictors' (/Users/marcod/Desktop/BSG/BSGBOT/sentiment_bot/comprehensive_economic_predictors.py)\n"
+    },
+    "other_predictors": {
+      "enhanced_economic_predictors": {
+        "import": "SUCCESS",
+        "methods": [],
+        "has_gdp_method": false,
+        "has_inflation_method": false,
+        "has_currency_method": false,
+        "test_prediction": "FAILED: 'EnhancedEconomicPredictor' object has no attribute 'predict_country'"
+      },
+      "advanced_economic_predictors": {
+        "import": "FAILED: cannot import name 'AdvancedEconomicPredictor' from 'sentiment_bot.advanced_economic_predictors' (/Users/marcod/Desktop/BSG/BSGBOT/sentiment_bot/advanced_economic_predictors.py)"
+      }
+    }
+  }
+}

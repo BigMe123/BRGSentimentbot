@@ -1,0 +1,444 @@
+{
+  "valid": [],
+  "invalid": [
+    {
+      "domain": "cnbc.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "marketwatch.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "yahoo.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "cnn.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "foxnews.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "npr.org",
+      "reason": "no_url"
+    },
+    {
+      "domain": "businessinsider.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "techcrunch.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "forbes.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "bloomberg.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "wsj.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "nytimes.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "washingtonpost.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "xinhuanet.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "chinadaily.com.cn",
+      "reason": "no_url"
+    },
+    {
+      "domain": "cgtn.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "scmp.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "dw.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "handelsblatt.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "spiegel.de",
+      "reason": "no_url"
+    },
+    {
+      "domain": "faz.net",
+      "reason": "no_url"
+    },
+    {
+      "domain": "tagesschau.de",
+      "reason": "no_url"
+    },
+    {
+      "domain": "zeit.de",
+      "reason": "no_url"
+    },
+    {
+      "domain": "welt.de",
+      "reason": "no_url"
+    },
+    {
+      "domain": "manager-magazin.de",
+      "reason": "no_url"
+    },
+    {
+      "domain": "wiwo.de",
+      "reason": "no_url"
+    },
+    {
+      "domain": "n-tv.de",
+      "reason": "no_url"
+    },
+    {
+      "domain": "bbc.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "ft.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "theguardian.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "independent.co.uk",
+      "reason": "no_url"
+    },
+    {
+      "domain": "cityam.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "economist.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "standard.co.uk",
+      "reason": "no_url"
+    },
+    {
+      "domain": "economictimes.indiatimes.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "thehindu.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "indianexpress.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "livemint.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "moneycontrol.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "ndtv.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "lefigaro.fr",
+      "reason": "no_url"
+    },
+    {
+      "domain": "lemonde.fr",
+      "reason": "no_url"
+    },
+    {
+      "domain": "liberation.fr",
+      "reason": "no_url"
+    },
+    {
+      "domain": "challenges.fr",
+      "reason": "no_url"
+    },
+    {
+      "domain": "capital.fr",
+      "reason": "no_url"
+    },
+    {
+      "domain": "bfmtv.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "franceinfo.fr",
+      "reason": "no_url"
+    },
+    {
+      "domain": "japantimes.co.jp",
+      "reason": "no_url"
+    },
+    {
+      "domain": "nhk.or.jp",
+      "reason": "no_url"
+    },
+    {
+      "domain": "koreaherald.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "folha.uol.com.br",
+      "reason": "no_url"
+    },
+    {
+      "domain": "cbc.ca",
+      "reason": "no_url"
+    },
+    {
+      "domain": "cbc.ca",
+      "reason": "no_url"
+    },
+    {
+      "domain": "globalnews.ca",
+      "reason": "no_url"
+    },
+    {
+      "domain": "abc.net.au",
+      "reason": "no_url"
+    },
+    {
+      "domain": "smh.com.au",
+      "reason": "no_url"
+    },
+    {
+      "domain": "nos.nl",
+      "reason": "no_url"
+    },
+    {
+      "domain": "svt.se",
+      "reason": "no_url"
+    },
+    {
+      "domain": "nrk.no",
+      "reason": "no_url"
+    },
+    {
+      "domain": "elpais.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "repubblica.it",
+      "reason": "no_url"
+    },
+    {
+      "domain": "rt.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "milenio.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "clarin.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "news24.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "channelnewsasia.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "bangkokpost.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "vnexpress.net",
+      "reason": "no_url"
+    },
+    {
+      "domain": "kompas.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "inquirer.net",
+      "reason": "no_url"
+    },
+    {
+      "domain": "dailysabah.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "haaretz.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "ahram.org.eg",
+      "reason": "no_url"
+    },
+    {
+      "domain": "punchng.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "nation.co.ke",
+      "reason": "no_url"
+    },
+    {
+      "domain": "latercera.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "eltiempo.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "comercio.pe",
+      "reason": "no_url"
+    },
+    {
+      "domain": "polsatnews.pl",
+      "reason": "no_url"
+    },
+    {
+      "domain": "ct24.ceskatelevize.cz",
+      "reason": "no_url"
+    },
+    {
+      "domain": "index.hu",
+      "reason": "no_url"
+    },
+    {
+      "domain": "digi24.ro",
+      "reason": "no_url"
+    },
+    {
+      "domain": "kyivpost.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "stuff.co.nz",
+      "reason": "no_url"
+    },
+    {
+      "domain": "vrt.be",
+      "reason": "no_url"
+    },
+    {
+      "domain": "orf.at",
+      "reason": "no_url"
+    },
+    {
+      "domain": "swissinfo.ch",
+      "reason": "no_url"
+    },
+    {
+      "domain": "publico.pt",
+      "reason": "no_url"
+    },
+    {
+      "domain": "rte.ie",
+      "reason": "no_url"
+    },
+    {
+      "domain": "yle.fi",
+      "reason": "no_url"
+    },
+    {
+      "domain": "dr.dk",
+      "reason": "no_url"
+    },
+    {
+      "domain": "ekathimerini.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "thedailystar.net",
+      "reason": "no_url"
+    },
+    {
+      "domain": "dawn.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "adaderana.lk",
+      "reason": "no_url"
+    },
+    {
+      "domain": "thestar.com.my",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.bbci.co.uk",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.bbci.co.uk",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.bbci.co.uk",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.bbci.co.uk",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.reuters.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.reuters.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.reuters.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.reuters.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.apnews.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.apnews.com",
+      "reason": "no_url"
+    },
+    {
+      "domain": "feeds.apnews.com",
+      "reason": "no_url"
+    }
+  ],
+  "timeout": [],
+  "error": [],
+  "summary": {
+    "total_sources": 107,
+    "valid": 0,
+    "invalid": 107,
+    "timeout": 0,
+    "error": 0,
+    "validation_time": 0.0,
+    "success_rate": 0.0
+  }
+}

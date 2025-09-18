@@ -1,0 +1,53 @@
+================================================================================
+COMPREHENSIVE ECONOMIC FORECAST
+================================================================================
+Generated: 2025-09-16 15:53:53
+
+
+Labor Market
+----------------------------------------
+• Payrolls: +133,877 jobs (70.0% conf)
+  Direction: up | Timeframe: next_month
+
+Inflation
+----------------------------------------
+• CPI Change: -0.23% (65.0% conf)
+  Annualized: 3.0%
+  Key drivers: Tariff inflation concerns
+
+Equity Markets
+----------------------------------------
+• SPX: +0.53% (bullish)
+  Confidence: 58.3% | 1-week forecast
+• NIFTY: +0.53% (bullish)
+  Confidence: 58.3% | 1-week forecast
+• DAX: +0.53% (bullish)
+  Confidence: 58.3% | 1-week forecast
+• NIKKEI: +0.53% (bullish)
+  Confidence: 58.3% | 1-week forecast
+
+Commodities
+----------------------------------------
+• OIL: +12.86% (up)
+  Confidence: 50.0%
+  Key drivers: Geopolitical risk premium
+• COPPER: +0.00% (down)
+  Confidence: 50.0%
+• WHEAT: +0.00% (down)
+  Confidence: 50.0%
+
+Trade & Investment
+----------------------------------------
+
+Risk & Sentiment
+----------------------------------------
+• Geopolitical Risk: 10.0/100 (low)
+  Key drivers: War risk, Military risk
+• Consumer Confidence: 40.0/100
+  Trend: deteriorating | MoM: -25.0
+  Key drivers: Price stability, Positive housing market
+
+================================================================================
+Note: Predictions are based on sentiment analysis and should be used alongside
+traditional fundamental and technical analysis for investment decisions.
+================================================================================

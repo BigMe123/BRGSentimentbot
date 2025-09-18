@@ -1,0 +1,105 @@
+{
+  "run_id": "cc48f691",
+  "started_at": "2025-09-16T01:43:09.578341",
+  "finished_at": "2025-09-16T01:43:21.164540",
+  "config": {
+    "region": "europe",
+    "topic": "Liechtenstein economy politics business",
+    "budget_sec": 120,
+    "min_sources": 15,
+    "discover": true,
+    "max_age_hours": 24
+  },
+  "collection": {
+    "attempted_feeds": 50,
+    "articles_raw": 60,
+    "unique_after_dedupe": 60,
+    "fresh_window_h": 24,
+    "fresh_count": 35,
+    "relevant_count": 4
+  },
+  "analysis": {
+    "sentiment_total": 6,
+    "breakdown": {
+      "positive": 1,
+      "negative": 3,
+      "neutral": 0
+    },
+    "avg_sentiment": 0.06312499999999997,
+    "top_triggers": [
+      "fx_markets",
+      "geopolitical_risk",
+      "political_risk",
+      "monetary_policy",
+      "inflation"
+    ],
+    "top_entities": [
+      {
+        "text": "EU",
+        "type": "ORG",
+        "count": 3
+      },
+      {
+        "text": "EU",
+        "type": "TICKER",
+        "count": 3
+      },
+      {
+        "text": "NATO",
+        "type": "ORG",
+        "count": 2
+      },
+      {
+        "text": "Ukraine",
+        "type": "GPE",
+        "count": 2
+      },
+      {
+        "text": "Russia",
+        "type": "GPE",
+        "count": 2
+      },
+      {
+        "text": "NATO",
+        "type": "TICKER",
+        "count": 2
+      },
+      {
+        "text": "BBC",
+        "type": "TICKER",
+        "count": 2
+      },
+      {
+        "text": "II",
+        "type": "TICKER",
+        "count": 2
+      },
+      {
+        "text": "Czech Republic",
+        "type": "GPE",
+        "count": 1
+      },
+      {
+        "text": "North Korea",
+        "type": "GPE",
+        "count": 1
+      }
+    ],
+    "volatility_index": 0.01820830298616169
+  },
+  "sources": [
+    {
+      "domain": "POLITICO",
+      "articles": 4
+    }
+  ],
+  "diversity": {
+    "sources": 1,
+    "languages": 2,
+    "regions": 5,
+    "editorial_families": 1,
+    "score": 0.78
+  },
+  "errors": [],
+  "schema_version": "1.0.0"
+}

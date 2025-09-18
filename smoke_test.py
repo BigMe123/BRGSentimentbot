@@ -9,7 +9,7 @@ This is a lightweight test that can be run in production environments.
 Usage:
     python smoke_test.py
     python smoke_test.py --quick     # Skip long-running tests
-    python smoke_test.py --crypto    # Test crypto configuration
+    python smoke_test.py --tech    # Test technology configuration
 """
 
 import asyncio
@@ -93,17 +93,17 @@ class SmokeTest:
 
             # Test keyword_match
             record = {
-                "title": "Bitcoin price surges in crypto market",
+                "title": "Bitcoin price surges in tech market",
                 "text": "Cryptocurrency markets are seeing growth",
             }
 
-            if keyword_match(record, ["bitcoin"]):
+            if keyword_match(record, ["artificial-intelligence"]):
                 self.log("✓ keyword_match with title match works", test_name)
             else:
                 self.test_fail(test_name, "keyword_match title match failed")
                 return
 
-            if keyword_match(record, ["cryptocurrency"]):
+            if keyword_match(record, ["techcurrency"]):
                 self.log("✓ keyword_match with text match works", test_name)
             else:
                 self.test_fail(test_name, "keyword_match text match failed")
@@ -177,13 +177,13 @@ class SmokeTest:
 
             # Test Reddit with queries (new mode)
             reddit = RedditRSS(
-                queries=["crypto", "blockchain"],
+                queries=["tech", "ai"],
                 sort="new",
                 time="week",
                 limit_per_sub=100,
                 delay_ms=300,
             )
-            if reddit.queries == ["crypto", "blockchain"] and reddit.delay_ms == 300:
+            if reddit.queries == ["tech", "ai"] and reddit.delay_ms == 300:
                 self.log("✓ Reddit search mode initialization", test_name)
             else:
                 self.test_fail(test_name, "Reddit initialization failed")
@@ -191,7 +191,7 @@ class SmokeTest:
 
             # Test Google News with fan-out
             google = GoogleNewsRSS(
-                queries=["bitcoin"],
+                queries=["artificial-intelligence"],
                 editions=["en-US", "en-GB"],
                 per_query_cap=200,
                 delay_ms=300,
@@ -204,7 +204,7 @@ class SmokeTest:
 
             # Test new HackerNews search
             hn_search = HackerNewsSearch(
-                queries=["cryptocurrency", "blockchain"], hits_per_page=50, pages=2
+                queries=["techcurrency", "ai"], hits_per_page=50, pages=2
             )
             if hn_search.name == "hackernews_search" and len(hn_search.queries) == 2:
                 self.log("✓ HackerNews search initialization", test_name)
@@ -227,19 +227,19 @@ class SmokeTest:
             test_config = """
 sources:
   - type: reddit
-    queries: ["crypto", "blockchain"]
+    queries: ["tech", "ai"]
     sort: new
     limit_per_sub: 100
     delay_ms: 300
     
   - type: hackernews_search
-    queries: ["bitcoin"]
+    queries: ["artificial-intelligence"]
     hits_per_page: 50
     pages: 2
     delay_ms: 100
     
   - type: google_news
-    queries: ["ethereum"]
+    queries: ["machine-learning"]
     editions: ["en-US"]
     per_query_cap: 50
     delay_ms: 300
@@ -285,10 +285,10 @@ sources:
         self.log("Testing acceptance criteria math...")
 
         try:
-            # Target: --keywords "crypto,blockchain,bitcoin,ethereum,web3,defi" --limit 400 --since 7d
+            # Target: --keywords "tech,ai,artificial-intelligence,machine-learning,cloud,saas" --limit 400 --since 7d
             # Should yield dozens+ results
 
-            keywords = ["crypto", "blockchain", "bitcoin", "ethereum", "web3", "defi"]
+            keywords = ["tech", "ai", "artificial-intelligence", "machine-learning", "cloud", "saas"]
             limit_per_connector = 400
             since_days = 7
 
@@ -436,20 +436,20 @@ sources:
         self.log(f"📄 Detailed results saved to {output_file}")
 
 
-def test_crypto_config():
-    """Test the crypto-specific configuration."""
-    print("🪙 Testing crypto configuration...")
+def test_tech_config():
+    """Test the tech-specific configuration."""
+    print("🪙 Testing tech configuration...")
 
-    crypto_config_path = Path("config/sources.crypto.yaml")
-    if not crypto_config_path.exists():
-        print("❌ Crypto config file not found: config/sources.crypto.yaml")
+    tech_config_path = Path("config/sources.tech.yaml")
+    if not tech_config_path.exists():
+        print("❌ Crypto config file not found: config/sources.tech.yaml")
         return False
 
     try:
-        registry = ConnectorRegistry(str(crypto_config_path))
+        registry = ConnectorRegistry(str(tech_config_path))
         print(f"✅ Crypto config loaded: {len(registry.connectors)} connectors")
 
-        # Verify we have the key connectors for crypto
+        # Verify we have the key connectors for tech
         connector_names = [c.name for c in registry.connectors]
         key_connectors = ["google_news", "reddit", "hackernews_search", "twitter"]
 
@@ -457,12 +457,12 @@ def test_crypto_config():
             if name in connector_names:
                 print(f"✅ {name} configured")
             else:
-                print(f"⚠️  {name} not found in crypto config")
+                print(f"⚠️  {name} not found in tech config")
 
         return True
 
     except Exception as e:
-        print(f"❌ Error loading crypto config: {e}")
+        print(f"❌ Error loading tech config: {e}")
         return False
 
 
@@ -473,7 +473,7 @@ async def main():
     )
     parser.add_argument("--quick", action="store_true", help="Skip long-running tests")
     parser.add_argument(
-        "--crypto", action="store_true", help="Test crypto configuration"
+        "--tech", action="store_true", help="Test tech configuration"
     )
     parser.add_argument(
         "--output", default="smoke_test_results.json", help="Output file for results"
@@ -481,8 +481,8 @@ async def main():
 
     args = parser.parse_args()
 
-    if args.crypto:
-        success = test_crypto_config()
+    if args.tech:
+        success = test_tech_config()
         return success
 
     # Run main smoke tests

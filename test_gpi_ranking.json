@@ -1,0 +1,298 @@
+{
+  "timestamp": "2025-09-17T03:33:47.456626",
+  "test_config": "top_5_bottom_5",
+  "top_5": [
+    {
+      "rank": 1,
+      "country": "Switzerland",
+      "iso3": "CHE",
+      "region": "Europe",
+      "headline_gpi": 40.7,
+      "confidence": "Medium",
+      "n_eff": 542,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 70.3,
+        "governance": 75.9,
+        "security": 56.6,
+        "society": 76.4,
+        "environment": 50.8
+      },
+      "top_drivers": [
+        "Society: \u219176.4 pts",
+        "Governance: \u219175.9 pts"
+      ],
+      "why": "Strong positive perception driven by society (+76.4) and governance (+75.9). High investor confidence and stable governance.",
+      "headlines": [
+        "Swiss economy shows resilience amid global uncertainty",
+        "Switzerland tops innovation index for 13th consecutive year",
+        "Swiss pharmaceutical exports surge to record highs"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": 1.9
+    },
+    {
+      "rank": 2,
+      "country": "Singapore",
+      "iso3": "SGP",
+      "region": "Asia",
+      "headline_gpi": 38.7,
+      "confidence": "Medium",
+      "n_eff": 489,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 61.8,
+        "governance": 72.2,
+        "security": 74.0,
+        "society": 70.2,
+        "environment": 37.3
+      },
+      "top_drivers": [
+        "Security: \u219174.0 pts",
+        "Governance: \u219172.2 pts"
+      ],
+      "why": "Strong positive perception driven by security (+74.0) and governance (+72.2). High investor confidence and stable governance.",
+      "headlines": [
+        "Singapore emerges as Asia's premier tech hub",
+        "MAS maintains stable monetary policy amid growth",
+        "Singapore leads ASEAN in green finance initiatives"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": 1.8
+    },
+    {
+      "rank": 3,
+      "country": "Norway",
+      "iso3": "NOR",
+      "region": "Europe",
+      "headline_gpi": 37.1,
+      "confidence": "Medium",
+      "n_eff": 461,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 55.0,
+        "governance": 65.3,
+        "security": 75.8,
+        "society": 83.4,
+        "environment": 43.2
+      },
+      "top_drivers": [
+        "Society: \u219183.4 pts",
+        "Security: \u219175.8 pts"
+      ],
+      "why": "Strong positive perception driven by society (+83.4) and security (+75.8). High investor confidence and stable governance.",
+      "headlines": [
+        "Norway's sovereign wealth fund exceeds $1.6 trillion",
+        "Norwegian energy exports stabilize European markets",
+        "Norway leads in EV adoption with 80% market share"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": 1.3
+    },
+    {
+      "rank": 4,
+      "country": "New Zealand",
+      "iso3": "NZL",
+      "region": "Oceania",
+      "headline_gpi": 35.0,
+      "confidence": "Medium",
+      "n_eff": 387,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 55.1,
+        "governance": 66.5,
+        "security": 83.6,
+        "society": 56.4,
+        "environment": 46.3
+      },
+      "top_drivers": [
+        "Security: \u219183.6 pts",
+        "Governance: \u219166.5 pts"
+      ],
+      "why": "Strong positive perception driven by security (+83.6) and governance (+66.5). High investor confidence and stable governance.",
+      "headlines": [
+        "New Zealand tourism recovery exceeds expectations",
+        "RBNZ signals end to rate hike cycle",
+        "NZ trade surplus widens on agricultural exports"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": -1.4
+    },
+    {
+      "rank": 5,
+      "country": "Australia",
+      "iso3": "AUS",
+      "region": "Oceania",
+      "headline_gpi": 33.5,
+      "confidence": "Medium",
+      "n_eff": 724,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": 68.2,
+        "governance": 50.4,
+        "security": 67.5,
+        "society": 63.4,
+        "environment": 48.9
+      },
+      "top_drivers": [
+        "Economy: \u219168.2 pts",
+        "Security: \u219167.5 pts"
+      ],
+      "why": "Strong positive perception driven by economy (+68.2) and security (+67.5). High investor confidence and stable governance.",
+      "headlines": [
+        "Australian critical minerals boom attracts global investment",
+        "RBA holds rates steady as inflation moderates",
+        "Australia-India trade deal boosts economic ties"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": 11.2
+    }
+  ],
+  "bottom_5": [
+    {
+      "rank": 31,
+      "country": "Israel",
+      "iso3": "ISR",
+      "region": "Middle East",
+      "headline_gpi": -42.2,
+      "confidence": "Medium",
+      "n_eff": 789,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -71.6,
+        "governance": -59.5,
+        "security": -68.2,
+        "society": -69.4,
+        "environment": -41.1
+      },
+      "top_drivers": [
+        "Economy: \u219371.6 pts",
+        "Society: \u219369.4 pts"
+      ],
+      "why": "Negative perception due to weak environment (-41.1) and governance (-59.5). Significant headwinds impact investor sentiment.",
+      "headlines": [
+        "Ongoing conflict severely impacts Israeli economy",
+        "Tech sector faces uncertainty amid tensions",
+        "Shekel weakens on geopolitical risks"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": 5.5
+    },
+    {
+      "rank": 30,
+      "country": "South Africa",
+      "iso3": "ZAF",
+      "region": "Africa",
+      "headline_gpi": -38.7,
+      "confidence": "Medium",
+      "n_eff": 412,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -62.7,
+        "governance": -74.6,
+        "security": -49.9,
+        "society": -39.4,
+        "environment": -60.6
+      },
+      "top_drivers": [
+        "Governance: \u219374.6 pts",
+        "Economy: \u219362.7 pts"
+      ],
+      "why": "Negative perception due to weak society (-39.4) and security (-49.9). Significant headwinds impact investor sentiment.",
+      "headlines": [
+        "South Africa power crisis deepens with daily blackouts",
+        "Rand weakens on political uncertainty",
+        "Crime and corruption deter foreign investment"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": 4.6
+    },
+    {
+      "rank": 29,
+      "country": "Turkey",
+      "iso3": "TUR",
+      "region": "Middle East",
+      "headline_gpi": -37.1,
+      "confidence": "Medium",
+      "n_eff": 534,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -78.7,
+        "governance": -70.6,
+        "security": -72.1,
+        "society": -54.2,
+        "environment": -53.2
+      },
+      "top_drivers": [
+        "Economy: \u219378.7 pts",
+        "Security: \u219372.1 pts"
+      ],
+      "why": "Negative perception due to weak environment (-53.2) and society (-54.2). Significant headwinds impact investor sentiment.",
+      "headlines": [
+        "Turkish lira hits new lows despite rate hikes",
+        "Inflation in Turkey exceeds 60% annually",
+        "Erdogan's unorthodox policies deter investors"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": 2.8
+    },
+    {
+      "rank": 28,
+      "country": "Argentina",
+      "iso3": "ARG",
+      "region": "Americas",
+      "headline_gpi": -36.0,
+      "confidence": "Low",
+      "n_eff": 298,
+      "coverage_quality": "Low",
+      "pillars": {
+        "economy": -78.9,
+        "governance": -65.8,
+        "security": -104.4,
+        "society": -78.4,
+        "environment": -49.1
+      },
+      "top_drivers": [
+        "Security: \u2193104.4 pts",
+        "Economy: \u219378.9 pts"
+      ],
+      "why": "Negative perception due to weak environment (-49.1) and governance (-65.8). Significant headwinds impact investor sentiment.",
+      "headlines": [
+        "Argentina inflation surpasses 140% ahead of election",
+        "IMF negotiations stall on policy disagreements",
+        "Peso devaluation accelerates economic crisis"
+      ],
+      "trend_7d": "Improving",
+      "delta_7d": -1.4
+    },
+    {
+      "rank": 27,
+      "country": "Russia",
+      "iso3": "RUS",
+      "region": "Europe",
+      "headline_gpi": -33.5,
+      "confidence": "Medium",
+      "n_eff": 867,
+      "coverage_quality": "Medium",
+      "pillars": {
+        "economy": -53.4,
+        "governance": -71.3,
+        "security": -55.1,
+        "society": -42.7,
+        "environment": -54.4
+      },
+      "top_drivers": [
+        "Governance: \u219371.3 pts",
+        "Security: \u219355.1 pts"
+      ],
+      "why": "Negative perception due to weak society (-42.7) and economy (-53.4). Significant headwinds impact investor sentiment.",
+      "headlines": [
+        "Russian economy contracts under sustained sanctions",
+        "Ruble volatility increases on capital controls",
+        "Russia pivots trade to Asia amid Western isolation"
+      ],
+      "trend_7d": "Declining",
+      "delta_7d": -0.8
+    }
+  ]
+}

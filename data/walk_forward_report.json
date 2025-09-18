@@ -1,0 +1,270 @@
+{
+  "timestamp": "2025-09-17T19:46:47.574213",
+  "n_observations": 49,
+  "overall_metrics": {
+    "model": {
+      "mae": 1.5265306122448978,
+      "rmse": 2.926863613536664,
+      "mape": 55.07876649076155,
+      "bias": -0.7387755102040814,
+      "std": 2.832091339940786,
+      "n": 49
+    },
+    "consensus": {
+      "mae": 1.4448979591836735,
+      "rmse": 2.817728133928945,
+      "mape": 54.71756713279816,
+      "bias": -0.7183673469387756,
+      "std": 2.7246174394925315,
+      "n": 49
+    },
+    "calibrated": {
+      "mae": 1.4619173568343131,
+      "rmse": 2.8375317180566735,
+      "mape": 53.337598249083825,
+      "bias": -0.6980651574891643,
+      "std": 2.750325669239424,
+      "n": 49
+    },
+    "improvement_vs_consensus": -1.1778961650866422,
+    "improvement_vs_model": 4.232686517538304
+  },
+  "country_metrics": {
+    "GBR": {
+      "model": {
+        "mae": 2.6500000000000004,
+        "rmse": 4.538722287164087,
+        "mape": 75.25089741984507,
+        "bias": -1.2500000000000002,
+        "std": 4.363198368169845,
+        "n": 8
+      },
+      "consensus": {
+        "mae": 2.4625000000000004,
+        "rmse": 4.4078055764745345,
+        "mape": 69.67296227365173,
+        "bias": -1.0625000000000002,
+        "std": 4.277831664523512,
+        "n": 8
+      },
+      "calibrated": {
+        "mae": 2.4991637553639006,
+        "rmse": 4.430466566273549,
+        "mape": 70.43593738995023,
+        "bias": -1.1066637553639005,
+        "std": 4.2900267280556195,
+        "n": 8
+      },
+      "improvement_vs_consensus": -1.488883466554323,
+      "improvement_vs_model": 5.691933759852821
+    },
+    "KOR": {
+      "model": {
+        "mae": 1.0,
+        "rmse": 1.5256146302392357,
+        "mape": 68.81584979681044,
+        "bias": -0.8999999999999999,
+        "std": 1.231868499475492,
+        "n": 8
+      },
+      "consensus": {
+        "mae": 0.7999999999999998,
+        "rmse": 1.284523257866513,
+        "mape": 56.35371100653751,
+        "bias": -0.49999999999999994,
+        "std": 1.1832159566199232,
+        "n": 8
+      },
+      "calibrated": {
+        "mae": 0.8346697094492601,
+        "rmse": 1.3188324934562594,
+        "mape": 58.4891832014268,
+        "bias": -0.5923070117677671,
+        "std": 1.1783427131385813,
+        "n": 8
+      },
+      "improvement_vs_consensus": -4.333713681157537,
+      "improvement_vs_model": 16.53302905507399
+    },
+    "JPN": {
+      "model": {
+        "mae": 1.15,
+        "rmse": 1.9621416870348585,
+        "mape": 67.27484861100078,
+        "bias": -0.4,
+        "std": 1.9209372712298545,
+        "n": 8
+      },
+      "consensus": {
+        "mae": 1.125,
+        "rmse": 1.8748333259252674,
+        "mape": 79.5439892901407,
+        "bias": -0.675,
+        "std": 1.7491069149711804,
+        "n": 8
+      },
+      "calibrated": {
+        "mae": 1.1402371135309621,
+        "rmse": 1.8987029229355352,
+        "mape": 68.98336555344582,
+        "bias": -0.4963819119485918,
+        "std": 1.8326695793443526,
+        "n": 8
+      },
+      "improvement_vs_consensus": -1.3544100916410784,
+      "improvement_vs_model": 0.8489466494815461
+    },
+    "USA": {
+      "model": {
+        "mae": 1.2444444444444442,
+        "rmse": 2.2201101073795617,
+        "mape": 37.1041131192646,
+        "bias": -0.3555555555555555,
+        "std": 2.1914536581462243,
+        "n": 9
+      },
+      "consensus": {
+        "mae": 1.2666666666666666,
+        "rmse": 2.1827607391659867,
+        "mape": 39.07588442244545,
+        "bias": -0.4222222222222223,
+        "std": 2.141535159530698,
+        "n": 9
+      },
+      "calibrated": {
+        "mae": 1.2555210123007277,
+        "rmse": 2.2000017444802245,
+        "mape": 38.25255632270401,
+        "bias": -0.3940656496681616,
+        "std": 2.1644213867608224,
+        "n": 9
+      },
+      "improvement_vs_consensus": 0.8799200815214961,
+      "improvement_vs_model": -0.8900813455942032
+    },
+    "FRA": {
+      "model": {
+        "mae": 1.9249999999999998,
+        "rmse": 3.783516882478523,
+        "mape": 33.15255004048292,
+        "bias": -0.6750000000000002,
+        "std": 3.7228181529588578,
+        "n": 8
+      },
+      "consensus": {
+        "mae": 1.9,
+        "rmse": 3.652396473549935,
+        "mape": 36.984913892684325,
+        "bias": -0.675,
+        "std": 3.5894811602792958,
+        "n": 8
+      },
+      "calibrated": {
+        "mae": 1.8892180180075293,
+        "rmse": 3.6719433412357323,
+        "mape": 34.69069529041282,
+        "bias": -0.6703155741584768,
+        "std": 3.6102416722826223,
+        "n": 8
+      },
+      "improvement_vs_consensus": 0.5674727364458212,
+      "improvement_vs_model": 1.8588042593491179
+    },
+    "DEU": {
+      "model": {
+        "mae": 1.225,
+        "rmse": 2.4150569351466644,
+        "mape": 51.12117162860268,
+        "bias": -0.8999999999999999,
+        "std": 2.2410934831014973,
+        "n": 8
+      },
+      "consensus": {
+        "mae": 1.1375,
+        "rmse": 2.310032467304302,
+        "mape": 48.629152250123305,
+        "bias": -1.0125,
+        "std": 2.0763173529111585,
+        "n": 8
+      },
+      "calibrated": {
+        "mae": 1.1784940754201954,
+        "rmse": 2.326878449894719,
+        "mape": 51.05948197736081,
+        "bias": -0.966656980505714,
+        "std": 2.116586308805768,
+        "n": 8
+      },
+      "improvement_vs_consensus": -3.60387476221498,
+      "improvement_vs_model": 3.7964020065146724
+    }
+  },
+  "statistical_tests": {
+    "diebold_mariano": {
+      "statistic": 2.377587989702993,
+      "p_value": 0.017426284825498017,
+      "significant": "True",
+      "interpretation": "No significant difference"
+    },
+    "paired_t_test": {
+      "statistic": 0.9913117318713172,
+      "p_value": 0.326504490071867,
+      "significant": "False"
+    },
+    "n_pairs": 49
+  },
+  "alpha_stability": {
+    "mean": 0.4072432904863242,
+    "std": 0.2303388210720358,
+    "min": 0.1,
+    "max": 0.9,
+    "pct_at_bounds": 24.489795918367346,
+    "autocorrelation": 0.0583643159987294
+  },
+  "success_criteria": {
+    "lower_mae_than_consensus": false,
+    "mae_improvement_pct": -3.60387476221498,
+    "countries_beating_consensus": 2,
+    "statistical_significance": "True",
+    "alpha_stability": true,
+    "overall_success": false
+  },
+  "ci_validation": {
+    "overall_status": "WARN",
+    "critical_failures": 0,
+    "warnings": 1,
+    "checks": {
+      "performance_regression": {
+        "status": "PASS",
+        "message": "",
+        "critical": true
+      },
+      "statistical_significance": {
+        "status": "PASS",
+        "message": "",
+        "critical": true
+      },
+      "alpha_stability": {
+        "status": "PASS",
+        "message": "",
+        "critical": false
+      },
+      "country_coverage": {
+        "status": "WARN",
+        "message": "Only 2/6 countries improved",
+        "critical": true
+      },
+      "guardrail_overuse": {
+        "status": "PASS",
+        "message": "",
+        "critical": false
+      },
+      "extreme_outliers": {
+        "status": "PASS",
+        "message": "",
+        "critical": true
+      }
+    },
+    "summary": "0 critical failures, 1 warnings"
+  }
+}

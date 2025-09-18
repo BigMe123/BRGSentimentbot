@@ -1,0 +1,80 @@
+{
+  "country": "Liechtenstein",
+  "analysis_date": "2025-09-16T15:49:00.517589",
+  "period_days": 30,
+  "data_sources": "RSS + TheNewsAPI.com",
+  "sections": {
+    "economic": {
+      "sentiment_score": 38.5,
+      "confidence": 0.6,
+      "signal_count": 6,
+      "assessment": "Positive economic sentiment",
+      "key_articles": [
+        {
+          "title": "GUEST COLUMN: What can a small town in Austria teach Spain about tackling its housing crisis?",
+          "source": "theolivepress.es",
+          "sentiment": -100.0
+        },
+        {
+          "title": "Sygnum Targets Institutional Investors with Germany Expansion",
+          "source": "retailnews.asia",
+          "sentiment": 100.0
+        },
+        {
+          "title": "Payrexx Establishes Liechtenstein Subsidiary for EEA Expansion",
+          "source": "fintechnews.ch",
+          "sentiment": 100.0
+        }
+      ]
+    },
+    "jobs": {
+      "sentiment_score": 0,
+      "confidence": 0,
+      "signal_count": 0,
+      "assessment": "Limited employment data available"
+    },
+    "commodities": {
+      "sentiment_score": 0,
+      "confidence": 0,
+      "signal_count": 0,
+      "assessment": "Limited commodities data - Liechtenstein is service-oriented economy"
+    },
+    "fx": {
+      "sentiment_score": 0,
+      "confidence": 1.0,
+      "signal_count": 0,
+      "currency": "Swiss Franc (CHF)",
+      "currency_mentions": 5,
+      "assessment": "Uses Swiss Franc (CHF) - 5 currency-related mentions found"
+    },
+    "gpi": {
+      "overall_score": 10.5,
+      "confidence": 1.0,
+      "observer_count": 1,
+      "signal_count": 15,
+      "assessment": "Neutral global perception",
+      "top_observers": [
+        {
+          "country": "International",
+          "sentiment": 6.7,
+          "articles": 15
+        }
+      ]
+    }
+  },
+  "total_articles_analyzed": 57,
+  "executive_summary": {
+    "overall_economic_sentiment": 38.5,
+    "gpi_score": 10.5,
+    "data_quality": "Strong",
+    "key_findings": [
+      "\u2705 Positive economic sentiment detected",
+      "\ud83c\udf0d Neutral global perception",
+      "\ud83d\udcc8 Strong data coverage (57 articles analyzed)"
+    ],
+    "risk_factors": [
+      "No significant risks identified"
+    ],
+    "recommendation": "Stable neutral indicators. Continue regular monitoring for emerging trends."
+  }
+}

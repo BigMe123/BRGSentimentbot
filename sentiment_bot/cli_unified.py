@@ -47,6 +47,7 @@ from .utils.output_models import (
     ConfigBlock,
 )
 from .utils.entity_extractor import EntityExtractor
+from .global_perception_index import GlobalPerceptionIndex
 import feedparser
 import aiohttp
 import asyncio
@@ -78,11 +79,14 @@ def run(
     export_csv: bool = typer.Option(
         False, "--export-csv", help="Also export results as CSV"
     ),
+    freshness: str = typer.Option(
+        "24h", "--freshness", help="Freshness window: 1h, 6h, 24h, 7d, 30d, forever"
+    ),
     region: Optional[str] = typer.Option(
         None,
         "--region",
         "-r",
-        help="Target region: asia, middle_east, europe, americas, africa",
+        help="Target region or country: asia, middle_east, europe, americas, africa, or specific countries like united_states, china, germany, etc.",
     ),
     topic: Optional[str] = typer.Option(
         None,
@@ -193,6 +197,7 @@ Target Words: {target_words}"""
             run_id_seed=run_id_seed,
             export_csv=export_csv,
             llm_analysis=llm_analysis,
+            freshness=freshness,
         )
     )
 
@@ -213,6 +218,7 @@ async def _run_async(
     run_id_seed: Optional[str],
     export_csv: bool,
     llm_analysis: bool,
+    freshness: str,
 ):
     """Async main execution."""
 
@@ -289,9 +295,11 @@ async def _run_async(
     )
 
     # Step 2.6: Freshness Filtering
-    console.print(f"\n[bold]🕐 Applying Freshness Filter (max age: 24h)...[/bold]")
+    max_age_hours = _parse_freshness(freshness)
+    freshness_display = freshness if freshness != "forever" else "unlimited"
+    console.print(f"\n[bold]🕐 Applying Freshness Filter (max age: {freshness_display})...[/bold]")
     fresh_articles, stale_count, freshness_rate = _filter_by_freshness(
-        unique_articles, max_age_hours=24
+        unique_articles, max_age_hours=max_age_hours
     )
     console.print(
         f"[green]Fresh: {len(fresh_articles)}/{len(unique_articles)} articles (Freshness Rate: {freshness_rate:.1%})[/green]"
@@ -496,7 +504,7 @@ async def _run_async(
             budget_sec=budget,
             min_sources=min_sources,
             discover=discover,
-            max_age_hours=24,
+            max_age_hours=max_age_hours or 24,
         ),
         collection=CollectionBlock(
             attempted_feeds=len(plan.sources),
@@ -1325,9 +1333,26 @@ def _deduplicate_articles(articles: List[Dict]) -> List[Dict]:
     return unique_articles
 
 
-def _filter_by_freshness(articles: List[Dict], max_age_hours: int = 24) -> tuple:
-    """Filter articles by freshness."""
+def _parse_freshness(freshness: str) -> Optional[int]:
+    """Parse freshness string to hours. Returns None for 'forever'."""
+    if freshness == "forever":
+        return None
+    elif freshness.endswith("h"):
+        return int(freshness[:-1])
+    elif freshness.endswith("d"):
+        return int(freshness[:-1]) * 24
+    else:
+        # Default fallback
+        return 24
+
+
+def _filter_by_freshness(articles: List[Dict], max_age_hours: Optional[int] = 24) -> tuple:
+    """Filter articles by freshness. If max_age_hours is None, no filter is applied."""
     from datetime import datetime, timedelta
+
+    # If max_age_hours is None (forever), return all articles
+    if max_age_hours is None:
+        return articles, 0, 1.0
 
     cutoff = datetime.now() - timedelta(hours=max_age_hours)
     fresh_articles = []
@@ -1541,14 +1566,14 @@ def connectors(
     """Fetch data using modern connectors (Reddit, Twitter, YouTube, etc.)
 
     Examples:
-        # Fetch crypto data with keyword fan-out
-        bsgbot connectors --keywords "crypto,blockchain,bitcoin,ethereum" --limit 400 --since 7d
+        # Fetch economic data with keyword fan-out
+        bsgbot connectors --keywords "economy,trade,gdp,inflation" --limit 400 --since 7d
 
         # Test specific connector
-        bsgbot connectors --type google_news --keywords "bitcoin" --limit 50
+        bsgbot connectors --type google_news --keywords "economy" --limit 50
 
         # Full analysis with metrics
-        bsgbot connectors --keywords "web3,defi" --analyze --since 24h
+        bsgbot connectors --keywords "trade,policy" --analyze --since 24h
     """
 
     from .ingest.registry import ConnectorRegistry
@@ -1978,6 +2003,566 @@ def list_connectors():
     console.print(
         "\n[green]Using master source configuration with unified source list[/green]"
     )
+
+
+@app.command()
+def comprehensive(
+    target: str = typer.Argument(..., help="Topic/keyword or country for comprehensive analysis"),
+    analysis_type: str = typer.Option(
+        "realtime", "--type", "-t",
+        help="Analysis type: realtime (live streaming), economic (GDP/CPI forecasts), backtest (historical), full (all types)"
+    ),
+    countries: str = typer.Option(
+        None, "--countries", "-c",
+        help="Comma-separated list of countries (e.g., 'united_states,united_kingdom,germany')"
+    ),
+    horizon: str = typer.Option(
+        "nowcast", "--horizon", "-h",
+        help="Forecast horizon: nowcast, 1q, 2q, 4q, 1y"
+    ),
+    backtest_start: str = typer.Option(
+        None, "--backtest-start",
+        help="Backtest start date (YYYY-MM-DD)"
+    ),
+    backtest_end: str = typer.Option(
+        None, "--backtest-end",
+        help="Backtest end date (YYYY-MM-DD)"
+    ),
+    output_dir: str = typer.Option(
+        "output/comprehensive", "--output", "-o",
+        help="Output directory for results"
+    ),
+    monitor: bool = typer.Option(
+        False, "--monitor", "-m",
+        help="Enable real-time performance monitoring dashboard"
+    ),
+):
+    """Run comprehensive analysis using all five core systems."""
+    import asyncio
+    from datetime import datetime, timedelta
+    from pathlib import Path
+    import json
+
+    # Import core systems
+    from .core.economic_models import UnifiedEconomicModel
+    from .core.rss_monitor import RSSMonitor
+    from .core.realtime_pipeline import RealtimeAnalysisPipeline
+    from .core.backtest_system import HistoricalBacktestSystem, BacktestConfig
+    from .core.performance_monitor import PerformanceMonitor
+
+    console.print(Panel.fit(
+        f"[bold cyan]Comprehensive Analysis System[/bold cyan]\n"
+        f"Target: {target}\n"
+        f"Type: {analysis_type}\n"
+        f"Countries: {countries or 'auto-detect'}",
+        title="BSG Bot - Production Grade Analysis"
+    ))
+
+    # Parse countries
+    country_list = countries.split(',') if countries else ['united_states', 'united_kingdom', 'germany']
+
+    # Create output directory
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    # Initialize systems
+    console.print("\n[bold]🔧 Initializing Core Systems...[/bold]")
+
+    economic_model = UnifiedEconomicModel()
+    rss_monitor = RSSMonitor()
+    pipeline = RealtimeAnalysisPipeline()
+    performance_monitor = PerformanceMonitor()
+
+    if analysis_type in ['backtest', 'full']:
+        backtest_system = HistoricalBacktestSystem()
+
+    async def run_comprehensive_analysis():
+        results = {}
+
+        # 1. RSS Health Check
+        console.print("\n[bold]📡 Checking RSS Feed Health...[/bold]")
+
+        # Get relevant feeds from master sources
+        from .master_sources import get_master_sources
+        master_sources = get_master_sources()
+
+        relevant_feeds = []
+        for country in country_list:
+            country_sources = master_sources.get_sources_for_region(country)
+            for source in country_sources[:10]:  # Limit to top 10 per country
+                if source.feed_url:
+                    relevant_feeds.append(source.feed_url)
+
+        # Check feed health
+        healthy_feeds = []
+        with Progress() as progress:
+            task = progress.add_task("Checking feeds...", total=len(relevant_feeds))
+
+            for feed_url in relevant_feeds:
+                health, _ = await rss_monitor.check_feed(feed_url)
+                if health.status == "healthy":
+                    healthy_feeds.append(feed_url)
+                progress.update(task, advance=1)
+
+        console.print(f"✅ {len(healthy_feeds)}/{len(relevant_feeds)} feeds healthy")
+
+        # 2. Real-time Analysis
+        if analysis_type in ['realtime', 'full']:
+            console.print("\n[bold]🔄 Running Real-time Analysis Pipeline...[/bold]")
+
+            articles_analyzed = []
+            async for article in pipeline.process_stream(
+                healthy_feeds[:5],  # Use top 5 healthy feeds
+                target_region=country_list[0] if len(country_list) == 1 else None,
+                target_topics=[target]
+            ):
+                articles_analyzed.append(article)
+                console.print(f"📄 Processed: {article.title[:80]}...")
+
+                if len(articles_analyzed) >= 20:  # Limit for demo
+                    break
+
+            results['realtime_articles'] = len(articles_analyzed)
+
+            # Generate sentiment data for economic models
+            if articles_analyzed:
+                sentiment_data = {
+                    "aggregate_sentiment": sum(a.sentiment_score for a in articles_analyzed) / len(articles_analyzed),
+                    "volume": len(articles_analyzed),
+                    "topics": list(set(topic for a in articles_analyzed for topic in a.topics))
+                }
+            else:
+                sentiment_data = {"aggregate_sentiment": 0, "volume": 0, "topics": []}
+
+        # 3. Economic Predictions
+        if analysis_type in ['economic', 'full']:
+            console.print("\n[bold]📈 Generating Economic Predictions...[/bold]")
+
+            predictions = {}
+            for country in country_list:
+                console.print(f"\n[cyan]Forecasting for {country}:[/cyan]")
+
+                # GDP forecast
+                gdp = economic_model.forecast_gdp(country, sentiment_data, horizon=horizon)
+                predictions[f"{country}_gdp"] = {
+                    "point": gdp.point_estimate,
+                    "low": gdp.confidence_low,
+                    "high": gdp.confidence_high,
+                    "horizon": gdp.horizon
+                }
+                console.print(f"  GDP: {gdp.point_estimate:.2f}% [{gdp.confidence_low:.2f}, {gdp.confidence_high:.2f}]")
+
+                # CPI forecast
+                cpi = economic_model.forecast_cpi(country, sentiment_data, horizon=horizon)
+                predictions[f"{country}_cpi"] = {
+                    "point": cpi.point_estimate,
+                    "low": cpi.confidence_low,
+                    "high": cpi.confidence_high
+                }
+                console.print(f"  CPI: {cpi.point_estimate:.2f}% [{cpi.confidence_low:.2f}, {cpi.confidence_high:.2f}]")
+
+                # Employment forecast
+                emp = economic_model.forecast_employment(country, sentiment_data, horizon=horizon)
+                predictions[f"{country}_employment"] = {
+                    "point": emp.point_estimate,
+                    "low": emp.confidence_low,
+                    "high": emp.confidence_high
+                }
+                console.print(f"  Employment: {emp.point_estimate:.2f}% [{emp.confidence_low:.2f}, {emp.confidence_high:.2f}]")
+
+                # Track predictions for monitoring
+                performance_monitor.track_prediction(
+                    "gdp", country, gdp.point_estimate,
+                    confidence_interval=(gdp.confidence_low, gdp.confidence_high)
+                )
+
+            results['economic_predictions'] = predictions
+
+        # 4. Historical Backtesting
+        if analysis_type in ['backtest', 'full']:
+            console.print("\n[bold]⏮️ Running Historical Backtest...[/bold]")
+
+            # Parse dates
+            start_date = datetime.strptime(backtest_start, "%Y-%m-%d") if backtest_start else datetime.now() - timedelta(days=365)
+            end_date = datetime.strptime(backtest_end, "%Y-%m-%d") if backtest_end else datetime.now()
+
+            config = BacktestConfig(
+                start_date=start_date,
+                end_date=end_date,
+                rebalance_frequency="monthly",
+                initial_capital=1_000_000,
+                countries=country_list,
+                metrics_to_track=["gdp", "cpi", "employment"]
+            )
+
+            backtest_results = backtest_system.run_comprehensive_backtest(config)
+
+            console.print("\n[cyan]Backtest Results:[/cyan]")
+            for country, result in backtest_results.items():
+                console.print(f"\n  {country}:")
+                console.print(f"    Total Return: {result.total_return:.2%}")
+                console.print(f"    Sharpe Ratio: {result.sharpe_ratio:.2f}")
+                console.print(f"    Max Drawdown: {result.max_drawdown:.2%}")
+                console.print(f"    MAPE: {result.mape:.2f}%")
+                console.print(f"    Directional Accuracy: {result.directional_accuracy:.1%}")
+
+            results['backtest'] = {
+                country: {
+                    "return": result.total_return,
+                    "sharpe": result.sharpe_ratio,
+                    "max_drawdown": result.max_drawdown,
+                    "mape": result.mape,
+                    "directional_accuracy": result.directional_accuracy
+                }
+                for country, result in backtest_results.items()
+            }
+
+        # 5. Performance Monitoring
+        if monitor:
+            console.print("\n[bold]📊 Performance Monitoring Dashboard[/bold]")
+
+            # Get current metrics
+            metrics = performance_monitor.get_current_metrics()
+
+            # Display metrics table
+            metrics_table = Table(title="Model Performance Metrics")
+            metrics_table.add_column("Model", style="cyan")
+            metrics_table.add_column("Country", style="green")
+            metrics_table.add_column("MAPE", style="yellow")
+            metrics_table.add_column("Dir. Accuracy", style="magenta")
+            metrics_table.add_column("Samples", style="white")
+
+            for model_type, countries in metrics.items():
+                for country, perf in countries.items():
+                    metrics_table.add_row(
+                        model_type,
+                        country,
+                        f"{perf.mape:.2f}%",
+                        f"{perf.directional_accuracy:.1%}",
+                        str(perf.sample_size)
+                    )
+
+            console.print(metrics_table)
+
+            # Check for alerts
+            alerts = performance_monitor.check_alerts(hours_back=24)
+            if alerts:
+                console.print("\n[bold red]⚠️ Performance Alerts:[/bold red]")
+                for alert in alerts[:5]:  # Show top 5 alerts
+                    console.print(f"  [{alert['severity']}] {alert['message']}")
+
+            # Generate performance report
+            report_path = output_path / "performance_report.json"
+            performance_monitor.generate_performance_report(str(report_path))
+            console.print(f"\n📋 Performance report saved to: {report_path}")
+
+        return results
+
+    # Run the analysis
+    results = asyncio.run(run_comprehensive_analysis())
+
+    # Save results
+    results_path = output_path / f"comprehensive_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    with open(results_path, 'w') as f:
+        json.dump(results, f, indent=2, default=str)
+
+    console.print(f"\n[bold green]✅ Analysis Complete![/bold green]")
+    console.print(f"Results saved to: {results_path}")
+
+    # Display summary
+    console.print(Panel.fit(
+        f"Articles Analyzed: {results.get('realtime_articles', 0)}\n"
+        f"Predictions Generated: {len(results.get('economic_predictions', {}))}\n"
+        f"Countries Backtested: {len(results.get('backtest', {}))}",
+        title="Summary"
+    ))
+
+
+# Global Perception Index Commands
+@app.command()
+def perception_measure(
+    perceiver: str = typer.Argument(..., help="Perceiver country code (e.g., USA)"),
+    target: str = typer.Argument(..., help="Target country code (e.g., CHN)"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path")
+):
+    """Measure how one country perceives another on a 1-100 scale."""
+    console = Console()
+
+    console.print(f"[bold cyan]Measuring Perception: {perceiver} → {target}[/bold cyan]")
+
+    gpi = GlobalPerceptionIndex()
+    reading = gpi.measure_perception(perceiver, target)
+
+    # Display results
+    table = Table(title=f"Perception Analysis: {perceiver} → {target}")
+    table.add_column("Metric", style="cyan", no_wrap=True)
+    table.add_column("Value", style="green")
+    table.add_column("Details", style="yellow")
+
+    table.add_row("Perception Score", f"{reading.perception_score:.1f}/100",
+                  "Overall perception rating")
+    table.add_row("Confidence", f"{reading.confidence:.2f}",
+                  "Reliability of measurement")
+    table.add_row("Data Sources", str(len(reading.data_sources)),
+                  ", ".join(reading.data_sources))
+
+    # Component breakdown
+    for component, score in reading.component_scores.items():
+        if not component.startswith('confidence_'):
+            table.add_row(f"  {component.replace('_', ' ').title()}",
+                         f"{score:.1f}", "Component score")
+
+    console.print(table)
+
+    if output:
+        with open(output, 'w') as f:
+            json.dump({
+                'perceiver': reading.perceiver_country,
+                'target': reading.target_country,
+                'score': reading.perception_score,
+                'confidence': reading.confidence,
+                'timestamp': reading.timestamp.isoformat(),
+                'components': reading.component_scores
+            }, f, indent=2)
+        console.print(f"\n[green]Results saved to: {output}[/green]")
+
+
+@app.command()
+def perception_rank(
+    countries: Optional[str] = typer.Option(None, "--countries", "-c",
+                                          help="Comma-separated country codes"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path")
+):
+    """Show global perception rankings."""
+    console = Console()
+
+    console.print("[bold cyan]Global Perception Rankings[/bold cyan]")
+
+    gpi = GlobalPerceptionIndex()
+
+    if countries:
+        country_list = [c.strip().upper() for c in countries.split(',')]
+        rankings = gpi.calculate_global_rankings(country_list)
+    else:
+        rankings = gpi.calculate_global_rankings()
+
+    # Display rankings table
+    table = Table(title="Global Perception Rankings")
+    table.add_column("Rank", style="cyan", no_wrap=True)
+    table.add_column("Country", style="green", no_wrap=True)
+    table.add_column("Score", style="yellow", no_wrap=True)
+    table.add_column("Perception Level", style="magenta")
+
+    for country, (score, rank) in rankings.items():
+        if score >= 70:
+            level = "Very Positive"
+            level_style = "green"
+        elif score >= 60:
+            level = "Positive"
+            level_style = "green"
+        elif score >= 40:
+            level = "Neutral"
+            level_style = "yellow"
+        elif score >= 30:
+            level = "Negative"
+            level_style = "red"
+        else:
+            level = "Very Negative"
+            level_style = "red"
+
+        table.add_row(str(rank), country, f"{score:.1f}/100",
+                     f"[{level_style}]{level}[/{level_style}]")
+
+    console.print(table)
+
+    if output:
+        with open(output, 'w') as f:
+            json.dump({
+                'rankings': {country: {'score': score, 'rank': rank}
+                           for country, (score, rank) in rankings.items()},
+                'timestamp': datetime.now().isoformat()
+            }, f, indent=2)
+        console.print(f"\n[green]Rankings saved to: {output}[/green]")
+
+
+@app.command()
+def perception_trends(
+    country: str = typer.Argument(..., help="Country code to analyze trends"),
+    days: int = typer.Option(30, "--days", "-d", help="Number of days to analyze"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path")
+):
+    """Show perception trends for a country over time."""
+    console = Console()
+
+    console.print(f"[bold cyan]Perception Trends: {country} (Last {days} days)[/bold cyan]")
+
+    gpi = GlobalPerceptionIndex()
+    trends = gpi.get_perception_trends(country, days)
+
+    # Display trends
+    table = Table(title=f"Perception Trends: {country}")
+    table.add_column("Metric", style="cyan")
+    table.add_column("Value", style="green")
+    table.add_column("Interpretation", style="yellow")
+
+    table.add_row("Trend Direction", trends['trend'].title(),
+                  "Overall movement pattern")
+    table.add_row("Change", f"{trends['change']:+.1f}",
+                  "Point change from start to end")
+    table.add_row("Data Points", str(trends['readings']),
+                  "Number of perception measurements")
+
+    if trends.get('avg_score'):
+        table.add_row("Average Score", f"{trends['avg_score']:.1f}/100",
+                      "Mean perception score")
+        table.add_row("Confidence", f"{trends.get('avg_confidence', 0):.2f}",
+                      "Average measurement confidence")
+
+    console.print(table)
+
+    # Trend interpretation
+    if trends['trend'] == 'improving':
+        console.print("📈 [green]Positive trend - perception is improving[/green]")
+    elif trends['trend'] == 'declining':
+        console.print("📉 [red]Negative trend - perception is declining[/red]")
+    elif trends['trend'] == 'stable':
+        console.print("📊 [yellow]Stable trend - perception is steady[/yellow]")
+    else:
+        console.print("❓ [gray]Insufficient data for trend analysis[/gray]")
+
+    if output:
+        with open(output, 'w') as f:
+            json.dump({
+                'country': country,
+                'period_days': days,
+                'trends': trends,
+                'timestamp': datetime.now().isoformat()
+            }, f, indent=2)
+        console.print(f"\n[green]Trends saved to: {output}[/green]")
+
+
+@app.command()
+def perception_report(
+    country: Optional[str] = typer.Argument(None, help="Country for detailed report (optional)"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path")
+):
+    """Generate comprehensive perception report."""
+    console = Console()
+
+    gpi = GlobalPerceptionIndex()
+
+    if country:
+        console.print(f"[bold cyan]Perception Report: {country}[/bold cyan]")
+        report = gpi.generate_report(country)
+
+        # Country-specific report
+        console.print(f"\n[bold]Average Perception Score:[/bold] {report['average_score']:.1f}/100")
+        console.print(f"[bold]Global Rank:[/bold] #{report['global_rank']}")
+        console.print(f"[bold]Trend:[/bold] {report['trends']['trend'].title()}")
+
+        # Perception by other countries
+        table = Table(title=f"How Other Countries Perceive {country}")
+        table.add_column("Country", style="cyan")
+        table.add_column("Perception Score", style="green")
+        table.add_column("Level", style="yellow")
+
+        sorted_perceptions = sorted(report['current_perceptions'].items(),
+                                  key=lambda x: x[1], reverse=True)
+
+        for perceiver, score in sorted_perceptions:
+            if score >= 60:
+                level = "Positive"
+                style = "green"
+            elif score >= 40:
+                level = "Neutral"
+                style = "yellow"
+            else:
+                level = "Negative"
+                style = "red"
+
+            table.add_row(perceiver, f"{score:.1f}/100", f"[{style}]{level}[/{style}]")
+
+        console.print(table)
+
+    else:
+        console.print("[bold cyan]Global Perception Report[/bold cyan]")
+        report = gpi.generate_report()
+
+        # Global overview
+        console.print("\n[bold]Top 5 Most Positively Perceived Countries:[/bold]")
+        for country, (score, rank) in report['top_5']:
+            console.print(f"  {rank}. {country}: {score:.1f}/100")
+
+        console.print("\n[bold]Bottom 5 Countries:[/bold]")
+        for country, (score, rank) in report['bottom_5']:
+            console.print(f"  {rank}. {country}: {score:.1f}/100")
+
+    if output:
+        with open(output, 'w') as f:
+            json.dump(report, f, indent=2, default=str)
+        console.print(f"\n[green]Report saved to: {output}[/green]")
+
+
+@app.command()
+def perception_matrix(
+    countries: Optional[str] = typer.Option(None, "--countries", "-c",
+                                          help="Comma-separated country codes"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path")
+):
+    """Show perception matrix between countries."""
+    console = Console()
+
+    gpi = GlobalPerceptionIndex()
+
+    if countries:
+        country_list = [c.strip().upper() for c in countries.split(',')]
+        if len(country_list) > 8:
+            console.print("[yellow]Warning: Matrix limited to 8 countries for display[/yellow]")
+            country_list = country_list[:8]
+    else:
+        # Use top 6 countries for display
+        rankings = gpi.calculate_global_rankings()
+        country_list = list(rankings.keys())[:6]
+
+    console.print(f"[bold cyan]Perception Matrix[/bold cyan]")
+    console.print(f"Countries: {', '.join(country_list)}")
+
+    matrix = gpi.get_perception_matrix(country_list)
+
+    # Create matrix table
+    table = Table(title="Perception Matrix (Perceiver → Target)")
+    table.add_column("From\\To", style="cyan", no_wrap=True)
+
+    for target in country_list:
+        table.add_column(target, style="green", no_wrap=True)
+
+    for perceiver in country_list:
+        row = [perceiver]
+        for target in country_list:
+            if perceiver == target:
+                row.append("—")
+            else:
+                score = matrix[perceiver][target]
+                if score >= 60:
+                    row.append(f"[green]{score:.0f}[/green]")
+                elif score >= 40:
+                    row.append(f"[yellow]{score:.0f}[/yellow]")
+                else:
+                    row.append(f"[red]{score:.0f}[/red]")
+
+        table.add_row(*row)
+
+    console.print(table)
+    console.print("\n[dim]Color coding: [green]Green ≥60[/green], [yellow]Yellow 40-59[/yellow], [red]Red <40[/red][/dim]")
+
+    if output:
+        with open(output, 'w') as f:
+            json.dump({
+                'countries': country_list,
+                'matrix': matrix,
+                'timestamp': datetime.now().isoformat()
+            }, f, indent=2)
+        console.print(f"\n[green]Matrix saved to: {output}[/green]")
 
 
 if __name__ == "__main__":

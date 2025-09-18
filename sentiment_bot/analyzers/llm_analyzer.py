@@ -13,6 +13,13 @@ from pathlib import Path
 from sentiment_bot.llm_client import LLMClient
 from sentiment_bot.llm_cache import get_cache, set_cache
 
+# Import economic predictor for integrated analysis
+try:
+    from sentiment_bot.economic_predictor import IntegratedEconomicAnalyzer
+    ECONOMIC_MODELS_AVAILABLE = True
+except ImportError:
+    ECONOMIC_MODELS_AVAILABLE = False
+
 logger = logging.getLogger(__name__)
 
 
@@ -346,3 +353,41 @@ Document:
             "cache_hits": self.cache_hits,
             "cache_misses": self.cache_misses,
         }
+    
+    async def analyze_with_economics(self, text: str, topic: str = None, 
+                                    doc_id: str = "single") -> Dict[str, Any]:
+        """Analyze document with integrated economic predictions."""
+        # Get base sentiment analysis
+        sentiment_result = await self.analyze_single(text, doc_id)
+        
+        # If economic models available, enhance with predictions
+        if ECONOMIC_MODELS_AVAILABLE:
+            try:
+                analyzer = IntegratedEconomicAnalyzer()
+                economic_analysis = analyzer.analyze_with_sentiment(
+                    sentiment_result, topic
+                )
+                
+                # Merge results
+                enhanced_result = {
+                    **sentiment_result,
+                    "economic_predictions": economic_analysis["economic_predictions"],
+                    "scenario_analysis": economic_analysis["scenario_analysis"],
+                    "quantitative_trading": economic_analysis["trading_implications"],
+                    "risk_assessment": economic_analysis["risk_assessment"],
+                    "policy_recommendations": economic_analysis["policy_recommendations"],
+                    "model_confidence": {
+                        "sentiment": sentiment_result.get("confidence", 0.5),
+                        "economic": 0.7 if economic_analysis["economic_predictions"]["model_metadata"]["arima_available"] else 0.5,
+                        "combined": (sentiment_result.get("confidence", 0.5) * 0.4 + 
+                                   (0.7 if economic_analysis["economic_predictions"]["model_metadata"]["arima_available"] else 0.5) * 0.6)
+                    }
+                }
+                
+                logger.info(f"Enhanced analysis with economic predictions for topic: {topic}")
+                return enhanced_result
+            except Exception as e:
+                logger.warning(f"Economic analysis failed: {e}. Returning base sentiment.")
+                return sentiment_result
+        
+        return sentiment_result

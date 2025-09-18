@@ -12,6 +12,7 @@ from .wikipedia import WikipediaConnector
 from .gdelt import GDELTConnector
 from .generic_web import GenericWebConnector
 from .twitter_snscrape import TwitterSnscrape
+from .twitter_improved import TwitterImproved
 
 __all__ = [
     "Connector",
@@ -26,4 +27,5 @@ __all__ = [
     "GDELTConnector",
     "GenericWebConnector",
     "TwitterSnscrape",
+    "TwitterImproved",
 ]

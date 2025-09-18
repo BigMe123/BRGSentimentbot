@@ -1,0 +1,133 @@
+name: GDP Calibration System CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'sentiment_bot/consensus/**'
+      - 'data/backtest_samples.csv'
+      - 'ci_validation.py'
+      - 'tests/test_*.py'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'sentiment_bot/consensus/**'
+      - 'data/backtest_samples.csv'
+      - 'ci_validation.py'
+      - 'tests/test_*.py'
+
+jobs:
+  calibration-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install numpy pandas scikit-learn scipy pytest
+
+    - name: Run unit tests
+      run: |
+        export PYTHONPATH=$PWD
+        python -m pytest tests/test_dynamic_alpha.py -v
+
+    - name: Run GDP Calibration CI Validation
+      id: ci_validation
+      run: |
+        export PYTHONPATH=$PWD
+        python ci_validation.py
+      continue-on-error: true
+
+    - name: Check CI Validation Results
+      run: |
+        if [ ${{ steps.ci_validation.outcome }} == 'success' ]; then
+          echo "✅ CI validation passed - deploying to production is safe"
+          exit 0
+        elif [ ${{ steps.ci_validation.outputs.exit_code }} == '1' ]; then
+          echo "⚠️ CI validation warnings - review before deploying"
+          echo "::warning::GDP calibration system has warnings but can be deployed with caution"
+          exit 0
+        else
+          echo "❌ CI validation failed - blocking deployment"
+          echo "::error::GDP calibration system has critical failures - DO NOT DEPLOY"
+          exit 1
+        fi
+
+    - name: Upload CI Report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: ci-validation-report
+        path: data/ci_validation_report.json
+        retention-days: 30
+
+    - name: Comment PR with Results
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = 'data/ci_validation_report.json';
+
+          if (fs.existsSync(path)) {
+            const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const status = report.ci_validation.overall_status;
+            const summary = report.ci_validation.summary;
+
+            let emoji = status === 'PASS' ? '✅' : status === 'WARN' ? '⚠️' : '❌';
+            let statusText = status === 'PASS' ? 'PASSED' : status === 'WARN' ? 'WARNINGS' : 'FAILED';
+
+            const comment = `## ${emoji} GDP Calibration CI Results: ${statusText}
+
+            **Summary:** ${summary}
+
+            ### Performance Metrics
+            - Model Improvement: +${((report.overall_metrics.model.mae - report.overall_metrics.calibrated.mae) / report.overall_metrics.model.mae * 100).toFixed(1)}%
+            - Statistical Significance: ${report.statistical_tests.diebold_mariano.significant === 'True' ? '✅ Significant' : '❌ Not Significant'}
+            - Countries Improved: ${report.success_criteria.countries_beating_consensus}/${Object.keys(report.country_metrics).length}
+
+            ### Detailed Checks
+            ${Object.entries(report.ci_validation.checks).map(([check, data]) => {
+              const checkEmoji = data.status === 'PASS' ? '✅' : data.status === 'WARN' ? '⚠️' : '❌';
+              return `- ${checkEmoji} **${check}**: ${data.status}${data.message ? ` - ${data.message}` : ''}`;
+            }).join('\n')}
+
+            ${status === 'FAIL' ? '\n🚨 **This PR should NOT be merged** - Critical regression detected!' : ''}
+            ${status === 'WARN' ? '\n⚠️ **Review recommended** - Some performance concerns detected.' : ''}
+            ${status === 'PASS' ? '\n🎉 **Safe to merge** - All validation checks passed!' : ''}
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          }
+
+  deployment-gate:
+    runs-on: ubuntu-latest
+    needs: calibration-validation
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Production Deployment Gate
+      run: |
+        echo "🔒 GDP Calibration validation passed - production deployment authorized"
+        echo "::notice::System performance validated and ready for production use"

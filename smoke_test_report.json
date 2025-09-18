@@ -1,0 +1,370 @@
+{
+  "timestamp": "2025-09-15T04:22:39.926645",
+  "summary": {
+    "total_sources": 50,
+    "success": 1,
+    "partial": 17,
+    "failed": 32,
+    "no_endpoints": 0,
+    "success_rate": 2.0
+  },
+  "by_country": {
+    "Netherlands": {
+      "total": 3,
+      "working": 2
+    },
+    "GR": {
+      "total": 1,
+      "working": 0
+    },
+    "Global": {
+      "total": 24,
+      "working": 8
+    },
+    "US": {
+      "total": 6,
+      "working": 4
+    },
+    "Australia": {
+      "total": 1,
+      "working": 0
+    },
+    "Italy": {
+      "total": 1,
+      "working": 1
+    },
+    "Russia": {
+      "total": 4,
+      "working": 1
+    },
+    "France": {
+      "total": 1,
+      "working": 0
+    },
+    "RU": {
+      "total": 1,
+      "working": 0
+    },
+    "Switzerland": {
+      "total": 1,
+      "working": 0
+    },
+    "South Korea": {
+      "total": 2,
+      "working": 1
+    },
+    "Uruguay": {
+      "total": 1,
+      "working": 0
+    },
+    "Spain": {
+      "total": 2,
+      "working": 0
+    },
+    "ZA": {
+      "total": 1,
+      "working": 1
+    },
+    "ET": {
+      "total": 1,
+      "working": 0
+    }
+  },
+  "failed_sources": [
+    {
+      "domain": "bnr.nl",
+      "name": "Bnr Nl",
+      "errors": [
+        "https://bnr.nl/rss: HTTP 403",
+        "https://bnr.nl/feed: HTTP 403",
+        "https://bnr.nl/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "athensnews.gr",
+      "name": "Athens News",
+      "errors": [
+        "https://athensnews.gr/rss: Error: Cannot connect to host athensnews.gr:443 ssl:defau",
+        "https://athensnews.gr/feed: Error: Cannot connect to host athensnews.gr:443 ssl:defau",
+        "https://athensnews.gr/rss.xml: Error: Cannot connect to host athensnews.gr:443 ssl:defau"
+      ]
+    },
+    {
+      "domain": "dealogic.com",
+      "name": "Dealogic",
+      "errors": [
+        "https://dealogic.com/rss: HTTP 403",
+        "https://dealogic.com/feed: HTTP 403",
+        "https://dealogic.com/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "prospect.org",
+      "name": "Prospect",
+      "errors": [
+        "https://prospect.org/rss: HTTP 404",
+        "https://prospect.org/feed: HTTP 404",
+        "https://prospect.org/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "couriermail.com.au",
+      "name": "Couriermail Au",
+      "errors": [
+        "https://couriermail.com.au/rss: No entries found",
+        "https://couriermail.com.au/feed: HTTP 403",
+        "https://couriermail.com.au/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "semana.com",
+      "name": "Semana",
+      "errors": [
+        "https://semana.com/rss: HTTP 404",
+        "https://semana.com/feed: HTTP 404",
+        "https://semana.com/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "dailyhodl.com",
+      "name": "Dailyhodl",
+      "errors": [
+        "https://dailyhodl.com/rss: No entries found",
+        "https://dailyhodl.com/feed: No entries found",
+        "https://dailyhodl.com/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "offshore-magazine.com",
+      "name": "Offshore-Magazine",
+      "errors": [
+        "https://offshore-magazine.com/rss: Error: Cannot connect to host offshore-magazine.com:443 s",
+        "https://offshore-magazine.com/feed: Error: Cannot connect to host offshore-magazine.com:443 s",
+        "https://offshore-magazine.com/rss.xml: Error: Cannot connect to host offshore-magazine.com:443 s"
+      ]
+    },
+    {
+      "domain": "mediapart.fr",
+      "name": "Mediapart Fr",
+      "errors": [
+        "https://mediapart.fr/rss: HTTP 404",
+        "https://mediapart.fr/feed: HTTP 404",
+        "https://mediapart.fr/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "crowdfundinsider.com",
+      "name": "Crowdfundinsider",
+      "errors": [
+        "https://crowdfundinsider.com/rss: HTTP 403",
+        "https://crowdfundinsider.com/feed: HTTP 403",
+        "https://crowdfundinsider.com/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "themoscowtimes.com",
+      "name": "The Moscow Times",
+      "errors": [
+        "https://themoscowtimes.com/rss: HTTP 404",
+        "https://themoscowtimes.com/feed: HTTP 404",
+        "https://themoscowtimes.com/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "wastedive.com",
+      "name": "Wastedive",
+      "errors": [
+        "https://wastedive.com/rss: HTTP 404",
+        "https://wastedive.com/feed: HTTP 404",
+        "https://wastedive.com/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "rts.ch",
+      "name": "Rts Ch",
+      "errors": [
+        "https://rts.ch/rss: HTTP 404",
+        "https://rts.ch/feed: HTTP 404",
+        "https://rts.ch/rss.xml: HTTP 406"
+      ]
+    },
+    {
+      "domain": "dbrs.com",
+      "name": "Dbrs",
+      "errors": [
+        "https://dbrs.com/rss: No entries found",
+        "https://dbrs.com/feed: No entries found",
+        "https://dbrs.com/rss.xml: No entries found"
+      ]
+    },
+    {
+      "domain": "tradingeconomics.com",
+      "name": "Tradingeconomics",
+      "errors": [
+        "https://tradingeconomics.com/rss: HTTP 403",
+        "https://tradingeconomics.com/feed: HTTP 403",
+        "https://tradingeconomics.com/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "yna.co.kr",
+      "name": "Ynakr",
+      "errors": [
+        "https://yna.co.kr/rss: HTTP 400",
+        "https://yna.co.kr/feed: HTTP 400",
+        "https://yna.co.kr/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "justjared.com",
+      "name": "Justjared",
+      "errors": [
+        "https://justjared.com/rss: HTTP 405",
+        "https://justjared.com/feed: HTTP 405",
+        "https://justjared.com/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "subrayado.com.uy",
+      "name": "Subrayado Uy",
+      "errors": [
+        "https://subrayado.com.uy/rss: HTTP 403",
+        "https://subrayado.com.uy/feed: HTTP 403",
+        "https://subrayado.com.uy/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "piie.com",
+      "name": "Piie",
+      "errors": [
+        "https://piie.com/rss: HTTP 403",
+        "https://piie.com/feed: HTTP 403",
+        "https://piie.com/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "larazon.es",
+      "name": "Larazon Es",
+      "errors": [
+        "https://larazon.es/rss: Error: Cannot connect to host larazon.es:443 ssl:True [SS",
+        "https://larazon.es/feed: Error: Cannot connect to host larazon.es:443 ssl:True [SS",
+        "https://larazon.es/rss.xml: Error: Cannot connect to host larazon.es:443 ssl:True [SS"
+      ]
+    },
+    {
+      "domain": "eurekalert.org",
+      "name": "Eurekalert",
+      "errors": [
+        "https://eurekalert.org/rss: HTTP 403",
+        "https://eurekalert.org/feed: HTTP 403",
+        "https://eurekalert.org/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "marketwatch.com",
+      "name": "MarketWatch",
+      "errors": [
+        "https://marketwatch.com/rss: HTTP 401",
+        "https://marketwatch.com/feed: HTTP 403",
+        "https://marketwatch.com/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "vedomosti.ru",
+      "name": "Vedomosti Ru",
+      "errors": [
+        "https://vedomosti.ru/rss: HTTP 404",
+        "https://vedomosti.ru/feed: HTTP 404",
+        "https://vedomosti.ru/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "ynetnews.com",
+      "name": "Ynetnews",
+      "errors": [
+        "https://ynetnews.com/rss: HTTP 404",
+        "https://ynetnews.com/feed: HTTP 404",
+        "https://ynetnews.com/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "finviz.com",
+      "name": "FINVIZ",
+      "errors": [
+        "https://finviz.com/rss: HTTP 403",
+        "https://finviz.com/feed: HTTP 403",
+        "https://finviz.com/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "renewableenergyworld.com",
+      "name": "Renewableenergyworld",
+      "errors": [
+        "https://renewableenergyworld.com/rss: HTTP 403",
+        "https://renewableenergyworld.com/feed: HTTP 403",
+        "https://renewableenergyworld.com/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "vnexpress.net",
+      "name": "Vnexpress",
+      "errors": [
+        "https://vnexpress.net/rss: No entries found",
+        "https://vnexpress.net/feed: HTTP 406",
+        "https://vnexpress.net/rss.xml: No entries found"
+      ]
+    },
+    {
+      "domain": "asiamoney.com",
+      "name": "Asiamoney",
+      "errors": [
+        "https://asiamoney.com/rss: HTTP 403",
+        "https://asiamoney.com/feed: HTTP 403",
+        "https://asiamoney.com/rss.xml: HTTP 403"
+      ]
+    },
+    {
+      "domain": "publico.es",
+      "name": "Publico Es",
+      "errors": [
+        "https://publico.es/rss: HTTP 404",
+        "https://publico.es/feed: HTTP 404",
+        "https://publico.es/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "ethiopianreview.com",
+      "name": "Ethiopian Review",
+      "errors": [
+        "https://ethiopianreview.com/rss: No entries found",
+        "https://ethiopianreview.com/feed: No entries found",
+        "https://ethiopianreview.com/rss.xml: No entries found"
+      ]
+    },
+    {
+      "domain": "interfax.ru",
+      "name": "Interfax Ru",
+      "errors": [
+        "https://interfax.ru/rss: HTTP 404",
+        "https://interfax.ru/feed: HTTP 404",
+        "https://interfax.ru/rss.xml: HTTP 404"
+      ]
+    },
+    {
+      "domain": "detik.com",
+      "name": "Detik",
+      "errors": [
+        "https://detik.com/rss: HTTP 404",
+        "https://detik.com/feed: HTTP 404",
+        "https://detik.com/rss.xml: HTTP 404"
+      ]
+    }
+  ],
+  "top_performing": [
+    {
+      "domain": "nytimes.com",
+      "name": "Nytimes",
+      "articles": 27
+    }
+  ]
+}

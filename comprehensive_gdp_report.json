@@ -1,0 +1,235 @@
+{
+  "timestamp": "2025-09-17T14:13:06.011543",
+  "results": {
+    "USA": {
+      "country_code": "USA",
+      "economy_type": "developed",
+      "timestamp": "2025-09-17T14:13:00.258556",
+      "prediction": 1.69,
+      "confidence": 0.8,
+      "methodology": "developed_economy_model",
+      "factors": {
+        "historical_trend": 2.4694733150260273,
+        "consumer": 1.8199233716475094,
+        "sector": 2.5,
+        "monetary": -0.5,
+        "external": 0.0
+      },
+      "weights": {
+        "historical_trend": 0.4,
+        "consumer": 0.2,
+        "sector": 0.2,
+        "monetary": 0.1,
+        "external": 0.1
+      }
+    },
+    "JPN": {
+      "country_code": "JPN",
+      "economy_type": "developed",
+      "timestamp": "2025-09-17T14:13:00.578477",
+      "prediction": 0.24,
+      "confidence": 0.7000000000000001,
+      "methodology": "developed_economy_model",
+      "factors": {
+        "historical_trend": 0.8944812412204151,
+        "sector": -0.8908071831836251,
+        "external": 0.0
+      },
+      "weights": {
+        "historical_trend": 0.4,
+        "sector": 0.2,
+        "external": 0.1
+      }
+    },
+    "DEU": {
+      "country_code": "DEU",
+      "economy_type": "developed",
+      "timestamp": "2025-09-17T14:13:04.354864",
+      "prediction": -0.46,
+      "confidence": 0.7000000000000001,
+      "methodology": "developed_economy_model",
+      "factors": {
+        "historical_trend": -0.18969236268275846,
+        "sector": -1.333334169427609,
+        "external": 0.0
+      },
+      "weights": {
+        "historical_trend": 0.4,
+        "sector": 0.2,
+        "external": 0.1
+      }
+    },
+    "BRA": {
+      "country_code": "BRA",
+      "economy_type": "emerging",
+      "timestamp": "2025-09-17T14:13:01.103390",
+      "prediction": 1.76,
+      "confidence": 0.7,
+      "methodology": "emerging_economy_model",
+      "factors": {
+        "momentum": 0.1670605676283336,
+        "industrial": 1.1368435894487328,
+        "investment": 3.0,
+        "inflation_drag": -0.529951324526694
+      },
+      "weights": {
+        "momentum": 0.35,
+        "industrial": 0.25,
+        "investment": 0.1,
+        "inflation_drag": 0.1
+      }
+    },
+    "RUS": {
+      "country_code": "RUS",
+      "economy_type": "emerging",
+      "timestamp": "2025-09-17T14:13:03.802128",
+      "prediction": 1.82,
+      "confidence": 0.405,
+      "methodology": "emerging_economy_model",
+      "factors": {
+        "industrial": 2.7753686036426695,
+        "investment": 1.5,
+        "inflation_drag": -2
+      },
+      "weights": {
+        "industrial": 0.25,
+        "investment": 0.1,
+        "inflation_drag": 0.1
+      }
+    },
+    "IND": {
+      "country_code": "IND",
+      "economy_type": "emerging",
+      "timestamp": "2025-09-17T14:13:05.527660",
+      "prediction": 15.86,
+      "confidence": 0.7,
+      "methodology": "emerging_economy_model",
+      "factors": {
+        "momentum": 31.800374415423665,
+        "industrial": 2.7763236503853816,
+        "investment": 4.5,
+        "inflation_drag": 0
+      },
+      "weights": {
+        "momentum": 0.35,
+        "industrial": 0.25,
+        "investment": 0.1,
+        "inflation_drag": 0.1
+      }
+    },
+    "SAU": {
+      "country_code": "SAU",
+      "economy_type": "oil_dependent",
+      "timestamp": "2025-09-17T14:13:03.227185",
+      "prediction": 0.57,
+      "confidence": 0.6400000000000001,
+      "methodology": "oil_economy_model",
+      "factors": {
+        "oil_impact": -0.6766256590509667,
+        "diversification": 3.0,
+        "global_demand": 2.5
+      },
+      "weights": {
+        "oil_impact": 0.5,
+        "diversification": 0.15,
+        "global_demand": 0.15
+      }
+    },
+    "CAN": {
+      "country_code": "CAN",
+      "economy_type": "developed",
+      "timestamp": "2025-09-17T14:13:04.227224",
+      "prediction": 0.0,
+      "confidence": 0.1,
+      "methodology": "developed_economy_model",
+      "factors": {
+        "external": 0.0
+      },
+      "weights": {
+        "external": 0.1
+      }
+    },
+    "KOR": {
+      "country_code": "KOR",
+      "economy_type": "developed",
+      "timestamp": "2025-09-17T14:13:04.717873",
+      "prediction": 0.45,
+      "confidence": 0.30000000000000004,
+      "methodology": "developed_economy_model",
+      "factors": {
+        "sector": 0.7400379506641364,
+        "external": 0.0
+      },
+      "weights": {
+        "sector": 0.2,
+        "external": 0.1
+      }
+    },
+    "SGP": {
+      "country_code": "SGP",
+      "economy_type": "developed",
+      "timestamp": "2025-09-17T14:13:05.072260",
+      "prediction": 0.0,
+      "confidence": 0.1,
+      "methodology": "developed_economy_model",
+      "factors": {
+        "external": 0.0
+      },
+      "weights": {
+        "external": 0.1
+      }
+    },
+    "CHN": {
+      "country_code": "CHN",
+      "economy_type": "emerging",
+      "timestamp": "2025-09-17T14:13:05.072288",
+      "prediction": 11.44,
+      "confidence": 0.675,
+      "methodology": "emerging_economy_model",
+      "factors": {
+        "momentum": 14.274448979760713,
+        "exports": 12.65234728703768,
+        "investment": 4.0,
+        "inflation_drag": 0
+      },
+      "weights": {
+        "momentum": 0.35,
+        "exports": 0.2,
+        "investment": 0.1,
+        "inflation_drag": 0.1
+      }
+    },
+    "VNM": {
+      "country_code": "VNM",
+      "economy_type": "frontier",
+      "timestamp": "2025-09-17T14:13:06.011471",
+      "prediction": 4.51,
+      "confidence": 0.4,
+      "methodology": "frontier_economy_model",
+      "factors": {
+        "demographics": 4.800000000000001,
+        "investment": 4.0,
+        "commodities": 1.0,
+        "stability": -1.5,
+        "infrastructure": 2.0
+      },
+      "weights": {
+        "demographics": 0.3,
+        "investment": 0.25,
+        "commodities": 0.2,
+        "stability": 0.15,
+        "infrastructure": 0.1
+      }
+    }
+  },
+  "summary": {
+    "total_countries": 12,
+    "global_avg": 3.7879999999999994,
+    "by_economy_type": {
+      "developed": 0.32,
+      "emerging": 7.719999999999999,
+      "oil_dependent": 0.57,
+      "frontier": 4.51
+    }
+  }
+}
