@@ -1,0 +1,202 @@
+{
+  "timestamp": "2025-09-17T20:37:04.987622",
+  "retrained_countries": [
+    "GBR",
+    "USA",
+    "JPN",
+    "DEU"
+  ],
+  "performance": {
+    "GBR": {
+      "gbm": {
+        "mae": 3.1027604471538077,
+        "std": 1.682396045468075,
+        "feature_importance": {
+          "house_prices": 0.24436809879867144,
+          "exports_eu": 0.14651330985519953,
+          "gdp_lag1": 0.1396884278221254,
+          "energy_prices": 0.12868052025713364,
+          "imports": 0.10291946299144372
+        }
+      },
+      "rf": {
+        "mae": 3.0683931915099527,
+        "std": 1.670942394936693,
+        "feature_importance": {
+          "gdp_lag1": 0.38282352092448263,
+          "house_prices": 0.2119649674642674,
+          "oil_price_change": 0.1882385993693283,
+          "energy_prices": 0.10946592804875813,
+          "post_transition": 0.027917363493620652
+        }
+      },
+      "ridge": {
+        "mae": 3.155400140271278,
+        "std": 1.2980080794859112,
+        "feature_importance": {
+          "gdp_lag4": 1.6749748728013842,
+          "industrial": 1.6386255215228585,
+          "global_uncertainty": 1.4627222728573517,
+          "cpi": 1.460621388851916,
+          "vacancies": 1.3048006506618004
+        }
+      },
+      "elastic": {
+        "mae": 3.1513328049124176,
+        "std": 1.5278532183624873,
+        "feature_importance": {
+          "gdp_lag4": 1.2255892626487224,
+          "industrial": 1.1987491114042736,
+          "global_uncertainty": 1.0905468571086718,
+          "energy_prices": 0.8956459787860537,
+          "vacancies": 0.8947500236778206
+        }
+      }
+    },
+    "USA": {
+      "gbm": {
+        "mae": 1.1509510937339353,
+        "std": 0.7251726833334258,
+        "feature_importance": {
+          "exports": 0.23685325974106902,
+          "retail_sales": 0.14182889151256073,
+          "unemployment": 0.13217904671244618,
+          "stock_market": 0.10288169339333814,
+          "gdp_lag4": 0.09003120877001987
+        }
+      },
+      "rf": {
+        "mae": 1.1626833268309225,
+        "std": 0.7404137220754062,
+        "feature_importance": {
+          "gdp_lag1": 0.25847248495270325,
+          "industrial": 0.19888020080625418,
+          "oil_price_change": 0.08370058571231992,
+          "gdp_lag4": 0.07871677574980157,
+          "stock_market": 0.07250517057907456
+        }
+      },
+      "ridge": {
+        "mae": 1.504301099216485,
+        "std": 0.4652481826898131,
+        "feature_importance": {
+          "retail_sales": 0.9411886239793293,
+          "unemployment": 0.8737941601312748,
+          "cpi": 0.666423636509207,
+          "industrial": 0.6390750631131565,
+          "exports": 0.4982513207466346
+        }
+      },
+      "elastic": {
+        "mae": 1.2061256294865332,
+        "std": 0.5482963589233754,
+        "feature_importance": {
+          "retail_sales": 0.7082198687253756,
+          "industrial": 0.7070777321409336,
+          "unemployment": 0.6966283578542042,
+          "gdp_lag4": 0.4791572186887002,
+          "exports": 0.1636021976354488
+        }
+      }
+    },
+    "JPN": {
+      "gbm": {
+        "mae": 1.567912942972768,
+        "std": 0.8570016397075224,
+        "feature_importance": {
+          "industrial": 0.26618701299251,
+          "yen_trade_weighted": 0.23885183109274538,
+          "cpi": 0.12341924835907171,
+          "exports": 0.10282880315186024,
+          "gdp_lag1": 0.05827708847365062
+        }
+      },
+      "rf": {
+        "mae": 1.6729271405103912,
+        "std": 1.1174948301148844,
+        "feature_importance": {
+          "industrial": 0.45436143372808785,
+          "yen_trade_weighted": 0.17339530339395917,
+          "gdp_lag1": 0.15407761344736773,
+          "gdp_lag4": 0.06371288790956783,
+          "yen_twi_lag2": 0.04895649538861157
+        }
+      },
+      "ridge": {
+        "mae": 2.129367070589278,
+        "std": 1.0937199513998184,
+        "feature_importance": {
+          "industrial": 1.3403472816075077,
+          "yen_trade_weighted": 0.9449369665832675,
+          "global_uncertainty": 0.9401843529993026,
+          "cpi": 0.8013433573026238,
+          "ycc_expansion": 0.67815581405678
+        }
+      },
+      "elastic": {
+        "mae": 1.421709963042422,
+        "std": 1.0461676627807748,
+        "feature_importance": {
+          "industrial": 1.189282566273489,
+          "global_uncertainty": 0.7310841260467159,
+          "cpi": 0.6388776476061192,
+          "ycc_expansion": 0.5216494686290969,
+          "oil_price_change": 0.41862378790169474
+        }
+      }
+    },
+    "DEU": {
+      "gbm": {
+        "mae": 1.3520015956605347,
+        "std": 0.7224222992593239,
+        "feature_importance": {
+          "industrial": 0.42857010395266754,
+          "global_uncertainty": 0.16079300999582757,
+          "gdp_lag1": 0.13588579130633735,
+          "exports": 0.13319584357015732,
+          "oil_price_change": 0.07786464161668831
+        }
+      },
+      "rf": {
+        "mae": 1.49877337168296,
+        "std": 0.8204164940130204,
+        "feature_importance": {
+          "industrial": 0.45539690333443594,
+          "gdp_lag1": 0.44055721710107976,
+          "global_uncertainty": 0.03466300812983497,
+          "exports": 0.03109800550562992,
+          "gdp_lag2": 0.012232811729765695
+        }
+      },
+      "ridge": {
+        "mae": 1.261511821127872,
+        "std": 0.2189308160573638,
+        "feature_importance": {
+          "industrial": 2.132187324355699,
+          "global_uncertainty": 0.40615442503607035,
+          "gdp_lag2": 0.36138556831419383,
+          "gdp_lag1": 0.23386725939323583,
+          "gdp_lag4": 0.18411610326124783
+        }
+      },
+      "elastic": {
+        "mae": 1.162590657819529,
+        "std": 0.3701641423569008,
+        "feature_importance": {
+          "industrial": 1.9119002714450155,
+          "global_uncertainty": 0.3755947135429625,
+          "gdp_lag2": 0.29340016468279845,
+          "gdp_lag1": 0.24732594455325052,
+          "gdp_lag4": 0.11252898687286358
+        }
+      }
+    }
+  },
+  "improvements_used": [
+    "DFM (5th model)",
+    "Stacking ensemble weights",
+    "Country-specific features",
+    "Regime detection",
+    "Robust estimation"
+  ]
+}

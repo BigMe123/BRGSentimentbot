@@ -139,6 +139,12 @@ class GDPModelTrainer:
         config.fred_api_key = os.getenv('FRED_API_KEY', '28eb3d64654c60195cfeed9bc4ec2a41')
         self.data_integration = DataIntegration(config)
 
+        # Initialize stacking ensembles and robust estimators
+        self.stacking_ensembles = {}
+        self.robust_estimators = {}
+        if STACKING_AVAILABLE:
+            logger.info("Stacking ensemble and robust estimation enabled")
+
         self.models = {}
         self.scalers = {}
         self.performance = {}
@@ -266,6 +272,61 @@ class GDPModelTrainer:
 
         logger.info(f"Created feature matrix with {features.shape[1]} features for {country}")
         return features
+
+    def _detect_regimes(self, gdp_growth: pd.Series) -> pd.Series:
+        """Detect economic regimes based on GDP growth"""
+        # Calculate rolling mean and std
+        rolling_mean = gdp_growth.rolling(window=4, min_periods=2).mean()
+        rolling_std = gdp_growth.rolling(window=4, min_periods=2).std()
+
+        # Define regime thresholds
+        regimes = pd.Series(index=gdp_growth.index, dtype=str)
+
+        for i in range(len(gdp_growth)):
+            growth = gdp_growth.iloc[i]
+            mean = rolling_mean.iloc[i] if i >= 1 else gdp_growth.mean()
+            std = rolling_std.iloc[i] if i >= 1 else gdp_growth.std()
+
+            if pd.isna(growth):
+                regimes.iloc[i] = 'normal'
+            elif growth < mean - 2 * std or growth < -2:
+                regimes.iloc[i] = 'stress'
+            elif growth < mean - std or growth < 0:
+                regimes.iloc[i] = 'contraction'
+            elif growth > mean + std and growth > 3:
+                regimes.iloc[i] = 'expansion'
+            else:
+                regimes.iloc[i] = 'normal'
+
+        return regimes
+
+    def _get_current_regime(self, country: str, features: pd.DataFrame) -> str:
+        """Determine current economic regime"""
+        # Get recent GDP growth if available
+        try:
+            gdp = self.fetch_gdp_data(country)
+            if not gdp.empty:
+                recent_growth = gdp.pct_change(periods=4).tail(4) * 100
+                if len(recent_growth) > 0:
+                    avg_growth = recent_growth.mean()
+                    if avg_growth < -1:
+                        return 'contraction'
+                    elif avg_growth < 1:
+                        return 'normal'
+                    elif avg_growth > 3:
+                        return 'expansion'
+                    else:
+                        return 'normal'
+        except Exception as e:
+            logger.warning(f"Could not determine regime for {country}: {e}")
+
+        # Check for shock indicators
+        if 'global_uncertainty' in features.columns:
+            vix = features['global_uncertainty'].iloc[-1]
+            if vix > 30:  # High VIX indicates stress
+                return 'stress'
+
+        return 'normal'
 
     def _train_dfm_model(self, country: str, features: pd.DataFrame, gdp: pd.Series):
         """Train Dynamic Factor Model for mixed-frequency nowcasting"""
@@ -434,6 +495,48 @@ class GDPModelTrainer:
 
         self.performance[country] = results
 
+        # Train stacking ensemble if we have enough data and STACKING_AVAILABLE
+        if STACKING_AVAILABLE and len(y) >= 50:
+            try:
+                logger.info(f"Training stacking ensemble for {country}")
+
+                # Generate out-of-fold predictions for stacking
+                from sentiment_bot.gdp_stacking_ensemble import generate_oof_predictions
+
+                # Prepare models dict (excluding DFM which has different interface)
+                oof_models = {}
+                for model_name in ['gbm', 'rf', 'ridge', 'elastic']:
+                    model_key = f"{country}_{model_name}"
+                    if model_key in self.models:
+                        oof_models[model_name] = self.models[model_key]
+
+                if oof_models:
+                    # Generate out-of-fold predictions
+                    oof_preds = generate_oof_predictions(oof_models, pd.DataFrame(X_scaled, columns=X.columns), y)
+
+                    # Detect regimes
+                    gdp_growth = y.pct_change(periods=4) * 100
+                    regimes = self._detect_regimes(gdp_growth)
+
+                    # Train stacking ensemble
+                    stacking = RegimeAwareStackingEnsemble()
+                    stacking.fit(oof_preds, y, regimes, pd.Series([country] * len(y)))
+
+                    self.stacking_ensembles[country] = stacking
+
+                    # Log the learned weights
+                    logger.info(f"Stacking ensemble trained for {country}")
+                    logger.info(f"Global weights: {stacking.get_weights()}")
+                    for regime in stacking.regime_weights:
+                        logger.info(f"Weights for {regime}: {stacking.get_weights(regime, country)}")
+
+            except Exception as e:
+                logger.warning(f"Failed to train stacking ensemble for {country}: {e}")
+
+        # Initialize robust estimator
+        if STACKING_AVAILABLE:
+            self.robust_estimators[country] = RobustGDPEstimator()
+
         return results
 
     def _get_feature_importance(self, model, feature_names) -> Dict:
@@ -498,8 +601,37 @@ class GDPModelTrainer:
                     logger.error(f"Prediction failed for {model_key}: {e}")
 
         if predictions:
-            # Ensemble prediction (simple average)
-            ensemble = np.mean(list(predictions.values()))
+            # Determine current regime
+            regime = self._get_current_regime(country, features)
+            predictions['regime'] = regime
+
+            # Use stacking ensemble if available
+            if STACKING_AVAILABLE and country in self.stacking_ensembles:
+                try:
+                    # Get stacking weights for current regime
+                    weights = self.stacking_ensembles[country].get_weights(regime, country)
+
+                    # Calculate weighted ensemble
+                    ensemble = 0
+                    weight_sum = 0
+                    for model_name, weight in weights.items():
+                        if model_name in predictions:
+                            ensemble += predictions[model_name] * weight
+                            weight_sum += weight
+
+                    if weight_sum > 0:
+                        ensemble = ensemble / weight_sum
+                    else:
+                        ensemble = np.mean(list(predictions.values()))
+
+                    logger.info(f"Using stacking weights for {country}/{regime}: {weights}")
+                except Exception as e:
+                    logger.warning(f"Stacking failed, using simple average: {e}")
+                    ensemble = np.mean(list(predictions.values()))
+            else:
+                # Fallback to simple average
+                ensemble = np.mean(list(predictions.values()))
+
             predictions['ensemble'] = float(ensemble)
 
             # Add confidence based on model agreement
