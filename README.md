@@ -5,7 +5,7 @@
 ![Python Version](https://img.shields.io/badge/python-3.11--3.13-blue.svg)
 ![License](https://img.shields.io/badge/license-Proprietary-red.svg)
 ![Sources](https://img.shields.io/badge/sources-1%2C413_domains-purple.svg)
-![RSS Endpoints](https://img.shields.io/badge/RSS_endpoints-3%2C903-orange.svg)
+![RSS Feeds](https://img.shields.io/badge/RSS_feeds-3%2C903-orange.svg)
 ![Connectors](https://img.shields.io/badge/connectors-16_types-green.svg)
 ![GDP MAE](https://img.shields.io/badge/GDP_MAE-1.452pp-green.svg)
 ![Coverage](https://img.shields.io/badge/country_coverage-200%2B-blue.svg)
@@ -14,7 +14,7 @@
 
 *Combining Wall Street-Grade GDP Forecasting with Real-Time Global Sentiment Monitoring*
 
-[🚀 Quick Start](#-quick-start) • [Capabilities](#-platform-capabilities) • [Sources](#-data-sources-3903-endpoints) • [Installation](#-installation) • [Architecture](#-architecture)
+[🚀 Quick Start](#-quick-start) • [Capabilities](#-platform-capabilities) • [Sources](#-data-sources-3903-feeds) • [Installation](#-installation) • [Architecture](#-architecture)
 
 </div>
 
@@ -34,7 +34,7 @@ Institutional-grade economic predictions with statistically validated models:
 ### 2. 📰 **Sentiment Analysis Engine**
 Production-ready news intelligence with massive data coverage:
 - **1,413 Curated Sources**: Pre-validated domains across all regions
-- **3,903 RSS Endpoints**: Multiple feeds per source for redundancy
+- **3,903 RSS Feeds**: Multiple feeds per source for redundancy
 - **16 Modern Connectors**: Google News, Reddit, HackerNews, YouTube, Twitter, GDELT, etc.
 - **200+ Articles/Second**: High-throughput async pipeline
 
@@ -127,7 +127,7 @@ python consolidate_sources.py
 
 #### Massive Source Coverage
 - **1,413 domains** validated globally
-- **3,903 RSS endpoints** (avg 2.76/source)
+- **3,903 RSS feeds** (avg 2.76/source)
 - **Regional breakdown**:
   - Americas: 697 (49.3%)
   - Europe: 297 (21.0%)
@@ -170,18 +170,18 @@ Features: Multi-source fetching, sentiment scoring, keyword extraction, number d
 
 ---
 
-## 📊 Data Sources (3,903 Endpoints)
+## 📊 Data Sources (3,903 Feeds)
 
 ### Source Architecture
 ```
 Total Sources: 1,413 curated domains
-Total RSS Endpoints: 3,903 feeds
-Average Endpoints/Source: 2.76
+Total RSS Feeds: 3,903 feeds
+Average Feeds/Source: 2.76
 Database: SQLite (skb_catalog.db, 1.6MB)
 Selection Speed: <300ms
 ```
 
-### Top Sources (4 endpoints each)
+### Top Sources (4 feeds each)
 CNBC, Bloomberg, WSJ, Economist, Reuters, BBC, FT, Forbes, MarketWatch, TechCrunch, and 50+ major outlets
 
 ### Regional Distribution
@@ -205,7 +205,7 @@ Americas (697) • Europe (297) • Asia (160) • Africa (96) • LATAM (86) �
     │   └── Global Perception Index (200+ countries)
     │
     └── 📰 Sentiment Analysis Engine
-        ├── SKB Catalog (1,413 sources, 3,903 endpoints)
+        ├── SKB Catalog (1,413 sources, 3,903 feeds)
         ├── 16 Modern Connectors (Google News, Reddit, HN, etc.)
         ├── Async Pipeline (200+ articles/sec)
         └── Entity Extraction (countries, tickers, themes)
@@ -259,7 +259,7 @@ ALPHA_VANTAGE_API_KEY=...      # For economic data
 | Metric | Value | Notes |
 |--------|-------|-------|
 | Sources | 1,413 | Validated domains |
-| RSS Endpoints | 3,903 | Multi-feed redundancy |
+| RSS Feeds | 3,903 | Multi-feed redundancy |
 | Throughput | 200-400/min | 10+ connectors |
 | Success Rate | 95-98% | Auto-retry |
 | Selection | <300ms | SQLite indexed |
@@ -304,11 +304,11 @@ python sentiment_bot/bridge_dfm_models.py
 ```
 BRGBOT/
 ├── run.py                      # Interactive launcher
-├── consolidate_sources.py      # Source consolidation (3,903 endpoints)
+├── consolidate_sources.py      # Source consolidation (3,903 feeds)
 ├── analyze_topic_live.py       # Standalone topic analysis
 ├── smoke_test.py               # Verification tests
 │
-├── skb_catalog.db              # 1,413 sources, 3,903 endpoints
+├── skb_catalog.db              # 1,413 sources, 3,903 feeds
 │
 ├── sentiment_bot/
 │   ├── cli_unified.py         # Main CLI
@@ -375,6 +375,6 @@ Proprietary - Boston Risk Group. All rights reserved.
 
 *Institutional-Grade Economic Intelligence & Global Sentiment Monitoring*
 
-**🏆 1,413 Sources • 3,903 Endpoints • 16 Connectors • 200+ Countries • 15+ Models**
+**🏆 1,413 Sources • 3,903 Feeds • 16 Connectors • 200+ Countries • 15+ Models**
 
 </div>
