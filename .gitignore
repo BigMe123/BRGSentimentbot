@@ -1,0 +1,105 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment Variables - CRITICAL!
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+*.out
+
+# Testing
+.coverage
+.pytest_cache/
+.tox/
+htmlcov/
+.hypothesis/
+coverage.xml
+*.cover
+.cache
+nosetests.xml
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Output & Generated Files
+output/
+test_output/
+*.csv
+*.jsonl
+run_summary_*.json
+dashboard_run_summary_*.txt
+
+# Temporary Files
+*.tmp
+*.bak
+*.swp
+tmp/
+temp/
+
+# Model Caches
+.cache/
+models/
+transformers_cache/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Project Specific
+.stealth_db.json
+.stealth_harvest_db.json
+.test_harvest_db.json
+smoke_test_results.json
+production_test.log
+
+# Secrets & Keys
+*.pem
+*.key
+credentials.json
+secrets/

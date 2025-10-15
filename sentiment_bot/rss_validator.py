@@ -190,6 +190,10 @@ class RSSValidator:
             domain = source.get('domain', 'unknown')
             rss_endpoints = source.get('rss_endpoints', [])
 
+            # Skip if rss_endpoints is None or empty
+            if not rss_endpoints:
+                continue
+
             for endpoint in rss_endpoints:
                 all_endpoints.append((endpoint, domain, source))
                 source_map[endpoint] = source
@@ -245,6 +249,8 @@ class RSSValidator:
             sources_to_remove = []
             for source in sources_data.get('sources', []):
                 rss_endpoints = source.get('rss_endpoints', [])
+
+                # Skip if rss_endpoints is None or empty
                 if not rss_endpoints:
                     continue
 

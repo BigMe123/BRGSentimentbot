@@ -1,7 +1,21 @@
-version: '3.0'
-description: Expanded master source list with 50+ country coverage including Liechtenstein
-total_sources: 107
+version: '2.0'
+description: Master source list for BSG Sentiment Bot
+total_sources: 87
 sources:
+- domain: regierung.li
+  name: Government of Liechtenstein
+  topics:
+  - politics
+  - government
+  - policy
+  priority: 0.9
+  policy: allow
+  region: europe
+  country: Liechtenstein
+  language: de
+  rss_endpoints:
+  - https://www.regierung.li/rss/
+  - https://www.llv.li/rss/
 - domain: cnbc.com
   name: cnbc.com
   topics:
@@ -218,18 +232,6 @@ sources:
   language: en
   rss_endpoints:
   - https://rss.dw.com/rdf/rss-en-bus
-- domain: handelsblatt.com
-  name: handelsblatt.com
-  topics:
-  - news
-  - economy
-  priority: 0.9
-  policy: allow
-  region: europe
-  country: germany
-  language: en
-  rss_endpoints:
-  - https://www.handelsblatt.com/contentexport/feed/schlagzeilen
 - domain: spiegel.de
   name: spiegel.de
   topics:
@@ -458,18 +460,6 @@ sources:
   language: en
   rss_endpoints:
   - https://www.livemint.com/rss/markets
-- domain: moneycontrol.com
-  name: moneycontrol.com
-  topics:
-  - news
-  - economy
-  priority: 0.9
-  policy: allow
-  region: asia
-  country: india
-  language: en
-  rss_endpoints:
-  - https://www.moneycontrol.com/rss/business.xml
 - domain: ndtv.com
   name: ndtv.com
   topics:
@@ -530,18 +520,6 @@ sources:
   language: en
   rss_endpoints:
   - https://www.challenges.fr/rss.xml
-- domain: capital.fr
-  name: capital.fr
-  topics:
-  - news
-  - economy
-  priority: 0.9
-  policy: allow
-  region: europe
-  country: france
-  language: en
-  rss_endpoints:
-  - https://www.capital.fr/rss
 - domain: bfmtv.com
   name: bfmtv.com
   topics:
@@ -566,19 +544,92 @@ sources:
   language: en
   rss_endpoints:
   - https://www.francetvinfo.fr/economie.rss
-- domain: japantimes.co.jp
-  name: Japantimes.Co.Jp - Japan
+- domain: feeds.bbci.co.uk
+  name: Bbc - China
   topics:
   - news
   - politics
   - economy
-  priority: 0.8
+  priority: 0.9
   policy: allow
   region: asia
-  country: japan
+  country: china
   language: en
   rss_endpoints:
-  - https://www.japantimes.co.jp/rss/news/
+  - https://feeds.bbci.co.uk/news/world/asia/china/rss.xml
+- domain: vaterland.li
+  name: Liechtensteiner Vaterland
+  topics:
+  - politics
+  - economics
+  - local
+  - business
+  priority: 0.85
+  policy: allow
+  region: europe
+  country: Liechtenstein
+  language: de
+  rss_endpoints:
+  - https://www.vaterland.li/rss/
+  - https://www.vaterland.li/liechtenstein/rss/
+  - https://www.vaterland.li/politik/rss/
+  - https://www.vaterland.li/wirtschaft/rss/
+- domain: volksblatt.li
+  name: Liechtensteiner Volksblatt
+  topics:
+  - politics
+  - economics
+  - local
+  - business
+  priority: 0.85
+  policy: allow
+  region: europe
+  country: Liechtenstein
+  language: de
+  rss_endpoints:
+  - https://www.volksblatt.li/rss/
+  - https://www.volksblatt.li/nachrichten/rss/
+  - https://www.volksblatt.li/liechtenstein/rss/
+  - https://www.volksblatt.li/wirtschaft/rss/
+- domain: landtag.li
+  name: Landtag of Liechtenstein
+  topics:
+  - politics
+  - parliament
+  - legislation
+  priority: 0.85
+  policy: allow
+  region: europe
+  country: Liechtenstein
+  language: de
+  rss_endpoints:
+  - https://www.landtag.li/rss/
+- domain: 1fl.li
+  name: 1FL - Radio Liechtenstein
+  topics:
+  - local
+  - news
+  - culture
+  priority: 0.8
+  policy: allow
+  region: europe
+  country: Liechtenstein
+  language: de
+  rss_endpoints:
+  - https://www.1fl.li/rss/
+- domain: nzz.ch/liechtenstein
+  name: NZZ - Liechtenstein Coverage
+  topics:
+  - economics
+  - politics
+  - business
+  priority: 0.8
+  policy: allow
+  region: europe
+  country: Liechtenstein
+  language: de
+  rss_endpoints:
+  - https://www.nzz.ch/international.rss
 - domain: nhk.or.jp
   name: Nhk.Or.Jp - Japan
   topics:
@@ -618,19 +669,6 @@ sources:
   language: en
   rss_endpoints:
   - https://feeds.folha.uol.com.br/emcimadahora/rss091.xml
-- domain: cbc.ca
-  name: Cbc.Ca - Canada
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: americas
-  country: canada
-  language: en
-  rss_endpoints:
-  - https://rss.cbc.ca/lineup/topstories.xml
 - domain: cbc.ca
   name: Cbc.Ca - Canada
   topics:
@@ -826,32 +864,6 @@ sources:
   language: en
   rss_endpoints:
   - https://www.bangkokpost.com/rss/data/topstories.xml
-- domain: vnexpress.net
-  name: Vnexpress.Net - Vietnam
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: asia
-  country: vietnam
-  language: en
-  rss_endpoints:
-  - https://vnexpress.net/rss/tin-tuc-24h.rss
-- domain: kompas.com
-  name: Kompas.Com - Indonesia
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: asia
-  country: indonesia
-  language: en
-  rss_endpoints:
-  - https://rss.kompas.com/regional
 - domain: inquirer.net
   name: Inquirer.Net - Philippines
   topics:
@@ -865,110 +877,6 @@ sources:
   language: en
   rss_endpoints:
   - https://www.inquirer.net/fullfeed
-- domain: dailysabah.com
-  name: Dailysabah.Com - Turkey
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: europe
-  country: turkey
-  language: en
-  rss_endpoints:
-  - https://www.dailysabah.com/rssFeed
-- domain: haaretz.com
-  name: Haaretz.Com - Israel
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: middle_east
-  country: israel
-  language: en
-  rss_endpoints:
-  - https://www.haaretz.com/cmlink/1.628319
-- domain: ahram.org.eg
-  name: Ahram.Org.Eg - Egypt
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: africa
-  country: egypt
-  language: en
-  rss_endpoints:
-  - http://english.ahram.org.eg/rss/news.aspx
-- domain: punchng.com
-  name: Punchng.Com - Nigeria
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: africa
-  country: nigeria
-  language: en
-  rss_endpoints:
-  - https://punchng.com/feed/
-- domain: nation.co.ke
-  name: Nation.Co.Ke - Kenya
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: africa
-  country: kenya
-  language: en
-  rss_endpoints:
-  - https://nation.africa/kenya/news/rss
-- domain: latercera.com
-  name: Latercera.Com - Chile
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: americas
-  country: chile
-  language: en
-  rss_endpoints:
-  - https://www.latercera.com/feed/
-- domain: eltiempo.com
-  name: Eltiempo.Com - Colombia
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: americas
-  country: colombia
-  language: en
-  rss_endpoints:
-  - https://www.eltiempo.com/rss.xml
-- domain: comercio.pe
-  name: Comercio.Pe - Peru
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: americas
-  country: peru
-  language: en
-  rss_endpoints:
-  - https://elcomercio.pe/rss/
 - domain: polsatnews.pl
   name: Polsatnews.Pl - Poland
   topics:
@@ -1047,19 +955,6 @@ sources:
   language: en
   rss_endpoints:
   - https://www.stuff.co.nz/rss
-- domain: vrt.be
-  name: Vrt.Be - Belgium
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: europe
-  country: belgium
-  language: en
-  rss_endpoints:
-  - https://www.vrt.be/vrtnws/en.rss.xml
 - domain: orf.at
   name: Orf.At - Austria
   topics:
@@ -1073,58 +968,6 @@ sources:
   language: en
   rss_endpoints:
   - https://rss.orf.at/news.xml
-- domain: swissinfo.ch
-  name: Swissinfo.Ch - Switzerland
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: europe
-  country: switzerland
-  language: en
-  rss_endpoints:
-  - https://www.swissinfo.ch/eng/rss
-- domain: publico.pt
-  name: Publico.Pt - Portugal
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: europe
-  country: portugal
-  language: en
-  rss_endpoints:
-  - https://www.publico.pt/rss
-- domain: rte.ie
-  name: Rte.Ie - Ireland
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: europe
-  country: ireland
-  language: en
-  rss_endpoints:
-  - https://www.rte.ie/news/rss/
-- domain: yle.fi
-  name: Yle.Fi - Finland
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: europe
-  country: finland
-  language: en
-  rss_endpoints:
-  - https://feeds.yle.fi/uutiset/v1/majorNews/YLE_UUTISET.rss
 - domain: dr.dk
   name: Dr.Dk - Denmark
   topics:
@@ -1138,19 +981,6 @@ sources:
   language: en
   rss_endpoints:
   - https://www.dr.dk/nyheder/service/feeds/allenyheder
-- domain: ekathimerini.com
-  name: Ekathimerini.Com - Greece
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.8
-  policy: allow
-  region: europe
-  country: greece
-  language: en
-  rss_endpoints:
-  - https://www.ekathimerini.com/rss
 - domain: thedailystar.net
   name: Thedailystar.Net - Bangladesh
   topics:
@@ -1203,146 +1033,66 @@ sources:
   language: en
   rss_endpoints:
   - https://www.thestar.com.my/rss/news/nation/
-- domain: feeds.bbci.co.uk
-  name: Bbc - United Kingdom
+- domain: lie-zeit.li
+  name: Lie:Zeit
   topics:
-  - news
-  - politics
-  - economy
-  priority: 0.9
+  - local
+  - culture
+  - society
+  priority: 0.75
   policy: allow
   region: europe
-  country: united_kingdom
-  language: en
+  country: Liechtenstein
+  language: de
   rss_endpoints:
-  - https://feeds.bbci.co.uk/news/rss.xml
-- domain: feeds.bbci.co.uk
-  name: Bbc - United Kingdom
+  - https://www.lie-zeit.li/feed/
+- domain: swissinfo.ch/liechtenstein
+  name: SwissInfo - Liechtenstein
   topics:
-  - news
+  - international
+  - economics
   - politics
-  - economy
-  priority: 0.9
+  priority: 0.75
   policy: allow
   region: europe
-  country: united_kingdom
+  country: Liechtenstein
   language: en
   rss_endpoints:
-  - https://feeds.bbci.co.uk/news/business/rss.xml
-- domain: feeds.bbci.co.uk
-  name: Bbc - India
+  - https://www.swissinfo.ch/eng/latest-news/rss
+- domain: twitter.com/liechtenstein
+  name: Liechtenstein Twitter/X
   topics:
+  - social
   - news
-  - politics
-  - economy
-  priority: 0.9
-  policy: allow
-  region: asia
-  country: india
-  language: en
-  rss_endpoints:
-  - https://feeds.bbci.co.uk/news/world/asia/india/rss.xml
-- domain: feeds.bbci.co.uk
-  name: Bbc - China
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.9
-  policy: allow
-  region: asia
-  country: china
-  language: en
-  rss_endpoints:
-  - https://feeds.bbci.co.uk/news/world/asia/china/rss.xml
-- domain: feeds.reuters.com
-  name: Reuters - United States
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.9
-  policy: allow
-  region: americas
-  country: united_states
-  language: en
-  rss_endpoints:
-  - https://feeds.reuters.com/reuters/topNews
-- domain: feeds.reuters.com
-  name: Reuters - United States
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.9
-  policy: allow
-  region: americas
-  country: united_states
-  language: en
-  rss_endpoints:
-  - https://feeds.reuters.com/reuters/businessNews
-- domain: feeds.reuters.com
-  name: Reuters - United Kingdom
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.9
+  - local
+  priority: 0.7
   policy: allow
   region: europe
-  country: united_kingdom
-  language: en
-  rss_endpoints:
-  - https://feeds.reuters.com/reuters/UKdomesticNews
-- domain: feeds.reuters.com
-  name: Reuters - Global
+  country: Liechtenstein
+  language: multi
+  rss_endpoints: null
+- domain: mastodon.social/liechtenstein
+  name: Liechtenstein Mastodon
   topics:
-  - news
-  - politics
-  - economy
-  priority: 0.9
+  - social
+  - tech
+  - local
+  priority: 0.65
   policy: allow
-  region: global
-  country: global
-  language: en
-  rss_endpoints:
-  - https://feeds.reuters.com/reuters/worldNews
-- domain: feeds.apnews.com
-  name: Ap - United States
+  region: europe
+  country: Liechtenstein
+  language: de
+  rss_endpoints: null
+- domain: reddit.com/r/liechtenstein
+  name: Liechtenstein Reddit
   topics:
-  - news
-  - politics
-  - economy
-  priority: 0.9
+  - social
+  - discussion
+  - local
+  priority: 0.6
   policy: allow
-  region: americas
-  country: united_states
+  region: europe
+  country: Liechtenstein
   language: en
   rss_endpoints:
-  - https://feeds.apnews.com/rss/apf-topnews
-- domain: feeds.apnews.com
-  name: Ap - United States
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.9
-  policy: allow
-  region: americas
-  country: united_states
-  language: en
-  rss_endpoints:
-  - https://feeds.apnews.com/rss/apf-usnews
-- domain: feeds.apnews.com
-  name: Ap - Global
-  topics:
-  - news
-  - politics
-  - economy
-  priority: 0.9
-  policy: allow
-  region: global
-  country: global
-  language: en
-  rss_endpoints:
-  - https://feeds.apnews.com/rss/apf-worldnews
+  - https://www.reddit.com/r/liechtenstein/.rss

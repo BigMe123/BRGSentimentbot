@@ -1,123 +1,51 @@
-# 🚀 BSG Bot Quick Start Guide
+# 🚀 Risk Intelligence System - Quick Start
 
-## ✅ System Status
-All systems operational. Run `python test_complete_system.py` to verify.
-
-## 🎯 Quick Commands
-
-### Initialize (One-time setup)
-```bash
-python initialize_skb.py
-```
-
-### Basic Analysis
-```bash
-# Asia elections (quick)
-poetry run bsgbot run --region asia --topic elections --budget 60
-
-# Europe economy (standard)
-poetry run bsgbot run --region europe --topic economy --budget 300
-
-# Middle East security (comprehensive)
-poetry run bsgbot run --region middle_east --topic security --budget 600 --expand
-```
-
-### With Institutional Outputs
-```bash
-# Generate all output formats
-poetry run bsgbot run \
-  --region americas \
-  --topic tech \
-  --output-dir ./outputs \
-  --export-csv \
-  --budget 300
-```
-
-### Obscure Topics with Discovery
-```bash
-poetry run bsgbot run \
-  --other "rare earth mining in Africa" \
-  --discover \
-  --budget 300
-```
-
-## 📊 Output Files
-
-After each run, find in your output directory:
-- `articles_{run_id}.jsonl` - Machine-readable article records
-- `run_summary_{run_id}.json` - Complete metrics and analysis
-- `dashboard_run_summary_{run_id}.txt` - Executive summary
-- `articles_{run_id}.csv` - Spreadsheet format (if --export-csv)
-
-## 🔍 Key Features Working
-
-✅ **SKB Catalog**: 173 sources across 6 regions  
-✅ **Smart Selection**: <300ms selection from catalog  
-✅ **Entity Extraction**: Organizations, locations, tickers  
-✅ **Signal Detection**: Volatility scoring, risk levels  
-✅ **Institutional Outputs**: JSONL, JSON, TXT, CSV formats  
-✅ **Sentiment Analysis**: VADER-based with confidence scores  
-✅ **RSS Fetching**: Concurrent with anti-bot evasion  
-✅ **Freshness Filtering**: 24-hour window, 85%+ rates  
-✅ **Deduplication**: URL hash-based, removes 15-20% duplicates  
-
-## 🎮 Common Workflows
-
-### Morning Market Scan (1 minute)
-```bash
-poetry run bsgbot run --topic economy --budget 60 --min-sources 10
-```
-
-### Regional Deep Dive (5 minutes)
-```bash
-poetry run bsgbot run --region asia --topic elections --budget 300
-```
-
-### Comprehensive Analysis (10 minutes)
-```bash
-poetry run bsgbot run --expand --discover --budget 600 --min-sources 100
-```
-
-## 🐛 Troubleshooting
-
-### If sentiment analysis is slow:
-- The first run loads models (takes 30-60s)
-- Subsequent runs use cached models
-- We limit text to 1000 chars for speed
-
-### If no articles found:
-- Check internet connection
-- Try different region/topic
-- Enable discovery with --discover
-
-### To verify system:
-```bash
-python test_complete_system.py
-```
-
-## 📈 Performance Metrics
-
-| Metric | Value |
-|--------|-------|
-| Sources in catalog | 173 |
-| Selection time | <300ms |
-| Articles per minute | 50-100 |
-| Freshness rate | 85-90% |
-| Relevance accuracy | 90%+ |
-| Sentiment analysis | ~1 sec/article |
-
-## 🆘 Help
+## One-Minute Setup
 
 ```bash
-# View all options
-poetry run bsgbot run --help
+# 1. Install (30 seconds)
+pip install fastapi uvicorn pydantic spacy sentence-transformers
+python -m spacy download en_core_web_sm
 
-# Check system stats
-poetry run bsgbot stats
+# Optional GUI
+pip install PyQt6 matplotlib
 
-# Test everything works
-python test_complete_system.py
+# 2. Launch (10 seconds)
+python run.py
+# → Select Option 23
+# → Choose: dashboard / api_server / run_agents
+
+# 3. Verify (20 seconds)
+python test_risk_intelligence.py
 ```
 
----
-**Ready to analyze!** Start with: `poetry run bsgbot run --region europe --topic economy --budget 60`
+## 🎯 Quick Reference
+
+### Launch Commands
+- `python run.py` → Interactive menu (Option 23)
+- `python -m sentiment_bot.risk_intelligence.api` → API server
+- `python -m sentiment_bot.risk_intelligence.dashboard` → GUI
+- `python test_risk_intelligence.py` → Run tests
+- `python demo_risk_intelligence.py` → Full demo
+
+### API Endpoints (port 8765)
+- `GET /api/latest` → Latest signals
+- `GET /api/stats` → Statistics
+- `GET /api/entity/{entity}` → Entity signals
+- `POST /api/agent/run` → Run agent job
+- `GET /docs` → Swagger UI
+
+### Python API
+```python
+from sentiment_bot.risk_intelligence import get_risk_db, run_agent_job, AgentJob
+db = get_risk_db()
+signals = db.get_latest_signals(limit=50)
+```
+
+### 4 Agents
+- **query**: Weak signal detection
+- **monitor**: Anomaly surveillance  
+- **forecast**: Causal impact analysis
+- **summarizer**: Daily digest generation
+
+**Status**: ✅ Production Ready | **Version**: 3.0.0
