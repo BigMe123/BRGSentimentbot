@@ -103,3 +103,4 @@ production_test.log
 *.key
 credentials.json
 secrets/
+.env
