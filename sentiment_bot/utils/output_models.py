@@ -83,10 +83,50 @@ class ConfigBlock(BaseModel):
 
     region: Optional[str] = None
     topic: Optional[str] = None
-    budget_sec: int = Field(..., ge=1)
-    min_sources: int = Field(..., ge=1)
+    budget_sec: int = Field(default=300, ge=0)
+    min_sources: int = Field(default=0, ge=0)
     discover: bool = False
     max_age_hours: int = Field(default=24, ge=1)
+
+
+class EventActor(BaseModel):
+    """An actor or receiver in a geopolitical event."""
+
+    name: str
+    type: Literal["state", "org", "person", "group", "sector", "public"]
+
+
+class EventAction(BaseModel):
+    """Action taken by an actor."""
+
+    verb: str
+    category: Literal[
+        "cooperate", "confront", "military", "economic",
+        "diplomatic", "regulatory", "communicate",
+    ]
+
+
+class EventLocation(BaseModel):
+    """Where an event took place."""
+
+    name: str
+    coordinates: Optional[List[float]] = None  # [lat, lon]
+
+
+class ExtractedEvent(BaseModel):
+    """A structured event extracted from an article."""
+
+    actor: EventActor
+    action: EventAction
+    receiver: Optional[EventActor] = None
+    tone: int = Field(default=0, ge=-10, le=10)
+    domain: Literal["military", "economic", "diplomatic", "legal", "social", "tech"]
+    intensity: int = Field(default=1, ge=1, le=5)
+    stance: Literal["support", "oppose", "neutral", "threaten", "request"]
+    location: Optional[EventLocation] = None
+    event_date: Optional[str] = None  # ISO date, when event happened
+    source_type: Literal["news", "social_media", "official_statement"] = "news"
+    confidence: float = Field(default=0.5, ge=0.0, le=1.0)
 
 
 class ArticleRecord(BaseModel):
@@ -107,14 +147,24 @@ class ArticleRecord(BaseModel):
     tickers: List[str] = Field(default_factory=list)
     entities: List[Dict[str, str]] = Field(default_factory=list)
     summary: str = ""
+    ai_summary: str = ""
     text_chars: int = Field(0, ge=0)
     hash: str = ""
+
+    # Source credibility
+    source_tier: int = Field(default=3, ge=1, le=3)  # 1=Major, 2=Regional, 3=Other
 
     # Analysis results
     relevance: float = Field(..., ge=0.0, le=1.0)
     sentiment: Sentiment
     aspects: List[AspectScore] = Field(default_factory=list)
     signals: Optional[SignalData] = None
+
+    # Entity stances (per-entity sentiment via NLI)
+    entity_stances: List[Dict] = Field(default_factory=list)
+
+    # Event extraction
+    events: List[ExtractedEvent] = Field(default_factory=list)
 
     class Config:
         json_encoders = {datetime: lambda v: v.isoformat()}

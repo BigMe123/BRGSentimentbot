@@ -272,16 +272,42 @@ class EntityExtractor:
             KNOWN_GPES.add(country)
             COUNTRY_TO_REGION[country] = region
 
-    # Add common alternative names
+    # Add common alternative names — maps variants to canonical name
     COUNTRY_ALIASES = {
         "US": "United States",
         "USA": "United States",
         "America": "United States",
+        "U.S.": "United States",
+        "U.S.A.": "United States",
         "UK": "United Kingdom",
         "Britain": "United Kingdom",
+        "Great Britain": "United Kingdom",
+        "England": "United Kingdom",
         "DRC": "Democratic Republic of Congo",
         "Congo": "Democratic Republic of Congo",
         "UAE": "United Arab Emirates",
+        "Emirates": "United Arab Emirates",
+        "South Korea": "South Korea",
+        "Republic of Korea": "South Korea",
+        "North Korea": "North Korea",
+        "DPRK": "North Korea",
+        "Ivory Coast": "Ivory Coast",
+        "Cote d'Ivoire": "Ivory Coast",
+        "Swaziland": "Swaziland",
+        "Eswatini": "Swaziland",
+        "Czech Republic": "Czech Republic",
+        "Czechia": "Czech Republic",
+        "East Timor": "East Timor",
+        "Timor-Leste": "East Timor",
+        "Palestine": "Palestine",
+        "Palestinian": "Palestine",
+        "Gaza": "Palestine",
+        "West Bank": "Palestine",
+        "Taiwan": "Taiwan",
+        "Republic of China": "Taiwan",
+        "Hong Kong": "Hong Kong",
+        "Macau": "Macau",
+        "Kosovo": "Kosovo",
     }
 
     # Market tickers patterns
@@ -317,57 +343,122 @@ class EntityExtractor:
         "low": ["calm", "quiet", "positive", "optimistic", "bullish"],
     }
 
+    # spaCy NER availability (class-level, checked once)
+    _spacy_extractor = None
+    _spacy_checked = False
+
+    @classmethod
+    def _get_spacy_extractor(cls):
+        """Skip spaCy NER — dict/regex path is fast and sufficient.
+
+        spaCy + NLI model loading is extremely slow on MPS and causes hangs.
+        The dictionary path catches all known orgs, countries, tickers, and
+        currency pairs reliably. Re-enable only if a GPU backend is confirmed.
+        """
+        cls._spacy_checked = True
+        cls._spacy_extractor = None
+        return None
+
+    def _canonicalize_entity(self, text: str, label: str) -> Dict[str, str]:
+        """Canonicalize a spaCy entity using our dictionaries."""
+        # Map spaCy labels to our types
+        type_map = {"PERSON": "PERSON", "ORG": "ORG", "GPE": "GPE", "LOC": "GPE", "NORP": "GPE"}
+        etype = type_map.get(label, label)
+
+        # Canonicalize country names via alias dict
+        if etype == "GPE":
+            canonical = self.COUNTRY_ALIASES.get(text, text)
+            return {"text": canonical, "type": "GPE"}
+
+        # Check if it matches a known org
+        if text in self.KNOWN_ORGS:
+            return {"text": text, "type": "ORG"}
+
+        return {"text": text, "type": etype}
+
     def extract_entities(self, text: str) -> List[Dict[str, str]]:
         """
         Extract named entities from text.
 
-        Args:
-            text: Input text
+        Uses spaCy NER when available (pip install spacy + model), with
+        dictionary-based canonicalization. Falls back to pure regex/dict
+        matching when spaCy is not installed.
+
+        Tickers and currency pairs always use regex (where it's better).
 
         Returns:
             List of entity dictionaries with text and type
         """
         entities = []
+        seen = set()
 
-        # Extract organizations
+        # --- Try spaCy NER first ---
+        spacy_ext = self._get_spacy_extractor()
+        if spacy_ext is not None:
+            try:
+                aspects = spacy_ext.extract_aspects(text)
+                for aspect in aspects:
+                    if aspect.get("label") in ("PERSON", "ORG", "GPE", "LOC", "NORP"):
+                        entity = self._canonicalize_entity(aspect["text"], aspect["label"])
+                        key = (entity["text"], entity["type"])
+                        if key not in seen:
+                            seen.add(key)
+                            entities.append(entity)
+            except Exception:
+                pass  # fall through to dict path
+
+        # --- Dictionary fallback for ORG/GPE (always runs to catch what spaCy misses) ---
         for org in self.KNOWN_ORGS:
             if org in text:
-                entities.append({"text": org, "type": "ORG"})
+                key = (org, "ORG")
+                if key not in seen:
+                    seen.add(key)
+                    entities.append({"text": org, "type": "ORG"})
 
-        # Extract geopolitical entities
+        seen_countries = set()
         for gpe in self.KNOWN_GPES:
             if gpe in text:
-                entities.append({"text": gpe, "type": "GPE"})
+                canonical = self.COUNTRY_ALIASES.get(gpe, gpe)
+                key = (canonical, "GPE")
+                if canonical not in seen_countries and key not in seen:
+                    seen_countries.add(canonical)
+                    seen.add(key)
+                    entities.append({"text": canonical, "type": "GPE"})
+        for alias, canonical in self.COUNTRY_ALIASES.items():
+            if alias in text:
+                key = (canonical, "GPE")
+                if canonical not in seen_countries and key not in seen:
+                    seen_countries.add(canonical)
+                    seen.add(key)
+                    entities.append({"text": canonical, "type": "GPE"})
 
-        # Extract potential tickers
+        # --- Tickers (regex is better than NER for these) ---
         potential_tickers = self.TICKER_PATTERN.findall(text)
         for ticker in potential_tickers:
-            # Filter out common words that match pattern
             if len(ticker) >= 2 and ticker not in {"THE", "AND", "FOR", "ARE", "BUT"}:
-                entities.append({"text": ticker, "type": "TICKER"})
+                key = (ticker, "TICKER")
+                if key not in seen:
+                    seen.add(key)
+                    entities.append({"text": ticker, "type": "TICKER"})
 
-        # Extract currency pairs
+        # --- Currency pairs (regex) ---
         currency_matches = self.CURRENCY_PATTERN.findall(text)
         for match in currency_matches:
             if "/" in match:
                 parts = match.split("/")
                 if all(p in self.CURRENCIES for p in parts):
-                    entities.append({"text": match, "type": "CURRENCY"})
+                    key = (match, "CURRENCY")
+                    if key not in seen:
+                        seen.add(key)
+                        entities.append({"text": match, "type": "CURRENCY"})
             elif len(match) == 6:
-                # Check if it's a currency pair like EURUSD
                 if match[:3] in self.CURRENCIES and match[3:] in self.CURRENCIES:
-                    entities.append({"text": match, "type": "CURRENCY"})
+                    key = (match, "CURRENCY")
+                    if key not in seen:
+                        seen.add(key)
+                        entities.append({"text": match, "type": "CURRENCY"})
 
-        # Deduplicate while preserving order
-        seen = set()
-        unique_entities = []
-        for entity in entities:
-            key = (entity["text"], entity["type"])
-            if key not in seen:
-                seen.add(key)
-                unique_entities.append(entity)
-
-        return unique_entities
+        return entities
 
     def extract_tickers(self, text: str) -> List[str]:
         """Extract stock tickers from text."""
@@ -485,80 +576,105 @@ class EntityExtractor:
 
         return max_level
 
+    # NLI topic analyzer (class-level, checked once)
+    _nli_analyzer = None
+    _nli_checked = False
+
+    # Map our theme labels to NLI-friendly natural language
+    THEME_NLI_LABELS = {
+        "inflation": "inflation and rising prices",
+        "monetary_policy": "central bank monetary policy and interest rates",
+        "economic_growth": "economic growth, GDP, or recession",
+        "equity_markets": "stock markets and equities",
+        "fixed_income": "bonds, yields, and fixed income",
+        "fx_markets": "foreign exchange and currency markets",
+        "geopolitical_risk": "war, military conflict, or sanctions",
+        "political_risk": "elections, voting, or political campaigns",
+        "energy_prices": "oil, gas, and energy prices",
+        "green_transition": "renewable energy and climate policy",
+        "ai_disruption": "artificial intelligence and machine learning",
+        "crypto_markets": "cryptocurrency and blockchain",
+    }
+
+    @classmethod
+    def _get_nli_analyzer(cls):
+        """Skip local NLI — themes are pre-computed via HF Inference API.
+
+        Local BART-large-MNLI hangs on MPS with large batches.
+        The keyword fallback path is sufficient when HF API themes
+        are not already attached to articles.
+        """
+        cls._nli_checked = True
+        cls._nli_analyzer = None
+        return None
+
     def extract_themes(self, text: str, topic: str = None) -> List[str]:
         """
         Extract key themes from text.
 
-        Args:
-            text: Input text
-            topic: Article topic for context
+        Uses zero-shot NLI classification when ML extras are installed.
+        Falls back to keyword matching otherwise.
 
         Returns:
-            List of theme strings
+            List of theme strings (max 5), ordered by confidence.
         """
+        # --- Try NLI-based classification first ---
+        nli = self._get_nli_analyzer()
+        if nli is not None:
+            try:
+                nli_pipeline = nli._get_nli_pipeline()
+                # Score all themes in one call using candidate_labels
+                labels = list(self.THEME_NLI_LABELS.values())
+                keys = list(self.THEME_NLI_LABELS.keys())
+
+                result = nli_pipeline(
+                    text[:1500],
+                    candidate_labels=labels,
+                    multi_label=True,
+                )
+
+                scored = []
+                for label, score in zip(result["labels"], result["scores"]):
+                    idx = labels.index(label)
+                    if score > 0.3:
+                        scored.append((keys[idx], score))
+
+                scored.sort(key=lambda x: x[1], reverse=True)
+                if scored:
+                    return [theme for theme, _ in scored[:5]]
+            except Exception:
+                pass  # fall through to keyword path
+
+        # --- Keyword fallback ---
         themes = []
         text_lower = text.lower()
 
-        # Economic themes
         if any(word in text_lower for word in ["inflation", "cpi", "prices", "cost"]):
             themes.append("inflation")
-
-        if any(
-            word in text_lower
-            for word in ["rate", "interest", "hike", "cut", "fed", "ecb"]
-        ):
+        if any(word in text_lower for word in ["rate", "interest", "hike", "cut", "fed", "ecb"]):
             themes.append("monetary_policy")
-
-        if any(
-            word in text_lower for word in ["recession", "growth", "gdp", "economy"]
-        ):
+        if any(word in text_lower for word in ["recession", "growth", "gdp", "economy"]):
             themes.append("economic_growth")
-
-        # Market themes
         if any(word in text_lower for word in ["stock", "equity", "share", "market"]):
             themes.append("equity_markets")
-
         if any(word in text_lower for word in ["bond", "yield", "treasury", "gilt"]):
             themes.append("fixed_income")
-
-        if any(
-            word in text_lower for word in ["dollar", "euro", "yen", "currency", "fx"]
-        ):
+        if any(word in text_lower for word in ["dollar", "euro", "yen", "currency", "fx"]):
             themes.append("fx_markets")
-
-        # Geopolitical themes
-        if any(
-            word in text_lower for word in ["war", "conflict", "military", "sanctions"]
-        ):
+        if any(word in text_lower for word in ["war", "conflict", "military", "sanctions"]):
             themes.append("geopolitical_risk")
-
-        if any(
-            word in text_lower for word in ["election", "vote", "poll", "candidate"]
-        ):
+        if any(word in text_lower for word in ["election", "vote", "poll", "candidate"]):
             themes.append("political_risk")
-
-        # Energy themes
-        if any(
-            word in text_lower for word in ["oil", "gas", "energy", "opec", "crude"]
-        ):
+        if any(word in text_lower for word in ["oil", "gas", "energy", "opec", "crude"]):
             themes.append("energy_prices")
-
         if any(word in text_lower for word in ["renewable", "solar", "wind", "green"]):
             themes.append("green_transition")
-
-        # Tech themes
-        if any(
-            word in text_lower
-            for word in ["ai", "artificial intelligence", "ml", "gpt"]
-        ):
+        if any(word in text_lower for word in ["ai", "artificial intelligence", "ml", "gpt"]):
             themes.append("ai_disruption")
-
-        if any(
-            word in text_lower for word in ["crypto", "bitcoin", "blockchain", "defi"]
-        ):
+        if any(word in text_lower for word in ["crypto", "bitcoin", "blockchain", "defi"]):
             themes.append("crypto_markets")
 
-        return themes[:5]  # Return top 5 themes
+        return themes[:5]
 
     def extract_country_mentions(self, text: str) -> List[Dict[str, str]]:
         """

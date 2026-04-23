@@ -14,6 +14,7 @@ from .output_models import (
     SourceCount,
     AnalysisBlock,
     DiversityBlock,
+    ExtractedEvent,
 )
 
 
@@ -181,6 +182,29 @@ class OutputWriter:
             actions.append("Increase feed refresh frequency or add real-time sources")
 
         return actions if actions else ["Continue standard monitoring"]
+
+    def write_events_jsonl(self, article_records: List[ArticleRecord]) -> str:
+        """
+        Write a flat events JSONL file — one line per event across all articles.
+
+        Returns:
+            Path to written file
+        """
+        filepath = self.dir / f"events_{self.run_id}.jsonl"
+
+        with filepath.open("w", encoding="utf-8") as f:
+            for record in article_records:
+                for event in record.events:
+                    line = {
+                        "article_id": record.id,
+                        "article_title": record.title,
+                        "article_url": record.url,
+                        "published_at": record.published_at,
+                        **event.model_dump(exclude_none=True),
+                    }
+                    f.write(json.dumps(line, default=str) + "\n")
+
+        return str(filepath)
 
     def write_csv(self, records: List[ArticleRecord]) -> str:
         """

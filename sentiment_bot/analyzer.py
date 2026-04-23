@@ -413,12 +413,40 @@ def extract_key_phrases(text: str, max_phrases: int = 5) -> List[str]:
     return [phrase for phrase, _ in top_phrases[:max_phrases]]
 
 
-def analyze(text: str) -> Analysis:
+# ---------------------------------------------------------------------------
+# Ensemble availability check (lazy, cached)
+# ---------------------------------------------------------------------------
+
+_ensemble_instance = None
+_ensemble_checked = False
+
+
+def _get_ensemble():
+    """Try to load the ML ensemble. Returns instance or None."""
+    global _ensemble_instance, _ensemble_checked
+    if _ensemble_checked:
+        return _ensemble_instance
+    _ensemble_checked = True
+    try:
+        from .analyzers.sentiment_ensemble import SentimentEnsemble
+        _ensemble_instance = SentimentEnsemble()
+        # Smoke test — if models aren't installed this will fail fast
+        _ensemble_instance.score_article("test")
+        return _ensemble_instance
+    except Exception:
+        _ensemble_instance = None
+        return None
+
+
+def analyze(text: str, fast: bool = False) -> Analysis:
     """Analyse *text* and return enhanced sentiment metrics.
 
+    Precedence:
+        1. ML ensemble (DistilBERT + RoBERTa + BART) — if [ml] extras installed and not fast
+        2. VADER — always available, used as fallback or when fast=True
+
     The returned :class:`Analysis` object includes a ``low_quality`` flag
-    which is ``True`` when the result was produced by the lightweight
-    fallback analyzer rather than the full VADER implementation.
+    which is ``True`` when only the lightweight fallback was used.
     """
     import threading
     from functools import wraps
@@ -442,7 +470,6 @@ def analyze(text: str) -> Analysis:
                 thread.join(seconds)
 
                 if thread.is_alive():
-                    # Thread is still running - timeout
                     raise TimeoutError(
                         f"Function {func.__name__} timed out after {seconds}s"
                     )
@@ -456,64 +483,78 @@ def analyze(text: str) -> Analysis:
 
         return decorator
 
-    # Basic VADER analysis
+    # --- Try ML ensemble first (unless fast mode) ---
+    ensemble = None if fast else _get_ensemble()
+    ensemble_score = None
+    ensemble_confidence = 0.5
+    ensemble_label = "neutral"
+    ensemble_components = {}
+
+    if ensemble is not None:
+        try:
+            @timeout(15)
+            def run_ensemble():
+                return ensemble.score_article(text)
+
+            result = run_ensemble()
+            ensemble_score = result.score
+            ensemble_confidence = result.confidence
+            ensemble_label = result.label
+            ensemble_components = result.components
+        except (Exception, TimeoutError):
+            ensemble_score = None
+
+    # --- VADER (always runs — used as fallback or secondary signal) ---
     vader_scores = _vader.polarity_scores(text)
     vader_score = vader_scores.get("compound", 0.0)
 
-    # Sentiment breakdown
     sentiment_breakdown = {
         "positive": vader_scores.get("pos", 0.0),
         "negative": vader_scores.get("neg", 0.0),
         "neutral": vader_scores.get("neu", 0.0),
     }
 
-    # BERT sentiment with timeout
-    bert_score = 0.0
-    if _bert:
-        try:
+    # --- Choose primary score ---
+    if ensemble_score is not None:
+        # Ensemble is primary, VADER is secondary
+        primary_score = ensemble_score
+        bert_score = ensemble_components.get("sst2", 0.0)
+        confidence_level = ensemble_confidence
+        low_quality = False
+    else:
+        # VADER-only path
+        primary_score = vader_score
+        bert_score = 0.0
+        confidence_level = 0.5
+        low_quality = not VADER_AVAILABLE
 
-            @timeout(5)  # 5 second timeout
-            def run_bert():
-                return _bert(text[:512])[0]  # BERT has token limit
-
-            res = run_bert()
-            bert_score = res.get("score", 0.0) * (
-                1 if res.get("label") == "POSITIVE" else -1
-            )
-        except (Exception, TimeoutError):
-            pass
-
-    # Zero-shot classification with timeout
+    # --- Zero-shot labels (from ensemble NLI or standalone) ---
     labels: List[str] = []
-    if _nli:
+    if ensemble_score is not None:
+        # Map ensemble label to risk labels
+        if ensemble_label in ("positive",):
+            labels = ["opportunity", "stable"]
+        elif ensemble_label in ("negative",):
+            labels = ["risk", "threat"]
+    elif _nli:
         try:
-
-            @timeout(5)  # 5 second timeout
+            @timeout(5)
             def run_nli():
-                candidate_labels = [
-                    "threat",
-                    "opportunity",
-                    "risk",
-                    "safe",
-                    "urgent",
-                    "stable",
-                ]
+                candidate_labels = ["threat", "opportunity", "risk", "safe", "urgent", "stable"]
                 return _nli(text[:512], candidate_labels=candidate_labels)
 
             nli_res = run_nli()
             cand = nli_res.get("labels", [])
-            scores = nli_res.get("scores", [])
-            # Get top 2 labels with scores > 0.3
-            labels = [cand[i] for i, score in enumerate(scores[:2]) if score > 0.3]
+            scores_list = nli_res.get("scores", [])
+            labels = [cand[i] for i, score in enumerate(scores_list[:2]) if score > 0.3]
         except (Exception, TimeoutError):
             pass
 
-    # Emotion detection with timeout
+    # --- Emotion detection ---
     emotion_scores: Dict[str, float] = {}
     if _emotion:
         try:
-
-            @timeout(5)  # 5 second timeout
+            @timeout(5)
             def run_emotion():
                 return _emotion(text[:512])
 
@@ -523,19 +564,16 @@ def analyze(text: str) -> Analysis:
         except (Exception, TimeoutError):
             pass
 
-    # Text summarization with timeout
+    # --- Summarization ---
     summary = text[:200]
     if _summarizer and len(text) > 300:
         try:
-
-            @timeout(10)  # 10 second timeout for summarization
+            @timeout(10)
             def run_summarizer():
-                # Dynamically adjust max_length based on input length
                 input_text = text[:1000]
                 input_tokens = len(input_text.split())
                 max_length = min(150, max(50, input_tokens // 2))
                 min_length = min(50, max(10, max_length // 3))
-
                 return _summarizer(
                     input_text, max_length=max_length, min_length=min_length
                 )[0]["summary_text"]
@@ -544,19 +582,17 @@ def analyze(text: str) -> Analysis:
         except (Exception, TimeoutError):
             pass
 
-    # Calculate text metrics
+    # --- Text metrics ---
     metrics = TextMetrics()
     readability = metrics.flesch_reading_ease(text)
     subjectivity = metrics.calculate_subjectivity(text)
 
-    # Basic text statistics
     words = re.findall(r"\b\w+\b", text)
     sentences = re.split(r"[.!?]+", text)
     word_count = len(words)
     sentence_count = len([s for s in sentences if s.strip()])
     avg_word_length = sum(len(w) for w in words) / len(words) if words else 0
 
-    # Complexity score (combination of readability and sentence length)
     complexity_score = 0.0
     if sentence_count > 0:
         avg_sentence_length = word_count / sentence_count
@@ -564,29 +600,20 @@ def analyze(text: str) -> Analysis:
             1.0, avg_sentence_length / 30
         ) * 0.5
 
-    # Positive/negative ratio
     pos_neg_ratio = 0.0
     if sentiment_breakdown["negative"] > 0:
-        pos_neg_ratio = (
-            sentiment_breakdown["positive"] / sentiment_breakdown["negative"]
-        )
+        pos_neg_ratio = sentiment_breakdown["positive"] / sentiment_breakdown["negative"]
     elif sentiment_breakdown["positive"] > 0:
-        pos_neg_ratio = 10.0  # High positive ratio when no negative
+        pos_neg_ratio = 10.0
 
-    # Confidence level (based on agreement between VADER and BERT)
-    confidence_level = (
-        1.0 - abs(vader_score - bert_score) / 2 if bert_score != 0 else 0.5
-    )
-
-    # Extract key phrases
     key_phrases = extract_key_phrases(text)
 
     return Analysis(
-        vader=vader_score,
+        vader=primary_score,  # primary_score is ensemble when available, vader otherwise
         bert=bert_score,
         labels=labels,
         summary=summary,
-        low_quality=not VADER_AVAILABLE,
+        low_quality=low_quality,
         emotion_scores=emotion_scores,
         subjectivity=subjectivity,
         readability=readability,

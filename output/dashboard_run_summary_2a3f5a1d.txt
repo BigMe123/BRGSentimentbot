@@ -1,3 +1,0 @@
-RUN 2a3f5a1d | global · general | 0 relevant | Sentiment +0 (avg 0.00) | Volatility 0.00
-Actions:
- - Expand source coverage for global

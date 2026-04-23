@@ -1,0 +1,300 @@
+{
+  "helsinkitimes.fi": {
+    "leads": 1,
+    "follows": 1,
+    "lead_hours": [
+      1.09,
+      7.02,
+      8.26,
+      12.93
+    ]
+  },
+  "Economic Times": {
+    "leads": 5,
+    "follows": 5,
+    "lead_hours": [
+      46.44,
+      90.9,
+      141.9,
+      166.37,
+      32.03,
+      0.82,
+      1.07,
+      6.89
+    ]
+  },
+  "thehindubusinessline.com": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  },
+  "en.abna24.com": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  },
+  "thehindu.com": {
+    "leads": 2,
+    "follows": 13,
+    "lead_hours": [
+      0.34,
+      0.99,
+      4.29,
+      6.3,
+      6.91
+    ]
+  },
+  "israelnationalnews.com": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      4.62,
+      38.48
+    ]
+  },
+  "deccanchronicle.com": {
+    "leads": 0,
+    "follows": 4,
+    "lead_hours": []
+  },
+  "opednews.com": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      67.01
+    ]
+  },
+  "CBS News": {
+    "leads": 1,
+    "follows": 2,
+    "lead_hours": [
+      6.9
+    ]
+  },
+  "newser.com": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      10.29,
+      222.25,
+      223.73,
+      510.94,
+      550.62
+    ]
+  },
+  "New York Times": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  },
+  "nypost.com": {
+    "leads": 0,
+    "follows": 2,
+    "lead_hours": []
+  },
+  "hurriyetdailynews.com": {
+    "leads": 2,
+    "follows": 6,
+    "lead_hours": [
+      23.27,
+      34.17,
+      52.47,
+      53.49,
+      57.69,
+      66.56,
+      547.9
+    ]
+  },
+  "timesofindia.indiatimes.com": {
+    "leads": 1,
+    "follows": 5,
+    "lead_hours": [
+      330.44
+    ]
+  },
+  "ABC Australia": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      55.86,
+      63.88,
+      140.32,
+      433.68
+    ]
+  },
+  "manilatimes.net": {
+    "leads": 1,
+    "follows": 2,
+    "lead_hours": [
+      47.19
+    ]
+  },
+  "Associated Press": {
+    "leads": 0,
+    "follows": 2,
+    "lead_hours": []
+  },
+  "Politico": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  },
+  "yahoo.com": {
+    "leads": 2,
+    "follows": 0,
+    "lead_hours": [
+      0.62,
+      222.34,
+      0.13,
+      0.58,
+      2.0,
+      3.54,
+      20.85
+    ]
+  },
+  "pravdareport.com": {
+    "leads": 1,
+    "follows": 1,
+    "lead_hours": [
+      47.82
+    ]
+  },
+  "India Today": {
+    "leads": 0,
+    "follows": 2,
+    "lead_hours": []
+  },
+  "citizen.co.za": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      237.9,
+      247.14,
+      499.84,
+      502.83,
+      503.69
+    ]
+  },
+  "japantoday.com": {
+    "leads": 0,
+    "follows": 2,
+    "lead_hours": []
+  },
+  "France 24": {
+    "leads": 2,
+    "follows": 3,
+    "lead_hours": [
+      0.0,
+      8.65
+    ]
+  },
+  "rte.ie": {
+    "leads": 0,
+    "follows": 3,
+    "lead_hours": []
+  },
+  "ABC News": {
+    "leads": 1,
+    "follows": 2,
+    "lead_hours": [
+      0.64,
+      3.55,
+      4.96,
+      6.92,
+      24.79
+    ]
+  },
+  "al-monitor.com": {
+    "leads": 1,
+    "follows": 2,
+    "lead_hours": [
+      0.38,
+      1.02
+    ]
+  },
+  "rt.com": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  },
+  "propakistani.pk": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  },
+  "techjuice.pk": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  },
+  "middleeastmonitor.com": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      98.48,
+      123.68
+    ]
+  },
+  "who.int": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  },
+  "news-medical.net": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  },
+  "unwomen.org": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  },
+  "azernews.az": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      41.43,
+      101.99
+    ]
+  },
+  "jpost.com": {
+    "leads": 0,
+    "follows": 2,
+    "lead_hours": []
+  },
+  "jurist.org": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      9.41
+    ]
+  },
+  "dailyexcelsior.com": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      2.32,
+      4.08
+    ]
+  },
+  "lamag.com": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      9.35
+    ]
+  },
+  "680news.com": {
+    "leads": 1,
+    "follows": 0,
+    "lead_hours": [
+      4.28
+    ]
+  },
+  "globalnews.ca": {
+    "leads": 0,
+    "follows": 1,
+    "lead_hours": []
+  }
+}

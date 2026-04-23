@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: priors-config
-data:
-  priors.yaml: |
-    mu_global: 0.0
-    sigma_global: 1.0

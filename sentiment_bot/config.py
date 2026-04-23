@@ -95,7 +95,8 @@ try:  # pragma: no cover - optional dependency
     class Settings(BaseSettings):
         """Application settings loaded from environment variables."""
 
-        NEWSAPI_KEY: str = "027e167533f7488bb9935e9ab1874e72"
+        NEWSAPI_KEY: str = ""
+        THENEWSAPI_KEY: str = ""
         RSS_FEEDS: List[str] = DEFAULT_RSS_SOURCES or [
             # Major International News
             "https://feeds.bbci.co.uk/news/world/rss.xml",
@@ -109,11 +110,8 @@ try:  # pragma: no cover - optional dependency
             "https://feeds.washingtonpost.com/rss/national",
             "https://www.theguardian.com/world/rss",
             "https://www.theguardian.com/uk/rss",
-            "https://feeds.reuters.com/reuters/topNews",
-            "https://feeds.reuters.com/reuters/worldNews",
             # Business & Finance
             "https://feeds.bloomberg.com/markets/news.rss",
-            "https://feeds.ft.com/rss/home",
             "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml",
             "https://feeds.washingtonpost.com/rss/business",
             "http://rss.cnn.com/rss/money_latest.rss",
@@ -246,9 +244,7 @@ try:  # pragma: no cover - optional dependency
         SIM_PATH: str = "simulations.csv"
         WEBSOCKET_PORT: int = 8765
         GRADIO_PORT: int = 7860
-        OPENAI_API_KEY: str = (
-            "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"
-        )
+        OPENAI_API_KEY: str = ""
 
         # Fast pipeline settings
         FAST_MAX_CONCURRENCY: int = 200
@@ -260,8 +256,24 @@ try:  # pragma: no cover - optional dependency
         FAST_JS_DOMAIN_CACHE_SIZE: int = 200
         FAST_DEBUG_LOGGING: bool = False
 
+        # API Keys for data sources
+        FRED_API_KEY: str = ""
+        ALPHA_VANTAGE_API_KEY: str = ""
+
+        # Parse.bot configuration for advanced web scraping
+        PARSE_BOT_API_KEY: str = ""
+        PARSE_BOT_BASE_URL: str = "https://parse.bot/v1"
+        PARSE_BOT_TIMEOUT: int = 60
+        PARSE_BOT_MAX_RETRIES: int = 3
+
+        # HTTP client settings
+        YAHOO_FINANCE_DELAY: int = 2
+        MAX_RETRIES: int = 3
+        REQUEST_TIMEOUT: int = 30
+
         class Config:
             env_file = ".env"
+            extra = "ignore"  # Allow extra fields from .env
 
     settings = Settings()
 
@@ -271,7 +283,8 @@ except ImportError:  # pragma: no cover - fallback without pydantic
     class Settings:  # type: ignore[no-redef]
         """Fallback settings when pydantic-settings is not available."""
 
-        NEWSAPI_KEY: str = os.getenv("NEWSAPI_KEY", "027e167533f7488bb9935e9ab1874e72")
+        NEWSAPI_KEY: str = os.getenv("NEWSAPI_KEY", "")
+        THENEWSAPI_KEY: str = os.getenv("THENEWSAPI_KEY", "")
         RSS_FEEDS: List[str] = field(
             default_factory=lambda: DEFAULT_RSS_SOURCES
             or [

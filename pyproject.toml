@@ -1,133 +1,49 @@
 [tool.poetry]
 name = "brgsentimentbot"
-version = "0.2.0"
-description = "Async news sentiment/volatility CLI bot"
+version = "0.3.0"
+description = "Async news sentiment analysis CLI bot"
 authors = ["BRG <dev@example.com>"]
 packages = [{ include = "sentiment_bot" }]
 
 [tool.poetry.dependencies]
-
 python = ">=3.11,<3.13"
 feedparser = "^6.0.11"
 aiohttp = "^3.9.5"
-newspaper3k = "^0.2.8"
 rapidfuzz = "^3.6.1"
-spacy = ">=3.7,<3.8"
-transformers = "^4.41.2"
-torch = "2.2.2"
 vaderSentiment = "^3.3.2"
 typer = "^0.12.3"
 rich = "^13.0"
-sqlmodel = "^0.0.16"
 aiosqlite = "^0.19.0"
-newsapi-python = "^0.2.7"
-langchain = "^0.2.1"
-langchain-community = "^0.2.7"
-sentence-transformers = "^3.0.1"
-faiss-cpu = "^1.8.0"
 pyyaml = "^6.0.1"
-websockets = "11.0.3"  # compatible with gradio-client 1.0.2 (<12.0)
-gradio = "^4.37.1"
 numpy = ">=1.23.0,<2.0"
-scipy = "^1.13.0"
 pydantic-settings = "^2.3.1"
-pandas = "^2.2.0"
-# Added for Bayesian and chat modules
-arviz = "^0.18.0"
-openai = "^1.30.1"
-# Research stack
-pyro-ppl = "^1.9.1"
-pymc = "^5.10.0"
-torch-geometric = "^2.5.3"
-networkx = "^3.2.1"
-opencv-python = "^4.9.0.80"
-pytesseract = "^0.3.10"
-ffmpeg-python = "^0.2.0"
-diffprivlib = "^0.6.5"
-pgmpy = "^0.1.24"
-mlflow = "^2.13.0"
-dvc = "^3.50.2"
-qiskit-aer = "^0.13.3"
-brotli = "^1.1.0"
-playwright = "^1.40.0"
-curl-cffi = "^0.6.0"
-langdetect = "^1.0.9"
-lxml-html-clean = "^0.4.2"
-aiodns = "^3.5.0"
-aiohttp-client-cache = "^0.13.0"
-mmh3 = "^5.2.0"
-datasketch = "^1.6.5"
+python-dateutil = "^2.8.2"
 beautifulsoup4 = "^4.12.0"
-scikit-learn = "^1.7.1"
-2captcha-python = "^1.2.8"
-playwright-stealth = "^1.0.6"
+lxml-html-clean = "^0.4.2"
+brotli = "^1.1.0"
 
-[tool.poetry.group.heavy]
-optional = true
+# Optional for enhanced features
+transformers = {version = "^4.41.2", optional = true}
+torch = {version = "2.2.2", optional = true}
+openai = {version = "^1.30.1", optional = true}
+spacy = {version = ">=3.7,<3.8", optional = true}
+newsapi-python = {version = "^0.2.7", optional = true}
 
-[tool.poetry.group.heavy.dependencies]
-pyspark = "^3.5.0"
+[tool.poetry.extras]
+ml = ["transformers", "torch", "spacy"]
+llm = ["openai"]
+newsapi = ["newsapi-python"]
+all = ["transformers", "torch", "spacy", "openai", "newsapi-python"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
-numpy = "^1.26.4"
 pytest-mock = "^3.12.0"
-respx = "^0.20.2"
-httpx = "^0.27.0"
 ruff = "^0.4.8"
 black = "^24.4.2"
-mypy = "^1.8"
-coverage = "^7.5"
-pre-commit = "^4.3.0"
 pytest-cov = "^6.2.1"
-types-pyyaml = "^6.0.12.20250822"
-types-requests = "^2.32.4.20250809"
-pandas-stubs = "^2.3.2.250827"
-types-python-dateutil = "^2.9.0.20250822"
-types-networkx = "^3.5.0.20250830"
 
 [tool.poetry.scripts]
-# Unified CLI - the ONLY command you need
 bsgbot = "sentiment_bot.cli_unified:app"
-# Enhanced v2 with all fixes
-bsgbot-v2 = "sentiment_bot.cli_enhanced_v2:app"
-# 🛡️ Military-grade stealth harvester for expanding SKB
-skb-harvest = "sentiment_bot.stealth_harvester:main"
-
-[tool.mypy]
-python_version = "3.12"
-strict = false
-ignore_missing_imports = true
-# comment out the next line later if you want stricter style
-no_implicit_optional = false
-warn_unused_ignores = true
-warn_redundant_casts = true
-warn_unreachable = true
-exclude = [
-  "tests/fixtures/.*",
-]
-
-# Silence noisy third-party ecosystems explicitly (optional but clearer)
-[[tool.mypy.overrides]]
-module = [
-  "pyspark.*",
-  "qiskit.*",
-  "qiskit_aer.*",
-  "faiss",
-  "whisper",
-  "feedparser",
-  "vaderSentiment.*",
-  "newsapi",
-  "datasketch",
-  "langdetect",
-  "pytesseract",
-  "ffmpeg",
-  "datasets",
-  "torch_geometric.*",
-  "sklearn.*",
-  "newspaper",
-]
-ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 addopts = "-q --cov=sentiment_bot --cov-report=term-missing"

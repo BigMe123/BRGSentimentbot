@@ -2,9 +2,6 @@ name: CI
 on: [push, pull_request]
 jobs:
   test:
-    strategy:
-      matrix:
-        device: [cpu, gpu]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -12,16 +9,6 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install deps
-        run: pip install .[dev]
-      - name: Cache DVC
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/dvc
-          key: dvc-cache
-      - name: Cache MLflow
-        uses: actions/cache@v4
-        with:
-          path: mlruns
-          key: mlflow-cache
+        run: pip install -e ".[all]" && pip install pytest pytest-cov pytest-mock
       - name: Run tests
         run: pytest

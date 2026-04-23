@@ -1,4 +1,4 @@
-"""Free data connectors for diverse sources."""
+"""Free data connectors for diverse sources - COMPREHENSIVE DATA COLLECTION."""
 
 from .base import Connector
 from .reddit_rss import RedditRSS
@@ -13,6 +13,22 @@ from .gdelt import GDELTConnector
 from .generic_web import GenericWebConnector
 from .twitter_snscrape import TwitterSnscrape
 from .twitter_improved import TwitterImproved
+from .parse_bot import ParseBotConnector, ParseBotScraper
+
+# Comprehensive data connectors - ALL DATA TYPES
+from .comprehensive_data import (
+    SECFilingsConnector,
+    EarningsCallsConnector,
+    PropertyDataConnector,
+    WeatherCrisisConnector,
+    FinancialNewsConnector,
+    CryptoDataConnector,
+    CommoditiesDataConnector,
+    GovernmentDataConnector,
+    CorporateFilingsConnector,
+    ResearchReportsConnector,
+    ComprehensiveDataAggregator,
+)
 
 __all__ = [
     "Connector",
@@ -28,4 +44,18 @@ __all__ = [
     "GenericWebConnector",
     "TwitterSnscrape",
     "TwitterImproved",
+    "ParseBotConnector",
+    "ParseBotScraper",
+    # Comprehensive data connectors
+    "SECFilingsConnector",
+    "EarningsCallsConnector",
+    "PropertyDataConnector",
+    "WeatherCrisisConnector",
+    "FinancialNewsConnector",
+    "CryptoDataConnector",
+    "CommoditiesDataConnector",
+    "GovernmentDataConnector",
+    "CorporateFilingsConnector",
+    "ResearchReportsConnector",
+    "ComprehensiveDataAggregator",
 ]

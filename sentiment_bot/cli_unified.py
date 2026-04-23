@@ -1,37 +1,26 @@
 """
-Unified CLI - The SINGLE source of truth for all terminal commands.
-Replaces cli_skb.py, cli_skb_optimized.py, and all other CLI variants.
+Unified CLI for BRG Sentiment Analysis Bot.
+Uses NewsAPI as the primary article source, with RSS as fallback.
 """
 
 import asyncio
 import typer
 import time
 import json
+import hashlib
+import logging
 from pathlib import Path
 from typing import Optional, List, Dict
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 import rich.box
-from rich.progress import (
-    Progress,
-    SpinnerColumn,
-    TextColumn,
-    BarColumn,
-    TimeElapsedColumn,
-)
-from rich.live import Live
-import logging
-from datetime import datetime
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
+from datetime import datetime, timedelta
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 
-from .skb_catalog import get_catalog
-from .master_sources import get_master_sources
-from .selection_planner import SelectionPlanner, SelectionQuotas
-from .source_discovery import SourceDiscovery
-from .relevance_filter import RelevanceFilter
-from .health_monitor import get_monitor
-from .smart_selector import SmartSelector
+from .config import settings
 from .utils.run_id import make_run_id
 from .utils.output_writer import OutputWriter
 from .utils.output_models import (
@@ -47,31 +36,464 @@ from .utils.output_models import (
     ConfigBlock,
 )
 from .utils.entity_extractor import EntityExtractor
-from .global_perception_index import GlobalPerceptionIndex
-import feedparser
-import aiohttp
-import asyncio
-from .analyzer import analyze
-from dateutil import parser as date_parser
-import hashlib
+from .utils.source_tiers import get_tier, get_weight, tier_label
 
 app = typer.Typer(
     name="bsgbot",
-    help="BSG Bot - Massive SKB with intelligent source selection and analysis",
+    help="BRG Sentiment Bot - NewsAPI-powered sentiment analysis",
 )
 console = Console()
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Source name mapping — maps domains/feed titles to clean outlet names
+# ---------------------------------------------------------------------------
+
+SOURCE_NAME_MAP = {
+    # TheNewsAPI domains + RSS feed domains
+    "bbc.co.uk": "BBC News", "bbc.com": "BBC News", "feeds.bbci.co.uk": "BBC News",
+    "cnn.com": "CNN", "edition.cnn.com": "CNN",
+    "nytimes.com": "New York Times", "rss.nytimes.com": "New York Times",
+    "washingtonpost.com": "Washington Post",
+    "theguardian.com": "The Guardian",
+    "aljazeera.com": "Al Jazeera",
+    "reuters.com": "Reuters",
+    "apnews.com": "Associated Press",
+    "cnbc.com": "CNBC",
+    "wsj.com": "Wall Street Journal",
+    "bloomberg.com": "Bloomberg",
+    "ft.com": "Financial Times",
+    "economist.com": "The Economist",
+    "politico.com": "Politico",
+    "thehill.com": "The Hill",
+    "npr.org": "NPR",
+    "foxnews.com": "Fox News",
+    "nbcnews.com": "NBC News",
+    "cbsnews.com": "CBS News",
+    "abcnews.go.com": "ABC News",
+    "france24.com": "France 24",
+    "dw.com": "Deutsche Welle",
+    "euronews.com": "Euronews",
+    "spiegel.de": "Der Spiegel",
+    "japantimes.co.jp": "Japan Times",
+    "scmp.com": "South China Morning Post",
+    "straitstimes.com": "Straits Times",
+    "abc.net.au": "ABC Australia",
+    "arstechnica.com": "Ars Technica",
+    "wired.com": "Wired",
+    "techcrunch.com": "TechCrunch",
+    "theverge.com": "The Verge",
+    "zdnet.com": "ZDNet",
+    "nature.com": "Nature",
+    "sciencedaily.com": "Science Daily",
+    "defensenews.com": "Defense News",
+    "janes.com": "Janes",
+    "military.com": "Military.com",
+    "defenseone.com": "Defense One",
+    "breakingdefense.com": "Breaking Defense",
+    "foreignaffairs.com": "Foreign Affairs",
+    "cfr.org": "CFR",
+    "csis.org": "CSIS",
+    "brookings.edu": "Brookings",
+    "rand.org": "RAND",
+    "atlanticcouncil.org": "Atlantic Council",
+    "bellingcat.com": "Bellingcat",
+    "theintercept.com": "The Intercept",
+    "foreignpolicy.com": "Foreign Policy",
+    "lawfareblog.com": "Lawfare",
+    "warontherocks.com": "War on the Rocks",
+    "mei.edu": "Middle East Institute",
+    "nato.int": "NATO",
+    "spacenews.com": "SpaceNews",
+    "space.com": "Space.com",
+    "nasa.gov": "NASA",
+    "marketwatch.com": "MarketWatch",
+    "forbes.com": "Forbes",
+    "axios.com": "Axios",
+    "theconversation.com": "The Conversation",
+    "livemint.com": "Mint",
+    "economictimes.indiatimes.com": "Economic Times",
+    "indiatoday.intoday.in": "India Today",
+    "bangkokpost.com": "Bangkok Post",
+    "dailymaverick.co.za": "Daily Maverick",
+    "nzherald.co.nz": "NZ Herald",
+    # RSS feed titles (feedparser returns these)
+    "BBC News": "BBC News",
+    "BBC News - World": "BBC News",
+    "BBC News - Home": "BBC News",
+    "Al Jazeera English": "Al Jazeera",
+    "Al Jazeera – Breaking News": "Al Jazeera",
+    "Al Jazeera – Breaking News, World News and Video from Al Jazeera": "Al Jazeera",
+    "CNN.com - RSS Channel - App International Edition": "CNN",
+    "CNN.com - Top Stories": "CNN",
+    "CNN.com": "CNN",
+    "NYT > World": "New York Times",
+    "NYT > World News": "New York Times",
+    "NYT > Home Page": "New York Times",
+    "NYT > Top Stories": "New York Times",
+    "NYT > Business": "New York Times",
+    "NYT > Technology": "New York Times",
+    "NYT > Science": "New York Times",
+    "NYT > Politics": "New York Times",
+    "NYT > U.S. > Politics": "New York Times",
+    "NYT > Health": "New York Times",
+    "Washington Post": "Washington Post",
+    "The Guardian": "The Guardian",
+    "CNBC": "CNBC",
+    "The Hill": "The Hill",
+    "NPR Topics: News": "NPR",
+    "Defense News": "Defense News",
+    "Defense One": "Defense One",
+    "War on the Rocks": "War on the Rocks",
+    "Brookings": "Brookings",
+    "RAND Blog": "RAND",
+    "Lawfare": "Lawfare",
+    "Ars Technica": "Ars Technica",
+    "TechCrunch": "TechCrunch",
+    "The Verge": "The Verge",
+    "Wired": "Wired",
+    "Nature - Issue": "Nature",
+    "SpaceNews": "SpaceNews",
+}
+
+
+def _normalize_source_name(raw: str) -> str:
+    """Map a domain or feed title to a clean, recognizable outlet name."""
+    if not raw or raw == "Unknown" or raw == "unknown":
+        return "Unknown"
+
+    # Direct match
+    if raw in SOURCE_NAME_MAP:
+        return SOURCE_NAME_MAP[raw]
+
+    # Strip www. and try domain match
+    clean = raw.lower().replace("www.", "").strip()
+    for domain, name in SOURCE_NAME_MAP.items():
+        if clean == domain.lower() or clean.endswith("." + domain.lower()):
+            return name
+
+    # Prefix match for RSS feed titles (e.g. "NYT > World News - ..." matches "NYT > World News")
+    raw_lower = raw.lower()
+    for key, name in SOURCE_NAME_MAP.items():
+        if raw_lower.startswith(key.lower()):
+            return name
+
+    # Keyword match for known outlets in long feed titles
+    _KEYWORD_MAP = {
+        "al jazeera": "Al Jazeera", "bbc": "BBC News", "cnn": "CNN",
+        "new york times": "New York Times", "nyt": "New York Times",
+        "washington post": "Washington Post", "guardian": "The Guardian",
+        "cnbc": "CNBC", "reuters": "Reuters", "france 24": "France 24",
+        "deutsche welle": "Deutsche Welle", "euronews": "Euronews",
+        "npr": "NPR", "politico": "Politico",
+        "us top news and analysis": "CNBC",
+        "japan times": "Japan Times", "straits times": "Straits Times",
+        "south china morning post": "South China Morning Post",
+        "sciencedaily": "Science Daily", "le monde": "Le Monde",
+        "daily maverick": "Daily Maverick", "realcleardefense": "RealClearDefense",
+        "new scientist": "New Scientist", "der spiegel": "Der Spiegel",
+        "american enterprise": "AEI", "begin-sadat": "BESA Center",
+    }
+    for kw, name in _KEYWORD_MAP.items():
+        if kw in raw_lower:
+            return name
+
+    # If it looks like a domain, clean it up
+    if "." in raw and "/" not in raw:
+        return raw.replace("www.", "")
+
+    return raw
+
+
+# ---------------------------------------------------------------------------
+# NewsAPI fetching
+# ---------------------------------------------------------------------------
+
+def _parse_thenewsapi_article(art: Dict) -> Dict:
+    """Normalise a single TheNewsAPI article dict."""
+    from dateutil import parser as dp
+
+    published_date = None
+    published_str = art.get("published_at", "")
+    if published_str:
+        try:
+            published_date = dp.parse(published_str)
+        except Exception:
+            pass
+
+    return {
+        "title": art.get("title", ""),
+        "link": art.get("url", ""),
+        "description": art.get("description", "") or "",
+        "content": art.get("description", "") or "",  # full text fetched later via newspaper3k
+        "domain": _normalize_source_name(art.get("source", "Unknown")),
+        "published": published_str,
+        "published_date": published_date,
+        "url_hash": hashlib.md5((art.get("url") or "").encode()).hexdigest(),
+        "authors": [],
+        "summary": art.get("snippet", "") or art.get("description", "") or "",
+        "categories": art.get("categories", []),
+        "uuid": art.get("uuid", ""),
+    }
+
+
+def _fetch_thenewsapi(
+    query: Optional[str] = None,
+    category: Optional[str] = None,
+    language: str = "en",
+    days_back: int = 1,
+    target_articles: int = 300,
+) -> List[Dict]:
+    """Fetch articles from TheNewsAPI (paid). Paginates to hit target."""
+    import requests as req
+
+    api_key = settings.THENEWSAPI_KEY
+    if not api_key:
+        console.print("[red]THENEWSAPI_KEY not set in .env[/red]")
+        return []
+
+    base_url = "https://api.thenewsapi.com/v1/news"
+    all_articles: List[Dict] = []
+    seen_urls: set = set()
+
+    # Build params
+    published_after = (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%dT00:00:00")
+    params: Dict = {
+        "api_token": api_key,
+        "language": language,
+        "published_after": published_after,
+        "limit": 25,  # max per page on TheNewsAPI
+    }
+
+    if query:
+        params["search"] = query
+        params["search_fields"] = "title,description,keywords,main_text"
+        endpoint = f"{base_url}/all"
+    elif category:
+        params["categories"] = category
+        endpoint = f"{base_url}/top"
+    else:
+        endpoint = f"{base_url}/top"
+
+    # Paginate until we hit target
+    page = 1
+    max_pages = (target_articles // 25) + 2  # safety cap
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TextColumn("{task.completed}/{task.total}"),
+        TimeElapsedColumn(),
+        console=console,
+    ) as progress:
+        task = progress.add_task(
+            f"[cyan]Fetching articles (target: {target_articles})...",
+            total=target_articles,
+        )
+
+        while len(all_articles) < target_articles and page <= max_pages:
+            params["page"] = page
+            try:
+                resp = req.get(endpoint, params=params, timeout=15)
+                if resp.status_code == 402:
+                    console.print("[yellow]Usage limit reached for this month[/yellow]")
+                    break
+                if resp.status_code == 429:
+                    console.print("[yellow]Rate limit hit, waiting...[/yellow]")
+                    import time as _time
+                    _time.sleep(2)
+                    continue
+                if resp.status_code != 200:
+                    console.print(f"[yellow]API error {resp.status_code}: {resp.text[:100]}[/yellow]")
+                    break
+
+                data = resp.json()
+                articles = data.get("data", [])
+                if not articles:
+                    break
+
+                for art in articles:
+                    url = art.get("url", "")
+                    if url and url not in seen_urls:
+                        seen_urls.add(url)
+                        all_articles.append(_parse_thenewsapi_article(art))
+
+                progress.update(task, completed=min(len(all_articles), target_articles))
+                page += 1
+
+                # Check if we've exhausted results
+                meta = data.get("meta", {})
+                total_found = meta.get("found", 0)
+                if page * 25 > total_found:
+                    break
+
+            except Exception as e:
+                logger.warning(f"TheNewsAPI page {page} failed: {e}")
+                break
+
+    # Show usage info from last response headers if available
+    try:
+        remaining = resp.headers.get("x-usagelimit-remaining", "?")
+        limit = resp.headers.get("x-usagelimit-limit", "?")
+        console.print(f"[dim]Credits used: {len(all_articles)} | Remaining: {remaining}/{limit}[/dim]")
+    except Exception:
+        pass
+
+    console.print(f"[green]TheNewsAPI returned {len(all_articles)} unique articles[/green]")
+    return all_articles[:target_articles]
+
+
+# Legacy NewsAPI fetcher (kept as fallback)
+def _fetch_newsapi_legacy(
+    query: Optional[str] = None,
+    category: Optional[str] = None,
+    country: Optional[str] = None,
+    page_size: int = 100,
+    days_back: int = 1,
+) -> List[Dict]:
+    """Fetch from NewsAPI.org (free tier fallback)."""
+    from dateutil import parser as dp
+
+    try:
+        from newsapi import NewsApiClient
+    except ImportError:
+        console.print("[yellow]newsapi-python not installed[/yellow]")
+        return []
+
+    api_key = settings.NEWSAPI_KEY
+    if not api_key:
+        return []
+
+    api = NewsApiClient(api_key=api_key)
+    articles: List[Dict] = []
+
+    try:
+        if query:
+            from_date = (datetime.now() - timedelta(days=days_back)).strftime("%Y-%m-%d")
+            resp = api.get_everything(
+                q=query, from_param=from_date, language="en",
+                sort_by="publishedAt", page_size=min(page_size, 100),
+            )
+        else:
+            kwargs: Dict = {"language": "en", "page_size": min(page_size, 100)}
+            if category:
+                kwargs["category"] = category
+            if country:
+                kwargs["country"] = country
+            else:
+                kwargs["country"] = "us"
+            resp = api.get_top_headlines(**kwargs)
+
+        if resp.get("status") == "ok":
+            for art in resp.get("articles", []):
+                published_date = None
+                published_str = art.get("publishedAt", "")
+                if published_str:
+                    try:
+                        published_date = dp.parse(published_str)
+                    except Exception:
+                        pass
+                articles.append({
+                    "title": art.get("title", ""),
+                    "link": art.get("url", ""),
+                    "description": art.get("description", "") or "",
+                    "content": art.get("content", "") or "",
+                    "domain": (art.get("source") or {}).get("name", "Unknown"),
+                    "published": published_str,
+                    "published_date": published_date,
+                    "url_hash": hashlib.md5((art.get("url") or "").encode()).hexdigest(),
+                    "authors": [art["author"]] if art.get("author") else [],
+                    "summary": art.get("description", "") or "",
+                })
+    except Exception as e:
+        logger.warning(f"NewsAPI fallback failed: {e}")
+
+    return articles
+
+
+# ---------------------------------------------------------------------------
+# RSS fetching (supplemental)
+# ---------------------------------------------------------------------------
+
+async def _fetch_single_rss(session, url):
+    try:
+        import aiohttp
+        async with session.get(url, timeout=aiohttp.ClientTimeout(total=10)) as response:
+            if response.status == 200:
+                import feedparser
+                content = await response.text()
+                feed = feedparser.parse(content)
+                return (feed, url, True)
+    except Exception as e:
+        logger.debug(f"Error fetching RSS {url}: {e}")
+    return (None, url, False)
+
+
+async def _fetch_rss_articles(rss_urls: List[str]) -> List[Dict]:
+    import aiohttp
+    from dateutil import parser as date_parser
+
+    articles = []
+
+    with Progress(
+        SpinnerColumn(), TextColumn("[progress.description]{task.description}"),
+        BarColumn(), TimeElapsedColumn(), console=console,
+    ) as progress:
+        task = progress.add_task("[cyan]Fetching RSS feeds...", total=len(rss_urls))
+
+        async with aiohttp.ClientSession() as session:
+            tasks = [_fetch_single_rss(session, url) for url in rss_urls]
+            for coro in asyncio.as_completed(tasks):
+                feed, url, success = await coro
+                progress.advance(task)
+
+                if feed and feed.entries:
+                    raw_title = feed.feed.get("title", "Unknown") if hasattr(feed, "feed") else "Unknown"
+                    domain = _normalize_source_name(raw_title)
+
+                    for entry in feed.entries[:25]:
+                        published_str = entry.get("published", entry.get("updated", ""))
+                        published_date = None
+                        if published_str:
+                            try:
+                                published_date = date_parser.parse(published_str)
+                            except Exception:
+                                pass
+
+                        article = {
+                            "title": entry.get("title", ""),
+                            "link": entry.get("link", ""),
+                            "description": entry.get("summary", entry.get("description", "")),
+                            "domain": domain,
+                            "published": published_str,
+                            "published_date": published_date,
+                            "content": (
+                                entry.get("content", [{}])[0].get("value", "")
+                                if "content" in entry else ""
+                            ),
+                            "url_hash": hashlib.md5(entry.get("link", "").encode()).hexdigest(),
+                        }
+                        articles.append(article)
+
+    return articles
+
+
+# ---------------------------------------------------------------------------
+# CLI commands
+# ---------------------------------------------------------------------------
 
 @app.command()
 def run(
+    query: Optional[str] = typer.Argument(
+        None, help="Search query for NewsAPI (e.g., 'AI regulation', 'oil prices')"
+    ),
     output_dir: str = typer.Option(
-        "./output", "--output-dir", "-o", help="Directory for output files"
+        "./output", "--output-dir", help="Directory for output files"
     ),
     run_id_seed: Optional[str] = typer.Option(
         None, "--run-id", help="Optional seed for run ID generation"
@@ -80,326 +502,282 @@ def run(
         False, "--export-csv", help="Also export results as CSV"
     ),
     freshness: str = typer.Option(
-        "24h", "--freshness", help="Freshness window: 1h, 6h, 24h, 7d, 30d, forever"
+        "7d", "--freshness", help="Freshness window: 1h, 6h, 24h, 7d, 30d"
+    ),
+    category: Optional[str] = typer.Option(
+        None, "--category", "-c",
+        help="NewsAPI category: business, technology, science, health, sports, entertainment, general",
+    ),
+    country: Optional[str] = typer.Option(
+        None, "--country",
+        help="2-letter country code for top headlines (e.g., us, gb, de)",
     ),
     region: Optional[str] = typer.Option(
-        None,
-        "--region",
-        "-r",
-        help="Target region or country: asia, middle_east, europe, americas, africa, or specific countries like united_states, china, germany, etc.",
+        None, "--region", "-r", help="Post-fetch keyword filter by region (e.g., asia, europe)"
     ),
     topic: Optional[str] = typer.Option(
-        None,
-        "--topic",
-        "-t",
-        help="Standard topic: elections, security, economy, politics, energy, climate, tech",
+        None, "--topic", "-t", help="Post-fetch keyword filter by topic (e.g., energy, elections)"
     ),
-    other: Optional[str] = typer.Option(
-        None,
-        "--other",
-        "-o",
-        help="Free-text topic for obscure subjects (triggers fuzzy matching and discovery)",
+    page_size: int = typer.Option(
+        100, "--page-size", help="Articles per API call (max 100)"
     ),
-    strict: bool = typer.Option(
-        False, "--strict", "-s", help="Strict mode - only exact matches"
+    target_articles: int = typer.Option(
+        300, "--target", "-n", help="Target number of articles (runs multiple queries to reach this)"
     ),
-    expand: bool = typer.Option(
-        False, "--expand", "-e", help="Expand to include cross-regional specialists"
+    also_rss: bool = typer.Option(
+        True, "--also-rss/--no-rss", help="Fetch from 100+ RSS feeds (BBC, CNN, NYT, etc). On by default."
     ),
-    budget: int = typer.Option(
-        300, "--budget", "-b", help="Time budget in seconds (default: 5 minutes)"
-    ),
-    min_sources: int = typer.Option(
-        30, "--min-sources", help="Minimum number of sources to fetch"
-    ),
-    target_words: int = typer.Option(
-        10000, "--target-words", help="Target fresh words to collect"
-    ),
-    discover: bool = typer.Option(
-        False,
-        "--discover",
-        "-d",
-        help="Enable active source discovery for obscure topics",
+    max_feeds: int = typer.Option(
+        0, "--max-feeds", help="Limit number of RSS feeds (0 = all)"
     ),
     llm_analysis: bool = typer.Option(
-        False,
-        "--llm",
-        help="Use LLM-based analysis (GPT-4.1-mini) instead of HuggingFace models",
+        False, "--llm", help="Use LLM-based analysis (requires OPENAI_API_KEY)"
+    ),
+    extract_events: bool = typer.Option(
+        False, "--extract-events", help="Extract structured events using LLM (requires OPENAI_API_KEY)"
+    ),
+    summarize: bool = typer.Option(
+        False, "--summarize", help="Generate AI summaries (slow — adds ~1s/article)"
     ),
     output: Optional[str] = typer.Option(
-        None, "--output", "-f", help="Output file for results (JSON format)"
+        None, "--output", "-f", help="Output file for results (JSON)"
     ),
+    fast: bool = typer.Option(False, "--fast", help="Use VADER for sentiment (dev only, lower quality)"),
     debug: bool = typer.Option(False, "--debug", help="Enable debug logging"),
-    dry_run: bool = typer.Option(
-        False, "--dry-run", help="Plan only, don't fetch articles"
-    ),
 ):
     """
-    Main analysis command - the unified entry point for all operations.
+    Fetch news via NewsAPI, analyze sentiment, and produce structured output.
 
     Examples:
-        # Standard region/topic analysis
-        bsgbot run --region asia --topic elections
-
-        # Obscure topic with discovery
-        bsgbot run --other "semiconductors in Maghreb" --discover
-
-        # Strict mode with expanded sources
-        bsgbot run --region europe --topic energy --strict --expand
-
-        # Quick run with small budget
-        bsgbot run --topic climate --budget 60 --min-sources 10
+        bsgbot run                                  # top headlines + 100+ RSS feeds
+        bsgbot run "AI regulation"                  # search for a topic
+        bsgbot run --category business              # business headlines
+        bsgbot run "climate change" --freshness 30d # last 30 days
+        bsgbot run --country gb --category technology
+        bsgbot run "trade war" --no-rss             # API only, skip RSS
+        bsgbot run "trade war" --llm                # use LLM analysis
     """
-
     if debug:
         logging.getLogger().setLevel(logging.DEBUG)
 
-    # Validate inputs
-    if not any([region, topic, other]):
-        console.print(
-            "[red]Error: Must specify at least one of --region, --topic, or --other[/red]"
-        )
-        raise typer.Exit(1)
+    # Build display label
+    source_label = "TheNewsAPI" if settings.THENEWSAPI_KEY else "NewsAPI"
+    if also_rss:
+        source_label += " + RSS"
 
-    if topic and other:
-        console.print(
-            "[yellow]Warning: Both --topic and --other specified, using --topic[/yellow]"
-        )
-        other = None
+    # Header
+    console.print()
+    if llm_analysis:
+        mode_label = "LLM (GPT-4o-mini)"
+    elif fast:
+        mode_label = "VADER (fast)"
+    else:
+        mode_label = "Ensemble (FinBERT + RoBERTa)"
+    # Check HF API status for header
+    hf_status = ""
+    if not fast and not llm_analysis:
+        try:
+            from .analyzers import hf_inference as hf
+            hf_status = "[green]HF API[/green]" if hf.is_available() else "[yellow]local[/yellow]"
+        except Exception:
+            hf_status = "[yellow]local[/yellow]"
+    query_display = query or "top headlines"
+    header_text = (
+        f"[bold white]BRG Sentiment Intelligence[/bold white]\n"
+        f"[dim]{query_display}  |  {freshness}  |  {mode_label}[/dim]"
+    )
+    if hf_status:
+        header_text += f"  [dim]|[/dim]  {hf_status}"
+    if extract_events:
+        header_text += f"  [dim]|  events[/dim]"
+    if category:
+        header_text += f"  [dim]|  {category}[/dim]"
+    console.print(Panel(header_text, border_style="blue", padding=(0, 1)))
+    console.print()
 
-    # Display configuration
-    config_text = f"""[bold cyan]Configuration[/bold cyan]
-Region: {region or 'All'}
-Topic: {topic or other or 'All'}
-Mode: {'Strict' if strict else 'Flexible'} {'+ Expanded' if expand else ''}
-Discovery: {'Enabled' if discover or other else 'Disabled'}
-Budget: {budget}s
-Min Sources: {min_sources}
-Target Words: {target_words}"""
-
-    console.print(Panel(config_text, title="BSG Bot Run"))
-
-    # Run async main
     asyncio.run(
         _run_async(
+            query=query,
+            category=category,
+            country=country,
             region=region,
             topic=topic,
-            other=other,
-            strict=strict,
-            expand=expand,
-            budget=budget,
-            min_sources=min_sources,
-            target_words=target_words,
-            discover=discover,
+            page_size=page_size,
+            target_articles=target_articles,
+            also_rss=also_rss,
+            max_feeds=max_feeds,
+            freshness=freshness,
+            llm_analysis=llm_analysis,
+            fast=fast,
+            extract_events=extract_events,
+            summarize=summarize,
             output=output,
-            dry_run=dry_run,
             output_dir=output_dir,
             run_id_seed=run_id_seed,
             export_csv=export_csv,
-            llm_analysis=llm_analysis,
-            freshness=freshness,
         )
     )
 
 
 async def _run_async(
+    query: Optional[str],
+    category: Optional[str],
+    country: Optional[str],
     region: Optional[str],
     topic: Optional[str],
-    other: Optional[str],
-    strict: bool,
-    expand: bool,
-    budget: int,
-    min_sources: int,
-    target_words: int,
-    discover: bool,
+    page_size: int,
+    target_articles: int,
+    also_rss: bool,
+    max_feeds: int,
+    freshness: str,
+    llm_analysis: bool,
+    fast: bool,
+    extract_events: bool,
+    summarize: bool,
     output: Optional[str],
-    dry_run: bool,
     output_dir: str,
     run_id_seed: Optional[str],
     export_csv: bool,
-    llm_analysis: bool,
-    freshness: str,
 ):
-    """Async main execution."""
-
     start_time = time.time()
     started_at = datetime.now()
-    catalog = get_catalog()
-    monitor = get_monitor()
 
-    # Generate run ID
-    run_id = make_run_id(
-        region=region, topic=topic or other, started_at=started_at, seed=run_id_seed
-    )
-
-    # Initialize output writer
+    run_id = make_run_id(region=region, topic=query or topic, started_at=started_at, seed=run_id_seed)
     writer = OutputWriter(output_dir=output_dir, run_id=run_id)
     entity_extractor = EntityExtractor()
 
-    console.print(f"[bold cyan]Run ID: {run_id}[/bold cyan]")
+    console.print(f"[dim]run {run_id}[/dim]")
 
-    # Step 1: Selection Planning
-    console.print("\n[bold]📚 Planning Source Selection...[/bold]")
-
-    planner = SelectionPlanner(catalog)
-    quotas = SelectionQuotas(min_sources=min_sources, time_budget_seconds=budget)
-
-    # Handle topic resolution
-    topics = [topic] if topic else None
-
-    plan = planner.plan_selection(
-        region=region,
-        topics=topics,
-        other_topic=other,
-        strict=strict,
-        expand=expand,
-        quotas=quotas,
-    )
-
-    # Display selection summary
-    _display_selection_summary(plan)
-
-    # Check if we need discovery
-    needs_discovery = len(plan.sources) < min_sources and (discover or other)
-
-    if needs_discovery:
-        console.print("\n[bold]🔍 Running Source Discovery...[/bold]")
-        discovery_sources = await _run_discovery(
-            topic=other or topic,
-            region=region,
-            time_budget=plan.time_allocations.get("_discovery", 30),
-        )
-
-        # Add discovered sources to plan
-        for disc_source in discovery_sources[:20]:  # Limit additions
-            plan.sources.append(disc_source)
-
-        console.print(
-            f"[green]Added {len(discovery_sources)} discovered sources[/green]"
-        )
-
-    if dry_run:
-        console.print("\n[yellow]Dry run mode - skipping article fetching[/yellow]")
-        return
-
-    # Step 2: Fetch Articles
-    console.print("\n[bold]📡 Fetching Articles...[/bold]")
-
-    articles = await _fetch_articles(plan, monitor)
-
-    # Step 2.5: Deduplication
-    console.print(f"\n[bold]🔄 Deduplicating Articles...[/bold]")
-    unique_articles = _deduplicate_articles(articles)
-    console.print(
-        f"[green]Kept {len(unique_articles)}/{len(articles)} unique articles[/green]"
-    )
-
-    # Step 2.6: Freshness Filtering
+    # Step 1: Fetch
     max_age_hours = _parse_freshness(freshness)
-    freshness_display = freshness if freshness != "forever" else "unlimited"
-    console.print(f"\n[bold]🕐 Applying Freshness Filter (max age: {freshness_display})...[/bold]")
-    fresh_articles, stale_count, freshness_rate = _filter_by_freshness(
-        unique_articles, max_age_hours=max_age_hours
-    )
-    console.print(
-        f"[green]Fresh: {len(fresh_articles)}/{len(unique_articles)} articles (Freshness Rate: {freshness_rate:.1%})[/green]"
-    )
+    days_back = (max_age_hours // 24) if max_age_hours else 30
 
-    # Calculate fresh words
-    fresh_words = sum(
-        len(article.get("content", article.get("description", "")).split())
-        for article in fresh_articles
-    )
-    console.print(f"[cyan]Fresh words collected: {fresh_words:,}[/cyan]")
-
-    # Step 3: Relevance Verification
-    console.print("\n[bold]✅ Verifying Relevance...[/bold]")
-
-    relevance_filter = RelevanceFilter()
-    filtered_articles = []
-
-    with Progress() as progress:
-        task = progress.add_task("[cyan]Filtering...", total=len(articles))
-
-        for article in fresh_articles:  # Only process fresh articles
-            score = relevance_filter.verify_relevance(
-                article=article,
-                target_region=region,
-                target_topics=topics or [other] if other else None,
-                strict=strict,
+    if settings.THENEWSAPI_KEY:
+        articles = _fetch_thenewsapi(
+            query=query,
+            category=category,
+            days_back=max(days_back, 1),
+            target_articles=target_articles,
+        )
+    else:
+        with console.status("[dim]Fetching articles...[/dim]", spinner="dots"):
+            articles = _fetch_newsapi_legacy(
+                query=query,
+                category=category,
+                country=country,
+                page_size=page_size,
+                days_back=max(days_back, 1),
             )
 
-            if score.should_keep:
-                article["_relevance_weight"] = score.weight
-                filtered_articles.append(article)
+    rss_count = 0
+    if also_rss:
+        rss_urls = list(settings.RSS_FEEDS)
+        if max_feeds > 0:
+            rss_urls = rss_urls[:max_feeds]
+        rss_articles = await _fetch_rss_articles(rss_urls)
+        rss_count = len(rss_articles)
+        articles.extend(rss_articles)
 
-                # Record relevance metrics
-                monitor.record_relevance(
-                    domain=article.get("domain", "unknown"),
-                    relevance_score=score.weight,
-                    dropped=False,
-                )
-            else:
-                monitor.record_relevance(
-                    domain=article.get("domain", "unknown"),
-                    relevance_score=score.weight,
-                    dropped=True,
-                )
+    gdelt_count = 0
+    try:
+        with console.status("[dim]Fetching GDELT...[/dim]", spinner="dots"):
+            from .utils.gdelt_fetcher import fetch_gdelt_articles
+            gdelt_articles = fetch_gdelt_articles(
+                query=query,
+                days_back=max(days_back, 1),
+                max_articles=250,
+            )
+            gdelt_count = len(gdelt_articles)
+            for ga in gdelt_articles:
+                ga["domain"] = _normalize_source_name(ga.get("domain", "Unknown"))
+            articles.extend(gdelt_articles)
+    except Exception as e:
+        logger.debug(f"GDELT fetch skipped: {e}")
 
-            progress.advance(task)
+    total_raw = len(articles)
+    if not articles:
+        console.print("[yellow]No articles fetched. Check API keys in .env[/yellow]")
+        return
 
-    console.print(
-        f"[green]Kept {len(filtered_articles)}/{len(fresh_articles)} relevant articles[/green]"
-    )
+    # Step 2-4: Filter pipeline
+    unique_articles = _deduplicate_articles(articles)
+    fresh_articles, stale_count, freshness_rate = _filter_by_freshness(unique_articles, max_age_hours)
+    if region or topic:
+        fresh_articles = _keyword_filter(fresh_articles, region=region, topic=topic)
 
-    # Step 4: Analysis
+    # Cap at target to avoid MPS/NLI hangs on large batches
+    if len(fresh_articles) > target_articles:
+        fresh_articles = fresh_articles[:target_articles]
+
+    # Pipeline summary — one line
+    console.print(f"  [dim]fetched {total_raw} | unique {len(unique_articles)} | fresh {len(fresh_articles)}[/dim]")
+
+    if not fresh_articles:
+        console.print("[yellow]No articles match your filters.[/yellow]")
+        return
+
+    # Step 4b: Full text
+    fresh_articles = _fetch_full_text(fresh_articles)
+
+    # Step 5: Analyze sentiment
     if llm_analysis:
-        console.print("\n[bold]🧠 Analyzing Sentiment (LLM)...[/bold]")
-        results = await _analyze_articles_llm(filtered_articles)
+        results = await _analyze_articles_llm(fresh_articles)
+    elif fast:
+        results = await _analyze_articles(fresh_articles)
     else:
-        console.print("\n[bold]🧠 Analyzing Sentiment...[/bold]")
-        results = await _analyze_articles(filtered_articles)
+        # Ensemble router: HF Inference API (remote GPU) -> local -> VADER fallback
+        results = _analyze_articles_ensemble(fresh_articles)
 
-    # Add freshness metrics to results
-    results["freshness_rate"] = freshness_rate
-    results["fresh_words"] = fresh_words
+    # Step 5b: AI summaries
+    if summarize:
+        fresh_articles = _summarize_articles(fresh_articles)
+    else:
+        for a in fresh_articles:
+            a["ai_summary"] = ""
 
-    # Build article records for institutional output
+    # Batch theme extraction via remote API (much faster than per-article NLI)
+    if not fast:
+        try:
+            from .analyzers import hf_inference as hf
+            if hf.is_available():
+                theme_labels = list(entity_extractor.THEME_NLI_LABELS.values())
+                theme_keys = list(entity_extractor.THEME_NLI_LABELS.keys())
+                batch_texts = [
+                    (a.get("content", "") or a.get("description", "") or a.get("title", ""))[:1500]
+                    for a in fresh_articles
+                ]
+                with console.status(f"[dim]Classifying themes ({len(batch_texts)} articles via HF API)...[/dim]", spinner="dots"):
+                    theme_results = hf.classify_batch(batch_texts, theme_labels, multi_label=True)
+                for article, scores in zip(fresh_articles, theme_results):
+                    if scores:
+                        themes = [theme_keys[theme_labels.index(lbl)] for lbl, s in scores.items() if s > 0.3]
+                        article["_themes"] = themes[:5]
+                    else:
+                        article["_themes"] = None
+                console.print(f"  [dim]themes: classified via HF API[/dim]")
+        except Exception as e:
+            logger.debug(f"Remote theme classification skipped: {e}")
+
+    # Build article records
     article_records = []
-    all_country_sentiments = []  # Collect country sentiments from all articles
-    for article in filtered_articles:
-        # Get text content
-        text = (
-            article.get("content", "")
-            or article.get("description", "")
-            or article.get("title", "")
-        )
-
-        # Extract entities and signals
+    all_country_sentiments = []
+    for article in fresh_articles:
+        text = article.get("content", "") or article.get("description", "") or article.get("title", "")
         entities = entity_extractor.extract_entities(text)
         tickers = entity_extractor.extract_tickers(text)
         volatility = entity_extractor.detect_volatility(text)
 
-        # Get sentiment analysis
-        analysis = analyze(text) if text else None
-        sentiment_score = analysis.vader if analysis else 0
-        sentiment_label = (
-            "pos"
-            if sentiment_score > 0.05
-            else ("neg" if sentiment_score < -0.05 else "neu")
-        )
+        sentiment_score = article.get("_sentiment_score", 0)
+        sentiment_label = "pos" if sentiment_score > 0.05 else ("neg" if sentiment_score < -0.05 else "neu")
 
         risk_level = entity_extractor.detect_risk_level(text, sentiment_score)
-        themes = entity_extractor.extract_themes(text, topic or other)
+        # Use pre-computed remote themes if available, else fall back to local
+        themes = article.get("_themes") or entity_extractor.extract_themes(text, query or topic)
 
-        # Extract country mentions and analyze sentiment
         country_mentions = entity_extractor.extract_country_mentions(text)
-        country_sentiments = entity_extractor.analyze_country_sentiment(
-            country_mentions, sentiment_score, text
-        )
-        all_country_sentiments.append(country_sentiments)  # Store for aggregation
+        country_sentiments = entity_extractor.analyze_country_sentiment(country_mentions, sentiment_score, text)
+        all_country_sentiments.append(country_sentiments)
 
-        # Create article record
         record = ArticleRecord(
             run_id=run_id,
             id=entity_extractor.generate_article_id(
@@ -412,56 +790,170 @@ async def _run_async(
             published_at=article.get("published", datetime.now().isoformat()),
             source=article.get("domain", "unknown"),
             region=region or "global",
-            topic=topic or other or "general",
+            topic=query or topic or "general",
             language="en",
             authors=article.get("authors", []),
             tickers=tickers,
             entities=[{"text": e["text"], "type": e["type"]} for e in entities],
             summary=article.get("summary", "")[:500],
+            ai_summary=article.get("ai_summary", ""),
             text_chars=len(text),
             hash=entity_extractor.calculate_text_hash(text),
-            relevance=article.get("_relevance_weight", 0.5),
-            sentiment=Sentiment(
-                label=sentiment_label, score=sentiment_score, confidence=0.8
-            ),
-            signals=SignalData(
-                volatility=volatility, risk_level=risk_level, themes=themes
-            ),
+            source_tier=get_tier(article.get("domain", "unknown")),
+            relevance=0.5,
+            sentiment=Sentiment(label=sentiment_label, score=sentiment_score, confidence=get_weight(article.get("domain", "unknown"))),
+            signals=SignalData(volatility=volatility, risk_level=risk_level, themes=themes),
         )
         article_records.append(record)
 
-    # Step 5: Auto-tune sources
-    console.print("\n[bold]⚙️ Auto-tuning Sources...[/bold]")
+    # Step 6a: Stance detection (per-entity sentiment via NLI)
+    try:
+        from .analyzers.stance_analyzer import StanceAnalyzer
+        stance_analyzer = StanceAnalyzer()
+        if stance_analyzer._ensure_ready():
+            with console.status("[dim]Detecting entity stances...[/dim]", spinner="dots"):
+                for record in article_records:
+                    text = ""
+                    for art in fresh_articles:
+                        if art.get("link", "") == record.url:
+                            text = art.get("content", "") or art.get("description", "") or art.get("title", "")
+                            break
+                    if not text:
+                        text = record.summary or record.title
+                    record.entity_stances = stance_analyzer.analyze(text, record.title)
+                total_stances = sum(len(r.entity_stances) for r in article_records)
+                console.print(f"  [dim]entity stances: {total_stances}[/dim]")
+    except Exception as e:
+        logger.debug(f"Stance detection skipped: {e}")
 
-    tune_actions = monitor.auto_tune_sources(dry_run=False)
-    if any(tune_actions.values()):
-        _display_tuning_actions(tune_actions)
+    # Step 6b: Event extraction (optional)
+    if extract_events:
+        with console.status("[dim]Extracting events...[/dim]", spinner="dots"):
+            try:
+                from .analyzers.event_extractor import EventExtractor
+                event_extractor_llm = EventExtractor()
 
-    # Step 6: Display Results
-    console.print("\n[bold]📊 Results Summary[/bold]")
+                docs = []
+                for record in article_records:
+                    text = ""
+                    for art in fresh_articles:
+                        if art.get("link", "") == record.url:
+                            text = art.get("content", "") or art.get("description", "") or art.get("title", "")
+                            break
+                    if not text:
+                        text = record.summary or record.title
+                    docs.append({"id": record.id, "text": text})
 
-    # Generate country insights
-    country_insights = entity_extractor.generate_country_insights(
-        all_country_sentiments
-    )
+                event_results = await event_extractor_llm.extract_batch(docs)
 
-    _display_results(
-        results, monitor.get_run_metrics(), article_records, country_insights
-    )
+                total_events = 0
+                for record in article_records:
+                    record.events = event_results.get(record.id, [])
+                    total_events += len(record.events)
 
-    # Step 7: Generate institutional outputs
-    console.print("\n[bold]💾 Writing Institutional Outputs...[/bold]")
+                console.print(f"  [dim]events extracted: {total_events}[/dim]")
+            except Exception as e:
+                console.print(f"[red]Event extraction failed: {e}[/red]")
 
-    # Build run summary
+    # Baseline-relative risk scoring + record history
+    try:
+        from .utils.country_baselines import record_scan, compute_risk_levels
+        # Build per-country sentiment summary
+        country_sent_agg = {}
+        for cs_list in all_country_sentiments:
+            for cs in cs_list:
+                c = cs.get("country", "")
+                if c:
+                    if c not in country_sent_agg:
+                        country_sent_agg[c] = {"sentiments": [], "count": 0}
+                    country_sent_agg[c]["sentiments"].append(cs.get("sentiment", 0))
+                    country_sent_agg[c]["count"] += 1
+
+        current = {}
+        record_data = []
+        for c, data in country_sent_agg.items():
+            avg = sum(data["sentiments"]) / len(data["sentiments"]) if data["sentiments"] else 0
+            current[c] = {"sentiment": avg, "article_count": data["count"]}
+            record_data.append({"country": c, "sentiment": avg, "article_count": data["count"]})
+
+        baseline_risks = compute_risk_levels(current)
+        record_scan(record_data)
+    except Exception:
+        baseline_risks = {}
+
+    # Cross-scan entity tracking
+    entity_movers = []
+    try:
+        from .utils.entity_tracker import build_entity_summary, record_entities, compute_movers
+        entity_summary = build_entity_summary(article_records)
+        entity_movers = compute_movers(entity_summary)
+        record_entities([
+            {"entity": e, "type": d["type"], "mentions": d["mentions"],
+             "mean_sentiment": float(d["mean_sentiment"]), "stances": d["stances"]}
+            for e, d in entity_summary.items()
+        ])
+    except Exception as e:
+        logger.debug(f"Entity tracking skipped: {e}")
+
+    # Narrative clustering
+    narratives = []
+    try:
+        from .analyzers.narrative_builder import NarrativeBuilder
+        if len(article_records) >= 4:
+            with console.status("[dim]Clustering narratives...[/dim]", spinner="dots"):
+                nb = NarrativeBuilder()
+                narratives = nb.build_narratives(article_records)
+            if narratives:
+                console.print(f"  [dim]narratives: {len(narratives)} threads[/dim]")
+    except Exception as e:
+        logger.debug(f"Narrative clustering skipped: {e}")
+
+    # Contradiction detection (requires narratives)
+    contradictions = []
+    if narratives:
+        try:
+            from .analyzers.contradiction_detector import ContradictionDetector
+            cd = ContradictionDetector()
+            contradictions = cd.detect(article_records, narratives)
+            if contradictions:
+                console.print(f"  [dim]contradictions: {len(contradictions)} detected[/dim]")
+        except Exception as e:
+            logger.debug(f"Contradiction detection skipped: {e}")
+
+    # Display
+    country_insights = entity_extractor.generate_country_insights(all_country_sentiments)
+    _display_results(results, article_records, country_insights, baseline_risks=baseline_risks, movers=entity_movers, narratives=narratives, contradictions=contradictions)
+
+    if extract_events:
+        _display_event_summary(article_records)
+        # Event graph
+        try:
+            from .analyzers.event_graph import EventGraph
+            eg = EventGraph()
+            eg.add_from_records(article_records)
+            _display_event_graph(eg)
+        except ImportError:
+            logger.debug("networkx not installed, skipping event graph")
+        except Exception as e:
+            logger.debug(f"Event graph skipped: {e}")
+
+    # Source influence tracking
+    if narratives:
+        try:
+            from .analyzers.source_influence import SourceInfluenceTracker
+            sit = SourceInfluenceTracker()
+            sit.analyze_narratives(article_records, narratives)
+        except Exception as e:
+            logger.debug(f"Source influence skipped: {e}")
+
+    # Write outputs
+
     sentiment_breakdown = results.get("sentiment", {})
-    total_articles = sum(sentiment_breakdown.values())
     avg_sentiment = (
         sum(r.sentiment.score for r in article_records) / len(article_records)
-        if article_records
-        else 0
+        if article_records else 0
     )
 
-    # Count entities
     entity_counter = Counter()
     for record in article_records:
         for entity in record.entities:
@@ -472,14 +964,12 @@ async def _run_async(
         for (text, etype), count in entity_counter.most_common(10)
     ]
 
-    # Count sources
     source_counter = Counter(r.source for r in article_records)
     source_counts = [
         SourceCount(domain=domain, articles=count)
         for domain, count in source_counter.most_common()
     ]
 
-    # Extract top triggers (volatility keywords)
     all_themes = []
     for record in article_records:
         if record.signals:
@@ -487,32 +977,32 @@ async def _run_async(
     theme_counter = Counter(all_themes)
     top_triggers = [theme for theme, _ in theme_counter.most_common(5)]
 
-    # Calculate volatility index
     volatility_scores = [r.signals.volatility for r in article_records if r.signals]
-    volatility_index = (
-        sum(volatility_scores) / len(volatility_scores) if volatility_scores else 0
-    )
+    volatility_index = sum(volatility_scores) / len(volatility_scores) if volatility_scores else 0
 
-    # Build summary object
+    attempted = page_size
+    if also_rss:
+        rss_urls = list(settings.RSS_FEEDS)
+        if max_feeds > 0:
+            rss_urls = rss_urls[:max_feeds]
+        attempted += len(rss_urls)
+
     run_summary = RunSummary(
         run_id=run_id,
         started_at=started_at.isoformat(),
         finished_at=datetime.now().isoformat(),
         config=ConfigBlock(
             region=region,
-            topic=topic or other,
-            budget_sec=budget,
-            min_sources=min_sources,
-            discover=discover,
+            topic=query or topic,
             max_age_hours=max_age_hours or 24,
         ),
         collection=CollectionBlock(
-            attempted_feeds=len(plan.sources),
-            articles_raw=len(articles),
+            attempted_feeds=attempted,
+            articles_raw=total_raw,
             unique_after_dedupe=len(unique_articles),
-            fresh_window_h=24,
+            fresh_window_h=max_age_hours or 24,
             fresh_count=len(fresh_articles),
-            relevant_count=len(filtered_articles),
+            relevant_count=len(fresh_articles),
         ),
         analysis=AnalysisBlock(
             sentiment_total=int(avg_sentiment * 100),
@@ -525,2044 +1015,1167 @@ async def _run_async(
         sources=source_counts,
         diversity=DiversityBlock(
             sources=len(source_counter),
-            languages=(
-                len(plan.language_distribution)
-                if hasattr(plan, "language_distribution")
-                else 1
-            ),
-            regions=(
-                len(plan.region_distribution)
-                if hasattr(plan, "region_distribution")
-                else 1
-            ),
-            editorial_families=(
-                len(plan.editorial_families)
-                if hasattr(plan, "editorial_families")
-                else 1
-            ),
-            score=(
-                plan.get_diversity_score()
-                if hasattr(plan, "get_diversity_score")
-                else 0.5
-            ),
+            languages=1,
+            regions=1,
+            editorial_families=len(source_counter),
+            score=min(len(source_counter) / 20, 1.0),
         ),
         errors=[],
         schema_version="1.0.0",
     )
 
-    # Write outputs
     jsonl_path = writer.write_articles_jsonl(article_records)
-    console.print(f"[green]✓ Articles JSONL: {jsonl_path}[/green]")
-
     json_path = writer.write_run_summary_json(run_summary)
-    console.print(f"[green]✓ Run Summary JSON: {json_path}[/green]")
 
-    # Generate highlights for dashboard
     highlights = []
-    for record in sorted(
-        article_records, key=lambda r: abs(r.sentiment.score), reverse=True
-    )[:5]:
-        sentiment_emoji = (
-            "🟢"
-            if record.sentiment.label == "pos"
-            else "🔴" if record.sentiment.label == "neg" else "⚪"
-        )
-        highlights.append(f"{sentiment_emoji} {record.title[:80]}")
+    for record in sorted(article_records, key=lambda r: abs(r.sentiment.score), reverse=True)[:5]:
+        highlights.append(f"{'+'if record.sentiment.label=='pos' else '-' if record.sentiment.label=='neg' else '~'} {record.title[:80]}")
 
     txt_path = writer.write_dashboard_txt(run_summary, highlights)
-    console.print(f"[green]✓ Dashboard TXT: {txt_path}[/green]")
+
+    output_files = [jsonl_path, json_path, txt_path]
+
+    if extract_events:
+        events_path = writer.write_events_jsonl(article_records)
+        output_files.append(events_path)
 
     if export_csv:
         csv_path = writer.write_csv(article_records)
-        console.print(f"[green]✓ Articles CSV: {csv_path}[/green]")
+        output_files.append(csv_path)
 
-    # Step 8: Save legacy output if requested
     if output:
         output_data = {
             "timestamp": datetime.now().isoformat(),
-            "config": {
-                "region": region,
-                "topic": topic or other,
-                "strict": strict,
-                "expand": expand,
-                "budget": budget,
-            },
-            "plan": {
-                "sources_selected": len(plan.sources),
-                "diversity_score": plan.get_diversity_score(),
-                "selection_time_ms": plan.selection_time_ms,
-            },
+            "config": {"query": query, "category": category, "country": country, "freshness": freshness},
             "results": results,
-            "metrics": monitor.export_metrics(),
         }
-
         with open(output, "w") as f:
             json.dump(output_data, f, indent=2, default=str)
+        output_files.append(output)
 
-        console.print(f"[green]Results saved to {output}[/green]")
-
-    # Final timing
+    # Footer
     total_time = time.time() - start_time
-    console.print(f"\n[bold green]✓ Completed in {total_time:.1f} seconds[/bold green]")
+    console.print()
+    console.print(f"[dim]{'=' * 40}[/dim]")
+    console.print(f"[dim]{len(output_files)} files written to {output_dir}/[/dim]")
+    console.print(f"[dim]completed in {total_time:.1f}s[/dim]")
 
 
-async def _run_discovery(topic: str, region: Optional[str], time_budget: float) -> List:
-    """Run source discovery for obscure topics."""
+# ---------------------------------------------------------------------------
+# Full-text fetching and AI summary
+# ---------------------------------------------------------------------------
 
-    discovery = SourceDiscovery(
-        max_concurrent=5, timeout=10, max_domains=20, max_pages=50
-    )
-
-    results = await discovery.discover_sources(
-        topic=topic, region=region, time_budget=time_budget
-    )
-
-    # Convert discovery results to source records
-    sources = []
-    for result in results:
-        if result.confidence > 0.4:  # Only decent matches
-            from .skb_catalog import SourceRecord
-
-            source = SourceRecord(
-                domain=result.domain,
-                name=result.domain,
-                region=region or "global",
-                topics=result.topics or [],
-                rss_endpoints=[result.url],
-                priority=0.3,
-                policy="allow",
-            )
-            sources.append(source)
-
-    return sources
+_SCRAPE_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate",
+    "DNT": "1",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1",
+}
 
 
-async def _fetch_single_rss(session, url):
-    """Fetch single RSS feed."""
+def _fetch_single_fulltext(article: Dict) -> bool:
+    """Fetch full text for one article.
+
+    Extraction order: trafilatura > newspaper3k > raw <p> tag scrape.
+    Tracks which extractor succeeded in article["_extractor"].
+    """
+    import requests as req
+
+    url = article.get("link", "")
+    if not url:
+        return False
+
+    existing_len = len(article.get("content", "") or "")
+
+    # Method 1: trafilatura (best extraction quality)
     try:
-        async with session.get(
-            url, timeout=aiohttp.ClientTimeout(total=10)
-        ) as response:
-            if response.status == 200:
-                content = await response.text()
-                feed = feedparser.parse(content)
-                return (feed, url, True)  # Return status for progress tracking
-    except Exception as e:
-        logger.error(f"Error fetching {url}: {e}")
-    return (None, url, False)  # Return status even on failure
+        import trafilatura
+        downloaded = trafilatura.fetch_url(url)
+        if downloaded:
+            text = trafilatura.extract(downloaded, include_comments=False, include_tables=False)
+            if text and len(text) > existing_len:
+                article["content"] = text
+                article["_extractor"] = "trafilatura"
+                return True
+    except Exception:
+        pass
+
+    # Method 2: newspaper3k
+    try:
+        from newspaper import Article as NewsArticle
+        na = NewsArticle(url, request_timeout=8)
+        na.set_headers(_SCRAPE_HEADERS)
+        na.download()
+        na.parse()
+        if na.text and len(na.text) > existing_len:
+            article["content"] = na.text
+            article["_extractor"] = "newspaper3k"
+            if na.authors and not article.get("authors"):
+                article["authors"] = na.authors
+            return True
+    except Exception:
+        pass
+
+    # Method 3: raw requests + <p> tag extraction
+    try:
+        resp = req.get(url, headers=_SCRAPE_HEADERS, timeout=8, allow_redirects=True)
+        if resp.status_code == 200 and len(resp.text) > 500:
+            import re
+            paragraphs = re.findall(r'<p[^>]*>(.*?)</p>', resp.text, re.DOTALL | re.IGNORECASE)
+            if paragraphs:
+                clean_text = " ".join(
+                    re.sub(r'<[^>]+>', '', p).strip()
+                    for p in paragraphs if len(re.sub(r'<[^>]+>', '', p).strip()) > 40
+                )
+                if len(clean_text) > existing_len:
+                    article["content"] = clean_text
+                    article["_extractor"] = "bs4_fallback"
+                    return True
+    except Exception:
+        pass
+
+    return False
 
 
-async def _fetch_articles(plan, monitor) -> List[Dict]:
-    """Fetch articles from selected sources."""
+def _fetch_full_text(articles: List[Dict]) -> List[Dict]:
+    """Fetch full article text with concurrent workers, proper headers, and fallback scraping."""
+    success = 0
+    failed = 0
+    total = len(articles)
 
-    articles = []
-
-    # Build RSS URLs from sources
-    rss_urls = []
-    for source in plan.sources:
-        if source.rss_endpoints:  # Only process sources with RSS feeds
-            for endpoint in source.rss_endpoints[
-                :1
-            ]:  # Limit to 1 endpoint per source to avoid overload
-                rss_urls.append(endpoint)
-                logger.info(f"Added RSS endpoint: {endpoint}")
-
-    if not rss_urls:
-        console.print(
-            "[yellow]Warning: No RSS feeds found for selected sources[/yellow]"
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TextColumn("{task.completed}/{task.total}"),
+        TextColumn("[green]{task.fields[success]} scraped[/green]"),
+        TimeElapsedColumn(),
+        console=console,
+    ) as progress:
+        task = progress.add_task(
+            "[cyan]Fetching full text...", total=total, success=0
         )
-        return articles
 
-    with Progress() as progress:
-        task = progress.add_task("[cyan]Fetching RSS feeds...", total=len(rss_urls))
+        with ThreadPoolExecutor(max_workers=20) as executor:
+            futures = {}
+            for i, article in enumerate(articles):
+                future = executor.submit(_fetch_single_fulltext, article)
+                futures[future] = i
 
-        # Fetch feeds with timeout
-        async with aiohttp.ClientSession() as session:
-            # Create tasks but don't gather immediately
-            tasks = [_fetch_single_rss(session, url) for url in rss_urls]
+            for future in futures:
+                try:
+                    result = future.result(timeout=15)
+                    if result:
+                        success += 1
+                    else:
+                        failed += 1
+                except (TimeoutError, FuturesTimeoutError):
+                    failed += 1
+                except Exception:
+                    failed += 1
+                progress.update(task, advance=1, success=success)
 
-            # Process results as they complete for live progress updates
-            for coro in asyncio.as_completed(tasks):
-                result = await coro
-                feed, url, success = result
-                progress.advance(task)  # Update progress for each completed feed
-
-                if feed and feed.entries:
-                    domain = (
-                        feed.feed.get("title", "Unknown")
-                        if hasattr(feed, "feed")
-                        else "Unknown"
-                    )
-
-                    # Smart fetch limit based on source quality
-                    fetch_limit = 25  # Default increased from 10
-                    for entry in feed.entries[:fetch_limit]:
-                        # Extract article data
-                        # Parse published date for freshness
-                        published_str = entry.get("published", entry.get("updated", ""))
-                        published_date = None
-                        if published_str:
-                            try:
-                                published_date = date_parser.parse(published_str)
-                            except:
-                                pass
-
-                        article = {
-                            "title": entry.get("title", ""),
-                            "link": entry.get("link", ""),
-                            "description": entry.get(
-                                "summary", entry.get("description", "")
-                            ),
-                            "domain": domain,
-                            "published": published_str,
-                            "published_date": published_date,
-                            "content": (
-                                entry.get("content", [{}])[0].get("value", "")
-                                if "content" in entry
-                                else ""
-                            ),
-                            "url_hash": hashlib.md5(
-                                entry.get("link", "").encode()
-                            ).hexdigest(),  # For dedup
-                        }
-
-                        # Record fetch metrics
-                        monitor.record_fetch_result(
-                            domain=domain, success=True, latency_ms=100  # Placeholder
-                        )
-
-                        articles.append(article)
-                else:
-                    # Record failure metrics
-                    monitor.record_fetch_result(
-                        domain=url.split("/")[2] if "/" in url else "unknown",
-                        success=False,
-                        latency_ms=100,
-                    )
-
+    console.print(
+        f"[green]Full text: {success} scraped, {failed} failed, {total} total[/green]"
+    )
     return articles
 
 
-async def _analyze_articles(articles: List[Dict]) -> Dict:
-    """Analyze article sentiment."""
-
-    if not articles:
-        return {
-            "total_articles": 0,
-            "sentiment": {"positive": 0, "negative": 0, "neutral": 0},
-            "top_topics": [],
-            "key_insights": [],
-        }
-
-    # Analyze each article individually with detailed progress
-    console.print(f"Analyzing {len(articles)} articles...")
-    analysis_results = []
-
-    for i, article in enumerate(articles):
-        # Show progress for every article
-        title = article.get("title", "Untitled")[:60]
-        console.print(
-            f"  [{i+1}/{len(articles)}] Analyzing: {title}{'...' if len(article.get('title', '')) > 60 else ''}"
-        )
-
-        # Get the text content from the article
-        text = (
-            article.get("content", "")
-            or article.get("description", "")
-            or article.get("title", "")
-        )
-
-        if text:
-            try:
-                # Show what we're analyzing
-                text_sample = text[:1000]  # Limit text to first 1000 chars for speed
-                word_count = len(text_sample.split())
-                console.print(
-                    f"    📝 Processing {word_count} words from: {article.get('domain', 'unknown')}"
-                )
-
-                # Add timeout wrapper for individual article analysis
-                import time
-                import threading
-                from concurrent.futures import (
-                    ThreadPoolExecutor,
-                    TimeoutError as FuturesTimeoutError,
-                )
-
-                def analyze_with_timeout(text_sample):
-                    return analyze(text_sample)
-
-                start_time = time.time()
-                console.print(f"    🧠 Running sentiment analysis...")
-
-                # Use ThreadPoolExecutor for timeout
-                with ThreadPoolExecutor(max_workers=1) as executor:
-                    future = executor.submit(analyze_with_timeout, text_sample)
-                    try:
-                        analysis = future.result(timeout=30)  # 30 second timeout
-                    except FuturesTimeoutError:
-                        raise TimeoutError(
-                            f"Article analysis timed out after 30 seconds"
-                        )
-
-                analysis_time = time.time() - start_time
-                console.print(
-                    f"    ✅ Completed in {analysis_time:.2f}s (sentiment: {analysis.vader:.3f})"
-                )
-
-                # Create result dict with the analysis
-                result = {
-                    "title": article.get("title", "Untitled"),
-                    "sentiment_label": (
-                        "POSITIVE"
-                        if analysis.vader > 0.05
-                        else ("NEGATIVE" if analysis.vader < -0.05 else "NEUTRAL")
-                    ),
-                    "sentiment_score": analysis.vader,
-                }
-                analysis_results.append(result)
-            except (TimeoutError, FuturesTimeoutError) as e:
-                console.print(f"    ❌ TIMEOUT: Article analysis timed out after 30s")
-                logger.error(
-                    f"Article timeout: {title} from {article.get('domain', 'unknown')}"
-                )
-                continue
-            except Exception as e:
-                console.print(f"    ❌ ERROR: {str(e)[:100]}")
-                logger.error(
-                    f"Failed to analyze article '{title}' from {article.get('domain', 'unknown')}: {e}"
-                )
-                import traceback
-
-                logger.debug(f"Full traceback: {traceback.format_exc()}")
-
-                # Try to get more diagnostic info
-                try:
-                    console.print(
-                        f"    🔍 Article details: domain={article.get('domain')}, url={article.get('link', '')[:80]}"
-                    )
-                    console.print(
-                        f"    🔍 Text length: {len(text)} chars, first 100: {text[:100].replace(chr(10), ' ')}"
-                    )
-                except:
-                    console.print(f"    🔍 Could not extract article details")
-                continue
-        else:
-            console.print(f"    ⚠️ SKIPPED: No text content found")
-            continue
-
-    # Final summary
-    total_processed = len(analysis_results)
-    total_attempted = len(articles)
-    success_rate = (
-        (total_processed / total_attempted * 100) if total_attempted > 0 else 0
-    )
-    console.print(
-        f"\n📊 Analysis Complete: {total_processed}/{total_attempted} articles processed ({success_rate:.1f}% success rate)"
-    )
-
-    # Calculate aggregate sentiment score (-100 to +100)
-    if analysis_results:
-        avg_sentiment = sum(a["sentiment_score"] for a in analysis_results) / len(
-            analysis_results
-        )
-        # Convert from -1 to 1 scale to -100 to +100 scale
-        aggregate_score = round(avg_sentiment * 100)
-    else:
-        aggregate_score = 0
-
-    # Format results for display
-    results = {
-        "total_articles": len(articles),
-        "sentiment_score": aggregate_score,  # Single aggregate score
-        "sentiment": {
-            "positive": sum(
-                1 for a in analysis_results if a["sentiment_label"] == "POSITIVE"
-            ),
-            "negative": sum(
-                1 for a in analysis_results if a["sentiment_label"] == "NEGATIVE"
-            ),
-            "neutral": sum(
-                1 for a in analysis_results if a["sentiment_label"] == "NEUTRAL"
-            ),
-        },
-        "top_topics": [],
-        "key_insights": [],
-    }
-
-    # Extract key insights from highly positive/negative articles
-    for article in analysis_results:
-        if article["sentiment_score"] > 0.8 or article["sentiment_score"] < -0.8:
-            results["key_insights"].append(
-                {
-                    "title": article["title"],
-                    "sentiment": article["sentiment_label"],
-                    "score": article["sentiment_score"],
-                }
-            )
-
-    return results
-
-
-async def _analyze_articles_llm(articles: List[Dict]) -> Dict:
-    """Analyze article sentiment using LLM (GPT-4.1-mini)."""
-
-    if not articles:
-        return {
-            "total_articles": 0,
-            "sentiment": {"positive": 0, "negative": 0, "neutral": 0},
-            "sentiment_score": 0,
-            "top_topics": [],
-            "key_insights": [],
-        }
-
+def _summarize_articles(articles: List[Dict]) -> List[Dict]:
+    """Generate AI summaries using a small local model (distilbart-cnn). Batched for speed."""
     try:
-        from sentiment_bot.analyzers.llm_analyzer import LLMAnalyzer
-
-        analyzer = LLMAnalyzer()
-
-        console.print(f"Analyzing {len(articles)} articles with LLM...")
-
-        # Prepare documents for LLM analysis
-        docs = []
-        for i, article in enumerate(articles):
-            text = (
-                article.get("content", "")
-                or article.get("description", "")
-                or article.get("title", "")
-            )
-            if text:
-                docs.append({"id": f"article_{i}", "text": text})
-
-        if not docs:
-            return {
-                "total_articles": len(articles),
-                "sentiment": {"positive": 0, "negative": 0, "neutral": 0},
-                "sentiment_score": 0,
-                "top_topics": [],
-                "key_insights": [],
-            }
-
-        # Batch analyze with LLM
-        llm_results = await analyzer.analyze_batch(docs)
-
-        # Convert LLM results to standard format
-        analysis_results = []
-        sentiment_scores = []
-
-        for i, llm_result in enumerate(llm_results):
-            # Map LLM sentiment to standard labels
-            sentiment_label = llm_result.get("sentiment", "neutral").upper()
-            if sentiment_label not in ["POSITIVE", "NEGATIVE", "NEUTRAL"]:
-                sentiment_label = "NEUTRAL"
-
-            # Convert confidence-weighted sentiment to score (-1 to 1 scale)
-            confidence = float(llm_result.get("confidence", 0.5))
-            if sentiment_label == "POSITIVE":
-                sentiment_score = confidence
-            elif sentiment_label == "NEGATIVE":
-                sentiment_score = -confidence
-            else:
-                sentiment_score = 0.0
-
-            result = {
-                "title": articles[i].get("title", "Untitled"),
-                "sentiment_label": sentiment_label,
-                "sentiment_score": sentiment_score,
-                "llm_confidence": confidence,
-                "llm_rationale": llm_result.get("rationale", ""),
-                "llm_entities": llm_result.get("entities", []),
-                "llm_signals": llm_result.get("signals", {}),
-                "llm_summary": llm_result.get("summary", ""),
-            }
-            analysis_results.append(result)
-            sentiment_scores.append(sentiment_score)
-
-        # Calculate aggregate sentiment score
-        aggregate_score = (
-            round(sum(sentiment_scores) / len(sentiment_scores) * 100)
-            if sentiment_scores
-            else 0
+        from transformers import pipeline as hf_pipeline
+        import transformers
+        transformers.logging.set_verbosity_error()
+        summarizer = hf_pipeline(
+            "summarization",
+            model="sshleifer/distilbart-cnn-12-6",
+            device="mps:0" if __import__("torch").backends.mps.is_available() else -1,
         )
-
-        # Count sentiment distribution
-        sentiment_counts = {
-            "positive": sum(
-                1 for r in analysis_results if r["sentiment_label"] == "POSITIVE"
-            ),
-            "negative": sum(
-                1 for r in analysis_results if r["sentiment_label"] == "NEGATIVE"
-            ),
-            "neutral": sum(
-                1 for r in analysis_results if r["sentiment_label"] == "NEUTRAL"
-            ),
-        }
-
-        # Extract key insights from high-confidence extreme sentiments
-        key_insights = []
-        for result in analysis_results:
-            confidence = result.get("llm_confidence", 0)
-            score = abs(result.get("sentiment_score", 0))
-            if confidence > 0.8 and score > 0.6:  # High confidence + strong sentiment
-                key_insights.append(
-                    {
-                        "title": result["title"],
-                        "sentiment": result["sentiment_label"],
-                        "score": result["sentiment_score"],
-                        "confidence": confidence,
-                        "summary": result.get("llm_summary", ""),
-                        "rationale": result.get("llm_rationale", ""),
-                    }
-                )
-
-        # Extract top topics from entities
-        entity_counts = {}
-        for result in analysis_results:
-            for entity in result.get("llm_entities", []):
-                name = entity.get("name", "")
-                if name and len(name) > 2:  # Filter out very short entities
-                    entity_counts[name] = entity_counts.get(name, 0) + 1
-
-        top_topics = [
-            {"topic": name, "count": count}
-            for name, count in sorted(
-                entity_counts.items(), key=lambda x: x[1], reverse=True
-            )[:10]
-        ]
-
-        results = {
-            "total_articles": len(articles),
-            "sentiment_score": aggregate_score,
-            "sentiment": sentiment_counts,
-            "top_topics": top_topics,
-            "key_insights": key_insights[:5],  # Top 5 insights
-            "llm_stats": analyzer.get_stats(),
-        }
-
-        console.print(
-            f"[green]LLM analysis completed: {len(analysis_results)} articles processed[/green]"
-        )
-        return results
-
-    except ImportError:
-        console.print(
-            "[red]LLM analysis requires OpenAI API key. Check your .env file.[/red]"
-        )
-        return await _analyze_articles(articles)  # Fallback to standard analysis
     except Exception as e:
-        console.print(f"[red]LLM analysis failed: {e}[/red]")
-        console.print("[yellow]Falling back to standard sentiment analysis...[/yellow]")
-        return await _analyze_articles(articles)  # Fallback to standard analysis
+        console.print(f"[yellow]Summarizer not available: {e}[/yellow]")
+        return articles
 
+    # Prepare batch inputs — only articles with enough text
+    batch_indices = []
+    batch_texts = []
+    for i, article in enumerate(articles):
+        text = article.get("content", "") or article.get("description", "")
+        if text and len(text) > 200:
+            batch_indices.append(i)
+            batch_texts.append(text[:2000])
+        else:
+            article["ai_summary"] = ""
 
-def _display_selection_summary(plan):
-    """Display selected sources summary."""
+    if not batch_texts:
+        return articles
 
-    table = Table(title="Selected Sources", show_header=True)
-    table.add_column("Domain", style="cyan", width=30)
-    table.add_column("Priority", style="yellow", width=10)
-    table.add_column("Topics", style="green", width=30)
-    table.add_column("Policy", style="magenta", width=15)
+    # Process in batches of 16 for GPU efficiency
+    BATCH_SIZE = 16
+    count = 0
+    with Progress(
+        SpinnerColumn(), TextColumn("[progress.description]{task.description}"),
+        BarColumn(), TextColumn("{task.completed}/{task.total}"),
+        TimeElapsedColumn(), console=console,
+    ) as progress:
+        task = progress.add_task("[cyan]AI summaries...", total=len(batch_texts))
 
-    # Show top sources
-    for source in plan.sources[:15]:
-        topics_str = ", ".join(source.topics[:3]) if source.topics else "general"
-        table.add_row(
-            source.domain[:30], f"{source.priority:.2f}", topics_str[:30], source.policy
-        )
-
-    if len(plan.sources) > 15:
-        table.add_row(f"... + {len(plan.sources) - 15} more", "", "", "")
-
-    console.print(table)
-
-    # Diversity metrics
-    diversity_text = f"""Sources: {len(plan.sources)}
-Editorial Families: {len(plan.editorial_families)}
-Languages: {len(plan.language_distribution)}
-Regions: {len(plan.region_distribution)}
-Diversity Score: {plan.get_diversity_score():.2f}"""
-
-    console.print(Panel(diversity_text, title="Diversity Metrics"))
-
-
-def _display_tuning_actions(actions: Dict):
-    """Display auto-tuning actions."""
-
-    if actions["promoted"]:
-        console.print(
-            f"[green]↑ Promoted: {', '.join(actions['promoted'][:5])}[/green]"
-        )
-
-    if actions["demoted"]:
-        console.print(
-            f"[yellow]↓ Demoted: {', '.join(actions['demoted'][:5])}[/yellow]"
-        )
-
-    if actions["parked"]:
-        console.print(f"[red]✗ Parked: {', '.join(actions['parked'][:5])}[/red]")
-
-
-def _display_results(
-    results: Dict, metrics: Dict, article_records=None, country_insights=None
-):
-    """Display enhanced analysis results with interactive insights."""
-
-    # Main Results table
-    table = Table(title="📊 Analysis Overview", show_header=False, box=rich.box.ROUNDED)
-    table.add_column("Metric", style="cyan bold", width=20)
-    table.add_column("Value", style="yellow", width=30)
-
-    table.add_row("📄 Total Articles", str(results["total_articles"]))
-
-    # Enhanced sentiment display with emoji indicators
-    score = results.get("sentiment_score", 0)
-    if score > 20:
-        score_style = "[bold green]📈 "
-        sentiment_emoji = "🟢"
-    elif score < -20:
-        score_style = "[bold red]📉 "
-        sentiment_emoji = "🔴"
-    else:
-        score_style = "[bold yellow]📊 "
-        sentiment_emoji = "🟡"
-
-    table.add_row("🎯 Sentiment Score", f"{score_style}{score:+d}[/] {sentiment_emoji}")
-
-    # Enhanced breakdown with percentages
-    pos = results["sentiment"]["positive"]
-    neg = results["sentiment"]["negative"]
-    neu = results["sentiment"]["neutral"]
-    total = pos + neg + neu
-    if total > 0:
-        pos_pct = (pos / total) * 100
-        neg_pct = (neg / total) * 100
-        neu_pct = (neu / total) * 100
-        breakdown_text = f"[green]✅ {pos} ({pos_pct:.0f}%)[/] [red]❌ {neg} ({neg_pct:.0f}%)[/] [dim]⚪ {neu} ({neu_pct:.0f}%)[/]"
-    else:
-        breakdown_text = f"Pos: {pos}, Neg: {neg}, Neu: {neu}"
-
-    table.add_row("📋 Distribution", breakdown_text)
-
-    console.print(table)
-
-    # Interactive Insights Section
-    if article_records:
-        console.print("\n[bold]🔍 Key Insights[/bold]")
-
-        # Find most extreme sentiments
-        if article_records:
-            most_positive = max(
-                article_records, key=lambda x: x.sentiment.score if x.sentiment else -1
-            )
-            most_negative = min(
-                article_records, key=lambda x: x.sentiment.score if x.sentiment else 1
-            )
-
-            # Top themes/issues
-            all_themes = []
-            high_volatility_articles = []
-            for record in article_records:
-                if record.signals and record.signals.themes:
-                    all_themes.extend(record.signals.themes)
-                if record.signals and record.signals.volatility > 0.5:
-                    high_volatility_articles.append(record)
-
-            from collections import Counter
-
-            theme_counts = Counter(all_themes)
-            top_themes = theme_counts.most_common(3)
-
-            # Create insights panel
-            insights = []
-            if most_positive.sentiment and most_positive.sentiment.score > 0.3:
-                insights.append(
-                    f"[green]📈 Most Positive:[/green] \"{most_positive.title[:60]}{'...' if len(most_positive.title) > 60 else ''}\" ({most_positive.sentiment.score:+.2f})"
+        for start in range(0, len(batch_texts), BATCH_SIZE):
+            chunk = batch_texts[start:start + BATCH_SIZE]
+            chunk_indices = batch_indices[start:start + BATCH_SIZE]
+            try:
+                max_len = 60
+                results = summarizer(
+                    chunk,
+                    max_length=max_len,
+                    min_length=20,
+                    do_sample=False,
+                    truncation=True,
+                    batch_size=BATCH_SIZE,
                 )
+                for idx, result in zip(chunk_indices, results):
+                    articles[idx]["ai_summary"] = result["summary_text"]
+                    count += 1
+            except Exception:
+                for idx in chunk_indices:
+                    articles[idx]["ai_summary"] = ""
+            progress.update(task, completed=min(start + BATCH_SIZE, len(batch_texts)))
 
-            if most_negative.sentiment and most_negative.sentiment.score < -0.3:
-                insights.append(
-                    f"[red]📉 Most Negative:[/red] \"{most_negative.title[:60]}{'...' if len(most_negative.title) > 60 else ''}\" ({most_negative.sentiment.score:+.2f})"
-                )
+    console.print(f"[green]AI summaries: {count}/{len(articles)}[/green]")
+    return articles
 
-            if top_themes:
-                theme_list = ", ".join([f"{theme}" for theme, count in top_themes])
-                insights.append(f"[yellow]🏷️ Top Themes:[/yellow] {theme_list}")
 
-            if high_volatility_articles:
-                insights.append(
-                    f"[bold red]⚠️ High Volatility:[/bold red] {len(high_volatility_articles)} articles show significant market risk"
-                )
-
-            # Display relevance insights
-            high_relevance = [r for r in article_records if r.relevance > 0.7]
-            if high_relevance:
-                insights.append(
-                    f"[blue]🎯 High Relevance:[/blue] {len(high_relevance)} articles highly relevant to search"
-                )
-
-            if insights:
-                for insight in insights[:4]:  # Show top 4 insights
-                    console.print(f"  {insight}")
-            else:
-                console.print("  [dim]No significant patterns detected[/dim]")
-
-    # Country Risk & Sentiment Insights
-    if country_insights and (
-        country_insights["most_mentioned"] or country_insights["highest_risk"]
-    ):
-        console.print("\n[bold]🌍 Global Country Analysis[/bold]")
-
-        # Most mentioned countries
-        if country_insights["most_mentioned"]:
-            mentioned_list = []
-            for country_data in country_insights["most_mentioned"][:5]:
-                flag_emoji = _get_country_flag(country_data["country"])
-                mentioned_list.append(
-                    f"{flag_emoji} {country_data['country']} ({country_data['mentions']} mentions)"
-                )
-            console.print(
-                f"  [cyan]📊 Most Mentioned:[/cyan] {', '.join(mentioned_list)}"
-            )
-
-        # Highest risk countries
-        if country_insights["highest_risk"]:
-            risk_list = []
-            for country_data in country_insights["highest_risk"][:3]:
-                flag_emoji = _get_country_flag(country_data["country"])
-                risk_pct = int(country_data["risk_ratio"] * 100)
-                risk_list.append(
-                    f"{flag_emoji} {country_data['country']} ({risk_pct}% high-risk)"
-                )
-            console.print(f"  [red]⚠️ Highest Risk:[/red] {', '.join(risk_list)}")
-
-        # Most positive sentiment
-        if country_insights["most_positive"]:
-            positive_list = []
-            for country_data in country_insights["most_positive"][:3]:
-                flag_emoji = _get_country_flag(country_data["country"])
-                positive_list.append(f"{flag_emoji} {country_data['country']}")
-            console.print(
-                f"  [green]🟢 Positive Sentiment:[/green] {', '.join(positive_list)}"
-            )
-
-        # Most negative sentiment
-        if country_insights["most_negative"]:
-            negative_list = []
-            for country_data in country_insights["most_negative"][:3]:
-                flag_emoji = _get_country_flag(country_data["country"])
-                negative_list.append(f"{flag_emoji} {country_data['country']}")
-            console.print(
-                f"  [red]🔴 Negative Sentiment:[/red] {', '.join(negative_list)}"
-            )
-
-        # Regional summary
-        if country_insights["regional_summary"]:
-            regional_risks = []
-            for region, data in country_insights["regional_summary"].items():
-                total_mentions = data["positive"] + data["negative"] + data["neutral"]
-                if total_mentions > 5:  # Only show active regions
-                    neg_pct = (
-                        int((data["negative"] / total_mentions) * 100)
-                        if total_mentions > 0
-                        else 0
-                    )
-                    if data["high_risk"] > 0:
-                        regional_risks.append(
-                            f"{region} ({data['high_risk']} high-risk, {neg_pct}% negative)"
-                        )
-            if regional_risks:
-                console.print(
-                    f"  [yellow]🌐 Regional Risks:[/yellow] {', '.join(regional_risks)}"
-                )
-
-    # Enhanced Metrics table
-    if metrics:
-        console.print()
-        metrics_table = Table(
-            title="⚡ Performance Metrics", show_header=False, box=rich.box.ROUNDED
-        )
-        metrics_table.add_column("Metric", style="cyan bold", width=20)
-        metrics_table.add_column("Value", style="green", width=15)
-        metrics_table.add_column("Status", style="white", width=15)
-
-        success_rate = metrics.get("fetch_success_rate", 0)
-        success_status = (
-            "🟢 Excellent"
-            if success_rate > 0.9
-            else "🟡 Good" if success_rate > 0.7 else "🔴 Poor"
-        )
-        metrics_table.add_row("🌐 Fetch Success", f"{success_rate:.1%}", success_status)
-
-        freshness_rate = metrics.get("freshness_rate", 0)
-        fresh_status = (
-            "🟢 Fresh"
-            if freshness_rate > 0.5
-            else "🟡 Mixed" if freshness_rate > 0.2 else "🔴 Stale"
-        )
-        metrics_table.add_row(
-            "🕒 Freshness Rate", f"{freshness_rate:.1%}", fresh_status
-        )
-
-        fresh_words = metrics.get("fresh_words", 0)
-        metrics_table.add_row("📝 Fresh Content", f"{fresh_words:,} words", "")
-
-        latency = metrics.get("avg_latency_ms", 0)
-        latency_status = (
-            "🟢 Fast" if latency < 200 else "🟡 OK" if latency < 500 else "🔴 Slow"
-        )
-        metrics_table.add_row("⚡ Avg Latency", f"{latency:.0f}ms", latency_status)
-
-        console.print(metrics_table)
-
+# ---------------------------------------------------------------------------
+# Filtering helpers
+# ---------------------------------------------------------------------------
 
 def _deduplicate_articles(articles: List[Dict]) -> List[Dict]:
-    """Remove duplicate articles based on URL hash."""
-    seen_hashes = set()
-    unique_articles = []
-
+    """Two-pass dedup: exact URL hash, then MinHash near-duplicate detection."""
+    # Pass 1: Exact URL dedup
+    seen = set()
+    unique = []
     for article in articles:
-        url_hash = (
-            article.get("url_hash")
-            or hashlib.md5(article.get("link", "").encode()).hexdigest()
-        )
-        if url_hash not in seen_hashes:
-            seen_hashes.add(url_hash)
-            unique_articles.append(article)
+        h = article.get("url_hash") or hashlib.md5(article.get("link", "").encode()).hexdigest()
+        if h not in seen:
+            seen.add(h)
+            unique.append(article)
 
-    return unique_articles
+    # Pass 2: MinHash near-duplicate detection (catches AP/Reuters syndication)
+    try:
+        from datasketch import MinHash, MinHashLSH
+
+        lsh = MinHashLSH(threshold=0.85, num_perm=128)
+        minhashes = []
+
+        for i, article in enumerate(unique):
+            text = (article.get("title", "") + " " + article.get("description", "")).lower()
+            tokens = text.split()
+            # 5-shingle
+            shingles = set()
+            for j in range(len(tokens) - 4):
+                shingles.add(" ".join(tokens[j:j+5]))
+            if not shingles:
+                shingles.add(text)
+
+            mh = MinHash(num_perm=128)
+            for s in shingles:
+                mh.update(s.encode("utf-8"))
+            minhashes.append(mh)
+
+            try:
+                lsh.insert(str(i), mh)
+            except ValueError:
+                pass  # duplicate key, already inserted
+
+        # Find clusters and keep the canonical (first seen) per cluster
+        dropped = set()
+        for i, mh in enumerate(minhashes):
+            if i in dropped:
+                continue
+            neighbors = lsh.query(mh)
+            for n in neighbors:
+                n_idx = int(n)
+                if n_idx != i and n_idx not in dropped:
+                    dropped.add(n_idx)
+                    # Track syndication count on the canonical
+                    unique[i].setdefault("syndication_count", 1)
+                    unique[i]["syndication_count"] += 1
+
+        if dropped:
+            logger.info(f"MinHash dedup removed {len(dropped)} near-duplicates")
+            unique = [a for j, a in enumerate(unique) if j not in dropped]
+
+    except ImportError:
+        pass  # datasketch not installed, skip semantic dedup
+
+    return unique
 
 
 def _parse_freshness(freshness: str) -> Optional[int]:
-    """Parse freshness string to hours. Returns None for 'forever'."""
     if freshness == "forever":
         return None
     elif freshness.endswith("h"):
         return int(freshness[:-1])
     elif freshness.endswith("d"):
         return int(freshness[:-1]) * 24
-    else:
-        # Default fallback
-        return 24
+    return 24
 
 
 def _filter_by_freshness(articles: List[Dict], max_age_hours: Optional[int] = 24) -> tuple:
-    """Filter articles by freshness. If max_age_hours is None, no filter is applied."""
-    from datetime import datetime, timedelta
-
-    # If max_age_hours is None (forever), return all articles
     if max_age_hours is None:
         return articles, 0, 1.0
 
     cutoff = datetime.now() - timedelta(hours=max_age_hours)
-    fresh_articles = []
-    stale_count = 0
+    fresh = []
+    stale = 0
 
     for article in articles:
         pub_date = article.get("published_date")
-
         if pub_date:
-            # Make timezone naive for comparison if needed
             if hasattr(pub_date, "tzinfo") and pub_date.tzinfo:
                 pub_date = pub_date.replace(tzinfo=None)
-                cutoff_naive = cutoff
+            if pub_date >= cutoff:
+                fresh.append(article)
             else:
-                cutoff_naive = cutoff
-
-            if pub_date >= cutoff_naive:
-                fresh_articles.append(article)
-            else:
-                stale_count += 1
+                stale += 1
         else:
-            # If no date, be conservative and exclude it
-            stale_count += 1
+            # NewsAPI always has dates, so keep articles without dates (likely RSS)
+            fresh.append(article)
 
-    freshness_rate = len(fresh_articles) / len(articles) if articles else 0
+    rate = len(fresh) / len(articles) if articles else 0
+    return fresh, stale, rate
 
-    return fresh_articles, stale_count, freshness_rate
+
+def _keyword_filter(articles: List[Dict], region: Optional[str] = None, topic: Optional[str] = None) -> List[Dict]:
+    from .config import REGION_MAP, TOPIC_MAP
+
+    keywords = []
+    if region and region in REGION_MAP:
+        keywords.extend(REGION_MAP[region])
+    elif region:
+        keywords.append(region.replace("_", " "))
+
+    if topic and topic in TOPIC_MAP:
+        keywords.extend(TOPIC_MAP[topic])
+    elif topic:
+        keywords.append(topic.replace("_", " "))
+
+    if not keywords:
+        return articles
+
+    filtered = []
+    for article in articles:
+        text = (
+            (article.get("title", "") + " " + article.get("description", "") + " " + article.get("content", ""))
+            .lower()
+        )
+        if any(kw.lower() in text for kw in keywords):
+            filtered.append(article)
+
+    return filtered
 
 
-@app.command()
-def import_skb(
-    yaml_path: str = typer.Argument(..., help="Path to SKB YAML file"),
-    force: bool = typer.Option(False, "--force", "-f", help="Force reimport"),
-):
-    """Import SKB from YAML file into SQLite catalog."""
+# ---------------------------------------------------------------------------
+# Analysis
+# ---------------------------------------------------------------------------
 
-    yaml_file = Path(yaml_path)
-    if not yaml_file.exists():
-        console.print(f"[red]Error: File {yaml_path} not found[/red]")
-        raise typer.Exit(1)
+def _analyze_articles_ensemble(articles: List[Dict]) -> Dict:
+    """Ensemble sentiment via HF Inference API (remote GPU) or local fallback."""
+    from .analyzers.sentiment_router import analyze_batch
 
-    catalog = get_catalog()
+    if not articles:
+        return {"total_articles": 0, "sentiment": {"positive": 0, "negative": 0, "neutral": 0}, "sentiment_score": 0}
 
-    console.print(f"[cyan]Importing SKB from {yaml_path}...[/cyan]")
+    texts = [a.get("content", "") or a.get("description", "") or a.get("title", "") for a in articles]
+    themes_per = [a.get("_themes") for a in articles]
+
+    with console.status(f"[dim]Sentiment ({len(articles)} articles via ensemble)...[/dim]", spinner="dots"):
+        results = analyze_batch(texts, themes_per)
+
+    pos = neg = neu = 0
+    scores = []
+    insights = []
+    for article, result in zip(articles, results):
+        article["_sentiment_score"] = result.score
+        article["_sentiment_confidence"] = result.confidence
+        article["_sentiment_model"] = result.model
+        scores.append(result.score)
+        if result.label == "positive":
+            pos += 1
+        elif result.label == "negative":
+            neg += 1
+        else:
+            neu += 1
+        if abs(result.score) > 0.6:
+            insights.append({"title": article.get("title", ""), "sentiment": result.label.upper(), "score": result.score})
+
+    avg = sum(scores) / len(scores) if scores else 0
+    console.print(f"  [dim]sentiment: +{pos} ~{neu} -{neg}  model={results[0].model if results else 'unknown'}[/dim]")
+    return {
+        "total_articles": len(articles),
+        "sentiment_score": round(avg * 100),
+        "sentiment": {"positive": pos, "negative": neg, "neutral": neu},
+        "key_insights": insights,
+    }
+
+
+async def _analyze_articles(articles: List[Dict]) -> Dict:
+    """Fast VADER-only sentiment on all articles (--fast mode)."""
+    from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+    vader = SentimentIntensityAnalyzer()
+
+    if not articles:
+        return {"total_articles": 0, "sentiment": {"positive": 0, "negative": 0, "neutral": 0}, "sentiment_score": 0}
+
+    scores = []
+    pos = neg = neu = 0
+    insights = []
+
+    with Progress(
+        SpinnerColumn(), TextColumn("[progress.description]{task.description}"),
+        BarColumn(), TextColumn("{task.completed}/{task.total}"),
+        TimeElapsedColumn(), console=console,
+    ) as progress:
+        task = progress.add_task("[cyan]Sentiment (VADER)...", total=len(articles))
+
+        for article in articles:
+            text = article.get("content", "") or article.get("description", "") or article.get("title", "")
+            if text:
+                score = vader.polarity_scores(text[:1000])["compound"]
+                article["_sentiment_score"] = score
+                scores.append(score)
+                if score > 0.05:
+                    pos += 1
+                    label = "POSITIVE"
+                elif score < -0.05:
+                    neg += 1
+                    label = "NEGATIVE"
+                else:
+                    neu += 1
+                    label = "NEUTRAL"
+                if abs(score) > 0.8:
+                    insights.append({"title": article.get("title", ""), "sentiment": label, "score": score})
+            else:
+                article["_sentiment_score"] = 0
+            progress.advance(task)
+
+    avg = sum(scores) / len(scores) if scores else 0
+    return {
+        "total_articles": len(articles),
+        "sentiment_score": round(avg * 100),
+        "sentiment": {"positive": pos, "negative": neg, "neutral": neu},
+        "key_insights": insights,
+    }
+
+
+async def _analyze_articles_llm(articles: List[Dict]) -> Dict:
+    if not articles:
+        return {"total_articles": 0, "sentiment": {"positive": 0, "negative": 0, "neutral": 0}, "sentiment_score": 0}
 
     try:
-        catalog.import_from_yaml(str(yaml_file))
-        stats = catalog.get_stats()
+        from .analyzers.llm_analyzer import LLMAnalyzer
+        analyzer_llm = LLMAnalyzer()
 
-        console.print(
-            f"[green]✓ Successfully imported {stats['total_sources']} sources[/green]"
-        )
-        console.print(f"  Active: {stats['active_sources']}")
-        console.print(f"  Regions: {', '.join(stats['regions'].keys())}")
+        docs = []
+        for i, article in enumerate(articles):
+            text = article.get("content", "") or article.get("description", "") or article.get("title", "")
+            if text:
+                docs.append({"id": f"article_{i}", "text": text})
 
+        if not docs:
+            return await _analyze_articles(articles)
+
+        llm_results = await analyzer_llm.analyze_batch(docs)
+
+        analysis_results = []
+        scores = []
+        for i, llm_result in enumerate(llm_results):
+            label = llm_result.get("sentiment", "neutral").upper()
+            if label not in ("POSITIVE", "NEGATIVE", "NEUTRAL"):
+                label = "NEUTRAL"
+
+            confidence = float(llm_result.get("confidence", 0.5))
+            score = confidence if label == "POSITIVE" else (-confidence if label == "NEGATIVE" else 0.0)
+
+            analysis_results.append({
+                "title": articles[i].get("title", "Untitled"),
+                "sentiment_label": label,
+                "sentiment_score": score,
+            })
+            scores.append(score)
+
+        aggregate = round(sum(scores) / len(scores) * 100) if scores else 0
+
+        return {
+            "total_articles": len(articles),
+            "sentiment_score": aggregate,
+            "sentiment": {
+                "positive": sum(1 for r in analysis_results if r["sentiment_label"] == "POSITIVE"),
+                "negative": sum(1 for r in analysis_results if r["sentiment_label"] == "NEGATIVE"),
+                "neutral": sum(1 for r in analysis_results if r["sentiment_label"] == "NEUTRAL"),
+            },
+            "key_insights": [],
+        }
+
+    except ImportError:
+        console.print("[red]LLM analysis requires OPENAI_API_KEY in .env[/red]")
+        return await _analyze_articles(articles)
     except Exception as e:
-        console.print(f"[red]Error importing SKB: {e}[/red]")
-        raise typer.Exit(1)
+        console.print(f"[red]LLM analysis failed: {e}[/red]")
+        console.print("[yellow]Falling back to VADER analysis...[/yellow]")
+        return await _analyze_articles(articles)
 
 
-@app.command()
-def stats():
-    """Display SKB catalog statistics."""
+# ---------------------------------------------------------------------------
+# Display
+# ---------------------------------------------------------------------------
 
-    catalog = get_catalog()
-    stats = catalog.get_stats()
+def _display_results(results: Dict, article_records=None, country_insights=None, baseline_risks=None, movers=None, narratives=None, contradictions=None):
+    console.print()
+    pos = results["sentiment"]["positive"]
+    neg = results["sentiment"]["negative"]
+    neu = results["sentiment"]["neutral"]
+    total = pos + neg + neu
+    score = results.get("sentiment_score", 0)
 
-    # Main stats
-    table = Table(title="SKB Statistics", show_header=False)
-    table.add_column("Metric", style="cyan")
-    table.add_column("Value", style="yellow")
-
-    table.add_row("Total Sources", str(stats["total_sources"]))
-    table.add_row("Active Sources", str(stats["active_sources"]))
-    table.add_row("Staging Sources", str(stats["staging_sources"]))
-    table.add_row("Parked Sources", str(stats["parked_sources"]))
-    table.add_row("Avg Reliability", f"{stats['avg_reliability']:.2f}")
-    table.add_row("Avg Yield", f"{stats['avg_yield']:.0f} words")
-
-    console.print(table)
-
-    # Region distribution
-    if stats["regions"]:
-        region_table = Table(title="Sources by Region", show_header=True)
-        region_table.add_column("Region", style="cyan")
-        region_table.add_column("Count", style="yellow")
-
-        for region, count in sorted(
-            stats["regions"].items(), key=lambda x: x[1], reverse=True
-        ):
-            region_table.add_row(region, str(count))
-
-        console.print(region_table)
-
-    # Top topics
-    if stats["topics"]:
-        topic_table = Table(title="Top Topics", show_header=True)
-        topic_table.add_column("Topic", style="green")
-        topic_table.add_column("Sources", style="yellow")
-
-        for topic, count in list(stats["topics"].items())[:10]:
-            topic_table.add_row(topic, str(count))
-
-        console.print(topic_table)
-
-
-@app.command()
-def health(
-    domain: Optional[str] = typer.Option(
-        None, "--domain", "-d", help="Specific domain to check"
-    ),
-    export: Optional[str] = typer.Option(
-        None, "--export", "-e", help="Export metrics to JSON file"
-    ),
-):
-    """Display source health metrics."""
-
-    monitor = get_monitor()
-
-    if domain:
-        # Specific source report
-        report = monitor.get_source_report(domain)
-        if not report:
-            console.print(f"[yellow]No metrics available for {domain}[/yellow]")
-            return
-
-        table = Table(title=f"Health Report: {domain}", show_header=False)
-        table.add_column("Metric", style="cyan")
-        table.add_column("Value", style="yellow")
-
-        table.add_row("Health Score", f"{report['health_score']:.2f}")
-        table.add_row("Success Rate", f"{report['success_rate']:.1%}")
-        table.add_row("Avg Latency", f"{report['avg_latency_ms']:.0f}ms")
-        table.add_row("Freshness Rate", f"{report['freshness_rate']:.1%}")
-        table.add_row("Avg Yield", f"{report['avg_yield_words']:.0f} words")
-
-        console.print(table)
-
+    # --- Sentiment gauge ---
+    if total > 0:
+        bar_width = 40
+        pos_w = round(pos / total * bar_width)
+        neg_w = round(neg / total * bar_width)
+        neu_w = bar_width - pos_w - neg_w
+        bar = f"[green]{'#' * pos_w}[/green][dim]{'.' * neu_w}[/dim][red]{'#' * neg_w}[/red]"
     else:
-        # Overall health summary
-        metrics = monitor.get_run_metrics()
+        bar = "[dim]no data[/dim]"
 
-        if not metrics:
-            console.print(
-                "[yellow]No health metrics available yet. Run an analysis first.[/yellow]"
+    if score > 20:
+        score_color = "green"
+        sentiment_word = "Bullish"
+    elif score < -20:
+        score_color = "red"
+        sentiment_word = "Bearish"
+    else:
+        score_color = "yellow"
+        sentiment_word = "Mixed"
+
+    sentiment_panel = (
+        f"[{score_color} bold]{score:+d}[/{score_color} bold]  "
+        f"[{score_color}]{sentiment_word}[/{score_color}]  "
+        f"{bar}\n"
+        f"[green]+{pos}[/green] positive  "
+        f"[dim]{neu} neutral[/dim]  "
+        f"[red]{neg} negative[/red]  "
+        f"[dim]|  {total} articles[/dim]"
+    )
+    console.print(Panel(sentiment_panel, title="[bold]Sentiment[/bold]", border_style="dim", padding=(0, 1)))
+
+    if not article_records:
+        return
+
+    # --- Top Signals (most extreme articles) ---
+    sorted_records = sorted(article_records, key=lambda x: x.sentiment.score)
+    most_neg = sorted_records[0]
+    most_pos = sorted_records[-1]
+
+    if most_pos.sentiment.score > 0.3 or most_neg.sentiment.score < -0.3:
+        signal_table = Table(box=None, show_header=False, show_edge=False, pad_edge=False, padding=(0, 1))
+        signal_table.add_column("Score", width=7, justify="right")
+        signal_table.add_column("Headline", ratio=1)
+        if most_pos.sentiment.score > 0.3:
+            signal_table.add_row(
+                f"[green]+{most_pos.sentiment.score:.2f}[/green]",
+                f"{most_pos.title[:70]}",
             )
-            return
+        if most_neg.sentiment.score < -0.3:
+            signal_table.add_row(
+                f"[red]{most_neg.sentiment.score:.2f}[/red]",
+                f"{most_neg.title[:70]}",
+            )
+        console.print(Panel(signal_table, title="[bold]Top Signals[/bold]", border_style="dim", padding=(0, 1)))
 
-        table = Table(title="Overall Health Metrics", show_header=False)
-        table.add_column("Metric", style="cyan")
-        table.add_column("Value", style="yellow")
+    # --- Intelligence grid: themes, regions/risk, sources ---
+    grid = Table(box=None, show_header=False, show_edge=False, pad_edge=False, padding=(0, 0))
+    grid.add_column("Label", width=10, style="bold")
+    grid.add_column("Content", ratio=1)
 
-        table.add_row("Total Sources", str(metrics.get("total_sources", 0)))
-        table.add_row(
-            "Fetch Success Rate", f"{metrics.get('fetch_success_rate', 0):.1%}"
-        )
-        table.add_row("Freshness Rate", f"{metrics.get('freshness_rate', 0):.1%}")
-        table.add_row("Avg Latency", f"{metrics.get('avg_latency_ms', 0):.0f}ms")
+    # Themes
+    all_themes = []
+    for record in article_records:
+        if record.signals and record.signals.themes:
+            all_themes.extend(record.signals.themes)
+    top_themes = Counter(all_themes).most_common(5)
+    if top_themes:
+        theme_parts = []
+        for t, c in top_themes:
+            if c >= 10:
+                theme_parts.append(f"[bold]{t}[/bold]({c})")
+            else:
+                theme_parts.append(f"{t}({c})")
+        grid.add_row("Themes", "  ".join(theme_parts))
 
+    # Countries/Risk
+    if baseline_risks:
+        risk_style = {"critical": "red bold", "high": "red", "elevated": "yellow", "normal": "dim", "improving": "green"}
+        flagged = [(c, d) for c, d in baseline_risks.items() if d["risk_level"] != "normal" and d["article_count"] >= 2]
+        flagged.sort(key=lambda x: x[1]["z_score"])
+        if flagged:
+            risk_parts = []
+            for c, d in flagged[:6]:
+                style = risk_style.get(d["risk_level"], "dim")
+                risk_parts.append(f"[{style}]{c}[/{style}] ({d['risk_level']}, z={d['z_score']:+.1f})")
+            grid.add_row("Risk", "  ".join(risk_parts))
+    if country_insights and country_insights.get("most_mentioned"):
+        top_countries = country_insights["most_mentioned"][:5]
+        c_str = "  ".join(f"{cd['country']}({cd['mentions']})" for cd in top_countries)
+        grid.add_row("Regions", c_str)
+
+    # Sources with tier
+    source_counter = Counter(r.source for r in article_records)
+    top_sources = source_counter.most_common(5)
+    if top_sources:
+        src_parts = []
+        for s, c in top_sources:
+            tier = get_tier(s)
+            tier_style = {"tier1": "green", "tier2": "cyan", "tier3": "dim"}.get(tier, "dim")
+            src_parts.append(f"[{tier_style}]{s}[/{tier_style}]({c})")
+        grid.add_row("Sources", "  ".join(src_parts))
+
+    console.print(Panel(grid, title="[bold]Intelligence[/bold]", border_style="dim", padding=(0, 1)))
+
+    # --- Movers ---
+    if movers:
+        mover_table = Table(box=None, show_header=True, show_edge=False, pad_edge=False, padding=(0, 1))
+        mover_table.add_column("Entity", style="white", no_wrap=True)
+        mover_table.add_column("Direction", width=12)
+        mover_table.add_column("Volume", justify="right", width=8)
+        mover_table.add_column("Sentiment", justify="right", width=10)
+        dir_style = {"worsening": "red", "improving": "green", "surging": "yellow", "fading": "dim", "shifting": "cyan"}
+        for m in movers[:5]:
+            style = dir_style.get(m["direction"], "dim")
+            mover_table.add_row(
+                m["entity"],
+                f"[{style}]{m['direction']}[/{style}]",
+                f"z={m['volume_z']:+.1f}",
+                f"{m['current_sentiment']:+.3f}",
+            )
+        console.print(Panel(mover_table, title="[bold]Movers[/bold]", border_style="dim", padding=(0, 1)))
+
+    # --- Narratives ---
+    if narratives:
+        narr_table = Table(box=None, show_header=True, show_edge=False, pad_edge=False, padding=(0, 1))
+        narr_table.add_column("Thread", ratio=1)
+        narr_table.add_column("N", justify="right", width=3)
+        narr_table.add_column("Sent", justify="right", width=7)
+        narr_table.add_column("Sources", style="dim", width=30)
+        narr_table.add_column("Themes", style="dim", width=24)
+        sent_color = {"negative": "red", "positive": "green", "neutral": "dim"}
+        for n in narratives[:6]:
+            color = sent_color.get(n.sentiment_direction, "dim")
+            sources_str = ", ".join(list(n.sources.keys())[:3])
+            theme_str = " ".join(n.themes[:2]) if n.themes else ""
+            narr_table.add_row(
+                f"[{color}]{n.headline[:55]}[/{color}]",
+                str(n.article_count),
+                f"[{color}]{n.mean_sentiment:+.2f}[/{color}]",
+                sources_str,
+                theme_str,
+            )
+        console.print(Panel(narr_table, title=f"[bold]Narratives[/bold]  [dim]{len(narratives)} threads[/dim]", border_style="dim", padding=(0, 1)))
+
+    # --- Contradictions ---
+    if contradictions:
+        type_style = {"sentiment": "yellow", "stance": "red", "both": "red bold"}
+        contra_lines = []
+        for c in contradictions[:3]:
+            style = type_style.get(c.contradiction_type, "yellow")
+            contra_lines.append(
+                f"[{style}]{c.contradiction_type}[/{style}] [dim](severity {c.severity:.2f})[/dim]\n"
+                f"  A: [dim]{c.article_a_title[:60]}[/dim]\n"
+                f"  B: [dim]{c.article_b_title[:60]}[/dim]\n"
+                f"  [dim]{c.details}[/dim]"
+            )
+        console.print(Panel(
+            "\n".join(contra_lines),
+            title=f"[bold]Contradictions[/bold]  [dim]{len(contradictions)} found[/dim]",
+            border_style="yellow",
+            padding=(0, 1),
+        ))
+
+
+def _display_event_summary(article_records):
+    """Display event extraction summary."""
+    all_events = []
+    for record in article_records:
+        for event in record.events:
+            all_events.append(event)
+
+    if not all_events:
+        return
+
+    console.print(f"\n  [bold]Events[/bold]   {len(all_events)} extracted")
+
+    # Key relationships — the most useful view
+    relationship_data = {}
+    for event in all_events:
+        if event.receiver:
+            key = (event.actor.name, event.receiver.name)
+            if key not in relationship_data:
+                relationship_data[key] = {"count": 0, "tones": [], "actions": []}
+            relationship_data[key]["count"] += 1
+            relationship_data[key]["tones"].append(event.tone)
+            relationship_data[key]["actions"].append(event.action.category)
+
+    if relationship_data:
+        console.print()
+        table = Table(box=rich.box.SIMPLE_HEAD, show_edge=False, pad_edge=False, padding=(0, 2))
+        table.add_column("Actor", style="white", no_wrap=True)
+        table.add_column("", style="dim", width=3)
+        table.add_column("Receiver", style="white", no_wrap=True)
+        table.add_column("Tone", justify="right", width=6)
+        table.add_column("Type", style="dim")
+
+        sorted_rels = sorted(relationship_data.items(), key=lambda x: x[1]["count"], reverse=True)
+        for (actor, receiver), data in sorted_rels[:8]:
+            avg_tone = sum(data["tones"]) / len(data["tones"])
+            tone_str = f"{avg_tone:+.1f}"
+            if avg_tone > 2:
+                tone_str = f"[green]{tone_str}[/green]"
+            elif avg_tone < -2:
+                tone_str = f"[red]{tone_str}[/red]"
+            top_action = Counter(data["actions"]).most_common(1)[0][0]
+            arrow = "-->" if avg_tone >= 0 else "--|"
+            table.add_row(actor[:25], arrow, receiver[:25], tone_str, top_action)
         console.print(table)
 
-        # Health distribution
-        if "sources_by_health" in metrics:
-            health_table = Table(title="Sources by Health", show_header=True)
-            health_table.add_column("Category", style="cyan")
-            health_table.add_column("Count", style="yellow")
+    # Compact breakdown
+    categories = Counter(e.action.category for e in all_events).most_common()
+    if categories:
+        cat_str = "  ".join(f"{c}({n})" for c, n in categories)
+        console.print(f"\n  [bold]Actions[/bold]  {cat_str}")
 
-            for category, count in metrics["sources_by_health"].items():
-                health_table.add_row(category.capitalize(), str(count))
 
-            console.print(health_table)
+def _display_event_graph(eg):
+    """Display event graph summary."""
+    top = eg.top_actors(5)
+    if top:
+        console.print(f"\n  [bold]Actor Network[/bold]  {len(eg.graph.nodes)} actors, {len(eg.graph.edges)} links")
+        for a in top:
+            tone = a["avg_tone_received"]
+            tone_style = "green" if tone > 1 else ("red" if tone < -1 else "dim")
+            console.print(
+                f"  {a['actor']}  [{tone_style}]tone={tone:+.1f}[/{tone_style}]  "
+                f"[dim]in={a['in_degree']} out={a['out_degree']}[/dim]"
+            )
 
-    if export:
-        all_metrics = monitor.export_metrics()
-        with open(export, "w") as f:
-            json.dump(all_metrics, f, indent=2, default=str)
-        console.print(f"[green]Metrics exported to {export}[/green]")
+    hostile = eg.hostile_pairs()
+    if hostile:
+        console.print(f"\n  [bold]Hostile[/bold]")
+        for p in hostile[:3]:
+            console.print(f"  [red]{p['actor']} -> {p['receiver']}[/red]  [dim]tone={p['avg_tone']:+.1f}  {', '.join(p['actions'][:3])}[/dim]")
+
+    coop = eg.cooperative_pairs()
+    if coop:
+        console.print(f"\n  [bold]Cooperative[/bold]")
+        for p in coop[:3]:
+            console.print(f"  [green]{p['actor']} -> {p['receiver']}[/green]  [dim]tone={p['avg_tone']:+.1f}  {', '.join(p['actions'][:3])}[/dim]")
+
+    domains = eg.domain_breakdown()
+    if domains:
+        d_str = "  ".join(f"{d}({c})" for d, c in list(domains.items())[:5])
+        console.print(f"\n  [bold]Domains[/bold]  {d_str}")
 
 
 @app.command()
-def connectors(
-    config: str = typer.Option(
-        "config/master_config.yaml",
-        "--config",
-        "-c",
-        help="Path to connector configuration YAML",
-    ),
-    connector_type: Optional[str] = typer.Option(
-        None, "--type", "-t", help="Run only specific connector type"
-    ),
-    output_dir: str = typer.Option(
-        "./output", "--output-dir", "-o", help="Directory for output files"
-    ),
-    limit: int = typer.Option(400, "--limit", "-l", help="Maximum items per connector"),
-    analyze: bool = typer.Option(
-        False, "--analyze", help="Run sentiment analysis on fetched content"
-    ),
-    keywords: Optional[str] = typer.Option(
-        None,
-        "--keywords",
-        "-k",
-        help="Keywords for relevance filtering (comma-separated)",
-    ),
-    since: Optional[str] = typer.Option(
-        None,
-        "--since",
-        "-s",
-        help="Date window filter (e.g., '24h', '7d', '2025-01-01')",
-    ),
+def events(
+    jsonl_file: str = typer.Argument(..., help="Path to an events JSONL file"),
+    actor: Optional[str] = typer.Option(None, "--actor", "-a", help="Filter by actor name"),
+    domain: Optional[str] = typer.Option(None, "--domain", "-d", help="Filter by domain"),
+    min_tone: Optional[int] = typer.Option(None, "--min-tone", help="Minimum tone value"),
+    max_tone: Optional[int] = typer.Option(None, "--max-tone", help="Maximum tone value"),
+    limit: int = typer.Option(50, "--limit", "-n", help="Max events to display"),
 ):
-    """Fetch data using modern connectors (Reddit, Twitter, YouTube, etc.)
+    """
+    View events from a previously generated events JSONL file.
 
     Examples:
-        # Fetch economic data with keyword fan-out
-        bsgbot connectors --keywords "economy,trade,gdp,inflation" --limit 400 --since 7d
-
-        # Test specific connector
-        bsgbot connectors --type google_news --keywords "economy" --limit 50
-
-        # Full analysis with metrics
-        bsgbot connectors --keywords "trade,policy" --analyze --since 24h
+        bsgbot events output/events_abc123.jsonl
+        bsgbot events output/events_abc123.jsonl --actor "United States"
+        bsgbot events output/events_abc123.jsonl --domain economic --min-tone -5
     """
+    filepath = Path(jsonl_file)
+    if not filepath.exists():
+        console.print(f"[red]File not found: {jsonl_file}[/red]")
+        raise typer.Exit(1)
 
-    from .ingest.registry import ConnectorRegistry
-    from .ingest.utils import parse_since_window, keyword_match
-    from datetime import datetime
-    import time
-
-    async def run_connectors():
-        # Create output directory
-        output_path = Path(output_dir)
-        output_path.mkdir(parents=True, exist_ok=True)
-
-        # Initialize registry
-        console.print(f"[dim]Loading connectors from: {config}[/dim]")
-        registry = ConnectorRegistry(config)
-        console.print(f"[dim]Loaded {len(registry.connectors)} connectors[/dim]")
-
-        if not registry.connectors:
-            console.print(
-                "[red]No connectors configured. Check your config file.[/red]"
-            )
-            console.print(
-                f"[yellow]Using master source configuration. Run 'bsgbot stats' to see available sources[/yellow]"
-            )
-            return
-
-        # Filter connectors if type specified
-        connectors = registry.connectors
-        if connector_type:
-            connectors = [c for c in connectors if c.name == connector_type]
-            if not connectors:
-                console.print(f"[red]Connector type '{connector_type}' not found[/red]")
-                return
-
-        # Show configured connectors
-        table = Table(title="Active Connectors")
-        table.add_column("Type", style="cyan")
-        table.add_column("Class", style="green")
-
-        for conn in connectors:
-            table.add_row(conn.name, conn.__class__.__name__)
-
-        console.print(table)
-        console.print()
-
-        # Initialize components
-        analyzer_func = None
-        if analyze:
-            from .analyzer import analyze as analyze_sentiment
-
-            analyzer_func = analyze_sentiment
-
-        keyword_list = None
-        if keywords:
-            keyword_list = [k.strip() for k in keywords.split(",")]
-
-        # Parse since window
-        since_cutoff = None
-        if since:
-            since_cutoff = parse_since_window(since)
-            if since_cutoff:
-                console.print(
-                    f"[cyan]Filtering articles since: {since_cutoff.strftime('%Y-%m-%d %H:%M:%S UTC')}[/cyan]"
-                )
-            else:
-                console.print(
-                    f"[yellow]Warning: Could not parse --since '{since}', ignoring filter[/yellow]"
-                )
-
-        # Wire keywords into connectors that support them
-        if keyword_list:
-            for conn in connectors:
-                if conn.name == "google_news":
-                    conn.queries = keyword_list
-                elif conn.name == "wikipedia":
-                    conn.queries = keyword_list
-                elif conn.name == "reddit":
-                    # Switch to search mode
-                    conn.queries = keyword_list
-                    conn.subreddits = []
-                elif conn.name == "youtube":
-                    conn.search_queries = keyword_list
-                elif conn.name == "twitter":
-                    # Build search queries
-                    conn.queries = [f'"{kw}"' for kw in keyword_list]
-                elif conn.name == "gdelt":
-                    conn.query = " OR ".join(keyword_list)
-                elif conn.name == "mastodon":
-                    conn.hashtags = [kw.replace(" ", "") for kw in keyword_list]
-                elif conn.name == "stackexchange":
-                    conn.queries = keyword_list  # Use search mode instead of tags
-                elif conn.name == "bluesky":
-                    conn.queries = keyword_list
-                elif conn.name == "hackernews_search":
-                    conn.queries = keyword_list
-
-        # Collect all articles with metrics
-        all_articles = []
-        connector_stats = {}
-        start_time = time.time()
-
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            TimeElapsedColumn(),
-            console=console,
-        ) as progress:
-
-            for conn in connectors:
-                task = progress.add_task(f"[cyan]{conn.name}[/cyan]", total=limit)
-                conn_start = time.time()
-
-                # Initialize stats for this connector
-                stats = {
-                    "fetched": 0,
-                    "after_keywords": 0,
-                    "after_since": 0,
-                    "saved": 0,
-                    "time_ms": 0,
-                    "errors": 0,
-                }
-
+    events_list = []
+    with filepath.open("r") as f:
+        for line in f:
+            line = line.strip()
+            if line:
                 try:
-                    async for item in conn.fetch():
-                        stats["fetched"] += 1
+                    events_list.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
 
-                        # Apply keyword filter (post-fetch defensive filtering)
-                        if keyword_list:
-                            if not keyword_match(item, keyword_list):
-                                continue
-                        stats["after_keywords"] += 1
+    if not events_list:
+        console.print("[yellow]No events found in file.[/yellow]")
+        return
 
-                        # Apply since filter
-                        if since_cutoff and item.get("published_at"):
-                            pub_date = item["published_at"]
-                            if isinstance(pub_date, str):
-                                try:
-                                    from dateutil import parser as date_parser
+    # Apply filters
+    filtered = events_list
+    if actor:
+        actor_lower = actor.lower()
+        filtered = [
+            e for e in filtered
+            if actor_lower in e.get("actor", {}).get("name", "").lower()
+            or actor_lower in (e.get("receiver") or {}).get("name", "").lower()
+        ]
+    if domain:
+        filtered = [e for e in filtered if e.get("domain") == domain]
+    if min_tone is not None:
+        filtered = [e for e in filtered if e.get("tone", 0) >= min_tone]
+    if max_tone is not None:
+        filtered = [e for e in filtered if e.get("tone", 0) <= max_tone]
 
-                                    pub_date = date_parser.parse(pub_date)
-                                except:
-                                    pub_date = None
+    console.print(f"[bold]Events: {len(filtered)}/{len(events_list)}[/bold]")
 
-                            if pub_date and hasattr(pub_date, "replace"):
-                                # Make timezone-naive for comparison
-                                if hasattr(pub_date, "tzinfo") and pub_date.tzinfo:
-                                    pub_date = pub_date.replace(tzinfo=None)
+    table = Table(box=rich.box.SIMPLE)
+    table.add_column("Actor", style="cyan", max_width=20)
+    table.add_column("Action", max_width=15)
+    table.add_column("Receiver", style="green", max_width=20)
+    table.add_column("Tone", justify="right", width=5)
+    table.add_column("Domain", width=10)
+    table.add_column("Article", style="dim", max_width=40)
 
-                                if pub_date < since_cutoff.replace(tzinfo=None):
-                                    continue
-                        stats["after_since"] += 1
+    for event in filtered[:limit]:
+        actor_name = event.get("actor", {}).get("name", "?")
+        action_verb = event.get("action", {}).get("verb", "?")
+        category = event.get("action", {}).get("category", "")
+        receiver_name = (event.get("receiver") or {}).get("name", "-")
+        tone = event.get("tone", 0)
+        tone_str = f"{tone:+d}"
+        if tone > 2:
+            tone_str = f"[green]{tone_str}[/green]"
+        elif tone < -2:
+            tone_str = f"[red]{tone_str}[/red]"
+        dom = event.get("domain", "")
+        title = event.get("article_title", "")[:40]
 
-                        # Analyze sentiment if requested
-                        if analyzer_func and item.get("text"):
-                            try:
-                                sentiment = analyzer_func(item["text"])
-                                item["sentiment"] = sentiment
-                            except Exception as e:
-                                logger.warning(f"Sentiment analysis failed: {e}")
+        table.add_row(actor_name, f"{action_verb} ({category})", receiver_name, tone_str, dom, title)
 
-                        all_articles.append(item)
-                        stats["saved"] += 1
-                        progress.update(task, advance=1)
-
-                        if stats["saved"] >= limit:
-                            break
-
-                    stats["time_ms"] = int((time.time() - conn_start) * 1000)
-                    connector_stats[conn.name] = stats
-
-                    progress.update(
-                        task,
-                        description=f"[green]✓[/green] {conn.name}: {stats['saved']} saved",
-                    )
-
-                except Exception as e:
-                    stats["errors"] += 1
-                    stats["time_ms"] = int((time.time() - conn_start) * 1000)
-                    connector_stats[conn.name] = stats
-                    console.print(f"[red]Error in {conn.name}: {e}[/red]")
-                    progress.update(
-                        task, description=f"[red]✗[/red] {conn.name}: failed"
-                    )
-
-        total_time = time.time() - start_time
-
-        # Generate comprehensive metrics summary
-        console.print(f"\n[bold]📊 Connector Metrics Summary[/bold]")
-
-        # Overall stats
-        total_fetched = sum(stats["fetched"] for stats in connector_stats.values())
-        total_after_keywords = sum(
-            stats["after_keywords"] for stats in connector_stats.values()
-        )
-        total_after_since = sum(
-            stats["after_since"] for stats in connector_stats.values()
-        )
-        total_saved = sum(stats["saved"] for stats in connector_stats.values())
-        total_errors = sum(stats["errors"] for stats in connector_stats.values())
-
-        summary_table = Table(title="Overall Metrics")
-        summary_table.add_column("Metric", style="cyan")
-        summary_table.add_column("Count", style="yellow")
-        summary_table.add_column("Rate", style="green")
-
-        summary_table.add_row("Raw Fetched", str(total_fetched), "100.0%")
-        if keyword_list:
-            keyword_rate = (
-                (total_after_keywords / total_fetched * 100) if total_fetched > 0 else 0
-            )
-            summary_table.add_row(
-                "After Keywords", str(total_after_keywords), f"{keyword_rate:.1f}%"
-            )
-        if since:
-            since_rate = (
-                (total_after_since / total_after_keywords * 100)
-                if total_after_keywords > 0
-                else 0
-            )
-            summary_table.add_row(
-                "After Since Filter", str(total_after_since), f"{since_rate:.1f}%"
-            )
-        summary_table.add_row("Final Saved", str(total_saved), "")
-        if total_errors > 0:
-            summary_table.add_row("Errors", str(total_errors), "")
-        summary_table.add_row("Total Time", f"{total_time:.1f}s", "")
-
-        console.print(summary_table)
-
-        # Per-connector breakdown
-        if len(connectors) > 1:
-            conn_table = Table(title="Per-Connector Breakdown")
-            conn_table.add_column("Connector", style="cyan")
-            conn_table.add_column("Fetched", style="yellow")
-            if keyword_list:
-                conn_table.add_column("Keywords", style="yellow")
-            if since:
-                conn_table.add_column("Since", style="yellow")
-            conn_table.add_column("Saved", style="green")
-            conn_table.add_column("Time", style="magenta")
-
-            for name, stats in connector_stats.items():
-                row = [name, str(stats["fetched"])]
-                if keyword_list:
-                    row.append(str(stats["after_keywords"]))
-                if since:
-                    row.append(str(stats["after_since"]))
-                row.extend([str(stats["saved"]), f"{stats['time_ms']}ms"])
-                conn_table.add_row(*row)
-
-            console.print(conn_table)
-
-        console.print(
-            f"\n[green]✓ Collected {len(all_articles)} articles meeting all criteria[/green]"
-        )
-
-        if all_articles:
-            # Save results
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_file = output_path / f"connector_results_{timestamp}.json"
-
-            # Add run metadata and convert datetime objects for JSON serialization
-            run_metadata = {
-                "run_timestamp": datetime.now().isoformat(),
-                "config": {
-                    "keywords": keyword_list,
-                    "since": since,
-                    "limit": limit,
-                    "analyze": analyze,
-                    "connector_type": connector_type,
-                },
-                "metrics": {
-                    "total_time_sec": total_time,
-                    "connectors_used": len(connectors),
-                    "total_fetched": total_fetched,
-                    "after_keywords": total_after_keywords,
-                    "after_since": total_after_since,
-                    "final_saved": total_saved,
-                    "errors": total_errors,
-                    "connector_stats": connector_stats,
-                },
-                "articles": all_articles,
-            }
-
-            for article in all_articles:
-                if "published_at" in article and hasattr(
-                    article["published_at"], "isoformat"
-                ):
-                    article["published_at"] = article["published_at"].isoformat()
-
-            with open(output_file, "w") as f:
-                json.dump(run_metadata, f, indent=2, default=str)
-
-            console.print(f"[green]Results saved to {output_file}[/green]")
-
-            # Show final source distribution
-            if all_articles:
-                source_counts = Counter(a["source"] for a in all_articles)
-
-                source_table = Table(title="Final Results by Source")
-                source_table.add_column("Source", style="cyan")
-                source_table.add_column("Articles", style="green")
-                source_table.add_column("Percentage", style="yellow")
-
-                for source, count in source_counts.most_common():
-                    percentage = (count / len(all_articles)) * 100
-                    source_table.add_row(source, str(count), f"{percentage:.1f}%")
-
-                console.print(source_table)
-
-    # Run async function
-    asyncio.run(run_connectors())
-
-
-def _get_country_flag(country: str) -> str:
-    """Get flag emoji for country name."""
-    # Simple mapping of some major countries to flag emojis
-    flag_map = {
-        "United States": "🇺🇸",
-        "USA": "🇺🇸",
-        "US": "🇺🇸",
-        "America": "🇺🇸",
-        "China": "🇨🇳",
-        "Japan": "🇯🇵",
-        "Germany": "🇩🇪",
-        "France": "🇫🇷",
-        "United Kingdom": "🇬🇧",
-        "UK": "🇬🇧",
-        "Britain": "🇬🇧",
-        "Italy": "🇮🇹",
-        "Spain": "🇪🇸",
-        "Canada": "🇨🇦",
-        "Australia": "🇦🇺",
-        "India": "🇮🇳",
-        "Brazil": "🇧🇷",
-        "Russia": "🇷🇺",
-        "South Korea": "🇰🇷",
-        "Mexico": "🇲🇽",
-        "Indonesia": "🇮🇩",
-        "Turkey": "🇹🇷",
-        "Netherlands": "🇳🇱",
-        "Belgium": "🇧🇪",
-        "Switzerland": "🇨🇭",
-        "Austria": "🇦🇹",
-        "Sweden": "🇸🇪",
-        "Norway": "🇳🇴",
-        "Denmark": "🇩🇰",
-        "Finland": "🇫🇮",
-        "Poland": "🇵🇱",
-        "Ukraine": "🇺🇦",
-        "Greece": "🇬🇷",
-        "Portugal": "🇵🇹",
-        "Ireland": "🇮🇪",
-        "Czech Republic": "🇨🇿",
-        "Hungary": "🇭🇺",
-        "Romania": "🇷🇴",
-        "Bulgaria": "🇧🇬",
-        "Croatia": "🇭🇷",
-        "Slovakia": "🇸🇰",
-        "Slovenia": "🇸🇮",
-        "Lithuania": "🇱🇹",
-        "Latvia": "🇱🇻",
-        "Estonia": "🇪🇪",
-        "Israel": "🇮🇱",
-        "Saudi Arabia": "🇸🇦",
-        "Iran": "🇮🇷",
-        "Iraq": "🇮🇶",
-        "Egypt": "🇪🇬",
-        "South Africa": "🇿🇦",
-        "Nigeria": "🇳🇬",
-        "Kenya": "🇰🇪",
-        "Ethiopia": "🇪🇹",
-        "Ghana": "🇬🇭",
-        "Argentina": "🇦🇷",
-        "Chile": "🇨🇱",
-        "Peru": "🇵🇪",
-        "Colombia": "🇨🇴",
-        "Venezuela": "🇻🇪",
-        "Ecuador": "🇪🇨",
-        "Uruguay": "🇺🇾",
-        "Paraguay": "🇵🇾",
-        "Thailand": "🇹🇭",
-        "Vietnam": "🇻🇳",
-        "Philippines": "🇵🇭",
-        "Malaysia": "🇲🇾",
-        "Singapore": "🇸🇬",
-        "Myanmar": "🇲🇲",
-        "Bangladesh": "🇧🇩",
-        "Pakistan": "🇵🇰",
-        "Afghanistan": "🇦🇫",
-        "Sri Lanka": "🇱🇰",
-        "Nepal": "🇳🇵",
-        "Mongolia": "🇲🇳",
-        "New Zealand": "🇳🇿",
-        "Papua New Guinea": "🇵🇬",
-        "Fiji": "🇫🇯",
-        "UAE": "🇦🇪",
-        "Qatar": "🇶🇦",
-        "Kuwait": "🇰🇼",
-        "Jordan": "🇯🇴",
-        "Lebanon": "🇱🇧",
-        "Syria": "🇸🇾",
-        "Yemen": "🇾🇪",
-        "Oman": "🇴🇲",
-    }
-    return flag_map.get(country, "🏳️")  # Default flag for unknown countries
+    console.print(table)
 
 
 @app.command()
-def list_connectors():
-    """List all available connector types."""
+def compare(
+    scan_a: str = typer.Argument(..., help="Path to older scan articles JSONL"),
+    scan_b: str = typer.Argument(..., help="Path to newer scan articles JSONL"),
+    min_articles: int = typer.Option(3, "--min-articles", help="Min articles per country"),
+):
+    """
+    Compare two scans with bootstrap confidence intervals.
 
-    from .ingest.registry import CONNECTORS
+    Only flags Worsening/Improving when the 95% CI excludes zero.
 
-    table = Table(title="Available Connector Types")
-    table.add_column("Type", style="cyan")
-    table.add_column("Class", style="green")
-    table.add_column("Description", style="white")
+    Examples:
+        bsgbot compare output/articles_old.jsonl output/articles_new.jsonl
+    """
+    from .utils.scan_compare import compare_scans
 
-    for name, cls in sorted(CONNECTORS.items()):
-        doc = cls.__doc__ or "No description"
-        doc = doc.strip().split("\n")[0]  # First line only
-        table.add_row(name, cls.__name__, doc)
+    results = compare_scans(scan_a, scan_b, min_articles=min_articles)
 
-    console.print(table)
-    console.print(
-        "\n[green]Using master source configuration with unified source list[/green]"
+    if not results:
+        console.print("[yellow]No countries with enough articles in both scans.[/yellow]")
+        return
+
+    table = Table(box=rich.box.SIMPLE_HEAD, show_edge=False, pad_edge=False, padding=(0, 2))
+    table.add_column("Country", style="white")
+    table.add_column("Delta", justify="right", width=8)
+    table.add_column("95% CI", width=18)
+    table.add_column("Direction", width=12)
+    table.add_column("N", style="dim", justify="right", width=8)
+
+    # Sort: significant changes first, then by absolute delta
+    sorted_results = sorted(
+        results.items(),
+        key=lambda x: (not x[1]["significant"], -abs(x[1]["delta"])),
     )
 
+    for country, data in sorted_results:
+        delta_str = f"{data['delta']:+.3f}"
+        ci_str = f"[{data['ci_lower']:+.3f}, {data['ci_upper']:+.3f}]"
+        n_str = f"{data['n_a']}/{data['n_b']}"
+
+        if data["direction"] == "worsening":
+            dir_str = "[red]worsening[/red]"
+            delta_str = f"[red]{delta_str}[/red]"
+        elif data["direction"] == "improving":
+            dir_str = "[green]improving[/green]"
+            delta_str = f"[green]{delta_str}[/green]"
+        else:
+            dir_str = "[dim]stable[/dim]"
+            delta_str = f"[dim]{delta_str}[/dim]"
+
+        table.add_row(country, delta_str, ci_str, dir_str, n_str)
+
+    console.print(table)
+
+    sig_count = sum(1 for d in results.values() if d["significant"])
+    console.print(f"\n[dim]{sig_count}/{len(results)} countries show significant change (95% CI excludes zero)[/dim]")
+
 
 @app.command()
-def comprehensive(
-    target: str = typer.Argument(..., help="Topic/keyword or country for comprehensive analysis"),
-    analysis_type: str = typer.Option(
-        "realtime", "--type", "-t",
-        help="Analysis type: realtime (live streaming), economic (GDP/CPI forecasts), backtest (historical), full (all types)"
-    ),
-    countries: str = typer.Option(
-        None, "--countries", "-c",
-        help="Comma-separated list of countries (e.g., 'united_states,united_kingdom,germany')"
-    ),
-    horizon: str = typer.Option(
-        "nowcast", "--horizon", "-h",
-        help="Forecast horizon: nowcast, 1q, 2q, 4q, 1y"
-    ),
-    backtest_start: str = typer.Option(
-        None, "--backtest-start",
-        help="Backtest start date (YYYY-MM-DD)"
-    ),
-    backtest_end: str = typer.Option(
-        None, "--backtest-end",
-        help="Backtest end date (YYYY-MM-DD)"
-    ),
-    output_dir: str = typer.Option(
-        "output/comprehensive", "--output", "-o",
-        help="Output directory for results"
-    ),
-    monitor: bool = typer.Option(
-        False, "--monitor", "-m",
-        help="Enable real-time performance monitoring dashboard"
-    ),
+def narratives(
+    jsonl_file: str = typer.Argument(..., help="Path to articles JSONL file"),
+    threshold: float = typer.Option(0.72, "--threshold", "-t", help="Cosine similarity threshold"),
+    min_size: int = typer.Option(2, "--min-size", help="Minimum articles per narrative"),
 ):
-    """Run comprehensive analysis using all five core systems."""
-    import asyncio
-    from datetime import datetime, timedelta
-    from pathlib import Path
-    import json
+    """Cluster articles from a JSONL file into narrative threads."""
+    from .analyzers.narrative_builder import NarrativeBuilder
+    from .utils.output_models import ArticleRecord
 
-    # Import core systems
-    from .core.economic_models import UnifiedEconomicModel
-    from .core.rss_monitor import RSSMonitor
-    from .core.realtime_pipeline import RealtimeAnalysisPipeline
-    from .core.backtest_system import HistoricalBacktestSystem, BacktestConfig
-    from .core.performance_monitor import PerformanceMonitor
+    path = Path(jsonl_file)
+    if not path.exists():
+        console.print(f"[red]File not found:[/red] {jsonl_file}")
+        raise typer.Exit(1)
 
-    console.print(Panel.fit(
-        f"[bold cyan]Comprehensive Analysis System[/bold cyan]\n"
-        f"Target: {target}\n"
-        f"Type: {analysis_type}\n"
-        f"Countries: {countries or 'auto-detect'}",
-        title="BSG Bot - Production Grade Analysis"
-    ))
+    records = []
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                try:
+                    records.append(ArticleRecord(**json.loads(line)))
+                except Exception:
+                    continue
 
-    # Parse countries
-    country_list = countries.split(',') if countries else ['united_states', 'united_kingdom', 'germany']
+    if len(records) < 2:
+        console.print("[dim]Not enough articles to cluster.[/dim]")
+        raise typer.Exit(0)
 
-    # Create output directory
-    output_path = Path(output_dir)
-    output_path.mkdir(parents=True, exist_ok=True)
+    console.print(f"[dim]Loaded {len(records)} articles[/dim]")
 
-    # Initialize systems
-    console.print("\n[bold]🔧 Initializing Core Systems...[/bold]")
+    nb = NarrativeBuilder(cosine_threshold=threshold, min_cluster_articles=min_size)
+    threads = nb.build_narratives(records)
 
-    economic_model = UnifiedEconomicModel()
-    rss_monitor = RSSMonitor()
-    pipeline = RealtimeAnalysisPipeline()
-    performance_monitor = PerformanceMonitor()
+    if not threads:
+        console.print("[dim]No narrative threads found.[/dim]")
+        raise typer.Exit(0)
 
-    if analysis_type in ['backtest', 'full']:
-        backtest_system = HistoricalBacktestSystem()
+    console.print(f"\n[bold]{len(threads)} Narrative Threads[/bold]\n")
 
-    async def run_comprehensive_analysis():
-        results = {}
+    sent_style = {"negative": "red", "positive": "green", "neutral": "dim"}
+    for i, n in enumerate(threads, 1):
+        style = sent_style.get(n.sentiment_direction, "dim")
+        console.print(f"  [bold]{i}.[/bold] [{style}]{n.headline}[/{style}]")
+        sources_str = ", ".join(f"{s}({c})" for s, c in sorted(n.sources.items(), key=lambda x: -x[1])[:5])
+        regions_str = ", ".join(f"{r}({c})" for r, c in sorted(n.regions.items(), key=lambda x: -x[1])[:5])
+        console.print(f"     [dim]{n.article_count} articles  sent={n.mean_sentiment:+.3f} ({n.sentiment_direction})  salience={n.salience:.2f}[/dim]")
+        if sources_str:
+            console.print(f"     [dim]Sources: {sources_str}[/dim]")
+        if regions_str:
+            console.print(f"     [dim]Regions: {regions_str}[/dim]")
+        if n.themes:
+            console.print(f"     [dim]Themes: {', '.join(n.themes)}[/dim]")
+        console.print()
 
-        # 1. RSS Health Check
-        console.print("\n[bold]📡 Checking RSS Feed Health...[/bold]")
 
-        # Get relevant feeds from master sources
-        from .master_sources import get_master_sources
-        master_sources = get_master_sources()
+@app.command()
+def forecast(
+    periods: int = typer.Option(3, "--periods", "-p", help="Forecast periods ahead"),
+    entities: bool = typer.Option(False, "--entities", "-e", help="Forecast entity sentiment"),
+):
+    """Forecast sentiment trends from historical scan data."""
+    from .analyzers.forecaster import SentimentForecaster
+    fc = SentimentForecaster()
 
-        relevant_feeds = []
-        for country in country_list:
-            country_sources = master_sources.get_sources_for_region(country)
-            for source in country_sources[:10]:  # Limit to top 10 per country
-                if source.feed_url:
-                    relevant_feeds.append(source.feed_url)
-
-        # Check feed health
-        healthy_feeds = []
-        with Progress() as progress:
-            task = progress.add_task("Checking feeds...", total=len(relevant_feeds))
-
-            for feed_url in relevant_feeds:
-                health, _ = await rss_monitor.check_feed(feed_url)
-                if health.status == "healthy":
-                    healthy_feeds.append(feed_url)
-                progress.update(task, advance=1)
-
-        console.print(f"✅ {len(healthy_feeds)}/{len(relevant_feeds)} feeds healthy")
-
-        # 2. Real-time Analysis
-        if analysis_type in ['realtime', 'full']:
-            console.print("\n[bold]🔄 Running Real-time Analysis Pipeline...[/bold]")
-
-            articles_analyzed = []
-            async for article in pipeline.process_stream(
-                healthy_feeds[:5],  # Use top 5 healthy feeds
-                target_region=country_list[0] if len(country_list) == 1 else None,
-                target_topics=[target]
-            ):
-                articles_analyzed.append(article)
-                console.print(f"📄 Processed: {article.title[:80]}...")
-
-                if len(articles_analyzed) >= 20:  # Limit for demo
-                    break
-
-            results['realtime_articles'] = len(articles_analyzed)
-
-            # Generate sentiment data for economic models
-            if articles_analyzed:
-                sentiment_data = {
-                    "aggregate_sentiment": sum(a.sentiment_score for a in articles_analyzed) / len(articles_analyzed),
-                    "volume": len(articles_analyzed),
-                    "topics": list(set(topic for a in articles_analyzed for topic in a.topics))
-                }
-            else:
-                sentiment_data = {"aggregate_sentiment": 0, "volume": 0, "topics": []}
-
-        # 3. Economic Predictions
-        if analysis_type in ['economic', 'full']:
-            console.print("\n[bold]📈 Generating Economic Predictions...[/bold]")
-
-            predictions = {}
-            for country in country_list:
-                console.print(f"\n[cyan]Forecasting for {country}:[/cyan]")
-
-                # GDP forecast
-                gdp = economic_model.forecast_gdp(country, sentiment_data, horizon=horizon)
-                predictions[f"{country}_gdp"] = {
-                    "point": gdp.point_estimate,
-                    "low": gdp.confidence_low,
-                    "high": gdp.confidence_high,
-                    "horizon": gdp.horizon
-                }
-                console.print(f"  GDP: {gdp.point_estimate:.2f}% [{gdp.confidence_low:.2f}, {gdp.confidence_high:.2f}]")
-
-                # CPI forecast
-                cpi = economic_model.forecast_cpi(country, sentiment_data, horizon=horizon)
-                predictions[f"{country}_cpi"] = {
-                    "point": cpi.point_estimate,
-                    "low": cpi.confidence_low,
-                    "high": cpi.confidence_high
-                }
-                console.print(f"  CPI: {cpi.point_estimate:.2f}% [{cpi.confidence_low:.2f}, {cpi.confidence_high:.2f}]")
-
-                # Employment forecast
-                emp = economic_model.forecast_employment(country, sentiment_data, horizon=horizon)
-                predictions[f"{country}_employment"] = {
-                    "point": emp.point_estimate,
-                    "low": emp.confidence_low,
-                    "high": emp.confidence_high
-                }
-                console.print(f"  Employment: {emp.point_estimate:.2f}% [{emp.confidence_low:.2f}, {emp.confidence_high:.2f}]")
-
-                # Track predictions for monitoring
-                performance_monitor.track_prediction(
-                    "gdp", country, gdp.point_estimate,
-                    confidence_interval=(gdp.confidence_low, gdp.confidence_high)
-                )
-
-            results['economic_predictions'] = predictions
-
-        # 4. Historical Backtesting
-        if analysis_type in ['backtest', 'full']:
-            console.print("\n[bold]⏮️ Running Historical Backtest...[/bold]")
-
-            # Parse dates
-            start_date = datetime.strptime(backtest_start, "%Y-%m-%d") if backtest_start else datetime.now() - timedelta(days=365)
-            end_date = datetime.strptime(backtest_end, "%Y-%m-%d") if backtest_end else datetime.now()
-
-            config = BacktestConfig(
-                start_date=start_date,
-                end_date=end_date,
-                rebalance_frequency="monthly",
-                initial_capital=1_000_000,
-                countries=country_list,
-                metrics_to_track=["gdp", "cpi", "employment"]
+    if entities:
+        results = fc.forecast_entities(periods=periods)
+        if not results:
+            console.print("[dim]Not enough entity history for forecasting.[/dim]")
+            raise typer.Exit(0)
+        console.print(f"\n[bold]Entity Sentiment Forecast[/bold]  ({periods} periods ahead)\n")
+        dir_style = {"improving": "green", "deteriorating": "red", "stable": "dim"}
+        for entity, data in list(results.items())[:15]:
+            style = dir_style.get(data["direction"], "dim")
+            fc_str = " -> ".join(f"{v:+.3f}" for v in data["forecast"])
+            console.print(
+                f"  [{style}]{entity}[/{style}]  "
+                f"current={data['current']:+.3f}  "
+                f"[dim]{fc_str}  ({data['direction']})[/dim]"
+            )
+    else:
+        results = fc.forecast_countries(periods=periods)
+        if not results:
+            console.print("[dim]Not enough country history for forecasting.[/dim]")
+            raise typer.Exit(0)
+        console.print(f"\n[bold]Country Sentiment Forecast[/bold]  ({periods} periods ahead)\n")
+        dir_style = {"improving": "green", "deteriorating": "red", "stable": "dim"}
+        for country, data in results.items():
+            style = dir_style.get(data["direction"], "dim")
+            fc_str = " -> ".join(f"{v:+.3f}" for v in data["forecast"])
+            console.print(
+                f"  [{style}]{country}[/{style}]  "
+                f"current={data['current']:+.3f}  "
+                f"[dim]{fc_str}  ({data['direction']}, {data['history_points']} pts)[/dim]"
             )
 
-            backtest_results = backtest_system.run_comprehensive_backtest(config)
 
-            console.print("\n[cyan]Backtest Results:[/cyan]")
-            for country, result in backtest_results.items():
-                console.print(f"\n  {country}:")
-                console.print(f"    Total Return: {result.total_return:.2%}")
-                console.print(f"    Sharpe Ratio: {result.sharpe_ratio:.2f}")
-                console.print(f"    Max Drawdown: {result.max_drawdown:.2%}")
-                console.print(f"    MAPE: {result.mape:.2f}%")
-                console.print(f"    Directional Accuracy: {result.directional_accuracy:.1%}")
-
-            results['backtest'] = {
-                country: {
-                    "return": result.total_return,
-                    "sharpe": result.sharpe_ratio,
-                    "max_drawdown": result.max_drawdown,
-                    "mape": result.mape,
-                    "directional_accuracy": result.directional_accuracy
-                }
-                for country, result in backtest_results.items()
-            }
-
-        # 5. Performance Monitoring
-        if monitor:
-            console.print("\n[bold]📊 Performance Monitoring Dashboard[/bold]")
-
-            # Get current metrics
-            metrics = performance_monitor.get_current_metrics()
-
-            # Display metrics table
-            metrics_table = Table(title="Model Performance Metrics")
-            metrics_table.add_column("Model", style="cyan")
-            metrics_table.add_column("Country", style="green")
-            metrics_table.add_column("MAPE", style="yellow")
-            metrics_table.add_column("Dir. Accuracy", style="magenta")
-            metrics_table.add_column("Samples", style="white")
-
-            for model_type, countries in metrics.items():
-                for country, perf in countries.items():
-                    metrics_table.add_row(
-                        model_type,
-                        country,
-                        f"{perf.mape:.2f}%",
-                        f"{perf.directional_accuracy:.1%}",
-                        str(perf.sample_size)
-                    )
-
-            console.print(metrics_table)
-
-            # Check for alerts
-            alerts = performance_monitor.check_alerts(hours_back=24)
-            if alerts:
-                console.print("\n[bold red]⚠️ Performance Alerts:[/bold red]")
-                for alert in alerts[:5]:  # Show top 5 alerts
-                    console.print(f"  [{alert['severity']}] {alert['message']}")
-
-            # Generate performance report
-            report_path = output_path / "performance_report.json"
-            performance_monitor.generate_performance_report(str(report_path))
-            console.print(f"\n📋 Performance report saved to: {report_path}")
-
-        return results
-
-    # Run the analysis
-    results = asyncio.run(run_comprehensive_analysis())
-
-    # Save results
-    results_path = output_path / f"comprehensive_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-    with open(results_path, 'w') as f:
-        json.dump(results, f, indent=2, default=str)
-
-    console.print(f"\n[bold green]✅ Analysis Complete![/bold green]")
-    console.print(f"Results saved to: {results_path}")
-
-    # Display summary
-    console.print(Panel.fit(
-        f"Articles Analyzed: {results.get('realtime_articles', 0)}\n"
-        f"Predictions Generated: {len(results.get('economic_predictions', {}))}\n"
-        f"Countries Backtested: {len(results.get('backtest', {}))}",
-        title="Summary"
-    ))
-
-
-# Global Perception Index Commands
 @app.command()
-def perception_measure(
-    perceiver: str = typer.Argument(..., help="Perceiver country code (e.g., USA)"),
-    target: str = typer.Argument(..., help="Target country code (e.g., CHN)"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path")
+def judge(
+    jsonl_file: str = typer.Argument(..., help="Path to articles JSONL file"),
+    sample_size: int = typer.Option(20, "--sample", "-n", help="Number of articles to judge"),
 ):
-    """Measure how one country perceives another on a 1-100 scale."""
-    console = Console()
+    """Use LLM to evaluate analysis quality (requires OPENAI_API_KEY)."""
+    from .analyzers.llm_judge import LLMJudge
+    from .utils.output_models import ArticleRecord
 
-    console.print(f"[bold cyan]Measuring Perception: {perceiver} → {target}[/bold cyan]")
+    path = Path(jsonl_file)
+    if not path.exists():
+        console.print(f"[red]File not found:[/red] {jsonl_file}")
+        raise typer.Exit(1)
 
-    gpi = GlobalPerceptionIndex()
-    reading = gpi.measure_perception(perceiver, target)
+    records = []
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                try:
+                    records.append(ArticleRecord(**json.loads(line)))
+                except Exception:
+                    continue
 
-    # Display results
-    table = Table(title=f"Perception Analysis: {perceiver} → {target}")
-    table.add_column("Metric", style="cyan", no_wrap=True)
-    table.add_column("Value", style="green")
-    table.add_column("Details", style="yellow")
+    if not records:
+        console.print("[dim]No articles loaded.[/dim]")
+        raise typer.Exit(0)
 
-    table.add_row("Perception Score", f"{reading.perception_score:.1f}/100",
-                  "Overall perception rating")
-    table.add_row("Confidence", f"{reading.confidence:.2f}",
-                  "Reliability of measurement")
-    table.add_row("Data Sources", str(len(reading.data_sources)),
-                  ", ".join(reading.data_sources))
+    console.print(f"[dim]Judging {min(sample_size, len(records))} of {len(records)} articles...[/dim]")
 
-    # Component breakdown
-    for component, score in reading.component_scores.items():
-        if not component.startswith('confidence_'):
-            table.add_row(f"  {component.replace('_', ' ').title()}",
-                         f"{score:.1f}", "Component score")
+    jdg = LLMJudge(sample_size=sample_size)
+    with console.status("[dim]LLM evaluating analysis quality...[/dim]", spinner="dots"):
+        result = jdg.evaluate(records, sample_size)
+
+    if "error" in result:
+        console.print(f"[red]{result['error']}[/red]")
+        raise typer.Exit(1)
+
+    console.print(f"\n[bold]Quality Assessment[/bold]  (n={result['judged']})\n")
+    console.print(f"  Sentiment accuracy:  {result['sentiment_accuracy']:.0%}")
+    console.print(f"  Theme accuracy:      {result['theme_accuracy']:.0%}")
+    console.print(f"  Entity accuracy:     {result['entity_accuracy']:.0%}")
+    console.print(f"  [bold]Overall:             {result['overall_accuracy']:.0%}[/bold]")
+
+    if result.get("issues"):
+        console.print(f"\n  [bold]Issues[/bold]")
+        for issue in result["issues"][:5]:
+            console.print(f"  [dim]- {issue}[/dim]")
+
+
+@app.command()
+def suggest_labels(
+    jsonl_file: str = typer.Argument(..., help="Path to articles JSONL file"),
+    n: int = typer.Option(20, "--count", "-n", help="Number of candidates"),
+    strategy: str = typer.Option("mixed", "--strategy", "-s", help="uncertainty, boundary, or mixed"),
+):
+    """Surface low-confidence articles for human labeling."""
+    from .analyzers.active_learner import ActiveLearner
+    from .utils.output_models import ArticleRecord
+
+    path = Path(jsonl_file)
+    if not path.exists():
+        console.print(f"[red]File not found:[/red] {jsonl_file}")
+        raise typer.Exit(1)
+
+    records = []
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                try:
+                    records.append(ArticleRecord(**json.loads(line)))
+                except Exception:
+                    continue
+
+    if not records:
+        console.print("[dim]No articles loaded.[/dim]")
+        raise typer.Exit(0)
+
+    al = ActiveLearner(strategy=strategy)
+    candidates = al.select_candidates(records, n=n)
+
+    console.print(f"\n[bold]Label Candidates[/bold]  (strategy={strategy}, n={len(candidates)})\n")
+    for i, c in enumerate(candidates, 1):
+        console.print(
+            f"  {i:2d}. [{c['sentiment_label']}] {c['title'][:60]}"
+        )
+        console.print(
+            f"      [dim]priority={c['priority']:.3f}  conf={c['confidence']:.3f}  {c['reason']}[/dim]"
+        )
+
+    # Export
+    export_path = al.export_candidates(candidates)
+    console.print(f"\n  [dim]Exported to {export_path}[/dim]")
+
+
+@app.command()
+def sources():
+    """Show source influence rankings from historical scans."""
+    from .analyzers.source_influence import SourceInfluenceTracker
+    sit = SourceInfluenceTracker()
+    rankings = sit.get_rankings()
+
+    if not rankings:
+        console.print("[dim]No source influence data yet. Run scans first.[/dim]")
+        raise typer.Exit(0)
+
+    console.print(f"\n[bold]Source Influence Rankings[/bold]\n")
+    table = Table(box=rich.box.SIMPLE_HEAD, show_edge=False)
+    table.add_column("Source", style="cyan")
+    table.add_column("Leads", justify="right")
+    table.add_column("Follows", justify="right")
+    table.add_column("Lead %", justify="right")
+    table.add_column("Avg Lead (h)", justify="right")
+    table.add_column("Influence", justify="right", style="bold")
+
+    for source, data in list(rankings.items())[:20]:
+        table.add_row(
+            source,
+            str(data["leads"]),
+            str(data["follows"]),
+            f"{data['lead_ratio']:.0%}",
+            f"{data['avg_lead_hours']:.1f}",
+            f"{data['influence_score']:.3f}",
+        )
 
     console.print(table)
 
-    if output:
-        with open(output, 'w') as f:
-            json.dump({
-                'perceiver': reading.perceiver_country,
-                'target': reading.target_country,
-                'score': reading.perception_score,
-                'confidence': reading.confidence,
-                'timestamp': reading.timestamp.isoformat(),
-                'components': reading.component_scores
-            }, f, indent=2)
-        console.print(f"\n[green]Results saved to: {output}[/green]")
+
+@app.command("download-models")
+def download_models():
+    """Pre-download sentiment models (~1GB). Run once after install."""
+    from .analyzers.sentiment_router import FINBERT_MODEL, NEWS_MODEL
+    from transformers import pipeline as hf_pipeline
+    console.print("[dim]Downloading FinBERT...[/dim]")
+    hf_pipeline("sentiment-analysis", model=FINBERT_MODEL, top_k=None)
+    console.print("[dim]Downloading news-RoBERTa...[/dim]")
+    hf_pipeline("sentiment-analysis", model=NEWS_MODEL, top_k=None)
+    console.print("[green]Done. Models cached in ~/.cache/huggingface/[/green]")
 
 
 @app.command()
-def perception_rank(
-    countries: Optional[str] = typer.Option(None, "--countries", "-c",
-                                          help="Comma-separated country codes"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path")
-):
-    """Show global perception rankings."""
-    console = Console()
+def feeds():
+    """List configured RSS feeds (used with --also-rss)."""
+    table = Table(title=f"Configured RSS Feeds ({len(settings.RSS_FEEDS)})")
+    table.add_column("#", style="dim", width=4)
+    table.add_column("URL", style="cyan")
 
-    console.print("[bold cyan]Global Perception Rankings[/bold cyan]")
-
-    gpi = GlobalPerceptionIndex()
-
-    if countries:
-        country_list = [c.strip().upper() for c in countries.split(',')]
-        rankings = gpi.calculate_global_rankings(country_list)
-    else:
-        rankings = gpi.calculate_global_rankings()
-
-    # Display rankings table
-    table = Table(title="Global Perception Rankings")
-    table.add_column("Rank", style="cyan", no_wrap=True)
-    table.add_column("Country", style="green", no_wrap=True)
-    table.add_column("Score", style="yellow", no_wrap=True)
-    table.add_column("Perception Level", style="magenta")
-
-    for country, (score, rank) in rankings.items():
-        if score >= 70:
-            level = "Very Positive"
-            level_style = "green"
-        elif score >= 60:
-            level = "Positive"
-            level_style = "green"
-        elif score >= 40:
-            level = "Neutral"
-            level_style = "yellow"
-        elif score >= 30:
-            level = "Negative"
-            level_style = "red"
-        else:
-            level = "Very Negative"
-            level_style = "red"
-
-        table.add_row(str(rank), country, f"{score:.1f}/100",
-                     f"[{level_style}]{level}[/{level_style}]")
+    for i, url in enumerate(settings.RSS_FEEDS, 1):
+        table.add_row(str(i), url)
 
     console.print(table)
-
-    if output:
-        with open(output, 'w') as f:
-            json.dump({
-                'rankings': {country: {'score': score, 'rank': rank}
-                           for country, (score, rank) in rankings.items()},
-                'timestamp': datetime.now().isoformat()
-            }, f, indent=2)
-        console.print(f"\n[green]Rankings saved to: {output}[/green]")
-
-
-@app.command()
-def perception_trends(
-    country: str = typer.Argument(..., help="Country code to analyze trends"),
-    days: int = typer.Option(30, "--days", "-d", help="Number of days to analyze"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path")
-):
-    """Show perception trends for a country over time."""
-    console = Console()
-
-    console.print(f"[bold cyan]Perception Trends: {country} (Last {days} days)[/bold cyan]")
-
-    gpi = GlobalPerceptionIndex()
-    trends = gpi.get_perception_trends(country, days)
-
-    # Display trends
-    table = Table(title=f"Perception Trends: {country}")
-    table.add_column("Metric", style="cyan")
-    table.add_column("Value", style="green")
-    table.add_column("Interpretation", style="yellow")
-
-    table.add_row("Trend Direction", trends['trend'].title(),
-                  "Overall movement pattern")
-    table.add_row("Change", f"{trends['change']:+.1f}",
-                  "Point change from start to end")
-    table.add_row("Data Points", str(trends['readings']),
-                  "Number of perception measurements")
-
-    if trends.get('avg_score'):
-        table.add_row("Average Score", f"{trends['avg_score']:.1f}/100",
-                      "Mean perception score")
-        table.add_row("Confidence", f"{trends.get('avg_confidence', 0):.2f}",
-                      "Average measurement confidence")
-
-    console.print(table)
-
-    # Trend interpretation
-    if trends['trend'] == 'improving':
-        console.print("📈 [green]Positive trend - perception is improving[/green]")
-    elif trends['trend'] == 'declining':
-        console.print("📉 [red]Negative trend - perception is declining[/red]")
-    elif trends['trend'] == 'stable':
-        console.print("📊 [yellow]Stable trend - perception is steady[/yellow]")
-    else:
-        console.print("❓ [gray]Insufficient data for trend analysis[/gray]")
-
-    if output:
-        with open(output, 'w') as f:
-            json.dump({
-                'country': country,
-                'period_days': days,
-                'trends': trends,
-                'timestamp': datetime.now().isoformat()
-            }, f, indent=2)
-        console.print(f"\n[green]Trends saved to: {output}[/green]")
-
-
-@app.command()
-def perception_report(
-    country: Optional[str] = typer.Argument(None, help="Country for detailed report (optional)"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path")
-):
-    """Generate comprehensive perception report."""
-    console = Console()
-
-    gpi = GlobalPerceptionIndex()
-
-    if country:
-        console.print(f"[bold cyan]Perception Report: {country}[/bold cyan]")
-        report = gpi.generate_report(country)
-
-        # Country-specific report
-        console.print(f"\n[bold]Average Perception Score:[/bold] {report['average_score']:.1f}/100")
-        console.print(f"[bold]Global Rank:[/bold] #{report['global_rank']}")
-        console.print(f"[bold]Trend:[/bold] {report['trends']['trend'].title()}")
-
-        # Perception by other countries
-        table = Table(title=f"How Other Countries Perceive {country}")
-        table.add_column("Country", style="cyan")
-        table.add_column("Perception Score", style="green")
-        table.add_column("Level", style="yellow")
-
-        sorted_perceptions = sorted(report['current_perceptions'].items(),
-                                  key=lambda x: x[1], reverse=True)
-
-        for perceiver, score in sorted_perceptions:
-            if score >= 60:
-                level = "Positive"
-                style = "green"
-            elif score >= 40:
-                level = "Neutral"
-                style = "yellow"
-            else:
-                level = "Negative"
-                style = "red"
-
-            table.add_row(perceiver, f"{score:.1f}/100", f"[{style}]{level}[/{style}]")
-
-        console.print(table)
-
-    else:
-        console.print("[bold cyan]Global Perception Report[/bold cyan]")
-        report = gpi.generate_report()
-
-        # Global overview
-        console.print("\n[bold]Top 5 Most Positively Perceived Countries:[/bold]")
-        for country, (score, rank) in report['top_5']:
-            console.print(f"  {rank}. {country}: {score:.1f}/100")
-
-        console.print("\n[bold]Bottom 5 Countries:[/bold]")
-        for country, (score, rank) in report['bottom_5']:
-            console.print(f"  {rank}. {country}: {score:.1f}/100")
-
-    if output:
-        with open(output, 'w') as f:
-            json.dump(report, f, indent=2, default=str)
-        console.print(f"\n[green]Report saved to: {output}[/green]")
-
-
-@app.command()
-def perception_matrix(
-    countries: Optional[str] = typer.Option(None, "--countries", "-c",
-                                          help="Comma-separated country codes"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output file path")
-):
-    """Show perception matrix between countries."""
-    console = Console()
-
-    gpi = GlobalPerceptionIndex()
-
-    if countries:
-        country_list = [c.strip().upper() for c in countries.split(',')]
-        if len(country_list) > 8:
-            console.print("[yellow]Warning: Matrix limited to 8 countries for display[/yellow]")
-            country_list = country_list[:8]
-    else:
-        # Use top 6 countries for display
-        rankings = gpi.calculate_global_rankings()
-        country_list = list(rankings.keys())[:6]
-
-    console.print(f"[bold cyan]Perception Matrix[/bold cyan]")
-    console.print(f"Countries: {', '.join(country_list)}")
-
-    matrix = gpi.get_perception_matrix(country_list)
-
-    # Create matrix table
-    table = Table(title="Perception Matrix (Perceiver → Target)")
-    table.add_column("From\\To", style="cyan", no_wrap=True)
-
-    for target in country_list:
-        table.add_column(target, style="green", no_wrap=True)
-
-    for perceiver in country_list:
-        row = [perceiver]
-        for target in country_list:
-            if perceiver == target:
-                row.append("—")
-            else:
-                score = matrix[perceiver][target]
-                if score >= 60:
-                    row.append(f"[green]{score:.0f}[/green]")
-                elif score >= 40:
-                    row.append(f"[yellow]{score:.0f}[/yellow]")
-                else:
-                    row.append(f"[red]{score:.0f}[/red]")
-
-        table.add_row(*row)
-
-    console.print(table)
-    console.print("\n[dim]Color coding: [green]Green ≥60[/green], [yellow]Yellow 40-59[/yellow], [red]Red <40[/red][/dim]")
-
-    if output:
-        with open(output, 'w') as f:
-            json.dump({
-                'countries': country_list,
-                'matrix': matrix,
-                'timestamp': datetime.now().isoformat()
-            }, f, indent=2)
-        console.print(f"\n[green]Matrix saved to: {output}[/green]")
 
 
 if __name__ == "__main__":

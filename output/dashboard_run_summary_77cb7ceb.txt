@@ -1,4 +1,0 @@
-RUN 77cb7ceb | americas · general | 0 relevant | Sentiment +0 (avg 0.00) | Volatility 0.00
-Actions:
- - Expand source coverage for americas
- - Increase feed refresh frequency or add real-time sources

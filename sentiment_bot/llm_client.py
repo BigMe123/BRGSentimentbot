@@ -26,7 +26,7 @@ class LLMClient:
         self.provider = os.getenv("LLM_PROVIDER", "openai")
         self.model = os.getenv("LLM_MODEL", "gpt-4o-mini")
         self.temp = float(os.getenv("LLM_TEMPERATURE", "0"))
-        self.max_tokens = int(os.getenv("LLM_MAX_TOKENS", "600"))
+        self.max_tokens = int(os.getenv("LLM_MAX_TOKENS", "4000"))  # Increased for longer responses
         self.base_url = os.getenv("LLM_BASE_URL", "https://api.openai.com/v1")
         self.sem = asyncio.Semaphore(int(os.getenv("LLM_CONCURRENCY", "4")))
         self.rate_delay = int(os.getenv("LLM_RATE_DELAY", "20"))
