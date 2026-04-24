@@ -399,6 +399,131 @@ if st.sidebar.button(_icon, use_container_width=True, key="theme_toggle"):
 
 st.sidebar.caption("Boston Risk Group")
 
+# ---------------------------------------------------------------------------
+# Tutorial walkthrough
+# ---------------------------------------------------------------------------
+
+TUTORIAL_STEPS = [
+    {
+        "title": "Welcome to BRG Sentiment Bot",
+        "body": (
+            "This tool scans hundreds of news sources, analyzes sentiment, "
+            "extracts geopolitical events, and generates intelligence reports.\n\n"
+            "This quick walkthrough will show you how to run a scan and read the results. "
+            "You can skip at any time."
+        ),
+        "page": None,
+    },
+    {
+        "title": "Step 1: Run a Scan",
+        "body": (
+            "Go to **New Scan** in the sidebar.\n\n"
+            "- Enter a topic (e.g. *Ukraine*, *AI regulation*, *oil prices*)\n"
+            "- Choose how far back to search (7d is a good default)\n"
+            "- Pick how many articles (300 is standard)\n"
+            "- Under Advanced, check **Extract events** for actor-action-receiver analysis\n"
+            "- Hit **Start Scan** and wait ~2-10 minutes\n\n"
+            "The bot will fetch articles from 100+ sources, scrape full text, "
+            "and run sentiment analysis on each one."
+        ),
+        "page": "New Scan",
+    },
+    {
+        "title": "Step 2: View Results",
+        "body": (
+            "After a scan completes, go to **Results**.\n\n"
+            "You'll see:\n"
+            "- **Overview metrics** — article count, overall mood, avg score, source count\n"
+            "- **Sentiment breakdown** — positive/negative/neutral distribution\n"
+            "- **Country risk table** — which countries are mentioned and their risk levels\n"
+            "- **Source credibility** — articles broken down by Tier 1/2/3 outlets\n"
+            "- **All articles** — filterable table with every article, score, and source\n\n"
+            "Click any article to see its full details, entities, themes, and events."
+        ),
+        "page": "Results",
+    },
+    {
+        "title": "Step 3: Explore Events",
+        "body": (
+            "If you enabled **Extract events**, go to the **Events** page.\n\n"
+            "Events break down *who did what to whom*:\n"
+            "- **Relationships** — actor-receiver pairs with tone scores\n"
+            "- **Network graph** — visual map of how actors interact\n"
+            "- **Top Actors** — ranked by activity, with drill-down\n"
+            "- **Action Breakdown** — economic, military, diplomatic, etc.\n"
+            "- **Timeline** — events plotted by date with tone trends\n\n"
+            "Use the filters in the **All Events** tab to search by domain, action, or tone range."
+        ),
+        "page": "Events",
+    },
+    {
+        "title": "Step 4: AI Analyst",
+        "body": (
+            "The **AI Analyst** sends your scan data to GPT-4o for analysis.\n\n"
+            "Quick reports:\n"
+            "- **Intelligence Brief** — executive summary with risk assessment\n"
+            "- **Country Risk Profile** — deep dive on a region\n"
+            "- **Market Impact** — financial implications\n"
+            "- **Threat Assessment** — security-focused analysis\n\n"
+            "You can also ask **custom questions** about the data.\n\n"
+            "That's it! You're ready to go."
+        ),
+        "page": "AI Analyst",
+    },
+]
+
+if "tutorial_active" not in st.session_state:
+    st.session_state.tutorial_active = True
+    st.session_state.tutorial_step = 0
+    st.session_state.tutorial_dismissed = False
+
+# Show tutorial offer on first visit
+if st.session_state.tutorial_active and not st.session_state.tutorial_dismissed:
+    step = st.session_state.tutorial_step
+
+    if step < len(TUTORIAL_STEPS):
+        ts = TUTORIAL_STEPS[step]
+
+        with st.sidebar.container():
+            st.sidebar.markdown("---")
+            st.sidebar.markdown(f"**{ts['title']}**")
+            st.sidebar.markdown(ts["body"])
+
+            cols = st.sidebar.columns(3 if step > 0 else 2)
+            col_idx = 0
+
+            if step > 0:
+                if cols[col_idx].button("Back", key=f"tut_back_{step}", use_container_width=True):
+                    st.session_state.tutorial_step -= 1
+                    st.rerun()
+                col_idx += 1
+
+            if step < len(TUTORIAL_STEPS) - 1:
+                if cols[col_idx].button("Next", key=f"tut_next_{step}", type="primary", use_container_width=True):
+                    st.session_state.tutorial_step += 1
+                    st.rerun()
+            else:
+                if cols[col_idx].button("Done", key=f"tut_done_{step}", type="primary", use_container_width=True):
+                    st.session_state.tutorial_dismissed = True
+                    st.session_state.tutorial_active = False
+                    st.rerun()
+            col_idx += 1
+
+            if cols[col_idx].button("Skip", key=f"tut_skip_{step}", use_container_width=True):
+                st.session_state.tutorial_dismissed = True
+                st.session_state.tutorial_active = False
+                st.rerun()
+
+            st.sidebar.caption(f"Step {step + 1} of {len(TUTORIAL_STEPS)}")
+            st.sidebar.markdown("---")
+else:
+    # Show restart button
+    if st.sidebar.button("Tutorial", use_container_width=True, key="restart_tutorial"):
+        st.session_state.tutorial_active = True
+        st.session_state.tutorial_step = 0
+        st.session_state.tutorial_dismissed = False
+        st.rerun()
+
 
 # =====================================================================
 # RESULTS
