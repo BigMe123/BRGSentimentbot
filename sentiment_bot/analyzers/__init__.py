@@ -1,35 +1,41 @@
 """Advanced analyzers for professional sentiment analysis."""
 
-from .sentiment_ensemble import SentimentEnsemble
-from .aspect_extraction import AspectExtractor
-from .aspect_sentiment import AspectSentimentAnalyzer
-from .topic_nli import TopicAnalyzer
-from .cluster import DocumentClusterer
-from .sarcasm import SarcasmDetector
-from .event_extractor import EventExtractor
-from .narrative_builder import NarrativeBuilder
-from .contradiction_detector import ContradictionDetector
-from .event_graph import EventGraph
-from .confidence_calibrator import ConfidenceCalibrator
-from .forecaster import SentimentForecaster
-from .llm_judge import LLMJudge
-from .source_influence import SourceInfluenceTracker
-from .active_learner import ActiveLearner
+import logging
 
-__all__ = [
-    "SentimentEnsemble",
-    "AspectExtractor",
-    "AspectSentimentAnalyzer",
-    "TopicAnalyzer",
-    "DocumentClusterer",
-    "SarcasmDetector",
-    "EventExtractor",
-    "NarrativeBuilder",
-    "ContradictionDetector",
-    "EventGraph",
-    "ConfidenceCalibrator",
-    "SentimentForecaster",
-    "LLMJudge",
-    "SourceInfluenceTracker",
-    "ActiveLearner",
-]
+logger = logging.getLogger(__name__)
+
+# Lazy imports — heavy deps (spacy, torch, networkx) may not be installed
+_IMPORTS = {
+    "SentimentEnsemble": ".sentiment_ensemble",
+    "AspectExtractor": ".aspect_extraction",
+    "AspectSentimentAnalyzer": ".aspect_sentiment",
+    "TopicAnalyzer": ".topic_nli",
+    "DocumentClusterer": ".cluster",
+    "SarcasmDetector": ".sarcasm",
+    "EventExtractor": ".event_extractor",
+    "NarrativeBuilder": ".narrative_builder",
+    "ContradictionDetector": ".contradiction_detector",
+    "EventGraph": ".event_graph",
+    "ConfidenceCalibrator": ".confidence_calibrator",
+    "SentimentForecaster": ".forecaster",
+    "LLMJudge": ".llm_judge",
+    "SourceInfluenceTracker": ".source_influence",
+    "ActiveLearner": ".active_learner",
+}
+
+__all__ = list(_IMPORTS.keys())
+
+_loaded = {}
+
+def __getattr__(name):
+    if name in _IMPORTS:
+        if name not in _loaded:
+            import importlib
+            try:
+                mod = importlib.import_module(_IMPORTS[name], __package__)
+                _loaded[name] = getattr(mod, name)
+            except (ImportError, AttributeError) as e:
+                logger.debug(f"Could not import {name}: {e}")
+                raise ImportError(f"{name} requires missing dependency: {e}") from e
+        return _loaded[name]
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
