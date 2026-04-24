@@ -305,6 +305,72 @@ def run_bot(args, placeholder=None):
 
 TIER_LABELS = {1: "Tier 1 (Major)", 2: "Tier 2 (Regional)", 3: "Tier 3 (Other)"}
 
+# ---------------------------------------------------------------------------
+# Rate limiting — prevent a single session from burning all API credits
+# ---------------------------------------------------------------------------
+
+RATE_LIMIT_FILE = OUTPUT_DIR / ".rate_limits.json"
+DAILY_CREDIT_CAP = 2000        # max credits across ALL users per day
+SESSION_SCAN_CAP = 3           # max scans per session
+SESSION_CREDIT_CAP = 600       # max credits per session
+COOLDOWN_MINUTES = 5           # minutes between scans per session
+
+def _load_rate_data():
+    if RATE_LIMIT_FILE.exists():
+        try:
+            return json.loads(RATE_LIMIT_FILE.read_text())
+        except Exception:
+            pass
+    return {"date": "", "credits_used": 0, "scans": 0}
+
+def _save_rate_data(data):
+    RATE_LIMIT_FILE.write_text(json.dumps(data))
+
+def _check_rate_limit(credits_requested: int) -> tuple:
+    """Returns (allowed: bool, reason: str)."""
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    # Global daily cap
+    data = _load_rate_data()
+    if data.get("date") != today:
+        data = {"date": today, "credits_used": 0, "scans": 0}
+    if data["credits_used"] + credits_requested > DAILY_CREDIT_CAP:
+        remaining = DAILY_CREDIT_CAP - data["credits_used"]
+        return False, f"Daily credit limit reached ({data['credits_used']}/{DAILY_CREDIT_CAP} used). {remaining} remaining. Resets at midnight."
+
+    # Per-session caps
+    sess_scans = st.session_state.get("_rate_scans", 0)
+    sess_credits = st.session_state.get("_rate_credits", 0)
+    last_scan = st.session_state.get("_rate_last_scan")
+
+    if sess_scans >= SESSION_SCAN_CAP:
+        return False, f"Session limit: {SESSION_SCAN_CAP} scans max per session. Refresh the page to start a new session."
+
+    if sess_credits + credits_requested > SESSION_CREDIT_CAP:
+        return False, f"Session credit limit: {sess_credits}/{SESSION_CREDIT_CAP} credits used. Try a smaller scan or refresh."
+
+    if last_scan:
+        elapsed = (datetime.now() - datetime.fromisoformat(last_scan)).total_seconds() / 60
+        if elapsed < COOLDOWN_MINUTES:
+            wait = COOLDOWN_MINUTES - elapsed
+            return False, f"Cooldown: wait {wait:.0f} more minutes between scans."
+
+    return True, ""
+
+def _record_scan(credits_used: int):
+    """Record a completed scan for rate limiting."""
+    today = datetime.now().strftime("%Y-%m-%d")
+    data = _load_rate_data()
+    if data.get("date") != today:
+        data = {"date": today, "credits_used": 0, "scans": 0}
+    data["credits_used"] += credits_used
+    data["scans"] += 1
+    _save_rate_data(data)
+
+    st.session_state["_rate_scans"] = st.session_state.get("_rate_scans", 0) + 1
+    st.session_state["_rate_credits"] = st.session_state.get("_rate_credits", 0) + credits_used
+    st.session_state["_rate_last_scan"] = datetime.now().isoformat()
+
 
 # ---------------------------------------------------------------------------
 # Sidebar
@@ -946,21 +1012,32 @@ elif page == "AI Analyst":
         if cols[i % 4].button(name, use_container_width=True, key=f"p_{i}"):
             chosen = name
 
+    AI_QUERY_CAP = 10  # max AI queries per session
+    ai_used = st.session_state.get("_rate_ai_queries", 0)
+    st.caption(f"AI queries this session: {ai_used}/{AI_QUERY_CAP}")
+
     if chosen:
-        with st.spinner(f"Generating {chosen}..."):
-            result = call_openai(AI_PRESETS[chosen], snapshot)
-        st.markdown(f"### {chosen}")
-        st.markdown(result)
-        st.download_button("Download as text", data=f"# {chosen}\nGenerated: {datetime.now():%Y-%m-%d %H:%M}\nScan: {run_id} | {len(articles)} articles\n\n{result}",
-                           file_name=f"BRG_{chosen.replace(' ','_')}_{run_id}.txt", mime="text/plain")
+        if ai_used >= AI_QUERY_CAP:
+            st.error(f"AI query limit reached ({AI_QUERY_CAP}/session). Refresh to start a new session.")
+        else:
+            with st.spinner(f"Generating {chosen}..."):
+                result = call_openai(AI_PRESETS[chosen], snapshot)
+            st.session_state["_rate_ai_queries"] = ai_used + 1
+            st.markdown(f"### {chosen}")
+            st.markdown(result)
+            st.download_button("Download as text", data=f"# {chosen}\nGenerated: {datetime.now():%Y-%m-%d %H:%M}\nScan: {run_id} | {len(articles)} articles\n\n{result}",
+                               file_name=f"BRG_{chosen.replace(' ','_')}_{run_id}.txt", mime="text/plain")
 
     st.divider()
     st.markdown("### Custom Question")
     q = st.text_area("Your question", placeholder="e.g. What are the biggest risks for Southeast Asia based on this data?", height=80)
     if st.button("Analyze", type="primary"):
-        if q.strip():
+        if ai_used >= AI_QUERY_CAP:
+            st.error(f"AI query limit reached ({AI_QUERY_CAP}/session). Refresh to start a new session.")
+        elif q.strip():
             with st.spinner("Analyzing..."):
                 result = call_openai(q, snapshot)
+            st.session_state["_rate_ai_queries"] = st.session_state.get("_rate_ai_queries", 0) + 1
             st.markdown(result)
         else:
             st.warning("Enter a question.")
@@ -1094,27 +1171,44 @@ elif page == "New Scan":
         st.caption(f"Estimated: ~{max(2 + (target//60 if summarize else 0), 1)} min  |  ~{target} API credits")
         go = st.form_submit_button("Start Scan", type="primary", use_container_width=True)
 
-    if go:
-        args = ["run"]
-        if query: args.append(query)
-        if category: args.extend(["--category", category])
-        args.extend(["--freshness", freshness, "--target", str(target)])
-        if extract_events: args.append("--extract-events")
-        if summarize: args.append("--summarize")
-        if export_csv: args.append("--export-csv")
-        if region_filter: args.extend(["--region", region_filter])
-        if topic_filter: args.extend(["--topic", topic_filter])
+    # Show current usage
+    sess_scans = st.session_state.get("_rate_scans", 0)
+    sess_credits = st.session_state.get("_rate_credits", 0)
+    daily_data = _load_rate_data()
+    today = datetime.now().strftime("%Y-%m-%d")
+    daily_used = daily_data["credits_used"] if daily_data.get("date") == today else 0
+    st.caption(
+        f"Session: {sess_scans}/{SESSION_SCAN_CAP} scans, {sess_credits}/{SESSION_CREDIT_CAP} credits  |  "
+        f"Daily: {daily_used}/{DAILY_CREDIT_CAP} credits"
+    )
 
-        st.info(f"Scanning {target} articles from 100+ sources...")
-        box = st.empty(); box.code("Starting...", language=None)
-        stdout, code = run_bot(args, placeholder=box)
-        if code == 0:
-            box.empty()
-            st.success("Scan complete. Go to Results or AI Analyst to explore.")
-            with st.expander("Technical log", expanded=False): st.text(re.sub(r'\x1b\[[0-9;]*m', '', stdout))
+    if go:
+        # Rate limit check
+        allowed, reason = _check_rate_limit(target)
+        if not allowed:
+            st.error(f"Rate limited: {reason}")
         else:
-            box.empty(); st.error("Scan failed.")
-            with st.expander("Error log"): st.text(stdout)
+            args = ["run"]
+            if query: args.append(query)
+            if category: args.extend(["--category", category])
+            args.extend(["--freshness", freshness, "--target", str(target)])
+            if extract_events: args.append("--extract-events")
+            if summarize: args.append("--summarize")
+            if export_csv: args.append("--export-csv")
+            if region_filter: args.extend(["--region", region_filter])
+            if topic_filter: args.extend(["--topic", topic_filter])
+
+            st.info(f"Scanning {target} articles from 100+ sources...")
+            box = st.empty(); box.code("Starting...", language=None)
+            stdout, code = run_bot(args, placeholder=box)
+            if code == 0:
+                _record_scan(target)
+                box.empty()
+                st.success("Scan complete. Go to Results or AI Analyst to explore.")
+                with st.expander("Technical log", expanded=False): st.text(re.sub(r'\x1b\[[0-9;]*m', '', stdout))
+            else:
+                box.empty(); st.error("Scan failed.")
+                with st.expander("Error log"): st.text(stdout)
 
 
 # =====================================================================
