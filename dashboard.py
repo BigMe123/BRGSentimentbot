@@ -1,5 +1,5 @@
 """
-BRG Intelligence Platform — Streamlit Dashboard
+BRG Sentiment Bot — Streamlit Dashboard
 Run: streamlit run dashboard.py
 """
 
@@ -23,7 +23,7 @@ except ImportError:
 from ai_analyst import PRESETS as AI_PRESETS, build_data_snapshot, call_openai
 
 st.set_page_config(
-    page_title="Boston Risk Group | Intelligence Platform",
+    page_title="Boston Risk Group",
     page_icon="assets/brg_logo.png",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -381,7 +381,7 @@ if LOGO_PATH.exists():
     st.sidebar.image(str(LOGO_PATH), width=180)
 st.sidebar.markdown(
     f'<p style="color:{t["gold"]}; font-size:0.7rem; letter-spacing:0.12em; '
-    f'text-transform:uppercase; margin-top:-8px;">Intelligence Platform</p>',
+    f'text-transform:uppercase; margin-top:-8px;">Sentiment Analysis</p>',
     unsafe_allow_html=True,
 )
 page = st.sidebar.radio("Navigation", [
