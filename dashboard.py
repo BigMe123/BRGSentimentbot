@@ -266,6 +266,16 @@ def load_articles(run_id):
             except Exception: pass
     return arts
 
+def load_events(run_id):
+    p = OUTPUT_DIR / f"events_{run_id}.jsonl"
+    if not p.exists(): return []
+    evts = []
+    for ln in p.read_text().splitlines():
+        if ln.strip():
+            try: evts.append(json.loads(ln))
+            except Exception: pass
+    return evts
+
 def sent_label(score):
     if score > 0.05: return "POS"
     if score < -0.05: return "NEG"
@@ -309,7 +319,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 page = st.sidebar.radio("Navigation", [
-    "Results", "AI Analyst", "Compare Scans",
+    "Results", "Events", "AI Analyst", "Compare Scans",
     "New Scan", "Past Scans", "Methodology",
 ], label_visibility="collapsed")
 st.sidebar.divider()
@@ -570,6 +580,341 @@ Click a country below to see the specific articles driving these numbers.
                     verb = ev.get("action", {}).get("verb", "?")
                     recv = (ev.get("receiver") or {}).get("name", "")
                     st.write(f"- {a_name} *{verb}*{f' -> {recv}' if recv else ''} (tone: {ev.get('tone', 0):+d})")
+
+
+# =====================================================================
+# EVENTS
+# =====================================================================
+
+elif page == "Events":
+    _page_header("Event Intelligence", "Structured Actor-Action-Receiver Analysis")
+
+    summaries = load_summaries()
+    if not summaries:
+        st.info("No scans yet. Run a New Scan with --extract-events to get started."); st.stop()
+
+    run_opts = {run_label(s): s["run_id"] for s in summaries}
+    sel = st.selectbox("Select scan", list(run_opts.keys()), index=0)
+    run_id = run_opts[sel]
+    events = load_events(run_id)
+
+    if not events:
+        st.warning("No events found for this scan. Re-run with **Extract Events** enabled in New Scan."); st.stop()
+
+    st.success(f"{len(events)} events extracted from {len(set(e.get('article_id','') for e in events))} articles")
+
+    # --- Overview metrics ---
+    st.markdown('<div class="brg-section">Overview</div>', unsafe_allow_html=True)
+    tones = [e.get("tone", 0) for e in events]
+    avg_tone = sum(tones) / len(tones) if tones else 0
+    hostile_n = sum(1 for t in tones if t < -3)
+    coop_n = sum(1 for t in tones if t > 3)
+    actors_unique = len(set(e.get("actor", {}).get("name", "") for e in events))
+
+    c1, c2, c3, c4, c5 = st.columns(5)
+    c1.metric("Total Events", f"{len(events):,}")
+    c2.metric("Unique Actors", f"{actors_unique:,}")
+    c3.metric("Avg Tone", f"{avg_tone:+.1f}")
+    c4.metric("Hostile", f"{hostile_n}", help="Events with tone < -3")
+    c5.metric("Cooperative", f"{coop_n}", help="Events with tone > +3")
+
+    tab_rel, tab_actors, tab_actions, tab_timeline, tab_table = st.tabs([
+        "Relationships", "Top Actors", "Action Breakdown", "Timeline", "All Events"
+    ])
+
+    # --- Relationships tab ---
+    with tab_rel:
+        st.markdown("#### Key Actor-Receiver Relationships")
+        rels = {}
+        for e in events:
+            recv = (e.get("receiver") or {}).get("name")
+            if not recv: continue
+            actor = e.get("actor", {}).get("name", "?")
+            key = (actor, recv)
+            if key not in rels:
+                rels[key] = {"tones": [], "actions": [], "domains": []}
+            rels[key]["tones"].append(e.get("tone", 0))
+            rels[key]["actions"].append(e.get("action", {}).get("category", "?"))
+            rels[key]["domains"].append(e.get("domain", "?"))
+
+        if rels:
+            rel_rows = []
+            for (actor, recv), data in sorted(rels.items(), key=lambda x: len(x[1]["tones"]), reverse=True):
+                avg_t = sum(data["tones"]) / len(data["tones"])
+                top_action = Counter(data["actions"]).most_common(1)[0][0]
+                top_domain = Counter(data["domains"]).most_common(1)[0][0]
+                rel_rows.append({
+                    "Actor": actor, "Receiver": recv,
+                    "Events": len(data["tones"]),
+                    "Avg Tone": round(avg_t, 1),
+                    "Primary Action": top_action,
+                    "Domain": top_domain,
+                })
+
+            # Tone filter
+            tone_filter = st.select_slider(
+                "Filter by tone",
+                options=["All", "Hostile only (<-3)", "Cooperative only (>3)"],
+                value="All",
+            )
+            if tone_filter == "Hostile only (<-3)":
+                rel_rows = [r for r in rel_rows if r["Avg Tone"] < -3]
+            elif tone_filter == "Cooperative only (>3)":
+                rel_rows = [r for r in rel_rows if r["Avg Tone"] > 3]
+
+            st.dataframe(
+                pd.DataFrame(rel_rows[:50]),
+                use_container_width=True, hide_index=True,
+                column_config={
+                    "Avg Tone": st.column_config.NumberColumn(format="%+.1f"),
+                },
+            )
+
+            # Network visualization
+            st.markdown("#### Relationship Network")
+            try:
+                import plotly.graph_objects as go
+                import math
+
+                top_rels = sorted(rels.items(), key=lambda x: len(x[1]["tones"]), reverse=True)[:30]
+                nodes_set = set()
+                for (a, r), _ in top_rels:
+                    nodes_set.add(a); nodes_set.add(r)
+                nodes = list(nodes_set)
+                node_idx = {n: i for i, n in enumerate(nodes)}
+
+                # Layout: circular
+                n_nodes = len(nodes)
+                node_x = [math.cos(2 * math.pi * i / n_nodes) for i in range(n_nodes)]
+                node_y = [math.sin(2 * math.pi * i / n_nodes) for i in range(n_nodes)]
+
+                # Edges
+                edge_x, edge_y, edge_colors = [], [], []
+                annotations = []
+                for (a, r), data in top_rels:
+                    ai, ri = node_idx[a], node_idx[r]
+                    edge_x += [node_x[ai], node_x[ri], None]
+                    edge_y += [node_y[ai], node_y[ri], None]
+                    avg_t = sum(data["tones"]) / len(data["tones"])
+
+                edge_trace = go.Scatter(
+                    x=edge_x, y=edge_y, mode="lines",
+                    line=dict(width=0.8, color="rgba(150,150,150,0.4)"),
+                    hoverinfo="none",
+                )
+
+                # Node colors by net tone received
+                tone_received = {}
+                for (a, r), data in top_rels:
+                    avg_t = sum(data["tones"]) / len(data["tones"])
+                    tone_received.setdefault(r, []).append(avg_t)
+                    tone_received.setdefault(a, [])
+
+                node_colors = []
+                for n in nodes:
+                    t_list = tone_received.get(n, [])
+                    if t_list:
+                        avg = sum(t_list) / len(t_list)
+                        node_colors.append(avg)
+                    else:
+                        node_colors.append(0)
+
+                # Node sizes by event count
+                actor_counts = Counter(e.get("actor", {}).get("name", "") for e in events)
+                node_sizes = [max(10, min(40, actor_counts.get(n, 1) * 2)) for n in nodes]
+
+                node_trace = go.Scatter(
+                    x=node_x, y=node_y, mode="markers+text",
+                    text=nodes, textposition="top center",
+                    textfont=dict(size=9),
+                    marker=dict(
+                        size=node_sizes,
+                        color=node_colors,
+                        colorscale=[[0, "#e74c3c"], [0.5, "#95a5a6"], [1, "#27ae60"]],
+                        cmin=-8, cmax=8,
+                        colorbar=dict(title="Tone", thickness=15, len=0.5),
+                        line=dict(width=1, color="#333"),
+                    ),
+                    hovertext=[f"{n}: {actor_counts.get(n,0)} events" for n in nodes],
+                    hoverinfo="text",
+                )
+
+                fig = go.Figure(data=[edge_trace, node_trace])
+                fig.update_layout(
+                    showlegend=False,
+                    xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                    yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                    margin=dict(l=20, r=20, t=20, b=20),
+                    height=500,
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    plot_bgcolor="rgba(0,0,0,0)",
+                )
+                st.plotly_chart(fig, use_container_width=True)
+            except ImportError:
+                st.caption("Install plotly for network visualization: pip install plotly")
+
+    # --- Top Actors tab ---
+    with tab_actors:
+        st.markdown("#### Most Active Actors")
+        actor_data = {}
+        for e in events:
+            name = e.get("actor", {}).get("name", "?")
+            atype = e.get("actor", {}).get("type", "?")
+            if name not in actor_data:
+                actor_data[name] = {"type": atype, "tones": [], "domains": [], "stances": []}
+            actor_data[name]["tones"].append(e.get("tone", 0))
+            actor_data[name]["domains"].append(e.get("domain", "?"))
+            actor_data[name]["stances"].append(e.get("stance", "?"))
+
+        actor_rows = []
+        for name, data in sorted(actor_data.items(), key=lambda x: len(x[1]["tones"]), reverse=True)[:30]:
+            avg_t = sum(data["tones"]) / len(data["tones"])
+            top_domain = Counter(data["domains"]).most_common(1)[0][0]
+            top_stance = Counter(data["stances"]).most_common(1)[0][0]
+            actor_rows.append({
+                "Actor": name, "Type": data["type"],
+                "Events": len(data["tones"]),
+                "Avg Tone": round(avg_t, 1),
+                "Top Domain": top_domain,
+                "Top Stance": top_stance,
+            })
+
+        st.dataframe(
+            pd.DataFrame(actor_rows),
+            use_container_width=True, hide_index=True,
+            column_config={"Avg Tone": st.column_config.NumberColumn(format="%+.1f")},
+        )
+
+        # Actor type breakdown
+        st.markdown("#### Actor Types")
+        type_counts = Counter(e.get("actor", {}).get("type", "?") for e in events)
+        st.bar_chart(pd.DataFrame({"Type": type_counts.keys(), "Count": type_counts.values()}).set_index("Type"))
+
+        # Drill-down
+        actor_pick = st.selectbox("Drill into actor", ["(select)"] + [r["Actor"] for r in actor_rows])
+        if actor_pick != "(select)":
+            actor_events = [e for e in events if e.get("actor", {}).get("name") == actor_pick]
+            st.markdown(f"**{actor_pick}** - {len(actor_events)} events")
+            ae_tones = [e.get("tone", 0) for e in actor_events]
+            m1, m2, m3 = st.columns(3)
+            m1.metric("Events", len(actor_events))
+            m2.metric("Avg Tone", f"{sum(ae_tones)/len(ae_tones):+.1f}")
+            m3.metric("Receivers", len(set((e.get("receiver") or {}).get("name", "") for e in actor_events if e.get("receiver"))))
+            for e in actor_events[:20]:
+                recv = (e.get("receiver") or {}).get("name", "")
+                verb = e.get("action", {}).get("verb", "?")
+                tone = e.get("tone", 0)
+                domain = e.get("domain", "?")
+                loc = (e.get("location") or {}).get("name", "")
+                date = e.get("event_date", "")
+                tone_color = "red" if tone < -3 else ("green" if tone > 3 else "gray")
+                recv_str = f" -> **{recv}**" if recv else ""
+                loc_str = f" [{loc}]" if loc else ""
+                date_str = f" ({date})" if date else ""
+                st.write(f"- :{tone_color}_circle: `{tone:+d}` {actor_pick} *{verb}*{recv_str} ({domain}){loc_str}{date_str}")
+
+    # --- Action Breakdown tab ---
+    with tab_actions:
+        st.markdown("#### Action Categories")
+        cat_counts = Counter(e.get("action", {}).get("category", "?") for e in events)
+        st.bar_chart(pd.DataFrame({"Category": cat_counts.keys(), "Count": cat_counts.values()}).set_index("Category"))
+
+        st.markdown("#### Domain Distribution")
+        dom_counts = Counter(e.get("domain", "?") for e in events)
+        st.bar_chart(pd.DataFrame({"Domain": dom_counts.keys(), "Count": dom_counts.values()}).set_index("Domain"))
+
+        st.markdown("#### Stance Distribution")
+        stance_counts = Counter(e.get("stance", "?") for e in events)
+        st.bar_chart(pd.DataFrame({"Stance": stance_counts.keys(), "Count": stance_counts.values()}).set_index("Stance"))
+
+        st.markdown("#### Intensity Distribution")
+        intensity_counts = Counter(e.get("intensity", 1) for e in events)
+        st.bar_chart(pd.DataFrame({
+            "Intensity": [str(k) for k in sorted(intensity_counts.keys())],
+            "Count": [intensity_counts[k] for k in sorted(intensity_counts.keys())]
+        }).set_index("Intensity"))
+
+    # --- Timeline tab ---
+    with tab_timeline:
+        st.markdown("#### Events by Date")
+        dated = [e for e in events if e.get("event_date")]
+        if dated:
+            date_counts = Counter(e["event_date"][:10] for e in dated)
+            date_df = pd.DataFrame(sorted(date_counts.items()), columns=["Date", "Events"])
+            st.bar_chart(date_df.set_index("Date"))
+
+            st.markdown("#### Tone Over Time")
+            date_tones = {}
+            for e in dated:
+                d = e["event_date"][:10]
+                date_tones.setdefault(d, []).append(e.get("tone", 0))
+            tone_df = pd.DataFrame([
+                {"Date": d, "Avg Tone": sum(t)/len(t)}
+                for d, t in sorted(date_tones.items())
+            ])
+            st.line_chart(tone_df.set_index("Date"))
+
+            st.markdown("#### Locations")
+            located = [e for e in events if e.get("location")]
+            if located:
+                loc_counts = Counter(e["location"].get("name", "?") for e in located)
+                loc_rows = [{"Location": name, "Events": cnt} for name, cnt in loc_counts.most_common(20)]
+                st.dataframe(pd.DataFrame(loc_rows), use_container_width=True, hide_index=True)
+        else:
+            st.info("No events have date information.")
+
+    # --- All Events table ---
+    with tab_table:
+        st.markdown(f"#### All Events ({len(events):,})")
+
+        # Filters
+        f1, f2, f3 = st.columns(3)
+        with f1:
+            domain_filter = st.multiselect("Domain", sorted(set(e.get("domain", "") for e in events)))
+        with f2:
+            category_filter = st.multiselect("Action", sorted(set(e.get("action", {}).get("category", "") for e in events)))
+        with f3:
+            tone_range = st.slider("Tone range", -10, 10, (-10, 10))
+
+        filt = events
+        if domain_filter:
+            filt = [e for e in filt if e.get("domain") in domain_filter]
+        if category_filter:
+            filt = [e for e in filt if e.get("action", {}).get("category") in category_filter]
+        filt = [e for e in filt if tone_range[0] <= e.get("tone", 0) <= tone_range[1]]
+
+        st.caption(f"Showing {len(filt)} of {len(events)} events")
+
+        tbl = []
+        for e in filt:
+            recv = (e.get("receiver") or {}).get("name", "")
+            tbl.append({
+                "Actor": e.get("actor", {}).get("name", "?"),
+                "Action": e.get("action", {}).get("verb", "?"),
+                "Category": e.get("action", {}).get("category", "?"),
+                "Receiver": recv,
+                "Tone": e.get("tone", 0),
+                "Domain": e.get("domain", "?"),
+                "Intensity": e.get("intensity", 1),
+                "Stance": e.get("stance", "?"),
+                "Location": (e.get("location") or {}).get("name", ""),
+                "Date": e.get("event_date", ""),
+                "Confidence": e.get("confidence", 0),
+                "Article": e.get("article_title", "")[:60],
+            })
+
+        if tbl:
+            st.dataframe(
+                pd.DataFrame(tbl),
+                use_container_width=True, hide_index=True,
+                height=min(len(tbl) * 35 + 40, 800),
+                column_config={
+                    "Tone": st.column_config.NumberColumn(format="%+d"),
+                    "Confidence": st.column_config.ProgressColumn(min_value=0, max_value=1, format="%.0%%"),
+                },
+            )
+
+    _page_footer()
 
 
 # =====================================================================
