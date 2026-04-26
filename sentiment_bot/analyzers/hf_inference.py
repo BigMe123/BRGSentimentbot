@@ -37,14 +37,20 @@ def _post(model: str, payload: dict, timeout: int = 30) -> list | dict | None:
     """POST to HF Inference API, return parsed JSON."""
     url = f"{API_BASE}/{model}"
     try:
-        r = requests.post(url, headers=_headers(), json=payload, timeout=timeout)
+        headers = _headers()
+        r = requests.post(url, headers=headers, json=payload, timeout=timeout)
+        if r.status_code in (401, 403) and headers:
+            # A stale/invalid HF_TOKEN should not poison public-model calls.
+            r = requests.post(url, headers={}, json=payload, timeout=timeout)
         if r.status_code == 503:
             # Model loading, retry once after wait
             import time
             wait = min(r.json().get("estimated_time", 20), 30)
             logger.info(f"Model {model} loading, waiting {wait}s...")
             time.sleep(wait)
-            r = requests.post(url, headers=_headers(), json=payload, timeout=60)
+            r = requests.post(url, headers=headers, json=payload, timeout=60)
+            if r.status_code in (401, 403) and headers:
+                r = requests.post(url, headers={}, json=payload, timeout=60)
         if r.status_code != 200:
             logger.debug(f"HF API {r.status_code}: {r.text[:200]}")
             return None
@@ -152,12 +158,20 @@ def classify_batch(
 def is_available() -> bool:
     """Check if HF Inference API is reachable."""
     try:
+        headers = _headers()
         r = requests.post(
             f"{API_BASE}/cardiffnlp/twitter-roberta-base-sentiment-latest",
-            headers=_headers(),
+            headers=headers,
             json={"inputs": "test"},
             timeout=10,
         )
+        if r.status_code in (401, 403) and headers:
+            r = requests.post(
+                f"{API_BASE}/cardiffnlp/twitter-roberta-base-sentiment-latest",
+                headers={},
+                json={"inputs": "test"},
+                timeout=10,
+            )
         return r.status_code == 200
     except Exception:
         return False

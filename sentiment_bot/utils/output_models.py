@@ -163,6 +163,11 @@ class ArticleRecord(BaseModel):
     # Entity stances (per-entity sentiment via NLI)
     entity_stances: List[Dict] = Field(default_factory=list)
 
+    # Rich RAMME payload (FLS, ESG, components, aspects, agreement, stance)
+    # — preserved alongside the flat sentiment so the dashboard can render
+    # the upgraded intelligence panel without a second pipeline call.
+    ramme: Optional[Dict[str, Any]] = None
+
     # Event extraction
     events: List[ExtractedEvent] = Field(default_factory=list)
 

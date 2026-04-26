@@ -21,6 +21,13 @@ _IMPORTS = {
     "LLMJudge": ".llm_judge",
     "SourceInfluenceTracker": ".source_influence",
     "ActiveLearner": ".active_learner",
+    # BRG RAMME pipeline
+    "RiskAwareEnsemble": ".finance_pipeline",
+    "RAMMEResult": ".finance_pipeline",
+    "DriftDetector": ".drift_detector",
+    "DriftReport": ".drift_detector",
+    "compute_agreement": ".model_agreement",
+    "AgreementStats": ".model_agreement",
 }
 
 __all__ = list(_IMPORTS.keys())

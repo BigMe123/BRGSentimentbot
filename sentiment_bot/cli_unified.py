@@ -572,7 +572,7 @@ def run(
     elif fast:
         mode_label = "VADER (fast)"
     else:
-        mode_label = "Ensemble (FinBERT + RoBERTa)"
+        mode_label = "RAMME (FinBERT-Tone + FLS + ESG + RoBERTa)"
     # Check HF API status for header
     hf_status = ""
     if not fast and not llm_analysis:
@@ -801,8 +801,13 @@ async def _run_async(
             hash=entity_extractor.calculate_text_hash(text),
             source_tier=get_tier(article.get("domain", "unknown")),
             relevance=0.5,
-            sentiment=Sentiment(label=sentiment_label, score=sentiment_score, confidence=get_weight(article.get("domain", "unknown"))),
+            sentiment=Sentiment(
+                label=sentiment_label,
+                score=sentiment_score,
+                confidence=article.get("_sentiment_confidence", get_weight(article.get("domain", "unknown"))),
+            ),
             signals=SignalData(volatility=volatility, risk_level=risk_level, themes=themes),
+            ramme=article.get("_ramme"),
         )
         article_records.append(record)
 
@@ -1390,10 +1395,11 @@ def _analyze_articles_ensemble(articles: List[Dict]) -> Dict:
         return {"total_articles": 0, "sentiment": {"positive": 0, "negative": 0, "neutral": 0}, "sentiment_score": 0}
 
     texts = [a.get("content", "") or a.get("description", "") or a.get("title", "") for a in articles]
+    titles = [a.get("title", "") for a in articles]
     themes_per = [a.get("_themes") for a in articles]
 
     with console.status(f"[dim]Sentiment ({len(articles)} articles via ensemble)...[/dim]", spinner="dots"):
-        results = analyze_batch(texts, themes_per)
+        results = analyze_batch(texts, themes_per, titles=titles)
 
     pos = neg = neu = 0
     scores = []
@@ -1402,6 +1408,10 @@ def _analyze_articles_ensemble(articles: List[Dict]) -> Dict:
         article["_sentiment_score"] = result.score
         article["_sentiment_confidence"] = result.confidence
         article["_sentiment_model"] = result.model
+        # Stash the rich RAMME payload (fls/esg/aspects/components/stance)
+        # on the article so it survives into ArticleRecord and the dashboard.
+        if getattr(result, "ramme", None):
+            article["_ramme"] = result.ramme
         scores.append(result.score)
         if result.label == "positive":
             pos += 1

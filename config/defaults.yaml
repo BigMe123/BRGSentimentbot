@@ -1,15 +1,32 @@
 models:
+  # Legacy SST-2 retained as a generic sentiment fallback only.
   sentiment:
     id: distilbert/distilbert-base-uncased-finetuned-sst-2-english
     revision: 714eb0f
   nli:
-    id: facebook/bart-large-mnli
-    revision: d7645e1
+    id: MoritzLaurer/deberta-v3-base-zeroshot-v2.0
+    revision: main
   summarizer:
     id: sshleifer/distilbart-cnn-12-6
     revision: a4f8f3e
   emotion:
     id: j-hartmann/emotion-english-distilroberta-base
+    revision: main
+  # BRG Risk-Aware Multi-Model Ensemble (RAMME) — finance & geopolitics tuned.
+  fin_tone:
+    id: yiyanghkust/finbert-tone
+    revision: main
+  fin_fls:
+    id: yiyanghkust/finbert-fls
+    revision: main
+  fin_esg:
+    id: yiyanghkust/finbert-esg
+    revision: main
+  fin_news:
+    id: mrm8488/distilroberta-finetuned-financial-news-sentiment-analysis
+    revision: main
+  news_roberta:
+    id: cardiffnlp/twitter-roberta-base-sentiment-latest
     revision: main
 
 runtime:
@@ -51,6 +68,7 @@ discovery:
     - "/api/rss"
 
 ensemble:
+  # Legacy ensemble (still used by analyzer.py as a fallback).
   weights:
     sst2: 0.45
     emotion: 0.25
@@ -58,6 +76,28 @@ ensemble:
   abstain:
     max_prob_thresh: 0.65
     disagreement_thresh: 0.35
+
+ramme:
+  # Risk-Aware Multi-Model Ensemble configuration.
+  weights:
+    fin_tone:     0.40   # finance-tone specialist (primary on finance docs)
+    fin_news:     0.25   # financial-news cross-check
+    news_roberta: 0.35   # general news / non-finance fallback
+  temperature: 1.30      # softens overconfident logits before aggregation
+  title_weight: 0.65     # share of doc score contributed by the headline
+  enable_fls: true       # forward-looking statement detection
+  enable_esg: true       # environmental/social/governance tagging
+  enable_stance: false   # NLI stance hypothesis testing (heavy)
+  risk:
+    neg_boost: 1.18      # asymmetric: amplify negative consensus
+    pos_damp:  0.95      # asymmetric: dampen positive bias
+  abstain:
+    raw_conf_floor: 0.40
+    agreement_floor: 0.55
+  drift:
+    baseline_window: 10  # last N runs make up the rolling baseline
+    psi_warn: 0.10
+    psi_alert: 0.25
 
 clustering:
   model: "sentence-transformers/all-MiniLM-L6-v2"

@@ -12,8 +12,8 @@ Falls back to VADER only with --fast flag.
 from __future__ import annotations
 import logging
 import os
-from dataclasses import dataclass
-from typing import List, Optional
+from dataclasses import dataclass, field
+from typing import List, Optional, Dict, Any
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,10 @@ class SentimentResult:
     confidence: float     # [0, 1]
     model: str            # which model produced this
     raw_probs: dict       # {"positive": 0.7, "negative": 0.1, "neutral": 0.2}
+    # Optional rich RAMME payload (fls, esg, components, aspects, agreement,
+    # abstain reason, stance, etc.). Populated when the RAMME pipeline ran.
+    # Stored as a plain dict so existing pydantic serializers keep working.
+    ramme: Optional[dict] = None
 
 
 def _is_financial(themes: list[str] | None) -> bool:
@@ -241,24 +245,68 @@ def analyze_batch_vader(texts: list[str]) -> list[SentimentResult]:
     return results
 
 
+def _ramme_to_legacy(r) -> SentimentResult:
+    """Adapt a RAMMEResult into the legacy SentimentResult shape so existing
+    callers (cli_unified, dashboard) keep working unchanged.
+
+    The full rich payload (fls, esg, components, aspects, agreement,
+    stance, abstain reason) is preserved on the `.ramme` attribute so
+    downstream code can opt into the upgraded fields without a separate
+    pipeline call."""
+    primary = r.primary_model or "ramme"
+    rich = r.to_dict() if hasattr(r, "to_dict") else None
+    return SentimentResult(
+        score=r.score,
+        label=r.label if r.label != "abstain" else "neutral",
+        confidence=r.confidence,
+        model=f"ramme/{primary}",
+        raw_probs={"positive": max(0.0,  r.score),
+                   "negative": max(0.0, -r.score),
+                   "neutral":  max(0.0, 1.0 - abs(r.score))},
+        ramme=rich,
+    )
+
+
 def analyze_batch(
     texts: list[str],
     themes_per_text: list[list[str] | None] | None = None,
+    titles: list[str | None] | None = None,
+    entities_per_text: list[list[str] | None] | None = None,
     fast: bool = False,
+    ramme: bool = True,
 ) -> list[SentimentResult]:
     """
-    Main entry point. Tries remote first, local second, VADER last.
+    Main entry point. Risk-aware multi-model ensemble (RAMME) by default.
 
     Args:
         texts: article texts
         themes_per_text: themes per article for domain routing
+        titles: optional headlines (used for title-weighted scoring)
+        entities_per_text: optional entity lists for ABSA
         fast: if True, skip ML and use VADER
+        ramme: if True (default), use the new BRG risk-aware ensemble.
+               Set False to use the legacy FinBERT/RoBERTa router.
     """
     if fast:
         logger.info("--fast mode: using VADER")
         return analyze_batch_vader(texts)
 
-    # Try remote (HF Inference API)
+    if ramme:
+        try:
+            from .finance_pipeline import RiskAwareEnsemble
+            pipe = RiskAwareEnsemble()
+            logger.info(f"Running RAMME on {len(texts)} articles")
+            results = pipe.score_batch(
+                texts,
+                titles=titles,
+                themes_per_text=themes_per_text,
+                entities_per_text=entities_per_text,
+            )
+            return [_ramme_to_legacy(r) for r in results]
+        except Exception as e:
+            logger.warning(f"RAMME failed, falling back to legacy router: {e}")
+
+    # Legacy path: try remote, then local
     try:
         from . import hf_inference as hf
         if hf.is_available():
@@ -267,9 +315,29 @@ def analyze_batch(
     except Exception as e:
         logger.debug(f"Remote inference unavailable: {e}")
 
-    # Fallback to local
     logger.info(f"Running sentiment on {len(texts)} articles locally")
     return analyze_batch_local(texts, themes_per_text)
+
+
+def analyze_batch_ramme(
+    texts: list[str],
+    titles: list[str | None] | None = None,
+    themes_per_text: list[list[str] | None] | None = None,
+    entities_per_text: list[list[str] | None] | None = None,
+):
+    """Return the rich RAMMEResult objects (not the legacy adapter).
+
+    Use this when you need fls/esg/aspects/agreement — e.g. the dashboard's
+    Risk Intelligence page.
+    """
+    from .finance_pipeline import RiskAwareEnsemble
+    pipe = RiskAwareEnsemble()
+    return pipe.score_batch(
+        texts,
+        titles=titles,
+        themes_per_text=themes_per_text,
+        entities_per_text=entities_per_text,
+    )
 
 
 def analyze_one(text: str, themes: list[str] | None = None) -> SentimentResult:
