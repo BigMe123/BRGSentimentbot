@@ -11,28 +11,56 @@ def article(title, body="", source="Reuters"):
     }
 
 
-def test_microchips_keeps_international_semiconductor_policy():
+def test_generic_multiterm_topic_keeps_title_and_context():
+    a = article(
+        "Russia weighs grain export restrictions as wheat prices rise",
+        "Officials said wheat shipments, food security and Black Sea trade flows were under review.",
+    )
+    decision = score_article_relevance(a, topic="grain export restrictions", strict=True)
+    assert decision.keep
+    assert decision.reason == "generic topic evidence"
+
+
+def test_generic_multiterm_topic_drops_body_only_incidental_match():
+    a = article(
+        "Food column reviews spring pasta recipes",
+        "A market note at the bottom mentioned grain export restrictions but the article is about cooking.",
+    )
+    decision = score_article_relevance(a, topic="grain export restrictions", strict=True)
+    assert not decision.keep
+    assert "title" in decision.reason
+
+
+def test_generic_topic_rejects_partial_title_match_without_context():
+    a = article(
+        "Bank profits rise after rate cuts",
+        "The article is about quarterly earnings and trading revenue.",
+    )
+    decision = score_article_relevance(a, topic="central bank independence", strict=True)
+    assert not decision.keep
+
+
+def test_strategy_taxonomy_keeps_semiconductor_policy():
     a = article(
         "US expands China chip export controls as ASML faces new limits",
         "The rules target advanced semiconductors, EUV lithography, Nvidia GPUs, TSMC supply chains and Taiwan foundries.",
     )
     decision = score_article_relevance(a, topic="microchips", strict=True)
     assert decision.keep
-    assert decision.topic == "microchips"
     assert decision.score >= 0.62
 
 
-def test_microchips_drops_incidental_comics_reference():
+def test_strategy_taxonomy_drops_incidental_entertainment_reference():
     a = article(
         "Punisher brings back Microchip in new comic arc",
         "The story focuses on Marvel characters and streaming adaptations with no semiconductor industry relevance.",
     )
     decision = score_article_relevance(a, topic="microchips", strict=True)
     assert not decision.keep
-    assert "context" in decision.reason or "international" in decision.reason
+    assert decision.score < 0.58
 
 
-def test_microchips_drops_food_and_blue_chip_noise():
+def test_strategy_taxonomy_drops_food_and_blue_chip_noise():
     noisy = [
         article("Best potato chips for summer cooking", "A recipe column tests salt and vinegar snacks."),
         article("Blue chip stocks edge higher before Fed decision", "Generic market coverage with no semiconductor supply chain angle."),
@@ -42,37 +70,52 @@ def test_microchips_drops_food_and_blue_chip_noise():
     assert kept == []
 
 
-def test_microchips_requires_international_context():
+def test_strategy_taxonomy_keeps_industry_articles_without_forcing_international_context():
     a = article(
         "Intel opens new chip packaging lab in Ohio",
-        "The local facility focuses on domestic hiring and regional development.",
+        "The facility focuses on semiconductor packaging, fabrication and advanced chip supply chains.",
     )
     decision = score_article_relevance(a, topic="microchips", strict=True)
-    assert not decision.keep
-    assert "international" in decision.reason
+    assert decision.keep
 
 
-def test_microchip_sanctions_keeps_export_control_story():
+def test_prefilter_does_not_starve_sparse_taxonomy_topics():
+    a = article(
+        "Nvidia unveils new AI chip for data centers",
+        "Short early wire item with limited body text.",
+    )
+    decision = score_article_relevance(a, topic="microchips", strict=False)
+    assert decision.keep
+
+
+def test_trade_controls_keeps_export_control_story():
     a = article(
         "U.S. tightens ASML chip export restrictions to China",
         "The export controls affect advanced lithography equipment, EUV tools and semiconductor fabrication.",
     )
     decision = score_article_relevance(a, topic="microchip sanctions", strict=True)
     assert decision.keep
-    assert decision.topic == "microchip_sanctions"
 
 
-def test_wokeness_keeps_policy_culture_war_story():
+def test_trade_controls_handles_restrictions_wording():
+    a = article(
+        "Japan weighs semiconductor restrictions after talks with Washington",
+        "The proposed export controls would affect chipmaking equipment trade with China.",
+    )
+    decision = score_article_relevance(a, topic="microchip restrictions", strict=True)
+    assert decision.keep
+
+
+def test_culture_policy_keeps_policy_culture_war_story():
     a = article(
         "UK ministers attack woke DEI policies in universities",
         "The government said education policy and free speech rules would become an election issue.",
     )
     decision = score_article_relevance(a, topic="wokeness", strict=True)
     assert decision.keep
-    assert decision.topic == "wokeness"
 
 
-def test_wokeness_drops_ordinary_woke_phrase():
+def test_culture_policy_drops_ordinary_woke_phrase():
     a = article(
         "Family woke up early for holiday travel",
         "The article is about airport delays and sleep schedules.",

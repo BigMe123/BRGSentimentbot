@@ -5,7 +5,7 @@ defaults:
   min_international_matches: 1
 
 topics:
-  oil:
+  energy_markets:
     aliases:
       - oil
       - crude
@@ -13,6 +13,9 @@ topics:
       - petroleum
       - brent
       - wti
+      - natural gas
+      - lng
+      - fuel markets
     require_international: false
     core_title:
       - oil
@@ -29,10 +32,8 @@ topics:
       - shale
       - lng
       - tanker
-      - exxon
-      - chevron
-      - aramco
       - hormuz
+      - natural gas
     context_body:
       - crude
       - barrel
@@ -46,18 +47,14 @@ topics:
       - pipeline
       - shale
       - lng
-      - exxon
-      - chevron
-      - saudi aramco
       - exporter
       - embargo
       - hormuz
       - tanker
-      - iran
-      - russia
-      - saudi
       - energy market
       - futures
+      - sanctions
+      - supply disruption
     international_context:
       - iran
       - russia
@@ -81,7 +78,8 @@ topics:
       - hair oil
       - salad
 
-  microchips:
+  strategic_technology:
+    strict_min_score: 0.58
     aliases:
       - microchip
       - microchips
@@ -92,7 +90,13 @@ topics:
       - chipmaking
       - chip makers
       - chip industry
-    require_international: true
+      - ai chips
+      - critical technology
+      - advanced technology
+      - telecom equipment
+      - rare earths
+      - batteries
+    require_international: false
     core_title:
       - chip
       - chips
@@ -111,6 +115,18 @@ topics:
       - gpu
       - ai chip
       - memory chip
+      - rare earth
+      - battery
+      - telecom equipment
+      - nvidia
+      - intel
+      - amd
+      - asml
+      - tsmc
+      - taiwan semiconductor
+      - micron
+      - qualcomm
+      - samsung
     context_body:
       - tsmc
       - nvidia
@@ -120,24 +136,22 @@ topics:
       - samsung
       - micron
       - qualcomm
-      - broadcom
-      - arm holdings
+      - huawei
+      - smic
       - lithography
       - euv
       - transistor
       - fabrication
       - foundry
-      - fab
       - wafer
-      - taiwan
-      - china
       - export control
       - export controls
       - supply chain
       - advanced packaging
-      - memory
-      - logic chip
-      - chip equipment
+      - packaging
+      - strategic industry
+      - critical minerals
+      - clean technology
     international_context:
       - china
       - taiwan
@@ -179,83 +193,80 @@ topics:
       - chips ahoy
       - chip and joanna
 
-  microchip_sanctions:
+  trade_controls:
     aliases:
-      - microchip sanctions
-      - microchips sanctions
+      - sanctions
+      - export controls
+      - export control
+      - trade controls
       - chip sanctions
-      - chips sanctions
-      - semiconductor sanctions
+      - microchip sanctions
       - semiconductor export controls
       - chip export controls
       - chip curbs
       - tech curbs
+      - tariffs
+      - import restrictions
+      - microchip restrictions
+      - chip restrictions
+      - semiconductor restrictions
+      - technology restrictions
     require_international: true
     core_title:
-      - chip
-      - chips
-      - microchip
-      - microchips
-      - semiconductor
-      - semiconductors
+      - sanctions
+      - sanction
       - export controls
       - export control
-      - chip curbs
-      - tech curbs
-      - sanctions
       - restrictions
       - restricted
+      - curbs
+      - tariff
+      - tariffs
+      - blacklist
+      - entity list
+      - chip
+      - semiconductor
+      - technology
     context_body:
-      - china
-      - taiwan
-      - tsmc
-      - asml
-      - nvidia
-      - intel
-      - amd
-      - huawei
-      - smic
+      - commerce department
+      - entity list
+      - blacklist
       - export controls
       - export control
       - sanctions
       - restrictions
       - curbs
-      - blacklist
-      - entity list
-      - commerce department
-      - netherlands
-      - japan
+      - tariffs
+      - trade
+      - customs
       - advanced chips
       - chipmaking equipment
       - lithography
-      - euv
+      - critical minerals
+      - supply chain
     international_context:
       - china
       - taiwan
       - united states
       - u.s.
       - us
+      - russia
+      - iran
       - netherlands
       - japan
       - south korea
       - korea
       - european union
       - eu
-      - export controls
-      - sanctions
-      - restrictions
-      - curbs
-      - entity list
-      - commerce department
       - trade
+      - export
+      - import
     exclude_title:
-      - potato chip
-      - chocolate chip
-      - blue chip
-      - chipotle
-      - poker chip
+      - fantasy sanctions
+      - sports sanctions
+      - game ban
 
-  wokeness:
+  culture_policy:
     aliases:
       - wokeness
       - woke
@@ -264,6 +275,9 @@ topics:
       - culture wars
       - dei backlash
       - identity politics
+      - diversity policy
+      - campus speech
+      - critical race theory
     require_international: false
     core_title:
       - woke
@@ -277,6 +291,8 @@ topics:
       - identity politics
       - critical race theory
       - crt
+      - campus speech
+      - free speech
     context_body:
       - government
       - parliament

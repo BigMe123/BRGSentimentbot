@@ -1,8 +1,10 @@
 """Topic relevance screening for noisy news scans.
 
 The fetchers intentionally cast a wide net. This module applies a second,
-auditable relevance gate so vague topics like "microchips" or "wokeness" do
-not keep articles where a word appears once in an unrelated body paragraph.
+auditable relevance gate so vague topics do not keep articles where a word
+appears once in an unrelated body paragraph. Curated taxonomies are optional
+guardrails for known ambiguous topic families; arbitrary user topics still use
+the same title/body evidence rules through the generic scorer.
 """
 
 from __future__ import annotations
@@ -17,6 +19,19 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 logger = logging.getLogger(__name__)
+
+_TOPIC_STOPWORDS = {
+    "a", "an", "and", "are", "as", "at", "by", "for", "from", "how",
+    "in", "into", "is", "it", "its", "new", "news", "of", "on", "or",
+    "over", "the", "to", "under", "via", "vs", "with",
+}
+
+_GENERIC_CONTEXT_TERMS = {
+    "ban", "bans", "bill", "court", "deal", "election", "export",
+    "exports", "government", "imports", "law", "lawsuit", "market",
+    "minister", "policy", "prices", "regulation", "rules", "sanction",
+    "sanctions", "supply", "tariff", "tariffs", "trade",
+}
 
 
 @dataclass
@@ -54,6 +69,30 @@ def split_topic_query(topic: Optional[str]) -> List[str]:
 
 def _norm(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", (text or "").lower()).strip()
+
+
+def _dedupe(items: Iterable[str]) -> List[str]:
+    seen = set()
+    out = []
+    for item in items:
+        clean = _norm(item)
+        if clean and clean not in seen:
+            seen.add(clean)
+            out.append(item)
+    return out
+
+
+def _topic_key(topic: str) -> str:
+    return _norm(topic).replace(" ", "_")
+
+
+def _meaningful_tokens(text: str) -> List[str]:
+    tokens = []
+    for token in _norm(text).split():
+        if len(token) < 3 or token in _TOPIC_STOPWORDS:
+            continue
+        tokens.append(token)
+    return _dedupe(tokens)
 
 
 def _word_re(term: str) -> re.Pattern:
@@ -158,25 +197,32 @@ def _score_taxonomy(
     intl = _hits(full_l, tax.international_context)
 
     title_ok = bool(title_core)
-    context_ok = len(context) >= tax.min_context_matches
     intl_ok = (not tax.require_international) or len(intl) >= tax.min_international_matches
 
     score = 0.0
     if title_ok:
-        score += 0.42
+        score += 0.46
     elif full_core and not strict:
-        score += 0.18
-    score += min(0.28, 0.10 * len(context))
+        score += 0.24
+    score += min(0.30, 0.12 * len(context))
     score += min(0.22, 0.08 * len(intl))
     if _hits(full_l, tax.aliases):
         score += 0.08
     score = min(1.0, score)
 
+    if not strict:
+        keep = bool(title_core or full_core or _hits(full_l, tax.aliases)) and score >= 0.28
+        return RelevanceDecision(
+            keep=keep,
+            score=round(score, 3),
+            topic=tax.name,
+            reason="taxonomy prefilter match" if keep else "no taxonomy prefilter match",
+            signals=[*title_core[:4], *full_core[:4], *context[:4], *intl[:4]],
+        )
+
     missing = []
     if not title_ok:
         missing.append("topic term in title")
-    if not context_ok:
-        missing.append("domain context")
     if not intl_ok:
         missing.append("international context")
 
@@ -200,28 +246,82 @@ def _score_taxonomy(
 
 
 def _fallback_keywords(topic: str) -> List[str]:
+    topic_phrase = topic.replace("_", " ")
+    keywords: List[str] = [topic_phrase]
     try:
         from .config import TOPIC_MAP
         if topic in TOPIC_MAP:
-            return list(TOPIC_MAP[topic])
-        topic_key = topic.lower().replace(" ", "_")
+            keywords.extend(TOPIC_MAP[topic])
+        topic_key = _topic_key(topic)
         if topic_key in TOPIC_MAP:
-            return list(TOPIC_MAP[topic_key])
+            keywords.extend(TOPIC_MAP[topic_key])
     except Exception:
         pass
-    return [topic.replace("_", " ")]
+    keywords.extend(_meaningful_tokens(topic_phrase))
+    return _dedupe(keywords)
 
 
 def _score_keyword_topic(article: Dict[str, Any], topic: str, *, strict: bool = False) -> RelevanceDecision:
     title, _body, full = _article_fields(article)
+    topic_phrase = topic.replace("_", " ")
+    topic_tokens = _meaningful_tokens(topic_phrase)
     terms = [t for t in _fallback_keywords(topic) if t]
-    title_hits = _hits(title.lower(), terms)
-    full_hits = _hits(full.lower(), terms)
-    if title_hits:
-        return RelevanceDecision(True, 0.62, "keyword match in title", topic=topic, signals=title_hits[:4])
-    if full_hits and not strict:
-        return RelevanceDecision(True, 0.40, "keyword match outside title", topic=topic, signals=full_hits[:4])
-    return RelevanceDecision(False, 0.0, "no topic keyword match", topic=topic)
+    phrase_terms = [t for t in terms if len(_norm(t).split()) > 1]
+    single_terms = [t for t in terms if len(_norm(t).split()) == 1]
+
+    title_phrase_hits = _hits(title, phrase_terms)
+    title_term_hits = _hits(title, single_terms)
+    full_phrase_hits = _hits(full, phrase_terms)
+    full_term_hits = _hits(full, single_terms)
+    context_hits = _hits(full, _GENERIC_CONTEXT_TERMS)
+
+    matched_topic_tokens = [
+        token for token in topic_tokens
+        if _hits(full, [token])
+    ]
+    title_has_topic_evidence = bool(title_phrase_hits or title_term_hits)
+
+    score = 0.0
+    if title_phrase_hits:
+        score += 0.48
+    elif full_phrase_hits and not strict:
+        score += 0.24
+    score += min(0.34, 0.14 * len(title_term_hits))
+    score += min(0.20, 0.05 * len(full_term_hits))
+    score += min(0.12, 0.04 * len(context_hits))
+    if len(matched_topic_tokens) >= 2:
+        score += 0.12
+    score = min(1.0, score)
+
+    missing = []
+    if strict and not title_has_topic_evidence:
+        missing.append("topic evidence in title")
+    if len(topic_tokens) >= 2 and len(matched_topic_tokens) < min(2, len(topic_tokens)):
+        missing.append("supporting topic terms")
+
+    threshold = 0.52 if strict else 0.32
+    keep = not missing and score >= threshold
+    if keep:
+        reason = "generic topic evidence"
+    elif missing:
+        reason = f"missing {', '.join(missing)}"
+    else:
+        reason = "below relevance threshold"
+
+    signals = _dedupe([
+        *title_phrase_hits[:3],
+        *title_term_hits[:4],
+        *full_phrase_hits[:2],
+        *full_term_hits[:4],
+        *context_hits[:3],
+    ])
+    return RelevanceDecision(
+        keep=keep,
+        score=round(score, 3),
+        reason=reason,
+        topic=topic,
+        signals=signals,
+    )
 
 
 def score_article_relevance(
@@ -323,7 +423,7 @@ def apply_embedding_gate(
 
     model_name = os.getenv("BRG_RELEVANCE_EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
     model = SentenceTransformer(model_name)
-    query_vec = model.encode([f"International news about {topic}"], normalize_embeddings=True)[0]
+    query_vec = model.encode([f"News article substantively about {topic}"], normalize_embeddings=True)[0]
     texts = [
         f"{a.get('title', '')}. {a.get('description', '') or a.get('summary', '')} {str(a.get('content', ''))[:800]}"
         for a in articles
@@ -363,8 +463,9 @@ def ai_relevance_judge(article: Dict[str, Any], *, topic: str, region: Optional[
         prompt = (
             "Decide whether this article is substantively relevant to the requested news topic. "
             "Require the article's main subject to match the topic; incidental one-word mentions are not enough. "
-            "For microchips/semiconductors, prefer international trade, sanctions, supply chain, Taiwan/China/US, "
-            "or strategic industry coverage. Return compact JSON: "
+            "Prefer title/lede evidence plus supporting body context. Reject unrelated food, sports, entertainment, "
+            "or finance idioms unless the requested topic is actually about those domains. If a region is provided, "
+            "it must be substantively connected. Return compact JSON: "
             '{"keep": true|false, "score": 0..1, "reason": "short"}\n\n'
             f"{json.dumps(snippet, ensure_ascii=False)}"
         )

@@ -71,7 +71,7 @@ bsgbot feeds
 | `--category` | NewsAPI category: business, technology, science, health, sports, entertainment, general |
 | `--country` | 2-letter code (us, gb, de, etc.) |
 | `--region` | Post-fetch relevance filter (asia, europe, middle_east, etc.) |
-| `--topic` | Post-fetch relevance filter (energy, elections, sanctions, microchips, wokeness, etc.) |
+| `--topic` | Post-fetch relevance filter (energy, elections, sanctions, strategic technology, culture policy, etc.) |
 | `--freshness` | Age window: 1h, 6h, 24h, 7d, 30d (default: 7d) |
 | `--target-articles` | Target article count (default: 300) |
 | `--also-rss` | Also fetch from ~190 configured RSS feeds |
@@ -120,7 +120,7 @@ Articles are normalized to a common dict: `{title, link, description, content, d
 
 - **Dedup**: URL hash-based, preserves order
 - **Freshness**: Drop articles older than `--freshness` window
-- **Relevance**: Two-pass topic/region screening. Curated taxonomies in `config/topic_taxonomies.yaml` handle vague topics such as microchips, microchip sanctions, wokeness, and oil. Optional semantic and OpenAI gates can be enabled for stricter review.
+- **Relevance**: Two-pass topic/region screening. A permissive prefilter preserves the candidate pool before full-text scraping; a stricter full-text pass requires title evidence plus supporting context. Curated taxonomies in `config/topic_taxonomies.yaml` cover ambiguous topic families such as energy markets, strategic technology, trade controls, and culture policy. Arbitrary user topics use the same generic evidence scorer. Optional semantic and OpenAI gates can be enabled for stricter review.
 - **Full text**: Scrapes article body via newspaper3k + requests fallback (NewsAPI truncates to ~200 chars)
 
 ### 3. Sentiment Analysis

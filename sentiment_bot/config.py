@@ -72,14 +72,14 @@ TOPIC_MAP = {
     "health": ["health", "disease", "pandemic"],
     "conflict": ["conflict", "war"],
     "technology": ["technology", "tech"],
+    "strategic_technology": ["semiconductor", "microchip", "chip", "ai chip", "critical minerals", "battery", "telecom equipment"],
+    "trade_controls": ["sanction", "export control", "restriction", "tariff", "entity list", "blacklist"],
+    "culture_policy": ["culture war", "dei", "free speech", "identity politics", "critical race theory"],
     "defense": ["defense", "military"],
     "natural_disasters": ["earthquake", "flood", "hurricane"],
     "terrorism": ["terrorism", "attack"],
     "infrastructure": ["infrastructure", "bridge", "road"],
     "diplomacy": ["diplomacy", "talks"],
-    "microchips": ["microchip", "microchips", "chip", "chips", "semiconductor", "semiconductors"],
-    "microchip_sanctions": ["microchip sanctions", "chip sanctions", "semiconductor export controls", "chip curbs"],
-    "wokeness": ["wokeness", "woke", "anti-woke", "culture war", "dei"],
 }
 
 WINDOWS = {
