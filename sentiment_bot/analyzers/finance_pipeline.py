@@ -200,9 +200,9 @@ def _temperature(probs: Dict[str, float], T: float = DEFAULT_TEMPERATURE) -> Dic
 
 
 def _label_from_score(score: float) -> str:
-    if score > 0.10:
+    if score > 0.05:
         return "positive"
-    if score < -0.10:
+    if score < -0.05:
         return "negative"
     return "neutral"
 

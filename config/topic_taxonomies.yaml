@@ -1,0 +1,331 @@
+defaults:
+  min_score: 0.55
+  strict_min_score: 0.62
+  min_context_matches: 1
+  min_international_matches: 1
+
+topics:
+  oil:
+    aliases:
+      - oil
+      - crude
+      - crude oil
+      - petroleum
+      - brent
+      - wti
+    require_international: false
+    core_title:
+      - oil
+      - crude
+      - brent
+      - wti
+      - petroleum
+      - refinery
+      - refining
+      - opec
+      - barrel
+      - drilling
+      - pipeline
+      - shale
+      - lng
+      - tanker
+      - exxon
+      - chevron
+      - aramco
+      - hormuz
+    context_body:
+      - crude
+      - barrel
+      - opec
+      - brent
+      - wti
+      - petroleum
+      - refinery
+      - refining
+      - drilling
+      - pipeline
+      - shale
+      - lng
+      - exxon
+      - chevron
+      - saudi aramco
+      - exporter
+      - embargo
+      - hormuz
+      - tanker
+      - iran
+      - russia
+      - saudi
+      - energy market
+      - futures
+    international_context:
+      - iran
+      - russia
+      - saudi
+      - hormuz
+      - opec
+      - tanker
+      - embargo
+      - sanctions
+      - export
+    exclude_title:
+      - cooking oil
+      - olive oil
+      - vegetable oil
+      - fish oil
+      - essential oil
+      - coconut oil
+      - snake oil
+      - recipe
+      - skincare
+      - hair oil
+      - salad
+
+  microchips:
+    aliases:
+      - microchip
+      - microchips
+      - chips
+      - chip
+      - semiconductors
+      - semiconductor
+      - chipmaking
+      - chip makers
+      - chip industry
+    require_international: true
+    core_title:
+      - chip
+      - chips
+      - microchip
+      - microchips
+      - semiconductor
+      - semiconductors
+      - wafer
+      - wafers
+      - foundry
+      - foundries
+      - fab
+      - fabs
+      - chipmaking
+      - asic
+      - gpu
+      - ai chip
+      - memory chip
+    context_body:
+      - tsmc
+      - nvidia
+      - intel
+      - amd
+      - asml
+      - samsung
+      - micron
+      - qualcomm
+      - broadcom
+      - arm holdings
+      - lithography
+      - euv
+      - transistor
+      - fabrication
+      - foundry
+      - fab
+      - wafer
+      - taiwan
+      - china
+      - export control
+      - export controls
+      - supply chain
+      - advanced packaging
+      - memory
+      - logic chip
+      - chip equipment
+    international_context:
+      - china
+      - taiwan
+      - united states
+      - u.s.
+      - us
+      - japan
+      - netherlands
+      - south korea
+      - korea
+      - european union
+      - eu
+      - singapore
+      - malaysia
+      - export control
+      - export controls
+      - sanctions
+      - restrictions
+      - curbs
+      - tariff
+      - tariffs
+      - trade war
+      - supply chain
+      - tsmc
+      - asml
+    exclude_title:
+      - potato chip
+      - potato chips
+      - chocolate chip
+      - chocolate chips
+      - blue chip
+      - blue-chip
+      - chipotle
+      - wood chip
+      - paint chip
+      - poker chip
+      - tortilla chip
+      - fish and chips
+      - chips ahoy
+      - chip and joanna
+
+  microchip_sanctions:
+    aliases:
+      - microchip sanctions
+      - microchips sanctions
+      - chip sanctions
+      - chips sanctions
+      - semiconductor sanctions
+      - semiconductor export controls
+      - chip export controls
+      - chip curbs
+      - tech curbs
+    require_international: true
+    core_title:
+      - chip
+      - chips
+      - microchip
+      - microchips
+      - semiconductor
+      - semiconductors
+      - export controls
+      - export control
+      - chip curbs
+      - tech curbs
+      - sanctions
+      - restrictions
+      - restricted
+    context_body:
+      - china
+      - taiwan
+      - tsmc
+      - asml
+      - nvidia
+      - intel
+      - amd
+      - huawei
+      - smic
+      - export controls
+      - export control
+      - sanctions
+      - restrictions
+      - curbs
+      - blacklist
+      - entity list
+      - commerce department
+      - netherlands
+      - japan
+      - advanced chips
+      - chipmaking equipment
+      - lithography
+      - euv
+    international_context:
+      - china
+      - taiwan
+      - united states
+      - u.s.
+      - us
+      - netherlands
+      - japan
+      - south korea
+      - korea
+      - european union
+      - eu
+      - export controls
+      - sanctions
+      - restrictions
+      - curbs
+      - entity list
+      - commerce department
+      - trade
+    exclude_title:
+      - potato chip
+      - chocolate chip
+      - blue chip
+      - chipotle
+      - poker chip
+
+  wokeness:
+    aliases:
+      - wokeness
+      - woke
+      - anti-woke
+      - culture war
+      - culture wars
+      - dei backlash
+      - identity politics
+    require_international: false
+    core_title:
+      - woke
+      - wokeness
+      - anti-woke
+      - culture war
+      - culture wars
+      - dei
+      - diversity equity inclusion
+      - diversity, equity and inclusion
+      - identity politics
+      - critical race theory
+      - crt
+    context_body:
+      - government
+      - parliament
+      - minister
+      - court
+      - election
+      - party
+      - policy
+      - law
+      - education
+      - school
+      - university
+      - corporate
+      - company
+      - workplace
+      - free speech
+      - censorship
+      - race
+      - gender
+      - diversity
+      - inclusion
+      - conservative
+      - progressive
+      - populist
+    international_context:
+      - united states
+      - u.s.
+      - us
+      - uk
+      - britain
+      - canada
+      - australia
+      - europe
+      - france
+      - germany
+      - india
+      - brazil
+      - government
+      - parliament
+      - minister
+      - court
+      - election
+      - party
+    exclude_title:
+      - woke up
+      - woke from
+      - woke me
+      - woke him
+      - woke her
+      - woke them
+      - wake forest
+      - awake

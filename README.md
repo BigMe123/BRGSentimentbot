@@ -46,7 +46,7 @@ bsgbot run "trade war" --llm
 # Extract structured geopolitical events
 bsgbot run "sanctions" --extract-events
 
-# Full pipeline: LLM sentiment + events + AI summaries + CSV
+# Full pipeline: LLM sentiment + events + executive summaries + CSV
 bsgbot run "oil prices" --llm --extract-events --summarize --export-csv
 
 # Include RSS feeds alongside NewsAPI
@@ -70,15 +70,17 @@ bsgbot feeds
 | `query` | Search term (positional) |
 | `--category` | NewsAPI category: business, technology, science, health, sports, entertainment, general |
 | `--country` | 2-letter code (us, gb, de, etc.) |
-| `--region` | Post-fetch keyword filter (asia, europe, middle_east, etc.) |
-| `--topic` | Post-fetch keyword filter (energy, elections, sanctions, etc.) |
+| `--region` | Post-fetch relevance filter (asia, europe, middle_east, etc.) |
+| `--topic` | Post-fetch relevance filter (energy, elections, sanctions, microchips, wokeness, etc.) |
 | `--freshness` | Age window: 1h, 6h, 24h, 7d, 30d (default: 7d) |
 | `--target-articles` | Target article count (default: 300) |
 | `--also-rss` | Also fetch from ~190 configured RSS feeds |
 | `--max-feeds` | Limit RSS feeds (0 = all) |
 | `--llm` | Use GPT-4o-mini for sentiment (requires OPENAI_API_KEY) |
 | `--extract-events` | Extract actor-action-receiver events via LLM |
-| `--summarize` | Generate AI article summaries |
+| `--summarize` | Generate executive article summaries |
+| `--semantic-relevance` | Optional embedding relevance gate for vague topics |
+| `--ai-relevance` | Optional OpenAI relevance review for article snippets |
 | `--export-csv` | Also export as CSV |
 | `--output-dir` | Output directory (default: ./output) |
 | `--debug` | Verbose logging |
@@ -92,7 +94,7 @@ pip install streamlit plotly altair
 streamlit run dashboard.py
 ```
 
-Pages: Overview, Article Browser, AI Analyst (GPT-powered intelligence briefs), Events, Configuration, Health.
+Pages: Results, Risk Intelligence, Events, Analyst Briefs, Compare Scans, New Scan, Past Scans, Methodology.
 
 ---
 
@@ -101,7 +103,7 @@ Pages: Overview, Article Browser, AI Analyst (GPT-powered intelligence briefs), 
 ### Pipeline
 
 ```
-Fetch --> Deduplicate --> Freshness Filter --> Keyword Filter --> Full Text --> Analyze --> Extract Events --> Output
+Fetch --> Deduplicate --> Freshness Filter --> Relevance Prefilter --> Full Text --> Strict Relevance --> Analyze --> Extract Events --> Output
 ```
 
 ### 1. Fetching
@@ -118,14 +120,16 @@ Articles are normalized to a common dict: `{title, link, description, content, d
 
 - **Dedup**: URL hash-based, preserves order
 - **Freshness**: Drop articles older than `--freshness` window
-- **Keywords**: Filter by region/topic mappings (config.py `REGION_MAP`, `TOPIC_MAP`)
+- **Relevance**: Two-pass topic/region screening. Curated taxonomies in `config/topic_taxonomies.yaml` handle vague topics such as microchips, microchip sanctions, wokeness, and oil. Optional semantic and OpenAI gates can be enabled for stricter review.
 - **Full text**: Scrapes article body via newspaper3k + requests fallback (NewsAPI truncates to ~200 chars)
 
 ### 3. Sentiment Analysis
 
 Two modes:
 
-**VADER (default)** — lexicon-based, no API needed, fast. Score range: -1.0 to +1.0. Labels: pos (>0.05), neg (<-0.05), neu.
+**RAMME (default)** — risk-aware, confidence-weighted specialist ensemble. Score range: -1.0 to +1.0. Labels: pos (>0.05), neg (<-0.05), neu.
+
+**VADER (--fast)** — lexicon-based fallback, no API needed, fast. Same score and label thresholds.
 
 **LLM (--llm)** — GPT-4o-mini via OpenAI API. Returns structured JSON with sentiment, confidence, entities, trading signals, market implications. Cached in SQLite to avoid repeat calls.
 

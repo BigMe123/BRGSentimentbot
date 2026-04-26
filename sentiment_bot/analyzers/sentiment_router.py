@@ -255,9 +255,13 @@ def _ramme_to_legacy(r) -> SentimentResult:
     pipeline call."""
     primary = r.primary_model or "ramme"
     rich = r.to_dict() if hasattr(r, "to_dict") else None
+    if getattr(r, "abstain", False) or r.label == "abstain":
+        label = "neutral"
+    else:
+        label = "positive" if r.score > 0.05 else ("negative" if r.score < -0.05 else "neutral")
     return SentimentResult(
         score=r.score,
-        label=r.label if r.label != "abstain" else "neutral",
+        label=label,
         confidence=r.confidence,
         model=f"ramme/{primary}",
         raw_probs={"positive": max(0.0,  r.score),

@@ -971,7 +971,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 page = st.sidebar.radio("Navigation", [
-    "Results", "Risk Intelligence", "Events", "AI Analyst", "Compare Scans",
+    "Results", "Risk Intelligence", "Events", "Analyst Briefs", "Compare Scans",
     "New Scan", "Past Scans", "Methodology",
 ], label_visibility="collapsed")
 st.sidebar.divider()
@@ -1043,9 +1043,9 @@ TUTORIAL_STEPS = [
         "page": "Events",
     },
     {
-        "title": "Step 4: AI Analyst",
+        "title": "Step 4: Analyst Briefs",
         "body": (
-            "The **AI Analyst** sends your scan data to GPT-4o for analysis.\n\n"
+            "The **Analyst Briefs** page turns a completed scan into structured briefings.\n\n"
             "Quick reports:\n"
             "- **Intelligence Brief** — executive summary with risk assessment\n"
             "- **Country Risk Profile** — deep dive on a region\n"
@@ -1054,7 +1054,7 @@ TUTORIAL_STEPS = [
             "You can also ask **custom questions** about the data.\n\n"
             "That's it! You're ready to go."
         ),
-        "page": "AI Analyst",
+        "page": "Analyst Briefs",
     },
 ]
 
@@ -2052,11 +2052,11 @@ elif page == "Events":
 
 
 # =====================================================================
-# AI ANALYST
+# ANALYST BRIEFS
 # =====================================================================
 
-elif page == "AI Analyst":
-    _page_header("AI Analyst", "GPT-4o Intelligence Briefings")
+elif page == "Analyst Briefs":
+    _page_header("Analyst Briefs", "Structured Scan Briefings")
 
     summaries = load_summaries()
     if not summaries:
@@ -2082,11 +2082,11 @@ elif page == "AI Analyst":
 
     AI_QUERY_CAP = 10  # max AI queries per session
     ai_used = st.session_state.get("_rate_ai_queries", 0)
-    st.caption(f"AI queries this session: {ai_used}/{AI_QUERY_CAP}")
+    st.caption(f"Briefing queries this session: {ai_used}/{AI_QUERY_CAP}")
 
     if chosen:
         if ai_used >= AI_QUERY_CAP:
-            st.error(f"AI query limit reached ({AI_QUERY_CAP}/session). Refresh to start a new session.")
+            st.error(f"Briefing query limit reached ({AI_QUERY_CAP}/session). Refresh to start a new session.")
         else:
             with st.spinner(f"Generating {chosen}..."):
                 result = call_openai(AI_PRESETS[chosen], snapshot)
@@ -2101,7 +2101,7 @@ elif page == "AI Analyst":
     q = st.text_area("Your question", placeholder="e.g. What are the biggest risks for Southeast Asia based on this data?", height=80)
     if st.button("Analyze", type="primary"):
         if ai_used >= AI_QUERY_CAP:
-            st.error(f"AI query limit reached ({AI_QUERY_CAP}/session). Refresh to start a new session.")
+            st.error(f"Briefing query limit reached ({AI_QUERY_CAP}/session). Refresh to start a new session.")
         elif q.strip():
             with st.spinner("Analyzing..."):
                 result = call_openai(q, snapshot)
@@ -2231,10 +2231,19 @@ elif page == "New Scan":
                                         format_func=lambda x: x.title() if x else "All")
                 extract_events = st.checkbox("Extract events (who did what to whom)", help="Requires OpenAI key")
             with a2:
-                summarize = st.checkbox("AI summaries (adds ~1s per article)")
+                summarize = st.checkbox("Executive summaries (adds ~1s per article)")
                 export_csv = st.checkbox("Export CSV")
                 region_filter = st.text_input("Region filter", placeholder="europe, asia, middle_east")
                 topic_filter = st.text_input("Topic filter", placeholder="energy, elections, trade")
+            relevance_mode = st.radio(
+                "Relevance screening",
+                ["Standard taxonomy", "Semantic", "Model review", "Semantic + model"],
+                horizontal=True,
+                help=(
+                    "Standard uses the audited taxonomy. Semantic requires sentence-transformers. "
+                    "Model review uses OpenAI on article snippets when an API key is configured."
+                ),
+            )
 
         st.caption(f"Estimated: ~{max(2 + (target//60 if summarize else 0), 1)} min  |  ~{target} API credits")
         go = st.form_submit_button("Start Scan", type="primary", use_container_width=True)
@@ -2261,6 +2270,8 @@ elif page == "New Scan":
             if category: args.extend(["--category", category])
             args.extend(["--freshness", freshness, "--target", str(target)])
             if extract_events: args.append("--extract-events")
+            if relevance_mode in ("Semantic", "Semantic + model"): args.append("--semantic-relevance")
+            if relevance_mode in ("Model review", "Semantic + model"): args.append("--ai-relevance")
             if summarize: args.append("--summarize")
             if export_csv: args.append("--export-csv")
             if region_filter: args.extend(["--region", region_filter])
@@ -2272,7 +2283,7 @@ elif page == "New Scan":
             if code == 0:
                 _record_scan(target)
                 box.empty()
-                st.success("Scan complete. Go to Results or AI Analyst to explore.")
+                st.success("Scan complete. Go to Results or Analyst Briefs to explore.")
                 with st.expander("Technical log", expanded=False): st.text(re.sub(r'\x1b\[[0-9;]*m', '', stdout))
             else:
                 box.empty(); st.error("Scan failed.")
@@ -2331,6 +2342,8 @@ elif page == "Methodology":
 **Deduplication:** Articles are deduplicated by URL hash (MD5). If two sources carry the same article URL, only one copy is retained.
 
 **Freshness Filter:** Articles are filtered by publication date against the user-specified time window (e.g., "7d" = last 7 days). Articles without parseable dates from RSS feeds are retained.
+
+**Relevance Screening:** The scan now uses a two-pass relevance gate. Before full-text scraping, articles must match the requested topic or region. After full text is retrieved, a stricter pass applies curated topic taxonomies such as `microchips`, `microchip sanctions`, `wokeness`, and `oil`. Vague topics require title-level topic evidence plus body context; the microchip taxonomy also requires an international trade, supply-chain, sanctions, or strategic-industry signal. Optional Semantic and Model Review modes add embedding or OpenAI checks after the deterministic gate.
 
 **Full Text Retrieval:** Most APIs and RSS feeds only provide headlines and short descriptions. The platform attempts full-text extraction in this order: trafilatura, newspaper3k, then a raw paragraph scrape. Failed extractions fall back to the headline + description for analysis and are visible through each article's text length.
 
@@ -2422,7 +2435,7 @@ Themes are assigned by keyword matching in article text:
 | Geopolitical Risk | war, conflict, military, sanctions |
 | Political Risk | election, vote, poll, candidate |
 | Energy | oil, gas, energy, OPEC, crude |
-| AI/Tech | AI, artificial intelligence, ML, GPT |
+| Technology | AI, artificial intelligence, ML, GPT |
 | Crypto | crypto, bitcoin, blockchain |
 
 An article can have multiple themes. Top 5 are retained per article.
@@ -2442,9 +2455,9 @@ Events are cached to avoid redundant API calls.
 
 ---
 
-### 8. AI Analyst
+### 8. Analyst Briefs
 
-The AI Analyst page sends a structured data snapshot to GPT-4o-mini containing:
+The Analyst Briefs page sends a structured data snapshot to GPT-4o-mini containing:
 - Overall scan statistics
 - Country mention counts and average sentiments
 - Source diversity breakdown
@@ -2477,6 +2490,6 @@ Every statistic in this platform is traceable to its source articles:
 **Data retention:** All scan data is stored locally. Nothing is sent to external services except:
 - TheNewsAPI (article metadata retrieval)
 - GDELT (article metadata retrieval)
-- OpenAI (only when AI Analyst or event extraction is explicitly invoked by the user)
+- OpenAI (only when Analyst Briefs, event extraction, summaries, or Model Review relevance is explicitly invoked by the user)
     """)
     _page_footer()

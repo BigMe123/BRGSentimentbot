@@ -77,6 +77,9 @@ TOPIC_MAP = {
     "terrorism": ["terrorism", "attack"],
     "infrastructure": ["infrastructure", "bridge", "road"],
     "diplomacy": ["diplomacy", "talks"],
+    "microchips": ["microchip", "microchips", "chip", "chips", "semiconductor", "semiconductors"],
+    "microchip_sanctions": ["microchip sanctions", "chip sanctions", "semiconductor export controls", "chip curbs"],
+    "wokeness": ["wokeness", "woke", "anti-woke", "culture war", "dei"],
 }
 
 WINDOWS = {

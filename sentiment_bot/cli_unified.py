@@ -514,10 +514,10 @@ def run(
         help="2-letter country code for top headlines (e.g., us, gb, de)",
     ),
     region: Optional[str] = typer.Option(
-        None, "--region", "-r", help="Post-fetch keyword filter by region (e.g., asia, europe)"
+        None, "--region", "-r", help="Post-fetch relevance filter by region (e.g., asia, europe)"
     ),
     topic: Optional[str] = typer.Option(
-        None, "--topic", "-t", help="Post-fetch keyword filter by topic (e.g., energy, elections)"
+        None, "--topic", "-t", help="Post-fetch relevance filter by topic (e.g., energy, elections)"
     ),
     page_size: int = typer.Option(
         100, "--page-size", help="Articles per API call (max 100)"
@@ -538,12 +538,22 @@ def run(
         False, "--extract-events", help="Extract structured events using LLM (requires OPENAI_API_KEY)"
     ),
     summarize: bool = typer.Option(
-        False, "--summarize", help="Generate AI summaries (slow — adds ~1s/article)"
+        False, "--summarize", help="Generate executive summaries (slow; adds ~1s/article)"
     ),
     output: Optional[str] = typer.Option(
         None, "--output", "-f", help="Output file for results (JSON)"
     ),
     fast: bool = typer.Option(False, "--fast", help="Use VADER for sentiment (dev only, lower quality)"),
+    semantic_relevance: bool = typer.Option(
+        False,
+        "--semantic-relevance",
+        help="Optional embedding relevance gate for vague topics (requires sentence-transformers)",
+    ),
+    ai_relevance: bool = typer.Option(
+        False,
+        "--ai-relevance",
+        help="Optional OpenAI relevance review; sends article snippets to OpenAI",
+    ),
     debug: bool = typer.Option(False, "--debug", help="Enable debug logging"),
 ):
     """
@@ -616,6 +626,8 @@ def run(
             output_dir=output_dir,
             run_id_seed=run_id_seed,
             export_csv=export_csv,
+            semantic_relevance=semantic_relevance,
+            ai_relevance=ai_relevance,
         )
     )
 
@@ -639,6 +651,8 @@ async def _run_async(
     output_dir: str,
     run_id_seed: Optional[str],
     export_csv: bool,
+    semantic_relevance: bool = False,
+    ai_relevance: bool = False,
 ):
     start_time = time.time()
     started_at = datetime.now()
@@ -703,12 +717,26 @@ async def _run_async(
     # Step 2-4: Filter pipeline
     unique_articles = _deduplicate_articles(articles)
     fresh_articles, stale_count, freshness_rate = _filter_by_freshness(unique_articles, max_age_hours)
-    if region or topic:
-        fresh_articles = _keyword_filter(fresh_articles, region=region, topic=topic)
+    relevance_topic = topic or query
+    relevance_prefilter_count = len(fresh_articles)
+    if region or relevance_topic:
+        fresh_articles = _keyword_filter(
+            fresh_articles,
+            region=region,
+            topic=relevance_topic,
+            strict=False,
+        )
+        console.print(
+            f"  [dim]relevance prefilter: {len(fresh_articles)}/{relevance_prefilter_count} kept[/dim]"
+        )
 
-    # Cap at target to avoid MPS/NLI hangs on large batches
-    if len(fresh_articles) > target_articles:
-        fresh_articles = fresh_articles[:target_articles]
+    # Keep a larger prefetch pool so the strict full-text gate can remove
+    # incidental keyword matches without starving the final target.
+    prefetch_cap = target_articles
+    if region or relevance_topic:
+        prefetch_cap = min(len(fresh_articles), max(target_articles * 3, target_articles + 75))
+    if len(fresh_articles) > prefetch_cap:
+        fresh_articles = fresh_articles[:prefetch_cap]
 
     # Pipeline summary — one line
     console.print(f"  [dim]fetched {total_raw} | unique {len(unique_articles)} | fresh {len(fresh_articles)}[/dim]")
@@ -719,6 +747,30 @@ async def _run_async(
 
     # Step 4b: Full text
     fresh_articles = _fetch_full_text(fresh_articles)
+
+    if region or relevance_topic:
+        strict_before = len(fresh_articles)
+        fresh_articles = _keyword_filter(
+            fresh_articles,
+            region=region,
+            topic=relevance_topic,
+            strict=True,
+            semantic=semantic_relevance,
+            ai=ai_relevance,
+        )
+        console.print(
+            f"  [dim]strict relevance: {len(fresh_articles)}/{strict_before} kept"
+            f"{' | semantic' if semantic_relevance else ''}"
+            f"{' | ai' if ai_relevance else ''}[/dim]"
+        )
+
+    # Cap final set at target after strict relevance screening.
+    if len(fresh_articles) > target_articles:
+        fresh_articles = fresh_articles[:target_articles]
+
+    if not fresh_articles:
+        console.print("[yellow]No articles match your filters after relevance screening.[/yellow]")
+        return
 
     # Step 5: Analyze sentiment
     if llm_analysis:
@@ -801,7 +853,7 @@ async def _run_async(
             text_chars=len(text),
             hash=entity_extractor.calculate_text_hash(text),
             source_tier=get_tier(article.get("domain", "unknown")),
-            relevance=0.5,
+            relevance=float(article.get("_relevance_score", 0.5) or 0.5),
             sentiment=Sentiment(
                 label=sentiment_label,
                 score=sentiment_score,
@@ -1420,73 +1472,35 @@ def _word_re(term: str) -> "re.Pattern":
     return re.compile(pat, re.IGNORECASE)
 
 
-def _keyword_filter(articles: List[Dict], region: Optional[str] = None, topic: Optional[str] = None) -> List[Dict]:
-    from .config import REGION_MAP, TOPIC_MAP
+def _keyword_filter(
+    articles: List[Dict],
+    region: Optional[str] = None,
+    topic: Optional[str] = None,
+    strict: bool = False,
+    semantic: bool = False,
+    ai: bool = False,
+) -> List[Dict]:
+    """Topic/region relevance gate.
 
-    keywords: List[str] = []
-    if region and region in REGION_MAP:
-        keywords.extend(REGION_MAP[region])
-    elif region:
-        keywords.append(region.replace("_", " "))
+    Kept as the public helper name for compatibility, but the implementation
+    is now taxonomy-driven rather than a bare bag-of-keywords.
+    """
+    from .topic_relevance import (
+        apply_ai_relevance_gate,
+        apply_embedding_gate,
+        filter_articles_by_relevance,
+    )
 
-    # Topic input may be free-form ("Iran, Hormuz, Oil"). Split on commas.
-    raw_topics: List[str] = []
-    if topic:
-        raw_topics = [t.strip() for t in topic.split(",") if t.strip()]
-
-    for t in raw_topics:
-        if t in TOPIC_MAP:
-            keywords.extend(TOPIC_MAP[t])
-        else:
-            keywords.append(t.replace("_", " "))
-
-    if not keywords and not raw_topics:
-        return articles
-
-    # Pre-compile word-boundary regexes
-    kw_patterns = [(kw, _word_re(kw)) for kw in keywords if kw]
-
-    # Disambiguation rules for any ambiguous topic the user typed
-    ambig: List[Dict[str, tuple]] = []
-    for t in raw_topics:
-        rule = _AMBIGUOUS_TOPICS.get(t.lower())
-        if rule:
-            ambig.append({
-                "term": t.lower(),
-                "core": [_word_re(w) for w in rule.get("core_any", ())],
-                "require": [_word_re(w) for w in rule["require_any"]],
-                "exclude": [_word_re(w) for w in rule["exclude_any"]],
-            })
-
-    filtered = []
-    for article in articles:
-        title = (article.get("title") or "").lower()
-        body = (article.get("description") or "") + " " + (article.get("content") or "")
-        body_lower = body.lower()
-        full = (title + " " + body_lower).lower()
-
-        # Core keyword test — word-boundary, not substring
-        if kw_patterns and not any(p.search(full) for _, p in kw_patterns):
-            continue
-
-        # Disambiguation: if user typed an ambiguous term, the title must
-        # contain at least one core topic word, must not contain any
-        # exclusion phrase, and the body must mention at least one context
-        # word. This kills "oil" articles about cooking/hair/movies/etc.
-        if ambig:
-            ok = True
-            for rule in ambig:
-                if rule["core"] and not any(c.search(title) for c in rule["core"]):
-                    ok = False; break
-                if any(ex.search(title) for ex in rule["exclude"]):
-                    ok = False; break
-                if rule["require"] and not any(rq.search(full) for rq in rule["require"]):
-                    ok = False; break
-            if not ok:
-                continue
-
-        filtered.append(article)
-
+    filtered = filter_articles_by_relevance(
+        articles,
+        region=region,
+        topic=topic,
+        strict=strict,
+    )
+    if semantic and topic:
+        filtered = apply_embedding_gate(filtered, topic=topic)
+    if ai and topic:
+        filtered = apply_ai_relevance_gate(filtered, topic=topic, region=region)
     return filtered
 
 
