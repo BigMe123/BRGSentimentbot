@@ -1357,35 +1357,58 @@ def _filter_by_freshness(articles: List[Dict], max_age_hours: Optional[int] = 24
 
 _AMBIGUOUS_TOPICS: Dict[str, Dict[str, tuple]] = {
     # Words that look like a topic but match unrelated content unless context confirms.
-    # require_any: at least one must co-occur in title+lead, else drop.
+    # core_any:    title must contain at least one of these (kills incidental body matches).
+    # require_any: at least one must co-occur in title+body (context proof).
     # exclude_any: any of these in title alone disqualifies the article.
     "oil": {
+        "core_any": ("oil", "crude", "brent", "wti", "petroleum", "refinery",
+                     "refining", "opec", "barrel", "drilling", "pipeline",
+                     "shale", "lng", "tanker", "exxon", "chevron", "aramco",
+                     "rosneft", "hormuz"),
         "require_any": ("crude", "barrel", "opec", "brent", "wti", "petroleum",
                         "refinery", "refining", "drilling", "pipeline", "shale",
                         "lng", "exxon", "chevron", "saudi aramco", "rosneft",
-                        "exporter", "embargo", "hormuz", "tanker"),
+                        "exporter", "embargo", "hormuz", "tanker", "iran",
+                        "russia", "saudi", "energy market", "futures"),
         "exclude_any": ("cooking oil", "olive oil", "vegetable oil", "fish oil",
-                        "essential oil", "coconut oil", "anointing", "salad",
-                        "skincare", "snake oil", "recipe"),
+                        "essential oil", "coconut oil", "anointing", "anointed",
+                        "salad", "skincare", "snake oil", "recipe",
+                        "pumpkin seed oil", "hair oil", "hair", "scalp",
+                        "beauty", "noodle", "stain", "scrub", "wine",
+                        "movie", "box office", "shoe", "hashish", "drug cartel",
+                        "medal", "museum", "podcast", "memecoin", "deer",
+                        "correspondents dinner", "fragrance", "perfume",
+                        "massage", "lotion", "diffuser", "cbd"),
     },
     "fuel": {
+        "core_any": ("fuel", "gasoline", "diesel", "petrol", "biofuel",
+                     "refinery", "lng", "kerosene", "ethanol"),
         "require_any": ("gasoline", "diesel", "petrol", "jet fuel", "biofuel",
                         "ethanol", "lng", "natural gas", "coal", "kerosene",
                         "refinery", "shortage", "subsidy", "subsidies", "price"),
         "exclude_any": ("rocket fuel", "nasa", "spacex", "starship", "satellite",
-                        "deep space", "hypersonic", "mars mission", "lunar"),
+                        "deep space", "hypersonic", "mars mission", "lunar",
+                        "fuel for thought", "fueled by", "fuels speculation",
+                        "fuels debate", "fuels rumors", "fuels concerns",
+                        "fueling speculation", "fueled the"),
     },
     "gas": {
+        "core_any": ("gas", "lng", "pipeline", "gazprom", "petrol",
+                     "gasoline", "henry hub", "nord stream"),
         "require_any": ("natural gas", "lng", "pipeline", "gazprom", "nord stream",
                         "petrol", "gasoline", "exporter", "import", "energy",
                         "europe", "shortage", "futures", "henry hub"),
         "exclude_any": ("tear gas", "laughing gas", "gastric", "gas station fire",
-                        "asthma", "anesthesia"),
+                        "asthma", "anesthesia", "gas mask", "gaslighting",
+                        "gas giant", "gas chamber"),
     },
     "gold": {
+        "core_any": ("gold", "bullion", "comex", "ounce"),
         "require_any": ("ounce", "spot gold", "bullion", "futures", "etf",
                         "central bank", "reserve", "comex", "precious metal"),
-        "exclude_any": ("gold medal", "olympics", "world cup", "academy award"),
+        "exclude_any": ("gold medal", "olympics", "world cup", "academy award",
+                        "gold cup", "golden globe", "goldfinger",
+                        "goldman sachs", "old gold", "gold star", "gold rush movie"),
     },
 }
 
@@ -1430,6 +1453,7 @@ def _keyword_filter(articles: List[Dict], region: Optional[str] = None, topic: O
         if rule:
             ambig.append({
                 "term": t.lower(),
+                "core": [_word_re(w) for w in rule.get("core_any", ())],
                 "require": [_word_re(w) for w in rule["require_any"]],
                 "exclude": [_word_re(w) for w in rule["exclude_any"]],
             })
@@ -1445,15 +1469,17 @@ def _keyword_filter(articles: List[Dict], region: Optional[str] = None, topic: O
         if kw_patterns and not any(p.search(full) for _, p in kw_patterns):
             continue
 
-        # Disambiguation: if user typed an ambiguous term, require co-occurrence
-        # of one context word AND no exclusion match in the title.
+        # Disambiguation: if user typed an ambiguous term, the title must
+        # contain at least one core topic word, must not contain any
+        # exclusion phrase, and the body must mention at least one context
+        # word. This kills "oil" articles about cooking/hair/movies/etc.
         if ambig:
             ok = True
             for rule in ambig:
+                if rule["core"] and not any(c.search(title) for c in rule["core"]):
+                    ok = False; break
                 if any(ex.search(title) for ex in rule["exclude"]):
                     ok = False; break
-                # If body never mentions any context word, the article is
-                # almost certainly off-topic (cooking, sports, NASA, etc.).
                 if rule["require"] and not any(rq.search(full) for rq in rule["require"]):
                     ok = False; break
             if not ok:
