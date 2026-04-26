@@ -4,3 +4,7 @@ primaryColor = "#1a73e8"
 
 [server]
 headless = true
+
+[client]
+showSidebarNavigation = true
+toolbarMode = "minimal"

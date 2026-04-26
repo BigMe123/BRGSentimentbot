@@ -124,10 +124,38 @@ st.markdown(f"""
 
     .block-container {{ padding-top: 1.1rem; padding-bottom: 4rem; max-width: 1440px; }}
 
-    /* Sidebar */
+    /* Sidebar — locked open, cannot be collapsed/hidden/slid */
     [data-testid="stSidebar"] {{
         background: {t["sidebar_bg"]};
         border-right: 1px solid var(--brg-border);
+        min-width: 280px !important;
+        max-width: 280px !important;
+        width: 280px !important;
+        transform: none !important;
+        visibility: visible !important;
+        display: block !important;
+        position: relative !important;
+    }}
+    /* Hide the chevron / collapse button so the user cannot toggle the sidebar */
+    [data-testid="stSidebarCollapseButton"],
+    [data-testid="collapsedControl"],
+    [data-testid="stSidebarCollapsedControl"],
+    button[kind="header"][data-testid="baseButton-header"] {{
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }}
+    /* Ensure the main content always shifts to the right of the (always-visible) sidebar */
+    section[data-testid="stSidebar"] + section,
+    [data-testid="stSidebarUserContent"] {{
+        display: block !important;
+    }}
+    /* Prevent the slim "edge resizer" handle from appearing */
+    [data-testid="stSidebar"] > div:first-child > div:first-child {{
+        pointer-events: auto;
+    }}
+    [data-testid="stSidebar"] [data-testid="stSidebarNav"] {{
+        display: block !important;
     }}
     [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {{
         color: var(--brg-muted);

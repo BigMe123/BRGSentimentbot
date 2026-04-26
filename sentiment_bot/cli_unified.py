@@ -9,6 +9,7 @@ import time
 import json
 import hashlib
 import logging
+import re
 from pathlib import Path
 from typing import Optional, List, Dict
 from rich.console import Console
@@ -1354,31 +1355,111 @@ def _filter_by_freshness(articles: List[Dict], max_age_hours: Optional[int] = 24
     return fresh, stale, rate
 
 
+_AMBIGUOUS_TOPICS: Dict[str, Dict[str, tuple]] = {
+    # Words that look like a topic but match unrelated content unless context confirms.
+    # require_any: at least one must co-occur in title+lead, else drop.
+    # exclude_any: any of these in title alone disqualifies the article.
+    "oil": {
+        "require_any": ("crude", "barrel", "opec", "brent", "wti", "petroleum",
+                        "refinery", "refining", "drilling", "pipeline", "shale",
+                        "lng", "exxon", "chevron", "saudi aramco", "rosneft",
+                        "exporter", "embargo", "hormuz", "tanker"),
+        "exclude_any": ("cooking oil", "olive oil", "vegetable oil", "fish oil",
+                        "essential oil", "coconut oil", "anointing", "salad",
+                        "skincare", "snake oil", "recipe"),
+    },
+    "fuel": {
+        "require_any": ("gasoline", "diesel", "petrol", "jet fuel", "biofuel",
+                        "ethanol", "lng", "natural gas", "coal", "kerosene",
+                        "refinery", "shortage", "subsidy", "subsidies", "price"),
+        "exclude_any": ("rocket fuel", "nasa", "spacex", "starship", "satellite",
+                        "deep space", "hypersonic", "mars mission", "lunar"),
+    },
+    "gas": {
+        "require_any": ("natural gas", "lng", "pipeline", "gazprom", "nord stream",
+                        "petrol", "gasoline", "exporter", "import", "energy",
+                        "europe", "shortage", "futures", "henry hub"),
+        "exclude_any": ("tear gas", "laughing gas", "gastric", "gas station fire",
+                        "asthma", "anesthesia"),
+    },
+    "gold": {
+        "require_any": ("ounce", "spot gold", "bullion", "futures", "etf",
+                        "central bank", "reserve", "comex", "precious metal"),
+        "exclude_any": ("gold medal", "olympics", "world cup", "academy award"),
+    },
+}
+
+
+def _word_re(term: str) -> "re.Pattern":
+    """Compile a word-boundary regex for an exact term (case-insensitive)."""
+    # Multi-word phrases get loose whitespace tolerance.
+    pat = r"\b" + r"\s+".join(re.escape(w) for w in term.split()) + r"\b"
+    return re.compile(pat, re.IGNORECASE)
+
+
 def _keyword_filter(articles: List[Dict], region: Optional[str] = None, topic: Optional[str] = None) -> List[Dict]:
     from .config import REGION_MAP, TOPIC_MAP
 
-    keywords = []
+    keywords: List[str] = []
     if region and region in REGION_MAP:
         keywords.extend(REGION_MAP[region])
     elif region:
         keywords.append(region.replace("_", " "))
 
-    if topic and topic in TOPIC_MAP:
-        keywords.extend(TOPIC_MAP[topic])
-    elif topic:
-        keywords.append(topic.replace("_", " "))
+    # Topic input may be free-form ("Iran, Hormuz, Oil"). Split on commas.
+    raw_topics: List[str] = []
+    if topic:
+        raw_topics = [t.strip() for t in topic.split(",") if t.strip()]
 
-    if not keywords:
+    for t in raw_topics:
+        if t in TOPIC_MAP:
+            keywords.extend(TOPIC_MAP[t])
+        else:
+            keywords.append(t.replace("_", " "))
+
+    if not keywords and not raw_topics:
         return articles
+
+    # Pre-compile word-boundary regexes
+    kw_patterns = [(kw, _word_re(kw)) for kw in keywords if kw]
+
+    # Disambiguation rules for any ambiguous topic the user typed
+    ambig: List[Dict[str, tuple]] = []
+    for t in raw_topics:
+        rule = _AMBIGUOUS_TOPICS.get(t.lower())
+        if rule:
+            ambig.append({
+                "term": t.lower(),
+                "require": [_word_re(w) for w in rule["require_any"]],
+                "exclude": [_word_re(w) for w in rule["exclude_any"]],
+            })
 
     filtered = []
     for article in articles:
-        text = (
-            (article.get("title", "") + " " + article.get("description", "") + " " + article.get("content", ""))
-            .lower()
-        )
-        if any(kw.lower() in text for kw in keywords):
-            filtered.append(article)
+        title = (article.get("title") or "").lower()
+        body = (article.get("description") or "") + " " + (article.get("content") or "")
+        body_lower = body.lower()
+        full = (title + " " + body_lower).lower()
+
+        # Core keyword test — word-boundary, not substring
+        if kw_patterns and not any(p.search(full) for _, p in kw_patterns):
+            continue
+
+        # Disambiguation: if user typed an ambiguous term, require co-occurrence
+        # of one context word AND no exclusion match in the title.
+        if ambig:
+            ok = True
+            for rule in ambig:
+                if any(ex.search(title) for ex in rule["exclude"]):
+                    ok = False; break
+                # If body never mentions any context word, the article is
+                # almost certainly off-topic (cooking, sports, NASA, etc.).
+                if rule["require"] and not any(rq.search(full) for rq in rule["require"]):
+                    ok = False; break
+            if not ok:
+                continue
+
+        filtered.append(article)
 
     return filtered
 
